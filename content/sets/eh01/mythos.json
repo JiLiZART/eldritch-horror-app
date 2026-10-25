@@ -5,8 +5,8 @@
     "color": "green",
     "difficulty": "easy",
     "images": {
-      "front": "cards/eh01/mythos/green/a-proposition.jpg",
-      "back": "cards/eh01/mythos/green/easy-back.jpg"
+      "front": "cards/eh01/mythos/green/a-proposition.webp",
+      "back": "cards/eh01/mythos/green/easy-back.webp"
     }
   },
   {
@@ -15,8 +15,8 @@
     "color": "green",
     "difficulty": "easy",
     "images": {
-      "front": "cards/eh01/mythos/green/buying-information.jpg",
-      "back": "cards/eh01/mythos/green/easy-back.jpg"
+      "front": "cards/eh01/mythos/green/buying-information.webp",
+      "back": "cards/eh01/mythos/green/easy-back.webp"
     }
   },
   {
@@ -25,8 +25,8 @@
     "color": "green",
     "difficulty": "easy",
     "images": {
-      "front": "cards/eh01/mythos/green/heart-of-corruption.jpg",
-      "back": "cards/eh01/mythos/green/easy-back.jpg"
+      "front": "cards/eh01/mythos/green/heart-of-corruption.webp",
+      "back": "cards/eh01/mythos/green/easy-back.webp"
     }
   },
   {
@@ -35,8 +35,8 @@
     "color": "green",
     "difficulty": "easy",
     "images": {
-      "front": "cards/eh01/mythos/green/support-of-the-church.jpg",
-      "back": "cards/eh01/mythos/green/easy-back.jpg"
+      "front": "cards/eh01/mythos/green/support-of-the-church.webp",
+      "back": "cards/eh01/mythos/green/easy-back.webp"
     }
   },
   {
@@ -45,8 +45,8 @@
     "color": "green",
     "difficulty": "easy",
     "images": {
-      "front": "cards/eh01/mythos/green/that-which-consumes.jpg",
-      "back": "cards/eh01/mythos/green/easy-back.jpg"
+      "front": "cards/eh01/mythos/green/that-which-consumes.webp",
+      "back": "cards/eh01/mythos/green/easy-back.webp"
     }
   },
   {
@@ -55,8 +55,8 @@
     "color": "green",
     "difficulty": "hard",
     "images": {
-      "front": "cards/eh01/mythos/green/from-beyond.jpg",
-      "back": "cards/eh01/mythos/green/hard-back.jpg"
+      "front": "cards/eh01/mythos/green/from-beyond.webp",
+      "back": "cards/eh01/mythos/green/hard-back.webp"
     }
   },
   {
@@ -65,8 +65,8 @@
     "color": "green",
     "difficulty": "hard",
     "images": {
-      "front": "cards/eh01/mythos/green/rising-terror.jpg",
-      "back": "cards/eh01/mythos/green/hard-back.jpg"
+      "front": "cards/eh01/mythos/green/rising-terror.webp",
+      "back": "cards/eh01/mythos/green/hard-back.webp"
     }
   },
   {
@@ -75,8 +75,8 @@
     "color": "green",
     "difficulty": "hard",
     "images": {
-      "front": "cards/eh01/mythos/green/strange-sightings.jpg",
-      "back": "cards/eh01/mythos/green/hard-back.jpg"
+      "front": "cards/eh01/mythos/green/strange-sightings.webp",
+      "back": "cards/eh01/mythos/green/hard-back.webp"
     }
   },
   {
@@ -85,8 +85,8 @@
     "color": "green",
     "difficulty": "hard",
     "images": {
-      "front": "cards/eh01/mythos/green/tied-to-a-dark-purpose.jpg",
-      "back": "cards/eh01/mythos/green/hard-back.jpg"
+      "front": "cards/eh01/mythos/green/tied-to-a-dark-purpose.webp",
+      "back": "cards/eh01/mythos/green/hard-back.webp"
     }
   },
   {
@@ -95,8 +95,8 @@
     "color": "green",
     "difficulty": "hard",
     "images": {
-      "front": "cards/eh01/mythos/green/torn-asunder.jpg",
-      "back": "cards/eh01/mythos/green/hard-back.jpg"
+      "front": "cards/eh01/mythos/green/torn-asunder.webp",
+      "back": "cards/eh01/mythos/green/hard-back.webp"
     }
   },
   {
@@ -105,8 +105,8 @@
     "color": "green",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/green/blood-flows.jpg",
-      "back": "cards/eh01/mythos/green/medium-back.jpg"
+      "front": "cards/eh01/mythos/green/blood-flows.webp",
+      "back": "cards/eh01/mythos/green/medium-back.webp"
     }
   },
   {
@@ -115,8 +115,8 @@
     "color": "green",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/green/calling-the-elder-things.jpg",
-      "back": "cards/eh01/mythos/green/medium-back.jpg"
+      "front": "cards/eh01/mythos/green/calling-the-elder-things.webp",
+      "back": "cards/eh01/mythos/green/medium-back.webp"
     }
   },
   {
@@ -125,8 +125,8 @@
     "color": "green",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/green/dimensional-instability.jpg",
-      "back": "cards/eh01/mythos/green/medium-back.jpg"
+      "front": "cards/eh01/mythos/green/dimensional-instability.webp",
+      "back": "cards/eh01/mythos/green/medium-back.webp"
     }
   },
   {
@@ -135,8 +135,8 @@
     "color": "green",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/green/driven-to-bankruptcy.jpg",
-      "back": "cards/eh01/mythos/green/medium-back.jpg"
+      "front": "cards/eh01/mythos/green/driven-to-bankruptcy.webp",
+      "back": "cards/eh01/mythos/green/medium-back.webp"
     }
   },
   {
@@ -145,8 +145,8 @@
     "color": "green",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/green/legitimate-banking.jpg",
-      "back": "cards/eh01/mythos/green/medium-back.jpg"
+      "front": "cards/eh01/mythos/green/legitimate-banking.webp",
+      "back": "cards/eh01/mythos/green/medium-back.webp"
     }
   },
   {
@@ -155,8 +155,8 @@
     "color": "green",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/green/no-peace-for-the-fallen.jpg",
-      "back": "cards/eh01/mythos/green/medium-back.jpg"
+      "front": "cards/eh01/mythos/green/no-peace-for-the-fallen.webp",
+      "back": "cards/eh01/mythos/green/medium-back.webp"
     }
   },
   {
@@ -165,8 +165,8 @@
     "color": "green",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/green/patrolling-the-border.jpg",
-      "back": "cards/eh01/mythos/green/medium-back.jpg"
+      "front": "cards/eh01/mythos/green/patrolling-the-border.webp",
+      "back": "cards/eh01/mythos/green/medium-back.webp"
     }
   },
   {
@@ -175,8 +175,8 @@
     "color": "green",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/green/unexpected-betrayal.jpg",
-      "back": "cards/eh01/mythos/green/medium-back.jpg"
+      "front": "cards/eh01/mythos/green/unexpected-betrayal.webp",
+      "back": "cards/eh01/mythos/green/medium-back.webp"
     }
   },
   {
@@ -185,8 +185,8 @@
     "color": "yellow",
     "difficulty": "easy",
     "images": {
-      "front": "cards/eh01/mythos/yellow/everyone-has-a-price.jpg",
-      "back": "cards/eh01/mythos/yellow/easy-back.jpg"
+      "front": "cards/eh01/mythos/yellow/everyone-has-a-price.webp",
+      "back": "cards/eh01/mythos/yellow/easy-back.webp"
     }
   },
   {
@@ -195,8 +195,8 @@
     "color": "yellow",
     "difficulty": "easy",
     "images": {
-      "front": "cards/eh01/mythos/yellow/omen-of-good-fortune.jpg",
-      "back": "cards/eh01/mythos/yellow/easy-back.jpg"
+      "front": "cards/eh01/mythos/yellow/omen-of-good-fortune.webp",
+      "back": "cards/eh01/mythos/yellow/easy-back.webp"
     }
   },
   {
@@ -205,8 +205,8 @@
     "color": "yellow",
     "difficulty": "easy",
     "images": {
-      "front": "cards/eh01/mythos/yellow/rally-the-people.jpg",
-      "back": "cards/eh01/mythos/yellow/easy-back.jpg"
+      "front": "cards/eh01/mythos/yellow/rally-the-people.webp",
+      "back": "cards/eh01/mythos/yellow/easy-back.webp"
     }
   },
   {
@@ -215,8 +215,8 @@
     "color": "yellow",
     "difficulty": "easy",
     "images": {
-      "front": "cards/eh01/mythos/yellow/silver-twilight-aid.jpg",
-      "back": "cards/eh01/mythos/yellow/easy-back.jpg"
+      "front": "cards/eh01/mythos/yellow/silver-twilight-aid.webp",
+      "back": "cards/eh01/mythos/yellow/easy-back.webp"
     }
   },
   {
@@ -225,8 +225,8 @@
     "color": "yellow",
     "difficulty": "easy",
     "images": {
-      "front": "cards/eh01/mythos/yellow/the-world-fights-back.jpg",
-      "back": "cards/eh01/mythos/yellow/easy-back.jpg"
+      "front": "cards/eh01/mythos/yellow/the-world-fights-back.webp",
+      "back": "cards/eh01/mythos/yellow/easy-back.webp"
     }
   },
   {
@@ -235,8 +235,8 @@
     "color": "yellow",
     "difficulty": "hard",
     "images": {
-      "front": "cards/eh01/mythos/yellow/all-for-nothing.jpg",
-      "back": "cards/eh01/mythos/yellow/hard-back.jpg"
+      "front": "cards/eh01/mythos/yellow/all-for-nothing.webp",
+      "back": "cards/eh01/mythos/yellow/hard-back.webp"
     }
   },
   {
@@ -245,8 +245,8 @@
     "color": "yellow",
     "difficulty": "hard",
     "images": {
-      "front": "cards/eh01/mythos/yellow/desperate-times.jpg",
-      "back": "cards/eh01/mythos/yellow/hard-back.jpg"
+      "front": "cards/eh01/mythos/yellow/desperate-times.webp",
+      "back": "cards/eh01/mythos/yellow/hard-back.webp"
     }
   },
   {
@@ -255,8 +255,8 @@
     "color": "yellow",
     "difficulty": "hard",
     "images": {
-      "front": "cards/eh01/mythos/yellow/eyes-everywhere.jpg",
-      "back": "cards/eh01/mythos/yellow/hard-back.jpg"
+      "front": "cards/eh01/mythos/yellow/eyes-everywhere.webp",
+      "back": "cards/eh01/mythos/yellow/hard-back.webp"
     }
   },
   {
@@ -265,8 +265,8 @@
     "color": "yellow",
     "difficulty": "hard",
     "images": {
-      "front": "cards/eh01/mythos/yellow/perplexing-stars.jpg",
-      "back": "cards/eh01/mythos/yellow/hard-back.jpg"
+      "front": "cards/eh01/mythos/yellow/perplexing-stars.webp",
+      "back": "cards/eh01/mythos/yellow/hard-back.webp"
     }
   },
   {
@@ -275,8 +275,8 @@
     "color": "yellow",
     "difficulty": "hard",
     "images": {
-      "front": "cards/eh01/mythos/yellow/the-storm.jpg",
-      "back": "cards/eh01/mythos/yellow/hard-back.jpg"
+      "front": "cards/eh01/mythos/yellow/the-storm.webp",
+      "back": "cards/eh01/mythos/yellow/hard-back.webp"
     }
   },
   {
@@ -285,8 +285,8 @@
     "color": "yellow",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/yellow/a-dark-power.jpg",
-      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+      "front": "cards/eh01/mythos/yellow/a-dark-power.webp",
+      "back": "cards/eh01/mythos/yellow/medium-back.webp"
     }
   },
   {
@@ -295,8 +295,8 @@
     "color": "yellow",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/yellow/ancient-guardians.jpg",
-      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+      "front": "cards/eh01/mythos/yellow/ancient-guardians.webp",
+      "back": "cards/eh01/mythos/yellow/medium-back.webp"
     }
   },
   {
@@ -305,8 +305,8 @@
     "color": "yellow",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/yellow/arrests-made-in-murder-case.jpg",
-      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+      "front": "cards/eh01/mythos/yellow/arrests-made-in-murder-case.webp",
+      "back": "cards/eh01/mythos/yellow/medium-back.webp"
     }
   },
   {
@@ -315,8 +315,8 @@
     "color": "yellow",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/yellow/burden-of-greed.jpg",
-      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+      "front": "cards/eh01/mythos/yellow/burden-of-greed.webp",
+      "back": "cards/eh01/mythos/yellow/medium-back.webp"
     }
   },
   {
@@ -325,8 +325,8 @@
     "color": "yellow",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/yellow/from-bad-to-worse.jpg",
-      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+      "front": "cards/eh01/mythos/yellow/from-bad-to-worse.webp",
+      "back": "cards/eh01/mythos/yellow/medium-back.webp"
     }
   },
   {
@@ -335,8 +335,8 @@
     "color": "yellow",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/yellow/haunting-nightmares.jpg",
-      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+      "front": "cards/eh01/mythos/yellow/haunting-nightmares.webp",
+      "back": "cards/eh01/mythos/yellow/medium-back.webp"
     }
   },
   {
@@ -345,8 +345,8 @@
     "color": "yellow",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/yellow/heat-wave-singes-the-globe.jpg",
-      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+      "front": "cards/eh01/mythos/yellow/heat-wave-singes-the-globe.webp",
+      "back": "cards/eh01/mythos/yellow/medium-back.webp"
     }
   },
   {
@@ -355,8 +355,8 @@
     "color": "yellow",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/yellow/the-bermuda-triangle.jpg",
-      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+      "front": "cards/eh01/mythos/yellow/the-bermuda-triangle.webp",
+      "back": "cards/eh01/mythos/yellow/medium-back.webp"
     }
   },
   {
@@ -365,8 +365,8 @@
     "color": "yellow",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/yellow/the-world-shakes.jpg",
-      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+      "front": "cards/eh01/mythos/yellow/the-world-shakes.webp",
+      "back": "cards/eh01/mythos/yellow/medium-back.webp"
     }
   },
   {
@@ -375,8 +375,8 @@
     "color": "yellow",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/yellow/tide-of-despair.jpg",
-      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+      "front": "cards/eh01/mythos/yellow/tide-of-despair.webp",
+      "back": "cards/eh01/mythos/yellow/medium-back.webp"
     }
   },
   {
@@ -385,8 +385,8 @@
     "color": "yellow",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/yellow/treacherous-magic.jpg",
-      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+      "front": "cards/eh01/mythos/yellow/treacherous-magic.webp",
+      "back": "cards/eh01/mythos/yellow/medium-back.webp"
     }
   },
   {
@@ -395,8 +395,8 @@
     "color": "blue",
     "difficulty": "easy",
     "images": {
-      "front": "cards/eh01/mythos/blue/fractured-reality.jpg",
-      "back": "cards/eh01/mythos/blue/easy-back.jpg"
+      "front": "cards/eh01/mythos/blue/fractured-reality.webp",
+      "back": "cards/eh01/mythos/blue/easy-back.webp"
     }
   },
   {
@@ -405,8 +405,8 @@
     "color": "blue",
     "difficulty": "easy",
     "images": {
-      "front": "cards/eh01/mythos/blue/growing-madness.jpg",
-      "back": "cards/eh01/mythos/blue/easy-back.jpg"
+      "front": "cards/eh01/mythos/blue/growing-madness.webp",
+      "back": "cards/eh01/mythos/blue/easy-back.webp"
     }
   },
   {
@@ -415,8 +415,8 @@
     "color": "blue",
     "difficulty": "easy",
     "images": {
-      "front": "cards/eh01/mythos/blue/lost-knowledge.jpg",
-      "back": "cards/eh01/mythos/blue/easy-back.jpg"
+      "front": "cards/eh01/mythos/blue/lost-knowledge.webp",
+      "back": "cards/eh01/mythos/blue/easy-back.webp"
     }
   },
   {
@@ -425,8 +425,8 @@
     "color": "blue",
     "difficulty": "easy",
     "images": {
-      "front": "cards/eh01/mythos/blue/secrets-of-the-past.jpg",
-      "back": "cards/eh01/mythos/blue/easy-back.jpg"
+      "front": "cards/eh01/mythos/blue/secrets-of-the-past.webp",
+      "back": "cards/eh01/mythos/blue/easy-back.webp"
     }
   },
   {
@@ -435,8 +435,8 @@
     "color": "blue",
     "difficulty": "hard",
     "images": {
-      "front": "cards/eh01/mythos/blue/dimensions-collide.jpg",
-      "back": "cards/eh01/mythos/blue/hard-back.jpg"
+      "front": "cards/eh01/mythos/blue/dimensions-collide.webp",
+      "back": "cards/eh01/mythos/blue/hard-back.webp"
     }
   },
   {
@@ -445,8 +445,8 @@
     "color": "blue",
     "difficulty": "hard",
     "images": {
-      "front": "cards/eh01/mythos/blue/mysterious-lights.jpg",
-      "back": "cards/eh01/mythos/blue/hard-back.jpg"
+      "front": "cards/eh01/mythos/blue/mysterious-lights.webp",
+      "back": "cards/eh01/mythos/blue/hard-back.webp"
     }
   },
   {
@@ -455,8 +455,8 @@
     "color": "blue",
     "difficulty": "hard",
     "images": {
-      "front": "cards/eh01/mythos/blue/spreading-sickness.jpg",
-      "back": "cards/eh01/mythos/blue/hard-back.jpg"
+      "front": "cards/eh01/mythos/blue/spreading-sickness.webp",
+      "back": "cards/eh01/mythos/blue/hard-back.webp"
     }
   },
   {
@@ -465,8 +465,8 @@
     "color": "blue",
     "difficulty": "hard",
     "images": {
-      "front": "cards/eh01/mythos/blue/web-between-worlds.jpg",
-      "back": "cards/eh01/mythos/blue/hard-back.jpg"
+      "front": "cards/eh01/mythos/blue/web-between-worlds.webp",
+      "back": "cards/eh01/mythos/blue/hard-back.webp"
     }
   },
   {
@@ -475,8 +475,8 @@
     "color": "blue",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/blue/faded-from-society.jpg",
-      "back": "cards/eh01/mythos/blue/medium-back.jpg"
+      "front": "cards/eh01/mythos/blue/faded-from-society.webp",
+      "back": "cards/eh01/mythos/blue/medium-back.webp"
     }
   },
   {
@@ -485,8 +485,8 @@
     "color": "blue",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/blue/return-of-the-ancient-ones.jpg",
-      "back": "cards/eh01/mythos/blue/medium-back.jpg"
+      "front": "cards/eh01/mythos/blue/return-of-the-ancient-ones.webp",
+      "back": "cards/eh01/mythos/blue/medium-back.webp"
     }
   },
   {
@@ -495,8 +495,8 @@
     "color": "blue",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/blue/stars-aligned.jpg",
-      "back": "cards/eh01/mythos/blue/medium-back.jpg"
+      "front": "cards/eh01/mythos/blue/stars-aligned.webp",
+      "back": "cards/eh01/mythos/blue/medium-back.webp"
     }
   },
   {
@@ -505,8 +505,8 @@
     "color": "blue",
     "difficulty": "medium",
     "images": {
-      "front": "cards/eh01/mythos/blue/the-wind-walker.jpg",
-      "back": "cards/eh01/mythos/blue/medium-back.jpg"
+      "front": "cards/eh01/mythos/blue/the-wind-walker.webp",
+      "back": "cards/eh01/mythos/blue/medium-back.webp"
     }
   }
 ]

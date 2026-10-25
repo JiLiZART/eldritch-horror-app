@@ -3,6 +3,7 @@
  * public/cards/eh01 and emit content/sets/eh01/*.json from the file names plus
  * the hand-typed tables below (investigator sheets, Ancient One setup).
  */
+import { execFileSync } from "node:child_process";
 import { copyFileSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { basename, extname, join } from "node:path";
 import type { AncientOne, Card, EncounterDeck, Investigator, Monster, MythosCard, NamedCard } from "../src/content/types";
@@ -12,18 +13,22 @@ const src = join(root, "inspired/ttp-eldritch-horror-master/assets/01 Core");
 const pub = join(root, "public/cards/eh01");
 const out = join(root, "content/sets/eh01");
 
+/** Deck-level atlas textures the mod uses for card sheets; every card also exists as its own file. */
+const deckBacks = new Set(["assets", "spells", "conditions", "artifacts", "monsters", "epic monsters", "investigators", "encounter - expedition"]);
 const kebab = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-const files = (dir: string) => readdirSync(join(src, dir)).filter((f) => f !== ".DS_Store" && extname(f) !== "");
+const files = (dir: string) => readdirSync(join(src, dir)).filter((f) => /\.(png|jpe?g|svg)$/i.test(f));
 /** Source file names with typos, corrected to the printed card name. */
 const typos: Record<string, string> = { "Personal Asistant": "Personal Assistant" };
 const stem = (f: string) => { const s = basename(f, extname(f)); return typos[s] ?? s; };
 
 const table: string[] = [];
-/** Copies one source file to public/cards/eh01/<dir>/<name><ext>, returns the public-relative path. */
+/** Converts one source file to public/cards/eh01/<dir>/<name>.webp (long edge capped), returns the public-relative path. */
 function copy(srcDir: string, file: string, dir: string, name: string): string {
   mkdirSync(join(pub, dir), { recursive: true });
-  const rel = `cards/eh01/${dir}/${name}${extname(file).toLowerCase()}`;
-  copyFileSync(join(src, srcDir, file), join(root, "public", rel));
+  const svg = extname(file).toLowerCase() === ".svg";
+  const rel = `cards/eh01/${dir}/${name}${svg ? ".svg" : ".webp"}`;
+  if (svg) copyFileSync(join(src, srcDir, file), join(root, "public", rel));
+  else execFileSync("magick", [join(src, srcDir, file), "-resize", "1600x1600>", "-quality", "85", join(root, "public", rel)]);
   table.push(`${srcDir}/${file} -> ${rel}`);
   return rel;
 }
@@ -33,12 +38,10 @@ function sides(srcDir: string, dir: string) {
   const byName = new Map<string, { front?: string; back?: string; file: string }>();
   for (const f of files(srcDir)) {
     const s = stem(f);
-    if (/errata/i.test(s) || /^chipped tile$/i.test(s)) {
-      copy(srcDir, f, dir, kebab(s));
-      continue;
-    }
+    if (/errata/i.test(s) || /^chipped tile$/i.test(s)) continue;
     const m = /^(.*?)\s*-\s*(front|back)$/i.exec(s);
     const name = m ? m[1]! : s;
+    if (deckBacks.has(name.toLowerCase())) continue; // deck atlas art, not a card
     const side = m ? (m[2]!.toLowerCase() as "front" | "back") : "front";
     const entry = byName.get(name) ?? { file: f };
     entry[side] = copy(srcDir, f, dir, kebab(name) + (side === "back" ? "-back" : ""));
@@ -47,12 +50,9 @@ function sides(srcDir: string, dir: string) {
   return byName;
 }
 
-const deckBacks = new Set(["assets", "spells", "conditions", "artifacts", "monsters", "epic monsters", "investigators"]);
-
 function cards(srcDir: string, deck: Card["deck"], dir: string): Card[] {
   const result: Card[] = [];
   for (const [name, imgs] of sides(srcDir, dir)) {
-    if (deckBacks.has(name.toLowerCase())) continue; // deck front/back art, not a card
     result.push({ id: `eh01/${dir}/${kebab(name)}`, name, deck, images: { front: imgs.front!, ...(imgs.back && { back: imgs.back }) } });
   }
   return result;
@@ -61,7 +61,6 @@ function cards(srcDir: string, deck: Card["deck"], dir: string): Card[] {
 function monsters(srcDir: string, epic: boolean): Monster[] {
   const result: Monster[] = [];
   for (const [name, imgs] of sides(srcDir, "monster")) {
-    if (deckBacks.has(name.toLowerCase())) continue;
     result.push({ id: `eh01/monster/${kebab(name)}`, name, ...(epic && { epic }), images: { front: imgs.front!, back: imgs.back! } });
   }
   return result;
@@ -76,7 +75,6 @@ function encounters(): EncounterDeck[] {
   decks.push({ id: "other-world", kind: "other-world", cards: numbered("Encounters/Other World", "other-world") });
   const exp: NamedCard[] = [];
   for (const [name, imgs] of sides("Encounters/Expedition", "encounter/expedition")) {
-    if (name === "Encounter - Expedition") continue;
     const short = name.replace(/^Encounter - Expedition - /, "");
     exp.push({ id: `eh01/encounter/expedition/${kebab(short)}`, name: short, images: { front: imgs.front!, back: imgs.back! } });
   }
@@ -89,7 +87,6 @@ function numbered(srcDir: string, id: string): NamedCard[] {
   const all = files(srcDir);
   const back = all.find((f) => / - back\./.test(f))!;
   const backRel = copy(srcDir, back, `encounter/${id}`, "back");
-  copy(srcDir, all.find((f) => / - front\./.test(f))!, `encounter/${id}`, "front");
   return all
     .filter((f) => /\d+\./.test(f))
     .map((f) => {
@@ -100,7 +97,6 @@ function numbered(srcDir: string, id: string): NamedCard[] {
 
 function mythos(): MythosCard[] {
   const result: MythosCard[] = [];
-  copy("Mythos", "mythos - back.jpg", "mythos", "back");
   for (const color of ["green", "yellow", "blue"] as const) {
     const dir = `Mythos/${color[0]!.toUpperCase()}${color.slice(1)}`;
     const backs: Record<string, string> = {};
@@ -110,11 +106,7 @@ function mythos(): MythosCard[] {
     }
     for (const f of files(dir)) {
       const m = /^(Easy|Medium|Hard) - (.*)$/.exec(stem(f));
-      if (!m) continue;
-      if (/errata/i.test(m[2]!)) {
-        copy(dir, f, `mythos/${color}`, kebab(m[2]!));
-        continue;
-      }
+      if (!m || /errata/i.test(m[2]!)) continue;
       const difficulty = m[1]!.toLowerCase() as MythosCard["difficulty"];
       result.push({ id: `eh01/mythos/${color}/${kebab(m[2]!)}`, name: m[2]!, color, difficulty, images: { front: copy(dir, f, `mythos/${color}`, kebab(m[2]!)), back: backs[difficulty]! } });
     }
@@ -138,8 +130,6 @@ function ancientOnes(): AncientOne[] {
     const strip = (f: string) => stem(f).replace(`${name} - `, "");
     const find = (suffix: string) => all.find((f) => strip(f) === suffix)!;
     const backOf = (prefix: string) => copy(srcDir, find(`${prefix} - back`), dir, `${kebab(prefix)}-back`);
-    copy(srcDir, find("Mystery - front"), dir, "mystery-front");
-    copy(srcDir, find("Research - front"), dir, "research-front");
     const mysteryBack = backOf("Mystery");
     const researchBack = backOf("Research");
     const mysteries: NamedCard[] = [];
@@ -147,10 +137,7 @@ function ancientOnes(): AncientOne[] {
     const special: NamedCard[] = [];
     for (const f of all) {
       const s = strip(f);
-      if (/errata/i.test(s)) {
-        copy(srcDir, f, dir, kebab(s));
-        continue;
-      }
+      if (/errata/i.test(s)) continue;
       let m = /^Mystery - (.+) - front$/.exec(s);
       if (m) mysteries.push({ id: `eh01/${dir}/mystery/${kebab(m[1]!)}`, name: m[1]!, images: { front: copy(srcDir, f, `${dir}/mystery`, kebab(m[1]!)), back: mysteryBack } });
       m = /^Research - (\d+)$/.exec(s);
@@ -158,7 +145,6 @@ function ancientOnes(): AncientOne[] {
       m = /^Special - (.+) - (\d+)$/.exec(s);
       if (m) {
         const specialBack = copy(srcDir, find(`Special - ${m[1]} - back`), dir, `${kebab(m[1]!)}-back`);
-        copy(srcDir, find(`Special - ${m[1]} - front`), dir, `${kebab(m[1]!)}-front`);
         special.push({ id: `eh01/${dir}/special/${kebab(m[1]!)}-${m[2]}`, name: `${m[1]} ${m[2]}`, images: { front: copy(srcDir, f, `${dir}/special`, `${kebab(m[1]!)}-${m[2]}`), back: specialBack } });
       }
     }
@@ -221,7 +207,7 @@ function tokens() {
   for (const dir of ["Clues", "Gates", "Health", "Sanity", "Travel", "Improvements", "Icon Reference", "Icon Reference/Variant"]) {
     for (const f of files(dir)) copy(dir, f, `tokens/${kebab(dir)}`, kebab(stem(f)));
   }
-  for (const f of files(".")) copy(".", f, "tokens", kebab(stem(f)));
+  for (const f of files(".")) if (!/^(Game Board|Assets)$/.test(stem(f))) copy(".", f, "tokens", kebab(stem(f)));
 }
 
 const set = {

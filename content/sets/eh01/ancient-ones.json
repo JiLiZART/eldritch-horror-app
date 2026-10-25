@@ -21,40 +21,40 @@
       }
     },
     "images": {
-      "front": "cards/eh01/ancient-one/azathoth/sheet.jpg",
-      "back": "cards/eh01/ancient-one/azathoth/sheet-back.jpg"
+      "front": "cards/eh01/ancient-one/azathoth/sheet.webp",
+      "back": "cards/eh01/ancient-one/azathoth/sheet-back.webp"
     },
     "mysteries": [
       {
         "id": "eh01/ancient-one/azathoth/mystery/occult-research",
         "name": "Occult Research",
         "images": {
-          "front": "cards/eh01/ancient-one/azathoth/mystery/occult-research.jpg",
-          "back": "cards/eh01/ancient-one/azathoth/mystery-back.jpg"
+          "front": "cards/eh01/ancient-one/azathoth/mystery/occult-research.webp",
+          "back": "cards/eh01/ancient-one/azathoth/mystery-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/azathoth/mystery/omen-of-devastation",
         "name": "Omen of Devastation",
         "images": {
-          "front": "cards/eh01/ancient-one/azathoth/mystery/omen-of-devastation.jpg",
-          "back": "cards/eh01/ancient-one/azathoth/mystery-back.jpg"
+          "front": "cards/eh01/ancient-one/azathoth/mystery/omen-of-devastation.webp",
+          "back": "cards/eh01/ancient-one/azathoth/mystery-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/azathoth/mystery/seed-of-the-daemon-sultan",
         "name": "Seed of the Daemon Sultan",
         "images": {
-          "front": "cards/eh01/ancient-one/azathoth/mystery/seed-of-the-daemon-sultan.jpg",
-          "back": "cards/eh01/ancient-one/azathoth/mystery-back.jpg"
+          "front": "cards/eh01/ancient-one/azathoth/mystery/seed-of-the-daemon-sultan.webp",
+          "back": "cards/eh01/ancient-one/azathoth/mystery-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/azathoth/mystery/the-true-name",
         "name": "The True Name",
         "images": {
-          "front": "cards/eh01/ancient-one/azathoth/mystery/the-true-name.jpg",
-          "back": "cards/eh01/ancient-one/azathoth/mystery-back.jpg"
+          "front": "cards/eh01/ancient-one/azathoth/mystery/the-true-name.webp",
+          "back": "cards/eh01/ancient-one/azathoth/mystery-back.webp"
         }
       }
     ],
@@ -63,64 +63,64 @@
         "id": "eh01/ancient-one/azathoth/research/01",
         "name": "01",
         "images": {
-          "front": "cards/eh01/ancient-one/azathoth/research/01.jpg",
-          "back": "cards/eh01/ancient-one/azathoth/research-back.jpg"
+          "front": "cards/eh01/ancient-one/azathoth/research/01.webp",
+          "back": "cards/eh01/ancient-one/azathoth/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/azathoth/research/02",
         "name": "02",
         "images": {
-          "front": "cards/eh01/ancient-one/azathoth/research/02.jpg",
-          "back": "cards/eh01/ancient-one/azathoth/research-back.jpg"
+          "front": "cards/eh01/ancient-one/azathoth/research/02.webp",
+          "back": "cards/eh01/ancient-one/azathoth/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/azathoth/research/03",
         "name": "03",
         "images": {
-          "front": "cards/eh01/ancient-one/azathoth/research/03.jpg",
-          "back": "cards/eh01/ancient-one/azathoth/research-back.jpg"
+          "front": "cards/eh01/ancient-one/azathoth/research/03.webp",
+          "back": "cards/eh01/ancient-one/azathoth/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/azathoth/research/04",
         "name": "04",
         "images": {
-          "front": "cards/eh01/ancient-one/azathoth/research/04.jpg",
-          "back": "cards/eh01/ancient-one/azathoth/research-back.jpg"
+          "front": "cards/eh01/ancient-one/azathoth/research/04.webp",
+          "back": "cards/eh01/ancient-one/azathoth/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/azathoth/research/05",
         "name": "05",
         "images": {
-          "front": "cards/eh01/ancient-one/azathoth/research/05.jpg",
-          "back": "cards/eh01/ancient-one/azathoth/research-back.jpg"
+          "front": "cards/eh01/ancient-one/azathoth/research/05.webp",
+          "back": "cards/eh01/ancient-one/azathoth/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/azathoth/research/06",
         "name": "06",
         "images": {
-          "front": "cards/eh01/ancient-one/azathoth/research/06.jpg",
-          "back": "cards/eh01/ancient-one/azathoth/research-back.jpg"
+          "front": "cards/eh01/ancient-one/azathoth/research/06.webp",
+          "back": "cards/eh01/ancient-one/azathoth/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/azathoth/research/07",
         "name": "07",
         "images": {
-          "front": "cards/eh01/ancient-one/azathoth/research/07.jpg",
-          "back": "cards/eh01/ancient-one/azathoth/research-back.jpg"
+          "front": "cards/eh01/ancient-one/azathoth/research/07.webp",
+          "back": "cards/eh01/ancient-one/azathoth/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/azathoth/research/08",
         "name": "08",
         "images": {
-          "front": "cards/eh01/ancient-one/azathoth/research/08.jpg",
-          "back": "cards/eh01/ancient-one/azathoth/research-back.jpg"
+          "front": "cards/eh01/ancient-one/azathoth/research/08.webp",
+          "back": "cards/eh01/ancient-one/azathoth/research-back.webp"
         }
       }
     ]
@@ -147,40 +147,40 @@
       }
     },
     "images": {
-      "front": "cards/eh01/ancient-one/cthulhu/sheet.jpg",
-      "back": "cards/eh01/ancient-one/cthulhu/sheet-back.jpg"
+      "front": "cards/eh01/ancient-one/cthulhu/sheet.webp",
+      "back": "cards/eh01/ancient-one/cthulhu/sheet-back.webp"
     },
     "mysteries": [
       {
         "id": "eh01/ancient-one/cthulhu/mystery/r-lyeh-risen",
         "name": "R'lyeh Risen",
         "images": {
-          "front": "cards/eh01/ancient-one/cthulhu/mystery/r-lyeh-risen.jpg",
-          "back": "cards/eh01/ancient-one/cthulhu/mystery-back.jpg"
+          "front": "cards/eh01/ancient-one/cthulhu/mystery/r-lyeh-risen.webp",
+          "back": "cards/eh01/ancient-one/cthulhu/mystery-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/cthulhu/mystery/the-deep-ones-attack",
         "name": "The Deep Ones Attack!",
         "images": {
-          "front": "cards/eh01/ancient-one/cthulhu/mystery/the-deep-ones-attack.jpg",
-          "back": "cards/eh01/ancient-one/cthulhu/mystery-back.jpg"
+          "front": "cards/eh01/ancient-one/cthulhu/mystery/the-deep-ones-attack.webp",
+          "back": "cards/eh01/ancient-one/cthulhu/mystery-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/cthulhu/mystery/the-stars-are-right",
         "name": "The Stars Are Right!",
         "images": {
-          "front": "cards/eh01/ancient-one/cthulhu/mystery/the-stars-are-right.jpg",
-          "back": "cards/eh01/ancient-one/cthulhu/mystery-back.jpg"
+          "front": "cards/eh01/ancient-one/cthulhu/mystery/the-stars-are-right.webp",
+          "back": "cards/eh01/ancient-one/cthulhu/mystery-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/cthulhu/mystery/watching-the-stars",
         "name": "Watching the Stars",
         "images": {
-          "front": "cards/eh01/ancient-one/cthulhu/mystery/watching-the-stars.jpg",
-          "back": "cards/eh01/ancient-one/cthulhu/mystery-back.jpg"
+          "front": "cards/eh01/ancient-one/cthulhu/mystery/watching-the-stars.webp",
+          "back": "cards/eh01/ancient-one/cthulhu/mystery-back.webp"
         }
       }
     ],
@@ -189,64 +189,64 @@
         "id": "eh01/ancient-one/cthulhu/research/01",
         "name": "01",
         "images": {
-          "front": "cards/eh01/ancient-one/cthulhu/research/01.jpg",
-          "back": "cards/eh01/ancient-one/cthulhu/research-back.jpg"
+          "front": "cards/eh01/ancient-one/cthulhu/research/01.webp",
+          "back": "cards/eh01/ancient-one/cthulhu/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/cthulhu/research/02",
         "name": "02",
         "images": {
-          "front": "cards/eh01/ancient-one/cthulhu/research/02.jpg",
-          "back": "cards/eh01/ancient-one/cthulhu/research-back.jpg"
+          "front": "cards/eh01/ancient-one/cthulhu/research/02.webp",
+          "back": "cards/eh01/ancient-one/cthulhu/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/cthulhu/research/03",
         "name": "03",
         "images": {
-          "front": "cards/eh01/ancient-one/cthulhu/research/03.jpg",
-          "back": "cards/eh01/ancient-one/cthulhu/research-back.jpg"
+          "front": "cards/eh01/ancient-one/cthulhu/research/03.webp",
+          "back": "cards/eh01/ancient-one/cthulhu/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/cthulhu/research/04",
         "name": "04",
         "images": {
-          "front": "cards/eh01/ancient-one/cthulhu/research/04.jpg",
-          "back": "cards/eh01/ancient-one/cthulhu/research-back.jpg"
+          "front": "cards/eh01/ancient-one/cthulhu/research/04.webp",
+          "back": "cards/eh01/ancient-one/cthulhu/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/cthulhu/research/05",
         "name": "05",
         "images": {
-          "front": "cards/eh01/ancient-one/cthulhu/research/05.jpg",
-          "back": "cards/eh01/ancient-one/cthulhu/research-back.jpg"
+          "front": "cards/eh01/ancient-one/cthulhu/research/05.webp",
+          "back": "cards/eh01/ancient-one/cthulhu/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/cthulhu/research/06",
         "name": "06",
         "images": {
-          "front": "cards/eh01/ancient-one/cthulhu/research/06.jpg",
-          "back": "cards/eh01/ancient-one/cthulhu/research-back.jpg"
+          "front": "cards/eh01/ancient-one/cthulhu/research/06.webp",
+          "back": "cards/eh01/ancient-one/cthulhu/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/cthulhu/research/07",
         "name": "07",
         "images": {
-          "front": "cards/eh01/ancient-one/cthulhu/research/07.jpg",
-          "back": "cards/eh01/ancient-one/cthulhu/research-back.jpg"
+          "front": "cards/eh01/ancient-one/cthulhu/research/07.webp",
+          "back": "cards/eh01/ancient-one/cthulhu/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/cthulhu/research/08",
         "name": "08",
         "images": {
-          "front": "cards/eh01/ancient-one/cthulhu/research/08.jpg",
-          "back": "cards/eh01/ancient-one/cthulhu/research-back.jpg"
+          "front": "cards/eh01/ancient-one/cthulhu/research/08.webp",
+          "back": "cards/eh01/ancient-one/cthulhu/research-back.webp"
         }
       }
     ],
@@ -255,48 +255,48 @@
         "id": "eh01/ancient-one/cthulhu/special/r-lyeh-risen-01",
         "name": "R'lyeh Risen 01",
         "images": {
-          "front": "cards/eh01/ancient-one/cthulhu/special/r-lyeh-risen-01.jpg",
-          "back": "cards/eh01/ancient-one/cthulhu/r-lyeh-risen-back.jpg"
+          "front": "cards/eh01/ancient-one/cthulhu/special/r-lyeh-risen-01.webp",
+          "back": "cards/eh01/ancient-one/cthulhu/r-lyeh-risen-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/cthulhu/special/r-lyeh-risen-02",
         "name": "R'lyeh Risen 02",
         "images": {
-          "front": "cards/eh01/ancient-one/cthulhu/special/r-lyeh-risen-02.jpg",
-          "back": "cards/eh01/ancient-one/cthulhu/r-lyeh-risen-back.jpg"
+          "front": "cards/eh01/ancient-one/cthulhu/special/r-lyeh-risen-02.webp",
+          "back": "cards/eh01/ancient-one/cthulhu/r-lyeh-risen-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/cthulhu/special/r-lyeh-risen-03",
         "name": "R'lyeh Risen 03",
         "images": {
-          "front": "cards/eh01/ancient-one/cthulhu/special/r-lyeh-risen-03.jpg",
-          "back": "cards/eh01/ancient-one/cthulhu/r-lyeh-risen-back.jpg"
+          "front": "cards/eh01/ancient-one/cthulhu/special/r-lyeh-risen-03.webp",
+          "back": "cards/eh01/ancient-one/cthulhu/r-lyeh-risen-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/cthulhu/special/r-lyeh-risen-04",
         "name": "R'lyeh Risen 04",
         "images": {
-          "front": "cards/eh01/ancient-one/cthulhu/special/r-lyeh-risen-04.jpg",
-          "back": "cards/eh01/ancient-one/cthulhu/r-lyeh-risen-back.jpg"
+          "front": "cards/eh01/ancient-one/cthulhu/special/r-lyeh-risen-04.webp",
+          "back": "cards/eh01/ancient-one/cthulhu/r-lyeh-risen-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/cthulhu/special/r-lyeh-risen-05",
         "name": "R'lyeh Risen 05",
         "images": {
-          "front": "cards/eh01/ancient-one/cthulhu/special/r-lyeh-risen-05.jpg",
-          "back": "cards/eh01/ancient-one/cthulhu/r-lyeh-risen-back.jpg"
+          "front": "cards/eh01/ancient-one/cthulhu/special/r-lyeh-risen-05.webp",
+          "back": "cards/eh01/ancient-one/cthulhu/r-lyeh-risen-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/cthulhu/special/r-lyeh-risen-06",
         "name": "R'lyeh Risen 06",
         "images": {
-          "front": "cards/eh01/ancient-one/cthulhu/special/r-lyeh-risen-06.jpg",
-          "back": "cards/eh01/ancient-one/cthulhu/r-lyeh-risen-back.jpg"
+          "front": "cards/eh01/ancient-one/cthulhu/special/r-lyeh-risen-06.webp",
+          "back": "cards/eh01/ancient-one/cthulhu/r-lyeh-risen-back.webp"
         }
       }
     ]
@@ -323,40 +323,40 @@
       }
     },
     "images": {
-      "front": "cards/eh01/ancient-one/shub-niggurath/sheet.jpg",
-      "back": "cards/eh01/ancient-one/shub-niggurath/sheet-back.jpg"
+      "front": "cards/eh01/ancient-one/shub-niggurath/sheet.webp",
+      "back": "cards/eh01/ancient-one/shub-niggurath/sheet-back.webp"
     },
     "mysteries": [
       {
         "id": "eh01/ancient-one/shub-niggurath/mystery/hunting-the-thousand",
         "name": "Hunting the Thousand",
         "images": {
-          "front": "cards/eh01/ancient-one/shub-niggurath/mystery/hunting-the-thousand.jpg",
-          "back": "cards/eh01/ancient-one/shub-niggurath/mystery-back.jpg"
+          "front": "cards/eh01/ancient-one/shub-niggurath/mystery/hunting-the-thousand.webp",
+          "back": "cards/eh01/ancient-one/shub-niggurath/mystery-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/shub-niggurath/mystery/nature-of-the-all-mother",
         "name": "Nature of the All-Mother",
         "images": {
-          "front": "cards/eh01/ancient-one/shub-niggurath/mystery/nature-of-the-all-mother.jpg",
-          "back": "cards/eh01/ancient-one/shub-niggurath/mystery-back.jpg"
+          "front": "cards/eh01/ancient-one/shub-niggurath/mystery/nature-of-the-all-mother.webp",
+          "back": "cards/eh01/ancient-one/shub-niggurath/mystery-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/shub-niggurath/mystery/rituals-in-the-wild",
         "name": "Rituals in the Wild",
         "images": {
-          "front": "cards/eh01/ancient-one/shub-niggurath/mystery/rituals-in-the-wild.jpg",
-          "back": "cards/eh01/ancient-one/shub-niggurath/mystery-back.jpg"
+          "front": "cards/eh01/ancient-one/shub-niggurath/mystery/rituals-in-the-wild.webp",
+          "back": "cards/eh01/ancient-one/shub-niggurath/mystery-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/shub-niggurath/mystery/spawn-of-the-black-goat",
         "name": "Spawn of the Black Goat",
         "images": {
-          "front": "cards/eh01/ancient-one/shub-niggurath/mystery/spawn-of-the-black-goat.jpg",
-          "back": "cards/eh01/ancient-one/shub-niggurath/mystery-back.jpg"
+          "front": "cards/eh01/ancient-one/shub-niggurath/mystery/spawn-of-the-black-goat.webp",
+          "back": "cards/eh01/ancient-one/shub-niggurath/mystery-back.webp"
         }
       }
     ],
@@ -365,64 +365,64 @@
         "id": "eh01/ancient-one/shub-niggurath/research/01",
         "name": "01",
         "images": {
-          "front": "cards/eh01/ancient-one/shub-niggurath/research/01.jpg",
-          "back": "cards/eh01/ancient-one/shub-niggurath/research-back.jpg"
+          "front": "cards/eh01/ancient-one/shub-niggurath/research/01.webp",
+          "back": "cards/eh01/ancient-one/shub-niggurath/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/shub-niggurath/research/02",
         "name": "02",
         "images": {
-          "front": "cards/eh01/ancient-one/shub-niggurath/research/02.jpg",
-          "back": "cards/eh01/ancient-one/shub-niggurath/research-back.jpg"
+          "front": "cards/eh01/ancient-one/shub-niggurath/research/02.webp",
+          "back": "cards/eh01/ancient-one/shub-niggurath/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/shub-niggurath/research/03",
         "name": "03",
         "images": {
-          "front": "cards/eh01/ancient-one/shub-niggurath/research/03.jpg",
-          "back": "cards/eh01/ancient-one/shub-niggurath/research-back.jpg"
+          "front": "cards/eh01/ancient-one/shub-niggurath/research/03.webp",
+          "back": "cards/eh01/ancient-one/shub-niggurath/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/shub-niggurath/research/04",
         "name": "04",
         "images": {
-          "front": "cards/eh01/ancient-one/shub-niggurath/research/04.jpg",
-          "back": "cards/eh01/ancient-one/shub-niggurath/research-back.jpg"
+          "front": "cards/eh01/ancient-one/shub-niggurath/research/04.webp",
+          "back": "cards/eh01/ancient-one/shub-niggurath/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/shub-niggurath/research/05",
         "name": "05",
         "images": {
-          "front": "cards/eh01/ancient-one/shub-niggurath/research/05.jpg",
-          "back": "cards/eh01/ancient-one/shub-niggurath/research-back.jpg"
+          "front": "cards/eh01/ancient-one/shub-niggurath/research/05.webp",
+          "back": "cards/eh01/ancient-one/shub-niggurath/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/shub-niggurath/research/06",
         "name": "06",
         "images": {
-          "front": "cards/eh01/ancient-one/shub-niggurath/research/06.jpg",
-          "back": "cards/eh01/ancient-one/shub-niggurath/research-back.jpg"
+          "front": "cards/eh01/ancient-one/shub-niggurath/research/06.webp",
+          "back": "cards/eh01/ancient-one/shub-niggurath/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/shub-niggurath/research/07",
         "name": "07",
         "images": {
-          "front": "cards/eh01/ancient-one/shub-niggurath/research/07.jpg",
-          "back": "cards/eh01/ancient-one/shub-niggurath/research-back.jpg"
+          "front": "cards/eh01/ancient-one/shub-niggurath/research/07.webp",
+          "back": "cards/eh01/ancient-one/shub-niggurath/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/shub-niggurath/research/08",
         "name": "08",
         "images": {
-          "front": "cards/eh01/ancient-one/shub-niggurath/research/08.jpg",
-          "back": "cards/eh01/ancient-one/shub-niggurath/research-back.jpg"
+          "front": "cards/eh01/ancient-one/shub-niggurath/research/08.webp",
+          "back": "cards/eh01/ancient-one/shub-niggurath/research-back.webp"
         }
       }
     ]
@@ -449,40 +449,40 @@
       }
     },
     "images": {
-      "front": "cards/eh01/ancient-one/yog-sothoth/sheet.jpg",
-      "back": "cards/eh01/ancient-one/yog-sothoth/sheet-back.jpg"
+      "front": "cards/eh01/ancient-one/yog-sothoth/sheet.webp",
+      "back": "cards/eh01/ancient-one/yog-sothoth/sheet-back.webp"
     },
     "mysteries": [
       {
         "id": "eh01/ancient-one/yog-sothoth/mystery/arcane-understanding",
         "name": "Arcane Understanding",
         "images": {
-          "front": "cards/eh01/ancient-one/yog-sothoth/mystery/arcane-understanding.jpg",
-          "back": "cards/eh01/ancient-one/yog-sothoth/mystery-back.jpg"
+          "front": "cards/eh01/ancient-one/yog-sothoth/mystery/arcane-understanding.webp",
+          "back": "cards/eh01/ancient-one/yog-sothoth/mystery-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/yog-sothoth/mystery/spawn-of-yog-sothoth",
         "name": "Spawn of Yog-Sothoth",
         "images": {
-          "front": "cards/eh01/ancient-one/yog-sothoth/mystery/spawn-of-yog-sothoth.jpg",
-          "back": "cards/eh01/ancient-one/yog-sothoth/mystery-back.jpg"
+          "front": "cards/eh01/ancient-one/yog-sothoth/mystery/spawn-of-yog-sothoth.webp",
+          "back": "cards/eh01/ancient-one/yog-sothoth/mystery-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/yog-sothoth/mystery/the-beyond-one",
         "name": "The Beyond One",
         "images": {
-          "front": "cards/eh01/ancient-one/yog-sothoth/mystery/the-beyond-one.jpg",
-          "back": "cards/eh01/ancient-one/yog-sothoth/mystery-back.jpg"
+          "front": "cards/eh01/ancient-one/yog-sothoth/mystery/the-beyond-one.webp",
+          "back": "cards/eh01/ancient-one/yog-sothoth/mystery-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/yog-sothoth/mystery/where-the-old-ones-broke-through",
         "name": "Where the Old Ones Broke Through",
         "images": {
-          "front": "cards/eh01/ancient-one/yog-sothoth/mystery/where-the-old-ones-broke-through.jpg",
-          "back": "cards/eh01/ancient-one/yog-sothoth/mystery-back.jpg"
+          "front": "cards/eh01/ancient-one/yog-sothoth/mystery/where-the-old-ones-broke-through.webp",
+          "back": "cards/eh01/ancient-one/yog-sothoth/mystery-back.webp"
         }
       }
     ],
@@ -491,64 +491,64 @@
         "id": "eh01/ancient-one/yog-sothoth/research/01",
         "name": "01",
         "images": {
-          "front": "cards/eh01/ancient-one/yog-sothoth/research/01.jpg",
-          "back": "cards/eh01/ancient-one/yog-sothoth/research-back.jpg"
+          "front": "cards/eh01/ancient-one/yog-sothoth/research/01.webp",
+          "back": "cards/eh01/ancient-one/yog-sothoth/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/yog-sothoth/research/02",
         "name": "02",
         "images": {
-          "front": "cards/eh01/ancient-one/yog-sothoth/research/02.jpg",
-          "back": "cards/eh01/ancient-one/yog-sothoth/research-back.jpg"
+          "front": "cards/eh01/ancient-one/yog-sothoth/research/02.webp",
+          "back": "cards/eh01/ancient-one/yog-sothoth/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/yog-sothoth/research/03",
         "name": "03",
         "images": {
-          "front": "cards/eh01/ancient-one/yog-sothoth/research/03.jpg",
-          "back": "cards/eh01/ancient-one/yog-sothoth/research-back.jpg"
+          "front": "cards/eh01/ancient-one/yog-sothoth/research/03.webp",
+          "back": "cards/eh01/ancient-one/yog-sothoth/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/yog-sothoth/research/04",
         "name": "04",
         "images": {
-          "front": "cards/eh01/ancient-one/yog-sothoth/research/04.jpg",
-          "back": "cards/eh01/ancient-one/yog-sothoth/research-back.jpg"
+          "front": "cards/eh01/ancient-one/yog-sothoth/research/04.webp",
+          "back": "cards/eh01/ancient-one/yog-sothoth/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/yog-sothoth/research/05",
         "name": "05",
         "images": {
-          "front": "cards/eh01/ancient-one/yog-sothoth/research/05.jpg",
-          "back": "cards/eh01/ancient-one/yog-sothoth/research-back.jpg"
+          "front": "cards/eh01/ancient-one/yog-sothoth/research/05.webp",
+          "back": "cards/eh01/ancient-one/yog-sothoth/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/yog-sothoth/research/06",
         "name": "06",
         "images": {
-          "front": "cards/eh01/ancient-one/yog-sothoth/research/06.jpg",
-          "back": "cards/eh01/ancient-one/yog-sothoth/research-back.jpg"
+          "front": "cards/eh01/ancient-one/yog-sothoth/research/06.webp",
+          "back": "cards/eh01/ancient-one/yog-sothoth/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/yog-sothoth/research/07",
         "name": "07",
         "images": {
-          "front": "cards/eh01/ancient-one/yog-sothoth/research/07.jpg",
-          "back": "cards/eh01/ancient-one/yog-sothoth/research-back.jpg"
+          "front": "cards/eh01/ancient-one/yog-sothoth/research/07.webp",
+          "back": "cards/eh01/ancient-one/yog-sothoth/research-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/yog-sothoth/research/08",
         "name": "08",
         "images": {
-          "front": "cards/eh01/ancient-one/yog-sothoth/research/08.jpg",
-          "back": "cards/eh01/ancient-one/yog-sothoth/research-back.jpg"
+          "front": "cards/eh01/ancient-one/yog-sothoth/research/08.webp",
+          "back": "cards/eh01/ancient-one/yog-sothoth/research-back.webp"
         }
       }
     ],
@@ -557,48 +557,48 @@
         "id": "eh01/ancient-one/yog-sothoth/special/the-key-and-the-gate-01",
         "name": "The Key and the Gate 01",
         "images": {
-          "front": "cards/eh01/ancient-one/yog-sothoth/special/the-key-and-the-gate-01.jpg",
-          "back": "cards/eh01/ancient-one/yog-sothoth/the-key-and-the-gate-back.jpg"
+          "front": "cards/eh01/ancient-one/yog-sothoth/special/the-key-and-the-gate-01.webp",
+          "back": "cards/eh01/ancient-one/yog-sothoth/the-key-and-the-gate-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/yog-sothoth/special/the-key-and-the-gate-02",
         "name": "The Key and the Gate 02",
         "images": {
-          "front": "cards/eh01/ancient-one/yog-sothoth/special/the-key-and-the-gate-02.jpg",
-          "back": "cards/eh01/ancient-one/yog-sothoth/the-key-and-the-gate-back.jpg"
+          "front": "cards/eh01/ancient-one/yog-sothoth/special/the-key-and-the-gate-02.webp",
+          "back": "cards/eh01/ancient-one/yog-sothoth/the-key-and-the-gate-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/yog-sothoth/special/the-key-and-the-gate-03",
         "name": "The Key and the Gate 03",
         "images": {
-          "front": "cards/eh01/ancient-one/yog-sothoth/special/the-key-and-the-gate-03.jpg",
-          "back": "cards/eh01/ancient-one/yog-sothoth/the-key-and-the-gate-back.jpg"
+          "front": "cards/eh01/ancient-one/yog-sothoth/special/the-key-and-the-gate-03.webp",
+          "back": "cards/eh01/ancient-one/yog-sothoth/the-key-and-the-gate-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/yog-sothoth/special/the-key-and-the-gate-04",
         "name": "The Key and the Gate 04",
         "images": {
-          "front": "cards/eh01/ancient-one/yog-sothoth/special/the-key-and-the-gate-04.jpg",
-          "back": "cards/eh01/ancient-one/yog-sothoth/the-key-and-the-gate-back.jpg"
+          "front": "cards/eh01/ancient-one/yog-sothoth/special/the-key-and-the-gate-04.webp",
+          "back": "cards/eh01/ancient-one/yog-sothoth/the-key-and-the-gate-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/yog-sothoth/special/the-key-and-the-gate-05",
         "name": "The Key and the Gate 05",
         "images": {
-          "front": "cards/eh01/ancient-one/yog-sothoth/special/the-key-and-the-gate-05.jpg",
-          "back": "cards/eh01/ancient-one/yog-sothoth/the-key-and-the-gate-back.jpg"
+          "front": "cards/eh01/ancient-one/yog-sothoth/special/the-key-and-the-gate-05.webp",
+          "back": "cards/eh01/ancient-one/yog-sothoth/the-key-and-the-gate-back.webp"
         }
       },
       {
         "id": "eh01/ancient-one/yog-sothoth/special/the-key-and-the-gate-06",
         "name": "The Key and the Gate 06",
         "images": {
-          "front": "cards/eh01/ancient-one/yog-sothoth/special/the-key-and-the-gate-06.jpg",
-          "back": "cards/eh01/ancient-one/yog-sothoth/the-key-and-the-gate-back.jpg"
+          "front": "cards/eh01/ancient-one/yog-sothoth/special/the-key-and-the-gate-06.webp",
+          "back": "cards/eh01/ancient-one/yog-sothoth/the-key-and-the-gate-back.webp"
         }
       }
     ]

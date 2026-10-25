@@ -20,10 +20,10 @@
     },
     "personalStory": "Guardian of the Veil",
     "images": {
-      "front": "cards/eh01/investigator/akachi-onyele.jpg",
-      "back": "cards/eh01/investigator/akachi-onyele-back.jpg"
+      "front": "cards/eh01/investigator/akachi-onyele.webp",
+      "back": "cards/eh01/investigator/akachi-onyele-back.webp"
     },
-    "pawn": "cards/eh01/investigator/pawn/akachi-onyele.png"
+    "pawn": "cards/eh01/investigator/pawn/akachi-onyele.webp"
   },
   {
     "id": "eh01/investigator/charlie-kane",
@@ -45,10 +45,10 @@
     },
     "personalStory": "Citizen Kane",
     "images": {
-      "front": "cards/eh01/investigator/charlie-kane.jpg",
-      "back": "cards/eh01/investigator/charlie-kane-back.jpg"
+      "front": "cards/eh01/investigator/charlie-kane.webp",
+      "back": "cards/eh01/investigator/charlie-kane-back.webp"
     },
-    "pawn": "cards/eh01/investigator/pawn/charlie-kane.png"
+    "pawn": "cards/eh01/investigator/pawn/charlie-kane.webp"
   },
   {
     "id": "eh01/investigator/diana-stanley",
@@ -73,10 +73,10 @@
     },
     "personalStory": "Bound by the Past",
     "images": {
-      "front": "cards/eh01/investigator/diana-stanley.jpg",
-      "back": "cards/eh01/investigator/diana-stanley-back.jpg"
+      "front": "cards/eh01/investigator/diana-stanley.webp",
+      "back": "cards/eh01/investigator/diana-stanley-back.webp"
     },
-    "pawn": "cards/eh01/investigator/pawn/diana-stanley.png"
+    "pawn": "cards/eh01/investigator/pawn/diana-stanley.webp"
   },
   {
     "id": "eh01/investigator/jacqueline-fine",
@@ -99,10 +99,10 @@
     },
     "personalStory": "Arbiter of Fate",
     "images": {
-      "front": "cards/eh01/investigator/jacqueline-fine.jpg",
-      "back": "cards/eh01/investigator/jacqueline-fine-back.jpg"
+      "front": "cards/eh01/investigator/jacqueline-fine.webp",
+      "back": "cards/eh01/investigator/jacqueline-fine-back.webp"
     },
-    "pawn": "cards/eh01/investigator/pawn/jacqueline-fine.png"
+    "pawn": "cards/eh01/investigator/pawn/jacqueline-fine.webp"
   },
   {
     "id": "eh01/investigator/jim-culver",
@@ -125,10 +125,10 @@
     },
     "personalStory": "Dead Rising",
     "images": {
-      "front": "cards/eh01/investigator/jim-culver.jpg",
-      "back": "cards/eh01/investigator/jim-culver-back.jpg"
+      "front": "cards/eh01/investigator/jim-culver.webp",
+      "back": "cards/eh01/investigator/jim-culver-back.webp"
     },
-    "pawn": "cards/eh01/investigator/pawn/jim-culver.png"
+    "pawn": "cards/eh01/investigator/pawn/jim-culver.webp"
   },
   {
     "id": "eh01/investigator/leo-anderson",
@@ -150,10 +150,10 @@
     },
     "personalStory": "The Expedition",
     "images": {
-      "front": "cards/eh01/investigator/leo-anderson.jpg",
-      "back": "cards/eh01/investigator/leo-anderson-back.jpg"
+      "front": "cards/eh01/investigator/leo-anderson.webp",
+      "back": "cards/eh01/investigator/leo-anderson-back.webp"
     },
-    "pawn": "cards/eh01/investigator/pawn/leo-anderson.png"
+    "pawn": "cards/eh01/investigator/pawn/leo-anderson.webp"
   },
   {
     "id": "eh01/investigator/lily-chen",
@@ -176,10 +176,10 @@
     },
     "personalStory": "All That Stands",
     "images": {
-      "front": "cards/eh01/investigator/lily-chen.jpg",
-      "back": "cards/eh01/investigator/lily-chen-back.jpg"
+      "front": "cards/eh01/investigator/lily-chen.webp",
+      "back": "cards/eh01/investigator/lily-chen-back.webp"
     },
-    "pawn": "cards/eh01/investigator/pawn/lily-chen.png"
+    "pawn": "cards/eh01/investigator/pawn/lily-chen.webp"
   },
   {
     "id": "eh01/investigator/lola-hayes",
@@ -201,10 +201,10 @@
     },
     "personalStory": "In the Limelight",
     "images": {
-      "front": "cards/eh01/investigator/lola-hayes.jpg",
-      "back": "cards/eh01/investigator/lola-hayes-back.jpg"
+      "front": "cards/eh01/investigator/lola-hayes.webp",
+      "back": "cards/eh01/investigator/lola-hayes-back.webp"
     },
-    "pawn": "cards/eh01/investigator/pawn/lola-hayes.png"
+    "pawn": "cards/eh01/investigator/pawn/lola-hayes.webp"
   },
   {
     "id": "eh01/investigator/mark-harrigan",
@@ -227,10 +227,10 @@
     },
     "personalStory": "Shadowed Heart",
     "images": {
-      "front": "cards/eh01/investigator/mark-harrigan.jpg",
-      "back": "cards/eh01/investigator/mark-harrigan-back.jpg"
+      "front": "cards/eh01/investigator/mark-harrigan.webp",
+      "back": "cards/eh01/investigator/mark-harrigan-back.webp"
     },
-    "pawn": "cards/eh01/investigator/pawn/mark-harrigan.png"
+    "pawn": "cards/eh01/investigator/pawn/mark-harrigan.webp"
   },
   {
     "id": "eh01/investigator/norman-withers",
@@ -252,10 +252,10 @@
     },
     "personalStory": "Written in the Stars",
     "images": {
-      "front": "cards/eh01/investigator/norman-withers.jpg",
-      "back": "cards/eh01/investigator/norman-withers-back.jpg"
+      "front": "cards/eh01/investigator/norman-withers.webp",
+      "back": "cards/eh01/investigator/norman-withers-back.webp"
     },
-    "pawn": "cards/eh01/investigator/pawn/norman-withers.png"
+    "pawn": "cards/eh01/investigator/pawn/norman-withers.webp"
   },
   {
     "id": "eh01/investigator/silas-marsh",
@@ -277,10 +277,10 @@
     },
     "personalStory": "The Call",
     "images": {
-      "front": "cards/eh01/investigator/silas-marsh.jpg",
-      "back": "cards/eh01/investigator/silas-marsh-back.jpg"
+      "front": "cards/eh01/investigator/silas-marsh.webp",
+      "back": "cards/eh01/investigator/silas-marsh-back.webp"
     },
-    "pawn": "cards/eh01/investigator/pawn/silas-marsh.png"
+    "pawn": "cards/eh01/investigator/pawn/silas-marsh.webp"
   },
   {
     "id": "eh01/investigator/trish-scarborough",
@@ -302,9 +302,9 @@
     },
     "personalStory": "Cracking the Code",
     "images": {
-      "front": "cards/eh01/investigator/trish-scarborough.jpg",
-      "back": "cards/eh01/investigator/trish-scarborough-back.jpg"
+      "front": "cards/eh01/investigator/trish-scarborough.webp",
+      "back": "cards/eh01/investigator/trish-scarborough-back.webp"
     },
-    "pawn": "cards/eh01/investigator/pawn/trish-scarborough.png"
+    "pawn": "cards/eh01/investigator/pawn/trish-scarborough.webp"
   }
 ]

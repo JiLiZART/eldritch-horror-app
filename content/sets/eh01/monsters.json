@@ -3,224 +3,224 @@
     "id": "eh01/monster/byakhee",
     "name": "Byakhee",
     "images": {
-      "front": "cards/eh01/monster/byakhee.jpg",
-      "back": "cards/eh01/monster/byakhee-back.jpg"
+      "front": "cards/eh01/monster/byakhee.webp",
+      "back": "cards/eh01/monster/byakhee-back.webp"
     }
   },
   {
     "id": "eh01/monster/color-out-of-space",
     "name": "Color Out of Space",
     "images": {
-      "front": "cards/eh01/monster/color-out-of-space.jpg",
-      "back": "cards/eh01/monster/color-out-of-space-back.jpg"
+      "front": "cards/eh01/monster/color-out-of-space.webp",
+      "back": "cards/eh01/monster/color-out-of-space-back.webp"
     }
   },
   {
     "id": "eh01/monster/cthonian",
     "name": "Cthonian",
     "images": {
-      "front": "cards/eh01/monster/cthonian.jpg",
-      "back": "cards/eh01/monster/cthonian-back.jpg"
+      "front": "cards/eh01/monster/cthonian.webp",
+      "back": "cards/eh01/monster/cthonian-back.webp"
     }
   },
   {
     "id": "eh01/monster/cultist",
     "name": "Cultist",
     "images": {
-      "front": "cards/eh01/monster/cultist.jpg",
-      "back": "cards/eh01/monster/cultist-back.jpg"
+      "front": "cards/eh01/monster/cultist.webp",
+      "back": "cards/eh01/monster/cultist-back.webp"
     }
   },
   {
     "id": "eh01/monster/dark-young",
     "name": "Dark Young",
     "images": {
-      "front": "cards/eh01/monster/dark-young.jpg",
-      "back": "cards/eh01/monster/dark-young-back.jpg"
+      "front": "cards/eh01/monster/dark-young.webp",
+      "back": "cards/eh01/monster/dark-young-back.webp"
     }
   },
   {
     "id": "eh01/monster/deep-one",
     "name": "Deep One",
     "images": {
-      "front": "cards/eh01/monster/deep-one.jpg",
-      "back": "cards/eh01/monster/deep-one-back.jpg"
+      "front": "cards/eh01/monster/deep-one.webp",
+      "back": "cards/eh01/monster/deep-one-back.webp"
     }
   },
   {
     "id": "eh01/monster/elder-thing",
     "name": "Elder Thing",
     "images": {
-      "front": "cards/eh01/monster/elder-thing.jpg",
-      "back": "cards/eh01/monster/elder-thing-back.jpg"
+      "front": "cards/eh01/monster/elder-thing.webp",
+      "back": "cards/eh01/monster/elder-thing-back.webp"
     }
   },
   {
     "id": "eh01/monster/ghost",
     "name": "Ghost",
     "images": {
-      "front": "cards/eh01/monster/ghost.jpg",
-      "back": "cards/eh01/monster/ghost-back.jpg"
+      "front": "cards/eh01/monster/ghost.webp",
+      "back": "cards/eh01/monster/ghost-back.webp"
     }
   },
   {
     "id": "eh01/monster/ghoul",
     "name": "Ghoul",
     "images": {
-      "front": "cards/eh01/monster/ghoul.jpg",
-      "back": "cards/eh01/monster/ghoul-back.jpg"
+      "front": "cards/eh01/monster/ghoul.webp",
+      "back": "cards/eh01/monster/ghoul-back.webp"
     }
   },
   {
     "id": "eh01/monster/gnoph-keh",
     "name": "Gnoph-Keh",
     "images": {
-      "front": "cards/eh01/monster/gnoph-keh.jpg",
-      "back": "cards/eh01/monster/gnoph-keh-back.jpg"
+      "front": "cards/eh01/monster/gnoph-keh.webp",
+      "back": "cards/eh01/monster/gnoph-keh-back.webp"
     }
   },
   {
     "id": "eh01/monster/goat-spawn",
     "name": "Goat Spawn",
     "images": {
-      "front": "cards/eh01/monster/goat-spawn.jpg",
-      "back": "cards/eh01/monster/goat-spawn-back.jpg"
+      "front": "cards/eh01/monster/goat-spawn.webp",
+      "back": "cards/eh01/monster/goat-spawn-back.webp"
     }
   },
   {
     "id": "eh01/monster/gug",
     "name": "Gug",
     "images": {
-      "front": "cards/eh01/monster/gug.jpg",
-      "back": "cards/eh01/monster/gug-back.jpg"
+      "front": "cards/eh01/monster/gug.webp",
+      "back": "cards/eh01/monster/gug-back.webp"
     }
   },
   {
     "id": "eh01/monster/hound-of-tindalos",
     "name": "Hound of Tindalos",
     "images": {
-      "front": "cards/eh01/monster/hound-of-tindalos.jpg",
-      "back": "cards/eh01/monster/hound-of-tindalos-back.jpg"
+      "front": "cards/eh01/monster/hound-of-tindalos.webp",
+      "back": "cards/eh01/monster/hound-of-tindalos-back.webp"
     }
   },
   {
     "id": "eh01/monster/lloigor",
     "name": "Lloigor",
     "images": {
-      "front": "cards/eh01/monster/lloigor.jpg",
-      "back": "cards/eh01/monster/lloigor-back.jpg"
+      "front": "cards/eh01/monster/lloigor.webp",
+      "back": "cards/eh01/monster/lloigor-back.webp"
     }
   },
   {
     "id": "eh01/monster/maniac",
     "name": "Maniac",
     "images": {
-      "front": "cards/eh01/monster/maniac.jpg",
-      "back": "cards/eh01/monster/maniac-back.jpg"
+      "front": "cards/eh01/monster/maniac.webp",
+      "back": "cards/eh01/monster/maniac-back.webp"
     }
   },
   {
     "id": "eh01/monster/mi-go",
     "name": "Mi-go",
     "images": {
-      "front": "cards/eh01/monster/mi-go.jpg",
-      "back": "cards/eh01/monster/mi-go-back.jpg"
+      "front": "cards/eh01/monster/mi-go.webp",
+      "back": "cards/eh01/monster/mi-go-back.webp"
     }
   },
   {
     "id": "eh01/monster/mummy",
     "name": "Mummy",
     "images": {
-      "front": "cards/eh01/monster/mummy.jpg",
-      "back": "cards/eh01/monster/mummy-back.jpg"
+      "front": "cards/eh01/monster/mummy.webp",
+      "back": "cards/eh01/monster/mummy-back.webp"
     }
   },
   {
     "id": "eh01/monster/nightgaunt",
     "name": "Nightgaunt",
     "images": {
-      "front": "cards/eh01/monster/nightgaunt.jpg",
-      "back": "cards/eh01/monster/nightgaunt-back.jpg"
+      "front": "cards/eh01/monster/nightgaunt.webp",
+      "back": "cards/eh01/monster/nightgaunt-back.webp"
     }
   },
   {
     "id": "eh01/monster/riot",
     "name": "Riot",
     "images": {
-      "front": "cards/eh01/monster/riot.jpg",
-      "back": "cards/eh01/monster/riot-back.jpg"
+      "front": "cards/eh01/monster/riot.webp",
+      "back": "cards/eh01/monster/riot-back.webp"
     }
   },
   {
     "id": "eh01/monster/serpent-people",
     "name": "Serpent People",
     "images": {
-      "front": "cards/eh01/monster/serpent-people.jpg",
-      "back": "cards/eh01/monster/serpent-people-back.jpg"
+      "front": "cards/eh01/monster/serpent-people.webp",
+      "back": "cards/eh01/monster/serpent-people-back.webp"
     }
   },
   {
     "id": "eh01/monster/shoggoth",
     "name": "Shoggoth",
     "images": {
-      "front": "cards/eh01/monster/shoggoth.jpg",
-      "back": "cards/eh01/monster/shoggoth-back.jpg"
+      "front": "cards/eh01/monster/shoggoth.webp",
+      "back": "cards/eh01/monster/shoggoth-back.webp"
     }
   },
   {
     "id": "eh01/monster/skeleton",
     "name": "Skeleton",
     "images": {
-      "front": "cards/eh01/monster/skeleton.jpg",
-      "back": "cards/eh01/monster/skeleton-back.jpg"
+      "front": "cards/eh01/monster/skeleton.webp",
+      "back": "cards/eh01/monster/skeleton-back.webp"
     }
   },
   {
     "id": "eh01/monster/star-spawn",
     "name": "Star Spawn",
     "images": {
-      "front": "cards/eh01/monster/star-spawn.jpg",
-      "back": "cards/eh01/monster/star-spawn-back.jpg"
+      "front": "cards/eh01/monster/star-spawn.webp",
+      "back": "cards/eh01/monster/star-spawn-back.webp"
     }
   },
   {
     "id": "eh01/monster/vampire",
     "name": "Vampire",
     "images": {
-      "front": "cards/eh01/monster/vampire.jpg",
-      "back": "cards/eh01/monster/vampire-back.jpg"
+      "front": "cards/eh01/monster/vampire.webp",
+      "back": "cards/eh01/monster/vampire-back.webp"
     }
   },
   {
     "id": "eh01/monster/warlock",
     "name": "Warlock",
     "images": {
-      "front": "cards/eh01/monster/warlock.jpg",
-      "back": "cards/eh01/monster/warlock-back.jpg"
+      "front": "cards/eh01/monster/warlock.webp",
+      "back": "cards/eh01/monster/warlock-back.webp"
     }
   },
   {
     "id": "eh01/monster/witch",
     "name": "Witch",
     "images": {
-      "front": "cards/eh01/monster/witch.jpg",
-      "back": "cards/eh01/monster/witch-back.jpg"
+      "front": "cards/eh01/monster/witch.webp",
+      "back": "cards/eh01/monster/witch-back.webp"
     }
   },
   {
     "id": "eh01/monster/wraith",
     "name": "Wraith",
     "images": {
-      "front": "cards/eh01/monster/wraith.jpg",
-      "back": "cards/eh01/monster/wraith-back.jpg"
+      "front": "cards/eh01/monster/wraith.webp",
+      "back": "cards/eh01/monster/wraith-back.webp"
     }
   },
   {
     "id": "eh01/monster/zombie",
     "name": "Zombie",
     "images": {
-      "front": "cards/eh01/monster/zombie.jpg",
-      "back": "cards/eh01/monster/zombie-back.jpg"
+      "front": "cards/eh01/monster/zombie.webp",
+      "back": "cards/eh01/monster/zombie-back.webp"
     }
   },
   {
@@ -228,8 +228,8 @@
     "name": "Cthulhu",
     "epic": true,
     "images": {
-      "front": "cards/eh01/monster/cthulhu.jpg",
-      "back": "cards/eh01/monster/cthulhu-back.jpg"
+      "front": "cards/eh01/monster/cthulhu.webp",
+      "back": "cards/eh01/monster/cthulhu-back.webp"
     }
   },
   {
@@ -237,8 +237,8 @@
     "name": "Cthylla",
     "epic": true,
     "images": {
-      "front": "cards/eh01/monster/cthylla.jpg",
-      "back": "cards/eh01/monster/cthylla-back.jpg"
+      "front": "cards/eh01/monster/cthylla.webp",
+      "back": "cards/eh01/monster/cthylla-back.webp"
     }
   },
   {
@@ -246,8 +246,8 @@
     "name": "Dunwich Horror",
     "epic": true,
     "images": {
-      "front": "cards/eh01/monster/dunwich-horror.jpg",
-      "back": "cards/eh01/monster/dunwich-horror-back.jpg"
+      "front": "cards/eh01/monster/dunwich-horror.webp",
+      "back": "cards/eh01/monster/dunwich-horror-back.webp"
     }
   },
   {
@@ -255,8 +255,8 @@
     "name": "Nug",
     "epic": true,
     "images": {
-      "front": "cards/eh01/monster/nug.jpg",
-      "back": "cards/eh01/monster/nug-back.jpg"
+      "front": "cards/eh01/monster/nug.webp",
+      "back": "cards/eh01/monster/nug-back.webp"
     }
   },
   {
@@ -264,8 +264,8 @@
     "name": "Shub-Niggurath",
     "epic": true,
     "images": {
-      "front": "cards/eh01/monster/shub-niggurath.jpg",
-      "back": "cards/eh01/monster/shub-niggurath-back.jpg"
+      "front": "cards/eh01/monster/shub-niggurath.webp",
+      "back": "cards/eh01/monster/shub-niggurath-back.webp"
     }
   },
   {
@@ -273,8 +273,8 @@
     "name": "Spinner of Webs",
     "epic": true,
     "images": {
-      "front": "cards/eh01/monster/spinner-of-webs.jpg",
-      "back": "cards/eh01/monster/spinner-of-webs-back.jpg"
+      "front": "cards/eh01/monster/spinner-of-webs.webp",
+      "back": "cards/eh01/monster/spinner-of-webs-back.webp"
     }
   },
   {
@@ -282,8 +282,8 @@
     "name": "Tick Tock Men",
     "epic": true,
     "images": {
-      "front": "cards/eh01/monster/tick-tock-men.jpg",
-      "back": "cards/eh01/monster/tick-tock-men-back.jpg"
+      "front": "cards/eh01/monster/tick-tock-men.webp",
+      "back": "cards/eh01/monster/tick-tock-men-back.webp"
     }
   },
   {
@@ -291,8 +291,8 @@
     "name": "Wind-Walker",
     "epic": true,
     "images": {
-      "front": "cards/eh01/monster/wind-walker.jpg",
-      "back": "cards/eh01/monster/wind-walker-back.jpg"
+      "front": "cards/eh01/monster/wind-walker.webp",
+      "back": "cards/eh01/monster/wind-walker-back.webp"
     }
   },
   {
@@ -300,8 +300,8 @@
     "name": "Zombie Horde",
     "epic": true,
     "images": {
-      "front": "cards/eh01/monster/zombie-horde.jpg",
-      "back": "cards/eh01/monster/zombie-horde-back.jpg"
+      "front": "cards/eh01/monster/zombie-horde.webp",
+      "back": "cards/eh01/monster/zombie-horde-back.webp"
     }
   }
 ]
