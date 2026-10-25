@@ -17,8 +17,11 @@ function contentDir(): Plugin {
         const url = decodeURIComponent(req.url?.split("?")[0] ?? "");
         if (!url.startsWith("/content/") || !url.endsWith(".json")) return next();
         const file = resolve(dir, url.slice("/content/".length));
-        // Keep requests inside content/ (no "..", no symlink escapes).
-        if (!file.startsWith(dir + sep) || !existsSync(file) || !realpathSync(file).startsWith(dir + sep)) return next();
+        // Keep requests inside content/ (no "..", no symlink escapes). A missing list must 404, not fall back to index.html.
+        if (!file.startsWith(dir + sep) || !existsSync(file) || !realpathSync(file).startsWith(dir + sep)) {
+          res.statusCode = 404;
+          return res.end();
+        }
         res.setHeader("Content-Type", "application/json");
         res.end(readFileSync(file));
       });

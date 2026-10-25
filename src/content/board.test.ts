@@ -15,8 +15,10 @@ describe("board graph", () => {
     expect(byId("eh03-lake-camp")).toMatchObject({ kind: "wilderness", set: "eh03" });
     expect(byId("eh03-lake-camp")?.region).toBeUndefined();
   });
-  it("has numbered spaces 1 to 21", () => {
+  it("has numbered spaces 1 to 21 with their printed kind", () => {
     for (let n = 1; n <= 21; n++) expect(byId(`space-${n}`)?.number).toBe(n);
+    expect(byId("space-15")?.kind).toBe("city");
+    expect(byId("space-2")?.kind).toBe("sea");
   });
   it("joins San Francisco and space 5 by train", () => {
     // The printed board has no direct SF-Arkham path: it runs SF-5-Arkham.

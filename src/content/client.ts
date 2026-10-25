@@ -1,18 +1,29 @@
-import type { Board, Investigator } from "./types";
+import { assembleSet, SET_FILES } from "./set-files";
+import type { Board, GameSet } from "./types";
 
-export interface Content {
-  board: Board;
-  investigators: Investigator[];
-}
-
-const json = async <T>(path: string): Promise<T> => {
+/** Fetches JSON; a 404 is `undefined` (optional set lists), any other failure throws. */
+const json = async <T>(path: string): Promise<T | undefined> => {
   const res = await fetch(path);
+  if (res.status === 404) return undefined;
   if (!res.ok) throw new Error(`${path}: ${res.status}`);
   return res.json() as Promise<T>;
 };
 
+const required = async <T>(path: string): Promise<T> => {
+  const data = await json<T>(path);
+  if (data === undefined) throw new Error(`${path}: 404`);
+  return data;
+};
+
+async function fetchSet(id: string): Promise<GameSet> {
+  const dir = `/content/sets/${id}`;
+  const files = Object.values(SET_FILES);
+  const [meta, ...lists] = await Promise.all([required<Pick<GameSet, "id" | "name">>(`${dir}/set.json`), ...files.map((f) => json<unknown[]>(`${dir}/${f}`))]);
+  const byFile = new Map(files.map((f, i) => [f, lists[i]]));
+  return assembleSet(meta, (file) => byFile.get(file));
+}
+
 /** Static content served next to the app; fetched once per page load. */
-export const content: Promise<Content> = Promise.all([
-  json<Board>("/content/board/board.json"),
-  json<Investigator[]>("/content/sets/eh01/investigators.json"),
-]).then(([board, investigators]) => ({ board, investigators }));
+export const content: Promise<{ board: Board; set: GameSet }> = Promise.all([required<Board>("/content/board/board.json"), fetchSet("eh01")]).then(
+  ([board, set]) => ({ board, set }),
+);

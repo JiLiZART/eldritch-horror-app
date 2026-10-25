@@ -1,23 +1,32 @@
+import type { ReactNode } from "react";
 import { neighbors } from "../content/board";
-import type { Board, Space } from "../content/types";
+import type { Board, GameSet, Space } from "../content/types";
+import type { GameState } from "../engine/types";
+import type { Piece } from "./pieces";
 import { BOARD_SETS, PATH_COLORS } from "./sets";
 
 interface PanelProps {
   board: Board;
+  set: GameSet;
+  state: GameState | undefined;
+  pieces: Map<string, Piece[]>;
   spaces: Space[];
   enabled: Set<string>;
   onToggle: (id: string, on: boolean) => void;
   selected: Space | undefined;
   onSelect: (id: string) => void;
+  children?: ReactNode;
 }
 
 const SET_NAMES: Record<string, string> = { eh01: "Core", ...Object.fromEntries(BOARD_SETS.map((s) => [s.id, s.name])) };
 
-export function Panel({ board, spaces, enabled, onToggle, selected, onSelect }: PanelProps) {
+export function Panel({ board, set, state, pieces, spaces, enabled, onToggle, selected, onSelect, children }: PanelProps) {
   const pathType = (a: string, b: string) => board.paths.find((p) => (p.from === a && p.to === b) || (p.from === b && p.to === a))?.type;
   return (
     <aside className="panel">
       <h1>Eldritch Horror</h1>
+      {children}
+      {state && <Status board={board} set={set} state={state} />}
       <fieldset>
         <legend>Sets</legend>
         <label>
@@ -53,6 +62,8 @@ export function Panel({ board, spaces, enabled, onToggle, selected, onSelect }: 
             <dd>{selected.region ?? "none"}</dd>
             <dt>Set</dt>
             <dd>{SET_NAMES[selected.set]}</dd>
+            <dt>Pieces</dt>
+            <dd>{pieces.get(selected.id)?.map((p) => p.label).join(", ") ?? "none"}</dd>
             <dt>Neighbours</dt>
             <dd>
               <ul>
@@ -84,5 +95,72 @@ export function Panel({ board, spaces, enabled, onToggle, selected, onSelect }: 
         </ul>
       </section>
     </aside>
+  );
+}
+
+/** Omen track spaces clockwise from the green comet. */
+const OMEN = ["green", "blue", "red", "blue"];
+
+function Status({ board, set, state }: { board: Board; set: GameSet; state: GameState }) {
+  const ancientOne = set.ancientOnes.find((a) => a.id === state.ancientOne);
+  const mystery = ancientOne?.mysteries.find((m) => m.id === state.currentMystery);
+  const cardName = (id: string) => set.cards.find((c) => c.id === id)?.name ?? id;
+  const spaceName = (id: string) => board.spaces.find((s) => s.id === id)?.name.en ?? id;
+  const { encounters, ...decks } = state.decks;
+  const sizes = Object.entries({ ...decks, ...encounters, "monster cup": state.monsterCup, "gate stack": state.gateStack, "clue pool": state.cluePool });
+  return (
+    <section className="status">
+      <h2>{ancientOne?.name ?? state.ancientOne}</h2>
+      <dl>
+        <dt>Doom</dt>
+        <dd>{state.doom}</dd>
+        <dt>Omen</dt>
+        <dd>
+          {OMEN[state.omen]}, {state.eldritchOnOmen[state.omen]} eldritch
+        </dd>
+        <dt>Reference card</dt>
+        <dd>
+          gates {state.referenceCard.gates}, clues {state.referenceCard.clues}, surge {state.referenceCard.surge}
+        </dd>
+        <dt>Mystery</dt>
+        <dd className="cards">{mystery && <img src={`/${mystery.images.front}`} alt={mystery.name} />}</dd>
+        <dt>Reserve</dt>
+        <dd className="cards">
+          {state.reserve.map((id) => {
+            const card = set.cards.find((c) => c.id === id);
+            return card && <img key={id} src={`/${card.images.front}`} alt={card.name} />;
+          })}
+        </dd>
+        <dt>Decks</dt>
+        <dd>{sizes.map(([name, cards]) => `${name} ${cards.length}`).join(", ")}</dd>
+      </dl>
+      <table>
+        <thead>
+          <tr>
+            <th>Investigator</th>
+            <th>Space</th>
+            <th>H</th>
+            <th>S</th>
+            <th>Clues</th>
+            <th>Possessions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {state.investigators.map((i) => (
+            <tr key={i.id}>
+              <td>
+                {i.id === state.leadInvestigator && <span title="Lead investigator">★ </span>}
+                {set.investigators.find((x) => x.id === i.id)?.name ?? i.id}
+              </td>
+              <td>{spaceName(i.space)}</td>
+              <td>{i.health}</td>
+              <td>{i.sanity}</td>
+              <td>{i.clues}</td>
+              <td>{i.possessions.map(cardName).join(", ")}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
   );
 }

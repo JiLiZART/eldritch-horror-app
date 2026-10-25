@@ -18,7 +18,7 @@ const deckBacks = new Set(["assets", "spells", "conditions", "artifacts", "monst
 const kebab = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const files = (dir: string) => readdirSync(join(src, dir)).filter((f) => /\.(png|jpe?g|svg)$/i.test(f));
 /** Source file names with typos, corrected to the printed card name. */
-const typos: Record<string, string> = { "Personal Asistant": "Personal Assistant" };
+const typos: Record<string, string> = { "Personal Asistant": "Personal Assistant", "Buenos Aries": "Buenos Aires" };
 const stem = (f: string) => { const s = basename(f, extname(f)); return typos[s] ?? s; };
 
 const table: string[] = [];
@@ -53,7 +53,8 @@ function sides(srcDir: string, dir: string) {
 function cards(srcDir: string, deck: Card["deck"], dir: string): Card[] {
   const result: Card[] = [];
   for (const [name, imgs] of sides(srcDir, dir)) {
-    result.push({ id: `eh01/${dir}/${kebab(name)}`, name, deck, images: { front: imgs.front!, ...(imgs.back && { back: imgs.back }) } });
+    // Copies are numbered in the source ("Mists of Releh 2"); the printed name has no number.
+    result.push({ id: `eh01/${dir}/${kebab(name)}`, name: name.replace(/ \d+$/, ""), deck, images: { front: imgs.front!, ...(imgs.back && { back: imgs.back }) } });
   }
   return result;
 }

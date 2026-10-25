@@ -321,7 +321,7 @@
   },
   {
     "id": "eh01/spell/blessing-of-isis-1",
-    "name": "Blessing of Isis 1",
+    "name": "Blessing of Isis",
     "deck": "spell",
     "images": {
       "front": "cards/eh01/spell/blessing-of-isis-1.webp",
@@ -330,7 +330,7 @@
   },
   {
     "id": "eh01/spell/blessing-of-isis-2",
-    "name": "Blessing of Isis 2",
+    "name": "Blessing of Isis",
     "deck": "spell",
     "images": {
       "front": "cards/eh01/spell/blessing-of-isis-2.webp",
@@ -339,7 +339,7 @@
   },
   {
     "id": "eh01/spell/clairvoyance-1",
-    "name": "Clairvoyance 1",
+    "name": "Clairvoyance",
     "deck": "spell",
     "images": {
       "front": "cards/eh01/spell/clairvoyance-1.webp",
@@ -348,7 +348,7 @@
   },
   {
     "id": "eh01/spell/clairvoyance-2",
-    "name": "Clairvoyance 2",
+    "name": "Clairvoyance",
     "deck": "spell",
     "images": {
       "front": "cards/eh01/spell/clairvoyance-2.webp",
@@ -357,7 +357,7 @@
   },
   {
     "id": "eh01/spell/conjuration-1",
-    "name": "Conjuration 1",
+    "name": "Conjuration",
     "deck": "spell",
     "images": {
       "front": "cards/eh01/spell/conjuration-1.webp",
@@ -366,7 +366,7 @@
   },
   {
     "id": "eh01/spell/conjuration-2",
-    "name": "Conjuration 2",
+    "name": "Conjuration",
     "deck": "spell",
     "images": {
       "front": "cards/eh01/spell/conjuration-2.webp",
@@ -375,7 +375,7 @@
   },
   {
     "id": "eh01/spell/feed-the-mind-1",
-    "name": "Feed the Mind 1",
+    "name": "Feed the Mind",
     "deck": "spell",
     "images": {
       "front": "cards/eh01/spell/feed-the-mind-1.webp",
@@ -384,7 +384,7 @@
   },
   {
     "id": "eh01/spell/feed-the-mind-2",
-    "name": "Feed the Mind 2",
+    "name": "Feed the Mind",
     "deck": "spell",
     "images": {
       "front": "cards/eh01/spell/feed-the-mind-2.webp",
@@ -393,7 +393,7 @@
   },
   {
     "id": "eh01/spell/flesh-ward-1",
-    "name": "Flesh Ward 1",
+    "name": "Flesh Ward",
     "deck": "spell",
     "images": {
       "front": "cards/eh01/spell/flesh-ward-1.webp",
@@ -402,7 +402,7 @@
   },
   {
     "id": "eh01/spell/flesh-ward-2",
-    "name": "Flesh Ward 2",
+    "name": "Flesh Ward",
     "deck": "spell",
     "images": {
       "front": "cards/eh01/spell/flesh-ward-2.webp",
@@ -411,7 +411,7 @@
   },
   {
     "id": "eh01/spell/instill-bravery-1",
-    "name": "Instill Bravery 1",
+    "name": "Instill Bravery",
     "deck": "spell",
     "images": {
       "front": "cards/eh01/spell/instill-bravery-1.webp",
@@ -420,7 +420,7 @@
   },
   {
     "id": "eh01/spell/instill-bravery-2",
-    "name": "Instill Bravery 2",
+    "name": "Instill Bravery",
     "deck": "spell",
     "images": {
       "front": "cards/eh01/spell/instill-bravery-2.webp",
@@ -429,7 +429,7 @@
   },
   {
     "id": "eh01/spell/mists-of-releh-1",
-    "name": "Mists of Releh 1",
+    "name": "Mists of Releh",
     "deck": "spell",
     "images": {
       "front": "cards/eh01/spell/mists-of-releh-1.webp",
@@ -438,7 +438,7 @@
   },
   {
     "id": "eh01/spell/mists-of-releh-2",
-    "name": "Mists of Releh 2",
+    "name": "Mists of Releh",
     "deck": "spell",
     "images": {
       "front": "cards/eh01/spell/mists-of-releh-2.webp",
@@ -447,7 +447,7 @@
   },
   {
     "id": "eh01/spell/plumb-the-void-1",
-    "name": "Plumb the Void 1",
+    "name": "Plumb the Void",
     "deck": "spell",
     "images": {
       "front": "cards/eh01/spell/plumb-the-void-1.webp",
@@ -456,7 +456,7 @@
   },
   {
     "id": "eh01/spell/plumb-the-void-2",
-    "name": "Plumb the Void 2",
+    "name": "Plumb the Void",
     "deck": "spell",
     "images": {
       "front": "cards/eh01/spell/plumb-the-void-2.webp",
@@ -465,7 +465,7 @@
   },
   {
     "id": "eh01/spell/shriveling-1",
-    "name": "Shriveling 1",
+    "name": "Shriveling",
     "deck": "spell",
     "images": {
       "front": "cards/eh01/spell/shriveling-1.webp",
@@ -474,7 +474,7 @@
   },
   {
     "id": "eh01/spell/shriveling-2",
-    "name": "Shriveling 2",
+    "name": "Shriveling",
     "deck": "spell",
     "images": {
       "front": "cards/eh01/spell/shriveling-2.webp",
@@ -483,7 +483,7 @@
   },
   {
     "id": "eh01/spell/wither-1",
-    "name": "Wither 1",
+    "name": "Wither",
     "deck": "spell",
     "images": {
       "front": "cards/eh01/spell/wither-1.webp",
@@ -492,7 +492,7 @@
   },
   {
     "id": "eh01/spell/wither-2",
-    "name": "Wither 2",
+    "name": "Wither",
     "deck": "spell",
     "images": {
       "front": "cards/eh01/spell/wither-2.webp",
@@ -501,7 +501,7 @@
   },
   {
     "id": "eh01/condition/amnesia-1",
-    "name": "Amnesia 1",
+    "name": "Amnesia",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/amnesia-1.webp",
@@ -510,7 +510,7 @@
   },
   {
     "id": "eh01/condition/amnesia-2",
-    "name": "Amnesia 2",
+    "name": "Amnesia",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/amnesia-2.webp",
@@ -519,7 +519,7 @@
   },
   {
     "id": "eh01/condition/amnesia-3",
-    "name": "Amnesia 3",
+    "name": "Amnesia",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/amnesia-3.webp",
@@ -528,7 +528,7 @@
   },
   {
     "id": "eh01/condition/back-injury-1",
-    "name": "Back Injury 1",
+    "name": "Back Injury",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/back-injury-1.webp",
@@ -537,7 +537,7 @@
   },
   {
     "id": "eh01/condition/back-injury-2",
-    "name": "Back Injury 2",
+    "name": "Back Injury",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/back-injury-2.webp",
@@ -546,7 +546,7 @@
   },
   {
     "id": "eh01/condition/back-injury-3",
-    "name": "Back Injury 3",
+    "name": "Back Injury",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/back-injury-3.webp",
@@ -555,7 +555,7 @@
   },
   {
     "id": "eh01/condition/blessed-1",
-    "name": "Blessed 1",
+    "name": "Blessed",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/blessed-1.webp",
@@ -564,7 +564,7 @@
   },
   {
     "id": "eh01/condition/blessed-2",
-    "name": "Blessed 2",
+    "name": "Blessed",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/blessed-2.webp",
@@ -573,7 +573,7 @@
   },
   {
     "id": "eh01/condition/blessed-3",
-    "name": "Blessed 3",
+    "name": "Blessed",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/blessed-3.webp",
@@ -582,7 +582,7 @@
   },
   {
     "id": "eh01/condition/cursed-1",
-    "name": "Cursed 1",
+    "name": "Cursed",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/cursed-1.webp",
@@ -591,7 +591,7 @@
   },
   {
     "id": "eh01/condition/cursed-2",
-    "name": "Cursed 2",
+    "name": "Cursed",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/cursed-2.webp",
@@ -600,7 +600,7 @@
   },
   {
     "id": "eh01/condition/cursed-3",
-    "name": "Cursed 3",
+    "name": "Cursed",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/cursed-3.webp",
@@ -609,7 +609,7 @@
   },
   {
     "id": "eh01/condition/dark-pact-1",
-    "name": "Dark Pact 1",
+    "name": "Dark Pact",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/dark-pact-1.webp",
@@ -618,7 +618,7 @@
   },
   {
     "id": "eh01/condition/dark-pact-2",
-    "name": "Dark Pact 2",
+    "name": "Dark Pact",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/dark-pact-2.webp",
@@ -627,7 +627,7 @@
   },
   {
     "id": "eh01/condition/dark-pact-3",
-    "name": "Dark Pact 3",
+    "name": "Dark Pact",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/dark-pact-3.webp",
@@ -636,7 +636,7 @@
   },
   {
     "id": "eh01/condition/debt-1",
-    "name": "Debt 1",
+    "name": "Debt",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/debt-1.webp",
@@ -645,7 +645,7 @@
   },
   {
     "id": "eh01/condition/debt-2",
-    "name": "Debt 2",
+    "name": "Debt",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/debt-2.webp",
@@ -654,7 +654,7 @@
   },
   {
     "id": "eh01/condition/debt-3",
-    "name": "Debt 3",
+    "name": "Debt",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/debt-3.webp",
@@ -663,7 +663,7 @@
   },
   {
     "id": "eh01/condition/debt-4",
-    "name": "Debt 4",
+    "name": "Debt",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/debt-4.webp",
@@ -672,7 +672,7 @@
   },
   {
     "id": "eh01/condition/debt-5",
-    "name": "Debt 5",
+    "name": "Debt",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/debt-5.webp",
@@ -681,7 +681,7 @@
   },
   {
     "id": "eh01/condition/debt-6",
-    "name": "Debt 6",
+    "name": "Debt",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/debt-6.webp",
@@ -690,7 +690,7 @@
   },
   {
     "id": "eh01/condition/detained-1",
-    "name": "Detained 1",
+    "name": "Detained",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/detained-1.webp",
@@ -699,7 +699,7 @@
   },
   {
     "id": "eh01/condition/detained-2",
-    "name": "Detained 2",
+    "name": "Detained",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/detained-2.webp",
@@ -708,7 +708,7 @@
   },
   {
     "id": "eh01/condition/detained-3",
-    "name": "Detained 3",
+    "name": "Detained",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/detained-3.webp",
@@ -717,7 +717,7 @@
   },
   {
     "id": "eh01/condition/hallucinations-1",
-    "name": "Hallucinations 1",
+    "name": "Hallucinations",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/hallucinations-1.webp",
@@ -726,7 +726,7 @@
   },
   {
     "id": "eh01/condition/hallucinations-2",
-    "name": "Hallucinations 2",
+    "name": "Hallucinations",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/hallucinations-2.webp",
@@ -735,7 +735,7 @@
   },
   {
     "id": "eh01/condition/hallucinations-3",
-    "name": "Hallucinations 3",
+    "name": "Hallucinations",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/hallucinations-3.webp",
@@ -744,7 +744,7 @@
   },
   {
     "id": "eh01/condition/internal-injury-1",
-    "name": "Internal Injury 1",
+    "name": "Internal Injury",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/internal-injury-1.webp",
@@ -753,7 +753,7 @@
   },
   {
     "id": "eh01/condition/internal-injury-2",
-    "name": "Internal Injury 2",
+    "name": "Internal Injury",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/internal-injury-2.webp",
@@ -762,7 +762,7 @@
   },
   {
     "id": "eh01/condition/internal-injury-3",
-    "name": "Internal Injury 3",
+    "name": "Internal Injury",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/internal-injury-3.webp",
@@ -771,7 +771,7 @@
   },
   {
     "id": "eh01/condition/leg-injury-1",
-    "name": "Leg Injury 1",
+    "name": "Leg Injury",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/leg-injury-1.webp",
@@ -780,7 +780,7 @@
   },
   {
     "id": "eh01/condition/leg-injury-2",
-    "name": "Leg Injury 2",
+    "name": "Leg Injury",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/leg-injury-2.webp",
@@ -789,7 +789,7 @@
   },
   {
     "id": "eh01/condition/leg-injury-3",
-    "name": "Leg Injury 3",
+    "name": "Leg Injury",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/leg-injury-3.webp",
@@ -798,7 +798,7 @@
   },
   {
     "id": "eh01/condition/paranoia-1",
-    "name": "Paranoia 1",
+    "name": "Paranoia",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/paranoia-1.webp",
@@ -807,7 +807,7 @@
   },
   {
     "id": "eh01/condition/paranoia-2",
-    "name": "Paranoia 2",
+    "name": "Paranoia",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/paranoia-2.webp",
@@ -816,7 +816,7 @@
   },
   {
     "id": "eh01/condition/paranoia-3",
-    "name": "Paranoia 3",
+    "name": "Paranoia",
     "deck": "condition",
     "images": {
       "front": "cards/eh01/condition/paranoia-3.webp",

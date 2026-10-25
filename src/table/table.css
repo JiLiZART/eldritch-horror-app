@@ -9,7 +9,7 @@ body {
 }
 .layout {
   display: grid;
-  grid-template-columns: 1fr 20rem;
+  grid-template-columns: 1fr 24rem;
   height: 100vh;
 }
 .table {
@@ -67,4 +67,23 @@ body {
 }
 .spaces {
   columns: 2;
+}
+.error {
+  color: #ff8a80;
+}
+.cards img {
+  width: 4rem;
+  margin: 0 0.2rem 0.2rem 0;
+  vertical-align: top;
+}
+.status table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.status th,
+.status td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.1rem 0.3rem 0.1rem 0;
+  overflow-wrap: anywhere;
 }

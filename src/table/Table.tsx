@@ -3,13 +3,15 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { type ComponentRef, Suspense, useEffect, useMemo, useRef } from "react";
 import { SRGBColorSpace, type Texture, Vector3 } from "three";
 import { activeGraph } from "../content/board";
-import type { Board, Investigator, Space } from "../content/types";
+import type { Board, Space } from "../content/types";
 import { boardSize, boardToWorld, spreadOnCircle } from "./geometry";
+import type { Piece, PieceKind } from "./pieces";
 import { PATH_COLORS } from "./sets";
 
 export interface TableProps {
   board: Board;
-  investigators: Investigator[];
+  /** Pieces grouped by space id; empty when no game is in progress. */
+  pieces: Map<string, Piece[]>;
   enabled: Set<string>;
   selected: string | undefined;
   onSelect: (id: string | undefined) => void;
@@ -34,7 +36,7 @@ export function Table(props: TableProps) {
   );
 }
 
-function Scene({ board, investigators, enabled, selected, onSelect, reducedMotion }: TableProps) {
+function Scene({ board, pieces, enabled, selected, onSelect, reducedMotion }: TableProps) {
   const graph = useMemo(() => activeGraph(board, enabled), [board, enabled]);
   const at = useMemo(() => new Map(board.spaces.map((s) => [s.id, boardToWorld(s, board)])), [board]);
   return (
@@ -47,7 +49,7 @@ function Scene({ board, investigators, enabled, selected, onSelect, reducedMotio
       {graph.spaces.map((s) => (
         <Marker key={s.id} space={s} position={at.get(s.id)!} selected={s.id === selected} onSelect={onSelect} />
       ))}
-      <Pawns investigators={investigators} at={at} />
+      {pieces.size > 0 && <Pieces pieces={pieces} at={at} />}
     </>
   );
 }
@@ -114,25 +116,37 @@ function Marker({ space, position, selected, onSelect }: { space: Space; positio
   );
 }
 
-const PAWN = { width: 0.26, height: 0.26 * (488 / 339) };
+/** Plane size per piece kind in world units; tokens are square, pawns keep the standee aspect. */
+const SIZE: Record<PieceKind, [width: number, height: number]> = {
+  gate: [0.3, 0.3],
+  expedition: [0.3, 0.3],
+  clue: [0.22, 0.22],
+  monster: [0.3, 0.3],
+  pawn: [0.26, 0.26 * (488 / 339)],
+};
 
-function Pawns({ investigators, at }: { investigators: Investigator[]; at: Map<string, [number, number]> }) {
-  const textures = useTexture(investigators.map((i) => `/${i.pawn}`), srgb);
-  const bySpace = new Map<string, number[]>();
-  investigators.forEach((inv, i) => bySpace.set(inv.startingSpace, [...(bySpace.get(inv.startingSpace) ?? []), i]));
+function Pieces({ pieces, at }: { pieces: Map<string, Piece[]>; at: Map<string, [number, number]> }) {
+  const images = useMemo(() => [...new Set([...pieces.values()].flat().map((p) => p.image))], [pieces]);
+  const textures = useTexture(images.map((i) => `/${i}`), srgb);
+  const textureOf = new Map(images.map((img, i) => [img, textures[i]]));
   return (
     <>
-      {[...bySpace].flatMap(([space, idx]) => {
+      {[...pieces].flatMap(([space, list]) => {
         const [x, y] = at.get(space)!;
-        const offsets = spreadOnCircle(idx.length, 0.2);
-        return idx.map((i, k) => (
-          <Billboard key={investigators[i]!.id} position={[x + offsets[k]![0], y + offsets[k]![1] + PAWN.height / 2, 0.05]}>
-            <mesh>
-              <planeGeometry args={[PAWN.width, PAWN.height]} />
-              <meshBasicMaterial map={textures[i]} transparent alphaTest={0.5} />
-            </mesh>
-          </Billboard>
-        ));
+        // Radius grows with the count so a crowded space stays readable.
+        const offsets = spreadOnCircle(list.length, 0.15 + 0.03 * list.length);
+        return list.map((p, k) => {
+          const [w, h] = SIZE[p.kind];
+          const [dx, dy] = offsets[k]!;
+          return (
+            <Billboard key={p.id} position={[x + dx, y + dy + (p.kind === "pawn" ? h / 2 : 0), 0.05 + k * 0.001]}>
+              <mesh>
+                <planeGeometry args={[w, h]} />
+                <meshBasicMaterial map={textureOf.get(p.image)} transparent alphaTest={0.5} />
+              </mesh>
+            </Billboard>
+          );
+        });
       })}
     </>
   );
