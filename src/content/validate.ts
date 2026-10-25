@@ -24,8 +24,8 @@ export function validateBoard(board: Board): string[] {
   return errors;
 }
 
-/** `imageExists` resolves a path relative to public/. */
-export function validateSet(set: GameSet, imageExists: (path: string) => boolean): string[] {
+/** `imageExists` resolves a path relative to public/; `board` enables space-id checks. */
+export function validateSet(set: GameSet, imageExists: (path: string) => boolean, board?: Board): string[] {
   const errors: string[] = [];
   const ids = new Set<string>();
   const check = (id: string, images: Images, ...extra: (string | undefined)[]) => {
@@ -46,12 +46,20 @@ export function validateSet(set: GameSet, imageExists: (path: string) => boolean
       }
     }
   }
+  const monsterIds = new Set(set.monsters.map((m) => m.id));
+  const spaceIds = board && new Set(board.spaces.map((s) => s.id));
   for (const a of set.ancientOnes) {
     check(a.id, a.images);
     for (const c of [...a.mysteries, ...a.research, ...(a.special ?? [])]) check(c.id, c.images);
+    for (const id of Object.keys(a.setup?.setAsideMonsters ?? {})) {
+      if (!monsterIds.has(id)) errors.push(`${a.id} sets aside unknown monster ${id}`);
+    }
   }
   for (const c of set.cards) check(c.id, c.images);
-  for (const m of set.monsters) check(m.id, m.images);
+  for (const m of set.monsters) {
+    check(m.id, m.images);
+    if (m.spawnMoveTo !== undefined && spaceIds && !spaceIds.has(m.spawnMoveTo)) errors.push(`${m.id} spawns onto unknown space ${m.spawnMoveTo}`);
+  }
   for (const d of set.encounterDecks) for (const c of d.cards) check(c.id, c.images);
   for (const m of set.mythos) check(m.id, m.images);
   for (const p of set.preludes) check(p.id, p.images);

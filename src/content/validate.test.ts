@@ -75,6 +75,23 @@ describe("validateSet", () => {
   it("accepts a set whose images exist", () => {
     expect(validateSet({ ...emptySet, cards: [card("eh01/asset/x")] }, () => true)).toEqual([]);
   });
+  const monster = (id: string, extra: Partial<GameSet["monsters"][number]> = {}) => ({ id, name: id, images: { front: "m.png", back: "mb.png" }, ...extra });
+  const ancient = (setup: NonNullable<GameSet["ancientOnes"][number]["setup"]>) => ({
+    id: "eh01/ancient-one/x", name: "x", doom: 10, images: { front: "a.png" }, mysteries: [], research: [],
+    mythos: { stage1: { green: 1, yellow: 1, blue: 1 }, stage2: { green: 1, yellow: 1, blue: 1 }, stage3: { green: 1, yellow: 1, blue: 1 } }, setup,
+  });
+  it("reports a set-aside monster the set does not have", () => {
+    const bad = { ...emptySet, monsters: [monster("eh01/monster/ghoul")], ancientOnes: [ancient({ setAsideMonsters: { "eh01/monster/nope": 1 } })] };
+    expect(validateSet(bad, () => true, board).join("\n")).toContain("eh01/monster/nope");
+  });
+  it("reports a spawn relocation to a space not on the board", () => {
+    const bad = { ...emptySet, monsters: [monster("eh01/monster/mummy", { spawnMoveTo: "atlantis" })] };
+    expect(validateSet(bad, () => true, board).join("\n")).toContain("eh01/monster/mummy");
+  });
+  it("accepts set-aside monsters and relocations that resolve", () => {
+    const ok = { ...emptySet, monsters: [monster("eh01/monster/ghoul", { count: 2, spawnMoveTo: "a" })], ancientOnes: [ancient({ setAsideMonsters: { "eh01/monster/ghoul": 2 } })] };
+    expect(validateSet(ok, () => true, board)).toEqual([]);
+  });
 });
 
 describe("validateIcons", () => {

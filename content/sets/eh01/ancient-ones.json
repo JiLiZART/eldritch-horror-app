@@ -20,6 +20,9 @@
         "blue": 0
       }
     },
+    "setup": {
+      "eldritchTokensOnOmen": 1
+    },
     "images": {
       "front": "cards/eh01/ancient-one/azathoth/sheet.webp",
       "back": "cards/eh01/ancient-one/azathoth/sheet-back.webp"
@@ -144,6 +147,12 @@
         "green": 3,
         "yellow": 4,
         "blue": 0
+      }
+    },
+    "setup": {
+      "setAsideMonsters": {
+        "eh01/monster/deep-one": 1,
+        "eh01/monster/star-spawn": 1
       }
     },
     "images": {
@@ -320,6 +329,13 @@
         "green": 2,
         "yellow": 4,
         "blue": 0
+      }
+    },
+    "setup": {
+      "setAsideMonsters": {
+        "eh01/monster/ghoul": 2,
+        "eh01/monster/goat-spawn": 2,
+        "eh01/monster/dark-young": 1
       }
     },
     "images": {

@@ -216,6 +216,26 @@ Source: manual_eng.pdf p.3, p.4; EH_reference.pdf p.3
 Token from the clue pool placed facedown on its printed space; a research encounter; spendable to reroll. Empty pool and discard mean no clue.
 Source: manual_eng.pdf p.3, p.4; EH_reference.pdf p.13
 
+### Gate stack / Стопка врат
+The 9 core gate tokens (one per named city) shuffled facedown at setup; gates spawn from the top. Discarded gates form a faceup pile that is reshuffled into the stack when it runs out.
+Source: manual_eng.pdf p.3; EH_reference.pdf p.3, p.13
+
+### Clue pool / Банк улик
+One clue token per core space shuffled facedown at setup; clues spawn from the top and starting clues are taken from it. Discarded clues return facedown and are reshuffled when the pool is empty.
+Source: manual_eng.pdf p.3; EH_reference.pdf p.11, p.13
+
+### Monster cup / Пул монстров
+Opaque container holding every non-epic monster token not set aside; monsters spawn from it at random and return to it when defeated. Epic monsters never enter it.
+Source: manual_eng.pdf p.3; EH_reference.pdf p.13
+
+### Reference card / Памятка
+Card chosen by investigator count giving the number of gates to spawn, clues to spawn and monsters per surge: 1–2 investigators 1/1/1, 3–4 1/2/2, 5–6 2/3/2, 7–8 2/4/3.
+Source: manual_eng.pdf p.3; printed reference cards (mirrored in the mod's icon-reference-card-holder.js)
+
+### Set aside / Отложенные монстры
+Monsters the Ancient One sheet removes from the cup at setup for its own effects. They never return to the cup; when discarded they are set aside again.
+Source: EH_reference.pdf p.13; Ancient One sheet backs
+
 ### Monster / Монстр
 Token drawn at random from the monster cup, with horror and Will test, damage and Strength test, toughness, and back-side effects. Defeated monsters return to the cup; set-aside monsters never do.
 Source: manual_eng.pdf p.3, p.4; EH_reference.pdf p.6
@@ -251,7 +271,7 @@ When doom reaches 0 the sheet flips, Awakens effects resolve, the back replaces 
 Source: manual_eng.pdf p.4; EH_reference.pdf p.3
 
 ### Mystery / Тайна
-Card of the chosen Ancient One placed near the sheet; the active mystery collects tokens; solving 3 wins the game. After awakening the final mystery must be solved as well.
+Card of the chosen Ancient One placed near the sheet; the active mystery collects tokens; solving 3 wins the game. After awakening the final mystery must be solved as well. The app draws the mystery but its enters-play effect is read from the card image and applied by the players (deviation: card text is not modelled).
 Source: manual_eng.pdf p.3, p.4, p.9; EH_reference.pdf p.12
 
 ### Mythos card / Карта Мифа

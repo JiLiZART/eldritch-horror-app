@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "./load";
 
 describe("core set", () => {
-  const { investigators, ancientOnes, encounterDecks: decks } = loadSet(join(import.meta.dirname, "../../content/sets/eh01"))!;
+  const { investigators, ancientOnes, monsters, encounterDecks: decks } = loadSet(join(import.meta.dirname, "../../content/sets/eh01"))!;
 
   it("has 12 investigators and 4 Ancient Ones", () => {
     expect(investigators).toHaveLength(12);
@@ -34,5 +34,23 @@ describe("core set", () => {
         for (const n of Object.values(stage)) expect(typeof n).toBe("number");
       }
     }
+  });
+
+  it("records printed Ancient One setup", () => {
+    const byName = (n: string) => ancientOnes.find((a) => a.name === n)!;
+    expect(byName("Cthulhu").setup?.setAsideMonsters).toEqual({ "eh01/monster/deep-one": 1, "eh01/monster/star-spawn": 1 });
+    expect(byName("Shub-Niggurath").setup?.setAsideMonsters).toEqual({ "eh01/monster/ghoul": 2, "eh01/monster/goat-spawn": 2, "eh01/monster/dark-young": 1 });
+    expect(byName("Azathoth").setup?.eldritchTokensOnOmen).toBe(1);
+    expect(byName("Yog-Sothoth").setup).toBeUndefined();
+  });
+
+  it("records monster token counts and spawn relocation", () => {
+    const byName = (n: string) => monsters.find((m) => m.name === n)!;
+    expect(byName("Cultist").count).toBe(5);
+    expect(byName("Ghoul").count).toBe(2);
+    expect(byName("Goat Spawn").count).toBe(2);
+    expect(monsters.filter((m) => !m.epic).reduce((n, m) => n + (m.count ?? 1), 0)).toBe(34);
+    expect(byName("Color Out of Space").spawnMoveTo).toBe("tunguska");
+    expect(byName("Cultist").spawnMoveTo).toBeUndefined();
   });
 });

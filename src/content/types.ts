@@ -89,6 +89,13 @@ export interface AncientOne {
   research: NamedCard[];
   special?: NamedCard[];
   mythos: { stage1: MythosStage; stage2: MythosStage; stage3: MythosStage };
+  /** Printed sheet setup. Text effects are not modelled. */
+  setup?: {
+    /** Monster id -> tokens removed from the cup at setup. */
+    setAsideMonsters?: Record<string, number>;
+    /** Eldritch tokens placed on the green omen space at setup. */
+    eldritchTokensOnOmen?: number;
+  };
 }
 
 export type Deck = "asset" | "spell" | "condition" | "artifact" | "unique-asset";
@@ -105,6 +112,10 @@ export interface Monster {
   id: string;
   name: string;
   epic?: boolean;
+  /** Identical tokens in the set; 1 when absent. */
+  count?: number;
+  /** Space id the token back moves the monster to when spawned. */
+  spawnMoveTo?: string;
   images: Images;
 }
 

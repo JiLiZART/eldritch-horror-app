@@ -19,7 +19,7 @@ const setsDir = join(root, "content/sets");
 if (existsSync(setsDir)) {
   for (const id of readdirSync(setsDir)) {
     const set = loadSet(join(setsDir, id));
-    if (set) errors.push(...validateSet(set, (p) => existsSync(join(pub, p))));
+    if (set) errors.push(...validateSet(set, (p) => existsSync(join(pub, p)), board));
   }
 }
 

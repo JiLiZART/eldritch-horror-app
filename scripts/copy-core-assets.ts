@@ -58,10 +58,23 @@ function cards(srcDir: string, deck: Card["deck"], dir: string): Card[] {
   return result;
 }
 
+/** Token copies and spawn relocation from the mod's src/Templates/01 Core/eh01 - token - monsters.json. */
+const monsterCounts: Record<string, number> = { Cultist: 5, Ghoul: 2, "Goat Spawn": 2 };
+const spawnMoveTo: Record<string, string> = {
+  "Color Out of Space": "tunguska",
+  Cthonian: "the-heart-of-africa",
+  "Elder Thing": "antarctica",
+  "Gnoph-Keh": "the-himalayas",
+  Mummy: "the-pyramids",
+  "Serpent People": "the-amazon",
+};
+
 function monsters(srcDir: string, epic: boolean): Monster[] {
   const result: Monster[] = [];
   for (const [name, imgs] of sides(srcDir, "monster")) {
-    result.push({ id: `eh01/monster/${kebab(name)}`, name, ...(epic && { epic }), images: { front: imgs.front!, back: imgs.back! } });
+    const count = monsterCounts[name];
+    const moveTo = spawnMoveTo[name];
+    result.push({ id: `eh01/monster/${kebab(name)}`, name, ...(epic && { epic }), ...(count && { count }), ...(moveTo && { spawnMoveTo: moveTo }), images: { front: imgs.front!, back: imgs.back! } });
   }
   return result;
 }
@@ -114,11 +127,11 @@ function mythos(): MythosCard[] {
   return result;
 }
 
-/** Doom and mythos stages from the mod's src/Scripts/01 Core/<name>.js. */
-const ancientSetup: Record<string, Pick<AncientOne, "doom" | "mythos">> = {
-  Azathoth: { doom: 15, mythos: { stage1: { green: 1, yellow: 2, blue: 1 }, stage2: { green: 2, yellow: 3, blue: 1 }, stage3: { green: 2, yellow: 4, blue: 0 } } },
-  Cthulhu: { doom: 12, mythos: { stage1: { green: 0, yellow: 2, blue: 2 }, stage2: { green: 1, yellow: 3, blue: 0 }, stage3: { green: 3, yellow: 4, blue: 0 } } },
-  "Shub-Niggurath": { doom: 13, mythos: { stage1: { green: 1, yellow: 2, blue: 1 }, stage2: { green: 3, yellow: 2, blue: 1 }, stage3: { green: 2, yellow: 4, blue: 0 } } },
+/** Doom, mythos stages and sheet setup from the mod's src/Scripts/01 Core/<name>.js. */
+const ancientSetup: Record<string, Pick<AncientOne, "doom" | "mythos" | "setup">> = {
+  Azathoth: { doom: 15, mythos: { stage1: { green: 1, yellow: 2, blue: 1 }, stage2: { green: 2, yellow: 3, blue: 1 }, stage3: { green: 2, yellow: 4, blue: 0 } }, setup: { eldritchTokensOnOmen: 1 } },
+  Cthulhu: { doom: 12, mythos: { stage1: { green: 0, yellow: 2, blue: 2 }, stage2: { green: 1, yellow: 3, blue: 0 }, stage3: { green: 3, yellow: 4, blue: 0 } }, setup: { setAsideMonsters: { "eh01/monster/deep-one": 1, "eh01/monster/star-spawn": 1 } } },
+  "Shub-Niggurath": { doom: 13, mythos: { stage1: { green: 1, yellow: 2, blue: 1 }, stage2: { green: 3, yellow: 2, blue: 1 }, stage3: { green: 2, yellow: 4, blue: 0 } }, setup: { setAsideMonsters: { "eh01/monster/ghoul": 2, "eh01/monster/goat-spawn": 2, "eh01/monster/dark-young": 1 } } },
   "Yog-Sothoth": { doom: 14, mythos: { stage1: { green: 0, yellow: 2, blue: 1 }, stage2: { green: 2, yellow: 3, blue: 1 }, stage3: { green: 3, yellow: 4, blue: 0 } } },
 };
 
