@@ -6,7 +6,7 @@ Produce the start-of-game state from the chosen Ancient One, investigators and d
 ## Requirements
 
 ### Requirement: Setup accepts a legal group
-Setup SHALL take an Ancient One from the set, one to eight distinct investigators in seat order, a mythos difficulty (normal, easy or hard) and a random seed, and SHALL refuse any other input with a message naming the broken rule. The first seat holds the lead investigator token.
+Setup SHALL take an Ancient One from the set, one to eight distinct investigators in seat order, a mythos difficulty (normal, easy or hard) and a random seed, and SHALL refuse any other input with a message naming the broken rule. The first seat holds the lead investigator token. Setup SHALL also start round 1 in the Action phase with the lead investigator active, no actions taken and no travel tickets.
 
 #### Scenario: Nine investigators
 - **WHEN** setup is asked for nine investigators
@@ -19,6 +19,10 @@ Setup SHALL take an Ancient One from the set, one to eight distinct investigator
 #### Scenario: Lead investigator
 - **WHEN** setup finishes for Leo Anderson then Lily Chen
 - **THEN** Leo Anderson holds the lead investigator token
+
+#### Scenario: First turn is the lead's
+- **WHEN** a game starts with Leo Anderson then Lily Chen
+- **THEN** round 1 is in the Action phase, Leo Anderson is active with no action taken, and nobody holds a travel ticket
 
 ### Requirement: Investigators start as printed
 Each chosen investigator SHALL stand on the starting space printed on the sheet back with full health and sanity and SHALL hold the printed starting possessions: starting cards leave their decks, starting clues leave the clue pool.
