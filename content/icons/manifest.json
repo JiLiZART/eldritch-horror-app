@@ -1,0 +1,120 @@
+{
+  "icons": {
+    "clue-token": {
+      "file": "icons/clue-token.png",
+      "width": 71,
+      "height": 71,
+      "source": "inspired/manual_eng.pdf",
+      "page": 3
+    },
+    "gate-token": {
+      "file": "icons/gate-token.png",
+      "width": 71,
+      "height": 71,
+      "source": "inspired/manual_eng.pdf",
+      "page": 3
+    },
+    "expedition": {
+      "file": "icons/expedition.png",
+      "width": 71,
+      "height": 72,
+      "source": "inspired/manual_eng.pdf",
+      "page": 3
+    },
+    "rumor-token": {
+      "file": "icons/rumor-token.png",
+      "width": 71,
+      "height": 62,
+      "source": "inspired/manual_eng.pdf",
+      "page": 3
+    },
+    "omen": {
+      "file": "icons/omen.png",
+      "width": 81,
+      "height": 81,
+      "source": "inspired/manual_eng.pdf",
+      "page": 3
+    },
+    "reckoning": {
+      "file": "icons/reckoning.png",
+      "width": 81,
+      "height": 81,
+      "source": "inspired/manual_eng.pdf",
+      "page": 3
+    },
+    "gate": {
+      "file": "icons/gate.png",
+      "width": 81,
+      "height": 81,
+      "source": "inspired/manual_eng.pdf",
+      "page": 3
+    },
+    "monster": {
+      "file": "icons/monster.png",
+      "width": 81,
+      "height": 81,
+      "source": "inspired/manual_eng.pdf",
+      "page": 3
+    },
+    "clue": {
+      "file": "icons/clue.png",
+      "width": 81,
+      "height": 81,
+      "source": "inspired/manual_eng.pdf",
+      "page": 3
+    },
+    "rumor": {
+      "file": "icons/rumor.png",
+      "width": 81,
+      "height": 81,
+      "source": "inspired/manual_eng.pdf",
+      "page": 3
+    },
+    "eldritch": {
+      "file": "icons/eldritch.png",
+      "width": 81,
+      "height": 81,
+      "source": "inspired/manual_eng.pdf",
+      "page": 3
+    },
+    "influence": {
+      "file": "icons/influence.png",
+      "width": 94,
+      "height": 45,
+      "source": "inspired/manual_eng.pdf",
+      "page": 5
+    },
+    "will": {
+      "file": "icons/will.png",
+      "width": 50,
+      "height": 57,
+      "source": "inspired/manual_eng.pdf",
+      "page": 8
+    },
+    "strength": {
+      "file": "icons/strength.png",
+      "width": 77,
+      "height": 51,
+      "source": "inspired/manual_eng.pdf",
+      "page": 8
+    },
+    "lore": {
+      "file": "icons/lore.png",
+      "width": 135,
+      "height": 84,
+      "source": "inspired/ttp-eldritch-horror-master/assets/01 Core/Improvements/lore+.jpg",
+      "page": 0
+    },
+    "observation": {
+      "file": "icons/observation.png",
+      "width": 127,
+      "height": 75,
+      "source": "inspired/ttp-eldritch-horror-master/assets/01 Core/Improvements/observation+.jpg",
+      "page": 0
+    }
+  },
+  "dice": {
+    "file": "icons/dice.svg",
+    "source": "inspired/ttp-eldritch-horror-master/assets/Eldritch Horror Dice.svg"
+  }
+}

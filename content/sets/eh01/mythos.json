@@ -1,0 +1,512 @@
+[
+  {
+    "id": "eh01/mythos/green/a-proposition",
+    "name": "A proposition",
+    "color": "green",
+    "difficulty": "easy",
+    "images": {
+      "front": "cards/eh01/mythos/green/a-proposition.jpg",
+      "back": "cards/eh01/mythos/green/easy-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/green/buying-information",
+    "name": "Buying Information",
+    "color": "green",
+    "difficulty": "easy",
+    "images": {
+      "front": "cards/eh01/mythos/green/buying-information.jpg",
+      "back": "cards/eh01/mythos/green/easy-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/green/heart-of-corruption",
+    "name": "Heart of Corruption",
+    "color": "green",
+    "difficulty": "easy",
+    "images": {
+      "front": "cards/eh01/mythos/green/heart-of-corruption.jpg",
+      "back": "cards/eh01/mythos/green/easy-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/green/support-of-the-church",
+    "name": "Support of the Church",
+    "color": "green",
+    "difficulty": "easy",
+    "images": {
+      "front": "cards/eh01/mythos/green/support-of-the-church.jpg",
+      "back": "cards/eh01/mythos/green/easy-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/green/that-which-consumes",
+    "name": "That Which Consumes",
+    "color": "green",
+    "difficulty": "easy",
+    "images": {
+      "front": "cards/eh01/mythos/green/that-which-consumes.jpg",
+      "back": "cards/eh01/mythos/green/easy-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/green/from-beyond",
+    "name": "From Beyond",
+    "color": "green",
+    "difficulty": "hard",
+    "images": {
+      "front": "cards/eh01/mythos/green/from-beyond.jpg",
+      "back": "cards/eh01/mythos/green/hard-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/green/rising-terror",
+    "name": "Rising Terror",
+    "color": "green",
+    "difficulty": "hard",
+    "images": {
+      "front": "cards/eh01/mythos/green/rising-terror.jpg",
+      "back": "cards/eh01/mythos/green/hard-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/green/strange-sightings",
+    "name": "Strange Sightings",
+    "color": "green",
+    "difficulty": "hard",
+    "images": {
+      "front": "cards/eh01/mythos/green/strange-sightings.jpg",
+      "back": "cards/eh01/mythos/green/hard-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/green/tied-to-a-dark-purpose",
+    "name": "Tied to a Dark Purpose",
+    "color": "green",
+    "difficulty": "hard",
+    "images": {
+      "front": "cards/eh01/mythos/green/tied-to-a-dark-purpose.jpg",
+      "back": "cards/eh01/mythos/green/hard-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/green/torn-asunder",
+    "name": "Torn Asunder",
+    "color": "green",
+    "difficulty": "hard",
+    "images": {
+      "front": "cards/eh01/mythos/green/torn-asunder.jpg",
+      "back": "cards/eh01/mythos/green/hard-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/green/blood-flows",
+    "name": "Blood Flows",
+    "color": "green",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/green/blood-flows.jpg",
+      "back": "cards/eh01/mythos/green/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/green/calling-the-elder-things",
+    "name": "Calling the Elder Things",
+    "color": "green",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/green/calling-the-elder-things.jpg",
+      "back": "cards/eh01/mythos/green/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/green/dimensional-instability",
+    "name": "Dimensional Instability",
+    "color": "green",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/green/dimensional-instability.jpg",
+      "back": "cards/eh01/mythos/green/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/green/driven-to-bankruptcy",
+    "name": "Driven to Bankruptcy",
+    "color": "green",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/green/driven-to-bankruptcy.jpg",
+      "back": "cards/eh01/mythos/green/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/green/legitimate-banking",
+    "name": "Legitimate Banking",
+    "color": "green",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/green/legitimate-banking.jpg",
+      "back": "cards/eh01/mythos/green/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/green/no-peace-for-the-fallen",
+    "name": "No Peace For the Fallen",
+    "color": "green",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/green/no-peace-for-the-fallen.jpg",
+      "back": "cards/eh01/mythos/green/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/green/patrolling-the-border",
+    "name": "Patrolling the Border",
+    "color": "green",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/green/patrolling-the-border.jpg",
+      "back": "cards/eh01/mythos/green/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/green/unexpected-betrayal",
+    "name": "Unexpected Betrayal",
+    "color": "green",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/green/unexpected-betrayal.jpg",
+      "back": "cards/eh01/mythos/green/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/everyone-has-a-price",
+    "name": "Everyone Has a Price",
+    "color": "yellow",
+    "difficulty": "easy",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/everyone-has-a-price.jpg",
+      "back": "cards/eh01/mythos/yellow/easy-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/omen-of-good-fortune",
+    "name": "Omen of Good Fortune",
+    "color": "yellow",
+    "difficulty": "easy",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/omen-of-good-fortune.jpg",
+      "back": "cards/eh01/mythos/yellow/easy-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/rally-the-people",
+    "name": "Rally the People",
+    "color": "yellow",
+    "difficulty": "easy",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/rally-the-people.jpg",
+      "back": "cards/eh01/mythos/yellow/easy-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/silver-twilight-aid",
+    "name": "Silver Twilight Aid",
+    "color": "yellow",
+    "difficulty": "easy",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/silver-twilight-aid.jpg",
+      "back": "cards/eh01/mythos/yellow/easy-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/the-world-fights-back",
+    "name": "The World Fights Back",
+    "color": "yellow",
+    "difficulty": "easy",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/the-world-fights-back.jpg",
+      "back": "cards/eh01/mythos/yellow/easy-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/all-for-nothing",
+    "name": "All For Nothing",
+    "color": "yellow",
+    "difficulty": "hard",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/all-for-nothing.jpg",
+      "back": "cards/eh01/mythos/yellow/hard-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/desperate-times",
+    "name": "Desperate Times",
+    "color": "yellow",
+    "difficulty": "hard",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/desperate-times.jpg",
+      "back": "cards/eh01/mythos/yellow/hard-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/eyes-everywhere",
+    "name": "Eyes Everywhere",
+    "color": "yellow",
+    "difficulty": "hard",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/eyes-everywhere.jpg",
+      "back": "cards/eh01/mythos/yellow/hard-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/perplexing-stars",
+    "name": "Perplexing Stars",
+    "color": "yellow",
+    "difficulty": "hard",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/perplexing-stars.jpg",
+      "back": "cards/eh01/mythos/yellow/hard-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/the-storm",
+    "name": "The Storm",
+    "color": "yellow",
+    "difficulty": "hard",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/the-storm.jpg",
+      "back": "cards/eh01/mythos/yellow/hard-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/a-dark-power",
+    "name": "A Dark Power",
+    "color": "yellow",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/a-dark-power.jpg",
+      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/ancient-guardians",
+    "name": "Ancient Guardians",
+    "color": "yellow",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/ancient-guardians.jpg",
+      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/arrests-made-in-murder-case",
+    "name": "Arrests Made in Murder Case!",
+    "color": "yellow",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/arrests-made-in-murder-case.jpg",
+      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/burden-of-greed",
+    "name": "Burden of Greed",
+    "color": "yellow",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/burden-of-greed.jpg",
+      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/from-bad-to-worse",
+    "name": "From Bad to Worse",
+    "color": "yellow",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/from-bad-to-worse.jpg",
+      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/haunting-nightmares",
+    "name": "Haunting Nightmares",
+    "color": "yellow",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/haunting-nightmares.jpg",
+      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/heat-wave-singes-the-globe",
+    "name": "Heat Wave Singes the Globe",
+    "color": "yellow",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/heat-wave-singes-the-globe.jpg",
+      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/the-bermuda-triangle",
+    "name": "The Bermuda Triangle",
+    "color": "yellow",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/the-bermuda-triangle.jpg",
+      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/the-world-shakes",
+    "name": "The World Shakes",
+    "color": "yellow",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/the-world-shakes.jpg",
+      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/tide-of-despair",
+    "name": "Tide of Despair",
+    "color": "yellow",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/tide-of-despair.jpg",
+      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/yellow/treacherous-magic",
+    "name": "Treacherous Magic",
+    "color": "yellow",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/yellow/treacherous-magic.jpg",
+      "back": "cards/eh01/mythos/yellow/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/blue/fractured-reality",
+    "name": "Fractured Reality",
+    "color": "blue",
+    "difficulty": "easy",
+    "images": {
+      "front": "cards/eh01/mythos/blue/fractured-reality.jpg",
+      "back": "cards/eh01/mythos/blue/easy-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/blue/growing-madness",
+    "name": "Growing Madness",
+    "color": "blue",
+    "difficulty": "easy",
+    "images": {
+      "front": "cards/eh01/mythos/blue/growing-madness.jpg",
+      "back": "cards/eh01/mythos/blue/easy-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/blue/lost-knowledge",
+    "name": "Lost Knowledge",
+    "color": "blue",
+    "difficulty": "easy",
+    "images": {
+      "front": "cards/eh01/mythos/blue/lost-knowledge.jpg",
+      "back": "cards/eh01/mythos/blue/easy-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/blue/secrets-of-the-past",
+    "name": "Secrets of the Past",
+    "color": "blue",
+    "difficulty": "easy",
+    "images": {
+      "front": "cards/eh01/mythos/blue/secrets-of-the-past.jpg",
+      "back": "cards/eh01/mythos/blue/easy-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/blue/dimensions-collide",
+    "name": "Dimensions Collide",
+    "color": "blue",
+    "difficulty": "hard",
+    "images": {
+      "front": "cards/eh01/mythos/blue/dimensions-collide.jpg",
+      "back": "cards/eh01/mythos/blue/hard-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/blue/mysterious-lights",
+    "name": "Mysterious Lights",
+    "color": "blue",
+    "difficulty": "hard",
+    "images": {
+      "front": "cards/eh01/mythos/blue/mysterious-lights.jpg",
+      "back": "cards/eh01/mythos/blue/hard-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/blue/spreading-sickness",
+    "name": "Spreading Sickness",
+    "color": "blue",
+    "difficulty": "hard",
+    "images": {
+      "front": "cards/eh01/mythos/blue/spreading-sickness.jpg",
+      "back": "cards/eh01/mythos/blue/hard-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/blue/web-between-worlds",
+    "name": "Web Between Worlds",
+    "color": "blue",
+    "difficulty": "hard",
+    "images": {
+      "front": "cards/eh01/mythos/blue/web-between-worlds.jpg",
+      "back": "cards/eh01/mythos/blue/hard-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/blue/faded-from-society",
+    "name": "Faded From Society",
+    "color": "blue",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/blue/faded-from-society.jpg",
+      "back": "cards/eh01/mythos/blue/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/blue/return-of-the-ancient-ones",
+    "name": "Return of the Ancient Ones",
+    "color": "blue",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/blue/return-of-the-ancient-ones.jpg",
+      "back": "cards/eh01/mythos/blue/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/blue/stars-aligned",
+    "name": "Stars Aligned",
+    "color": "blue",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/blue/stars-aligned.jpg",
+      "back": "cards/eh01/mythos/blue/medium-back.jpg"
+    }
+  },
+  {
+    "id": "eh01/mythos/blue/the-wind-walker",
+    "name": "The Wind-Walker",
+    "color": "blue",
+    "difficulty": "medium",
+    "images": {
+      "front": "cards/eh01/mythos/blue/the-wind-walker.jpg",
+      "back": "cards/eh01/mythos/blue/medium-back.jpg"
+    }
+  }
+]

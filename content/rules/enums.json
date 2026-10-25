@@ -1,0 +1,54 @@
+{
+  "phases": ["action", "encounter", "mythos"],
+  "phaseNames": {
+    "action": { "en": "Action Phase", "ru": "Фаза действий" },
+    "encounter": { "en": "Encounter Phase", "ru": "Фаза контактов" },
+    "mythos": { "en": "Mythos Phase", "ru": "Фаза Мифа" }
+  },
+  "actions": [
+    { "id": "travel", "name": { "en": "Travel", "ru": "Путешествие" }, "set": "eh01" },
+    { "id": "rest", "name": { "en": "Rest", "ru": "Отдых" }, "set": "eh01" },
+    { "id": "trade", "name": { "en": "Trade", "ru": "Обмен" }, "set": "eh01" },
+    { "id": "prepare-for-travel", "name": { "en": "Prepare for Travel", "ru": "Подготовка к путешествию" }, "set": "eh01" },
+    { "id": "acquire-assets", "name": { "en": "Acquire Assets", "ru": "Приобретение активов" }, "set": "eh01" },
+    { "id": "component-action", "name": { "en": "Component Action", "ru": "Особое действие" }, "set": "eh01" },
+    { "id": "focus", "name": { "en": "Focus", "ru": "Концентрация" }, "set": "eh04" },
+    { "id": "gather-resources", "name": { "en": "Gather Resources", "ru": "Сбор ресурсов" }, "set": "eh09" }
+  ],
+  "skills": ["lore", "influence", "observation", "strength", "will"],
+  "skillNames": {
+    "lore": { "en": "Lore", "ru": "Знания" },
+    "influence": { "en": "Influence", "ru": "Общение" },
+    "observation": { "en": "Observation", "ru": "Внимание" },
+    "strength": { "en": "Strength", "ru": "Сила" },
+    "will": { "en": "Will", "ru": "Воля" }
+  },
+  "encounterKinds": [
+    { "id": "combat", "name": { "en": "Combat Encounter", "ru": "Боевой контакт" } },
+    { "id": "location", "name": { "en": "Location Encounter", "ru": "Контакт в локации" } },
+    { "id": "general", "name": { "en": "General Encounter", "ru": "Общий контакт" } },
+    { "id": "research", "name": { "en": "Research Encounter", "ru": "Поисковый контакт" } },
+    { "id": "other-world", "name": { "en": "Other World Encounter", "ru": "Контакт в Ином мире" } },
+    { "id": "expedition", "name": { "en": "Expedition Encounter", "ru": "Экспедиционный контакт" } },
+    { "id": "rumor", "name": { "en": "Rumor Encounter", "ru": "Контакт слуха" } },
+    { "id": "defeated-investigator", "name": { "en": "Defeated Investigator Encounter", "ru": "Контакт с побеждённым сыщиком" } },
+    { "id": "special", "name": { "en": "Special Encounter", "ru": "Особый контакт" } }
+  ],
+  "mythosEffects": [
+    { "id": "advance-omen", "name": { "en": "Advance Omen", "ru": "Измените знамение" } },
+    { "id": "reckoning", "name": { "en": "Resolve Reckoning Effects", "ru": "Разыграйте эффекты расплаты" } },
+    { "id": "spawn-gates", "name": { "en": "Spawn Gates", "ru": "Откройте врата" } },
+    { "id": "monster-surge", "name": { "en": "Monster Surge", "ru": "Наплыв монстров" } },
+    { "id": "spawn-clues", "name": { "en": "Spawn Clues", "ru": "Выложите улики" } },
+    { "id": "place-rumor", "name": { "en": "Place Rumor Token", "ru": "Выложите жетон слуха" } },
+    { "id": "place-eldritch-tokens", "name": { "en": "Place Eldritch Tokens", "ru": "Выложите жетоны Древних" } },
+    { "id": "resolve-text", "name": { "en": "Resolve Text Effect", "ru": "Разыграйте текстовый эффект" } }
+  ],
+  "mythosTraits": ["event", "ongoing"],
+  "reckoningOrder": ["monsters", "ancient-one", "ongoing-mythos", "possessions-and-conditions"],
+  "combatSteps": ["check-monster-effects", "will-test", "strength-test"],
+  "investigatorStates": ["delayed", "defeated", "devoured"],
+  "pathTypes": ["train", "ship", "uncharted", "local"],
+  "spaceKinds": ["city", "wilderness", "sea"],
+  "regions": ["america", "europe", "asia"]
+}

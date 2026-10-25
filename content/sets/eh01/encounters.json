@@ -1,0 +1,665 @@
+[
+  {
+    "id": "america",
+    "kind": "location",
+    "region": "america",
+    "cards": [
+      {
+        "id": "eh01/encounter/america/01",
+        "name": "01",
+        "images": {
+          "front": "cards/eh01/encounter/america/01.jpg",
+          "back": "cards/eh01/encounter/america/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/america/02",
+        "name": "02",
+        "images": {
+          "front": "cards/eh01/encounter/america/02.jpg",
+          "back": "cards/eh01/encounter/america/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/america/03",
+        "name": "03",
+        "images": {
+          "front": "cards/eh01/encounter/america/03.jpg",
+          "back": "cards/eh01/encounter/america/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/america/04",
+        "name": "04",
+        "images": {
+          "front": "cards/eh01/encounter/america/04.jpg",
+          "back": "cards/eh01/encounter/america/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/america/05",
+        "name": "05",
+        "images": {
+          "front": "cards/eh01/encounter/america/05.jpg",
+          "back": "cards/eh01/encounter/america/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/america/06",
+        "name": "06",
+        "images": {
+          "front": "cards/eh01/encounter/america/06.jpg",
+          "back": "cards/eh01/encounter/america/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/america/07",
+        "name": "07",
+        "images": {
+          "front": "cards/eh01/encounter/america/07.jpg",
+          "back": "cards/eh01/encounter/america/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/america/08",
+        "name": "08",
+        "images": {
+          "front": "cards/eh01/encounter/america/08.jpg",
+          "back": "cards/eh01/encounter/america/back.jpg"
+        }
+      }
+    ]
+  },
+  {
+    "id": "europe",
+    "kind": "location",
+    "region": "europe",
+    "cards": [
+      {
+        "id": "eh01/encounter/europe/01",
+        "name": "01",
+        "images": {
+          "front": "cards/eh01/encounter/europe/01.jpg",
+          "back": "cards/eh01/encounter/europe/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/europe/02",
+        "name": "02",
+        "images": {
+          "front": "cards/eh01/encounter/europe/02.jpg",
+          "back": "cards/eh01/encounter/europe/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/europe/03",
+        "name": "03",
+        "images": {
+          "front": "cards/eh01/encounter/europe/03.jpg",
+          "back": "cards/eh01/encounter/europe/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/europe/04",
+        "name": "04",
+        "images": {
+          "front": "cards/eh01/encounter/europe/04.jpg",
+          "back": "cards/eh01/encounter/europe/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/europe/05",
+        "name": "05",
+        "images": {
+          "front": "cards/eh01/encounter/europe/05.jpg",
+          "back": "cards/eh01/encounter/europe/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/europe/06",
+        "name": "06",
+        "images": {
+          "front": "cards/eh01/encounter/europe/06.jpg",
+          "back": "cards/eh01/encounter/europe/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/europe/07",
+        "name": "07",
+        "images": {
+          "front": "cards/eh01/encounter/europe/07.jpg",
+          "back": "cards/eh01/encounter/europe/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/europe/08",
+        "name": "08",
+        "images": {
+          "front": "cards/eh01/encounter/europe/08.jpg",
+          "back": "cards/eh01/encounter/europe/back.jpg"
+        }
+      }
+    ]
+  },
+  {
+    "id": "asia",
+    "kind": "location",
+    "region": "asia",
+    "cards": [
+      {
+        "id": "eh01/encounter/asia/01",
+        "name": "01",
+        "images": {
+          "front": "cards/eh01/encounter/asia/01.jpg",
+          "back": "cards/eh01/encounter/asia/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/asia/02",
+        "name": "02",
+        "images": {
+          "front": "cards/eh01/encounter/asia/02.jpg",
+          "back": "cards/eh01/encounter/asia/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/asia/03",
+        "name": "03",
+        "images": {
+          "front": "cards/eh01/encounter/asia/03.jpg",
+          "back": "cards/eh01/encounter/asia/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/asia/04",
+        "name": "04",
+        "images": {
+          "front": "cards/eh01/encounter/asia/04.jpg",
+          "back": "cards/eh01/encounter/asia/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/asia/05",
+        "name": "05",
+        "images": {
+          "front": "cards/eh01/encounter/asia/05.jpg",
+          "back": "cards/eh01/encounter/asia/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/asia/06",
+        "name": "06",
+        "images": {
+          "front": "cards/eh01/encounter/asia/06.jpg",
+          "back": "cards/eh01/encounter/asia/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/asia/07",
+        "name": "07",
+        "images": {
+          "front": "cards/eh01/encounter/asia/07.jpg",
+          "back": "cards/eh01/encounter/asia/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/asia/08",
+        "name": "08",
+        "images": {
+          "front": "cards/eh01/encounter/asia/08.jpg",
+          "back": "cards/eh01/encounter/asia/back.jpg"
+        }
+      }
+    ]
+  },
+  {
+    "id": "general",
+    "kind": "general",
+    "cards": [
+      {
+        "id": "eh01/encounter/general/01",
+        "name": "01",
+        "images": {
+          "front": "cards/eh01/encounter/general/01.jpg",
+          "back": "cards/eh01/encounter/general/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/general/02",
+        "name": "02",
+        "images": {
+          "front": "cards/eh01/encounter/general/02.jpg",
+          "back": "cards/eh01/encounter/general/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/general/03",
+        "name": "03",
+        "images": {
+          "front": "cards/eh01/encounter/general/03.jpg",
+          "back": "cards/eh01/encounter/general/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/general/04",
+        "name": "04",
+        "images": {
+          "front": "cards/eh01/encounter/general/04.jpg",
+          "back": "cards/eh01/encounter/general/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/general/05",
+        "name": "05",
+        "images": {
+          "front": "cards/eh01/encounter/general/05.jpg",
+          "back": "cards/eh01/encounter/general/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/general/06",
+        "name": "06",
+        "images": {
+          "front": "cards/eh01/encounter/general/06.jpg",
+          "back": "cards/eh01/encounter/general/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/general/07",
+        "name": "07",
+        "images": {
+          "front": "cards/eh01/encounter/general/07.jpg",
+          "back": "cards/eh01/encounter/general/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/general/08",
+        "name": "08",
+        "images": {
+          "front": "cards/eh01/encounter/general/08.jpg",
+          "back": "cards/eh01/encounter/general/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/general/09",
+        "name": "09",
+        "images": {
+          "front": "cards/eh01/encounter/general/09.jpg",
+          "back": "cards/eh01/encounter/general/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/general/10",
+        "name": "10",
+        "images": {
+          "front": "cards/eh01/encounter/general/10.jpg",
+          "back": "cards/eh01/encounter/general/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/general/11",
+        "name": "11",
+        "images": {
+          "front": "cards/eh01/encounter/general/11.jpg",
+          "back": "cards/eh01/encounter/general/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/general/12",
+        "name": "12",
+        "images": {
+          "front": "cards/eh01/encounter/general/12.jpg",
+          "back": "cards/eh01/encounter/general/back.jpg"
+        }
+      }
+    ]
+  },
+  {
+    "id": "other-world",
+    "kind": "other-world",
+    "cards": [
+      {
+        "id": "eh01/encounter/other-world/01",
+        "name": "01",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/01.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/02",
+        "name": "02",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/02.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/03",
+        "name": "03",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/03.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/04",
+        "name": "04",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/04.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/05",
+        "name": "05",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/05.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/06",
+        "name": "06",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/06.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/07",
+        "name": "07",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/07.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/08",
+        "name": "08",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/08.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/09",
+        "name": "09",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/09.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/10",
+        "name": "10",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/10.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/11",
+        "name": "11",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/11.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/12",
+        "name": "12",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/12.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/13",
+        "name": "13",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/13.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/14",
+        "name": "14",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/14.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/15",
+        "name": "15",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/15.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/16",
+        "name": "16",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/16.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/17",
+        "name": "17",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/17.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/18",
+        "name": "18",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/18.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/19",
+        "name": "19",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/19.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/20",
+        "name": "20",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/20.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/21",
+        "name": "21",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/21.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/22",
+        "name": "22",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/22.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/23",
+        "name": "23",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/23.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/other-world/24",
+        "name": "24",
+        "images": {
+          "front": "cards/eh01/encounter/other-world/24.jpg",
+          "back": "cards/eh01/encounter/other-world/back.jpg"
+        }
+      }
+    ]
+  },
+  {
+    "id": "expedition",
+    "kind": "expedition",
+    "cards": [
+      {
+        "id": "eh01/encounter/expedition/antarctica-01",
+        "name": "Antarctica - 01",
+        "images": {
+          "front": "cards/eh01/encounter/expedition/encounter-expedition-antarctica-01.jpg",
+          "back": "cards/eh01/encounter/expedition/encounter-expedition-antarctica-01-back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/expedition/antarctica-02",
+        "name": "Antarctica - 02",
+        "images": {
+          "front": "cards/eh01/encounter/expedition/encounter-expedition-antarctica-02.jpg",
+          "back": "cards/eh01/encounter/expedition/encounter-expedition-antarctica-02-back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/expedition/antarctica-03",
+        "name": "Antarctica - 03",
+        "images": {
+          "front": "cards/eh01/encounter/expedition/encounter-expedition-antarctica-03.jpg",
+          "back": "cards/eh01/encounter/expedition/encounter-expedition-antarctica-03-back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/expedition/the-amazon-01",
+        "name": "The Amazon - 01",
+        "images": {
+          "front": "cards/eh01/encounter/expedition/encounter-expedition-the-amazon-01.jpg",
+          "back": "cards/eh01/encounter/expedition/encounter-expedition-the-amazon-01-back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/expedition/the-amazon-02",
+        "name": "The Amazon - 02",
+        "images": {
+          "front": "cards/eh01/encounter/expedition/encounter-expedition-the-amazon-02.jpg",
+          "back": "cards/eh01/encounter/expedition/encounter-expedition-the-amazon-02-back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/expedition/the-amazon-03",
+        "name": "The Amazon - 03",
+        "images": {
+          "front": "cards/eh01/encounter/expedition/encounter-expedition-the-amazon-03.jpg",
+          "back": "cards/eh01/encounter/expedition/encounter-expedition-the-amazon-03-back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/expedition/the-heart-of-africa-01",
+        "name": "The Heart of Africa - 01",
+        "images": {
+          "front": "cards/eh01/encounter/expedition/encounter-expedition-the-heart-of-africa-01.jpg",
+          "back": "cards/eh01/encounter/expedition/encounter-expedition-the-heart-of-africa-01-back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/expedition/the-heart-of-africa-02",
+        "name": "The Heart of Africa - 02",
+        "images": {
+          "front": "cards/eh01/encounter/expedition/encounter-expedition-the-heart-of-africa-02.jpg",
+          "back": "cards/eh01/encounter/expedition/encounter-expedition-the-heart-of-africa-02-back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/expedition/the-heart-of-africa-03",
+        "name": "The Heart of Africa - 03",
+        "images": {
+          "front": "cards/eh01/encounter/expedition/encounter-expedition-the-heart-of-africa-03.jpg",
+          "back": "cards/eh01/encounter/expedition/encounter-expedition-the-heart-of-africa-03-back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/expedition/the-himalayas-01",
+        "name": "The Himalayas - 01",
+        "images": {
+          "front": "cards/eh01/encounter/expedition/encounter-expedition-the-himalayas-01.jpg",
+          "back": "cards/eh01/encounter/expedition/encounter-expedition-the-himalayas-01-back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/expedition/the-himalayas-02",
+        "name": "The Himalayas - 02",
+        "images": {
+          "front": "cards/eh01/encounter/expedition/encounter-expedition-the-himalayas-02.jpg",
+          "back": "cards/eh01/encounter/expedition/encounter-expedition-the-himalayas-02-back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/expedition/the-himalayas-03",
+        "name": "The Himalayas - 03",
+        "images": {
+          "front": "cards/eh01/encounter/expedition/encounter-expedition-the-himalayas-03.jpg",
+          "back": "cards/eh01/encounter/expedition/encounter-expedition-the-himalayas-03-back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/expedition/the-pyramids-01",
+        "name": "The Pyramids - 01",
+        "images": {
+          "front": "cards/eh01/encounter/expedition/encounter-expedition-the-pyramids-01.jpg",
+          "back": "cards/eh01/encounter/expedition/encounter-expedition-the-pyramids-01-back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/expedition/the-pyramids-02",
+        "name": "The Pyramids - 02",
+        "images": {
+          "front": "cards/eh01/encounter/expedition/encounter-expedition-the-pyramids-02.jpg",
+          "back": "cards/eh01/encounter/expedition/encounter-expedition-the-pyramids-02-back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/expedition/the-pyramids-03",
+        "name": "The Pyramids - 03",
+        "images": {
+          "front": "cards/eh01/encounter/expedition/encounter-expedition-the-pyramids-03.jpg",
+          "back": "cards/eh01/encounter/expedition/encounter-expedition-the-pyramids-03-back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/expedition/tunguska-01",
+        "name": "Tunguska - 01",
+        "images": {
+          "front": "cards/eh01/encounter/expedition/encounter-expedition-tunguska-01.jpg",
+          "back": "cards/eh01/encounter/expedition/encounter-expedition-tunguska-01-back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/expedition/tunguska-02",
+        "name": "Tunguska - 02",
+        "images": {
+          "front": "cards/eh01/encounter/expedition/encounter-expedition-tunguska-02.jpg",
+          "back": "cards/eh01/encounter/expedition/encounter-expedition-tunguska-02-back.jpg"
+        }
+      },
+      {
+        "id": "eh01/encounter/expedition/tunguska-03",
+        "name": "Tunguska - 03",
+        "images": {
+          "front": "cards/eh01/encounter/expedition/encounter-expedition-tunguska-03.jpg",
+          "back": "cards/eh01/encounter/expedition/encounter-expedition-tunguska-03-back.jpg"
+        }
+      }
+    ]
+  }
+]

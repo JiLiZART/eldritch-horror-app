@@ -1,0 +1,310 @@
+[
+  {
+    "id": "eh01/investigator/akachi-onyele",
+    "name": "Akachi Onyele",
+    "health": 5,
+    "sanity": 7,
+    "skills": {
+      "lore": 3,
+      "influence": 2,
+      "observation": 2,
+      "strength": 2,
+      "will": 4
+    },
+    "startingSpace": "space-15",
+    "starting": {
+      "clues": 1,
+      "spells": [
+        "eh01/spell/mists-of-releh"
+      ]
+    },
+    "personalStory": "Guardian of the Veil",
+    "images": {
+      "front": "cards/eh01/investigator/akachi-onyele.jpg",
+      "back": "cards/eh01/investigator/akachi-onyele-back.jpg"
+    },
+    "pawn": "cards/eh01/investigator/pawn/akachi-onyele.png"
+  },
+  {
+    "id": "eh01/investigator/charlie-kane",
+    "name": "Charlie Kane",
+    "health": 4,
+    "sanity": 8,
+    "skills": {
+      "lore": 2,
+      "influence": 4,
+      "observation": 3,
+      "strength": 2,
+      "will": 2
+    },
+    "startingSpace": "san-francisco",
+    "starting": {
+      "assets": [
+        "eh01/asset/personal-assistant"
+      ]
+    },
+    "personalStory": "Citizen Kane",
+    "images": {
+      "front": "cards/eh01/investigator/charlie-kane.jpg",
+      "back": "cards/eh01/investigator/charlie-kane-back.jpg"
+    },
+    "pawn": "cards/eh01/investigator/pawn/charlie-kane.png"
+  },
+  {
+    "id": "eh01/investigator/diana-stanley",
+    "name": "Diana Stanley",
+    "health": 7,
+    "sanity": 5,
+    "skills": {
+      "lore": 4,
+      "influence": 2,
+      "observation": 3,
+      "strength": 3,
+      "will": 1
+    },
+    "startingSpace": "space-7",
+    "starting": {
+      "assets": [
+        "eh01/asset/arcane-manuscripts"
+      ],
+      "spells": [
+        "eh01/spell/wither"
+      ]
+    },
+    "personalStory": "Bound by the Past",
+    "images": {
+      "front": "cards/eh01/investigator/diana-stanley.jpg",
+      "back": "cards/eh01/investigator/diana-stanley-back.jpg"
+    },
+    "pawn": "cards/eh01/investigator/pawn/diana-stanley.png"
+  },
+  {
+    "id": "eh01/investigator/jacqueline-fine",
+    "name": "Jacqueline Fine",
+    "health": 4,
+    "sanity": 8,
+    "skills": {
+      "lore": 4,
+      "influence": 2,
+      "observation": 3,
+      "strength": 1,
+      "will": 3
+    },
+    "startingSpace": "space-5",
+    "starting": {
+      "clues": 1,
+      "spells": [
+        "eh01/spell/flesh-ward"
+      ]
+    },
+    "personalStory": "Arbiter of Fate",
+    "images": {
+      "front": "cards/eh01/investigator/jacqueline-fine.jpg",
+      "back": "cards/eh01/investigator/jacqueline-fine-back.jpg"
+    },
+    "pawn": "cards/eh01/investigator/pawn/jacqueline-fine.png"
+  },
+  {
+    "id": "eh01/investigator/jim-culver",
+    "name": "Jim Culver",
+    "health": 7,
+    "sanity": 5,
+    "skills": {
+      "lore": 3,
+      "influence": 3,
+      "observation": 2,
+      "strength": 2,
+      "will": 3
+    },
+    "startingSpace": "space-6",
+    "starting": {
+      "clues": 1,
+      "spells": [
+        "eh01/spell/shriveling"
+      ]
+    },
+    "personalStory": "Dead Rising",
+    "images": {
+      "front": "cards/eh01/investigator/jim-culver.jpg",
+      "back": "cards/eh01/investigator/jim-culver-back.jpg"
+    },
+    "pawn": "cards/eh01/investigator/pawn/jim-culver.png"
+  },
+  {
+    "id": "eh01/investigator/leo-anderson",
+    "name": "Leo Anderson",
+    "health": 6,
+    "sanity": 6,
+    "skills": {
+      "lore": 2,
+      "influence": 2,
+      "observation": 3,
+      "strength": 3,
+      "will": 3
+    },
+    "startingSpace": "buenos-aires",
+    "starting": {
+      "assets": [
+        "eh01/asset/hired-muscle"
+      ]
+    },
+    "personalStory": "The Expedition",
+    "images": {
+      "front": "cards/eh01/investigator/leo-anderson.jpg",
+      "back": "cards/eh01/investigator/leo-anderson-back.jpg"
+    },
+    "pawn": "cards/eh01/investigator/pawn/leo-anderson.png"
+  },
+  {
+    "id": "eh01/investigator/lily-chen",
+    "name": "Lily Chen",
+    "health": 6,
+    "sanity": 6,
+    "skills": {
+      "lore": 2,
+      "influence": 2,
+      "observation": 2,
+      "strength": 4,
+      "will": 3
+    },
+    "startingSpace": "shanghai",
+    "starting": {
+      "assets": [
+        "eh01/asset/protective-amulet",
+        "eh01/asset/lucky-rabbit-s-foot"
+      ]
+    },
+    "personalStory": "All That Stands",
+    "images": {
+      "front": "cards/eh01/investigator/lily-chen.jpg",
+      "back": "cards/eh01/investigator/lily-chen-back.jpg"
+    },
+    "pawn": "cards/eh01/investigator/pawn/lily-chen.png"
+  },
+  {
+    "id": "eh01/investigator/lola-hayes",
+    "name": "Lola Hayes",
+    "health": 5,
+    "sanity": 7,
+    "skills": {
+      "lore": 2,
+      "influence": 4,
+      "observation": 2,
+      "strength": 2,
+      "will": 3
+    },
+    "startingSpace": "tokyo",
+    "starting": {
+      "assets": [
+        "eh01/asset/18-derringer"
+      ]
+    },
+    "personalStory": "In the Limelight",
+    "images": {
+      "front": "cards/eh01/investigator/lola-hayes.jpg",
+      "back": "cards/eh01/investigator/lola-hayes-back.jpg"
+    },
+    "pawn": "cards/eh01/investigator/pawn/lola-hayes.png"
+  },
+  {
+    "id": "eh01/investigator/mark-harrigan",
+    "name": "Mark Harrigan",
+    "health": 8,
+    "sanity": 4,
+    "skills": {
+      "lore": 1,
+      "influence": 2,
+      "observation": 2,
+      "strength": 4,
+      "will": 4
+    },
+    "startingSpace": "space-14",
+    "starting": {
+      "assets": [
+        "eh01/asset/38-revolver",
+        "eh01/asset/kerosene"
+      ]
+    },
+    "personalStory": "Shadowed Heart",
+    "images": {
+      "front": "cards/eh01/investigator/mark-harrigan.jpg",
+      "back": "cards/eh01/investigator/mark-harrigan-back.jpg"
+    },
+    "pawn": "cards/eh01/investigator/pawn/mark-harrigan.png"
+  },
+  {
+    "id": "eh01/investigator/norman-withers",
+    "name": "Norman Withers",
+    "health": 5,
+    "sanity": 7,
+    "skills": {
+      "lore": 3,
+      "influence": 1,
+      "observation": 3,
+      "strength": 2,
+      "will": 4
+    },
+    "startingSpace": "arkham",
+    "starting": {
+      "spells": [
+        "eh01/spell/feed-the-mind"
+      ]
+    },
+    "personalStory": "Written in the Stars",
+    "images": {
+      "front": "cards/eh01/investigator/norman-withers.jpg",
+      "back": "cards/eh01/investigator/norman-withers-back.jpg"
+    },
+    "pawn": "cards/eh01/investigator/pawn/norman-withers.png"
+  },
+  {
+    "id": "eh01/investigator/silas-marsh",
+    "name": "Silas Marsh",
+    "health": 8,
+    "sanity": 4,
+    "skills": {
+      "lore": 1,
+      "influence": 3,
+      "observation": 3,
+      "strength": 3,
+      "will": 3
+    },
+    "startingSpace": "sydney",
+    "starting": {
+      "assets": [
+        "eh01/asset/fishing-net"
+      ]
+    },
+    "personalStory": "The Call",
+    "images": {
+      "front": "cards/eh01/investigator/silas-marsh.jpg",
+      "back": "cards/eh01/investigator/silas-marsh-back.jpg"
+    },
+    "pawn": "cards/eh01/investigator/pawn/silas-marsh.png"
+  },
+  {
+    "id": "eh01/investigator/trish-scarborough",
+    "name": "Trish Scarborough",
+    "health": 7,
+    "sanity": 5,
+    "skills": {
+      "lore": 1,
+      "influence": 3,
+      "observation": 4,
+      "strength": 3,
+      "will": 2
+    },
+    "startingSpace": "space-16",
+    "starting": {
+      "assets": [
+        "eh01/asset/45-automatic"
+      ]
+    },
+    "personalStory": "Cracking the Code",
+    "images": {
+      "front": "cards/eh01/investigator/trish-scarborough.jpg",
+      "back": "cards/eh01/investigator/trish-scarborough-back.jpg"
+    },
+    "pawn": "cards/eh01/investigator/pawn/trish-scarborough.png"
+  }
+]

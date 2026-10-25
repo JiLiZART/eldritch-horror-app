@@ -1,0 +1,1083 @@
+{
+  "source": {
+    "file": "inspired/All_boards.jpg",
+    "width": 9437,
+    "height": 6198
+  },
+  "texture": "board/all-boards.jpg",
+  "spaces": [
+    {
+      "id": "san-francisco",
+      "name": {
+        "en": "San Francisco",
+        "ru": "Сан-Франциско"
+      },
+      "kind": "city",
+      "region": "america",
+      "set": "eh01",
+      "x": 0.066,
+      "y": 0.348
+    },
+    {
+      "id": "arkham",
+      "name": {
+        "en": "Arkham",
+        "ru": "Аркхэм"
+      },
+      "kind": "city",
+      "region": "america",
+      "set": "eh01",
+      "x": 0.238,
+      "y": 0.359
+    },
+    {
+      "id": "buenos-aires",
+      "name": {
+        "en": "Buenos Aires",
+        "ru": "Буэнос-Айрес"
+      },
+      "kind": "city",
+      "region": "america",
+      "set": "eh01",
+      "x": 0.233,
+      "y": 0.772
+    },
+    {
+      "id": "london",
+      "name": {
+        "en": "London",
+        "ru": "Лондон"
+      },
+      "kind": "city",
+      "region": "europe",
+      "set": "eh01",
+      "x": 0.407,
+      "y": 0.304
+    },
+    {
+      "id": "rome",
+      "name": {
+        "en": "Rome",
+        "ru": "Рим"
+      },
+      "kind": "city",
+      "region": "europe",
+      "set": "eh01",
+      "x": 0.466,
+      "y": 0.417
+    },
+    {
+      "id": "istanbul",
+      "name": {
+        "en": "Istanbul",
+        "ru": "Стамбул"
+      },
+      "kind": "city",
+      "region": "europe",
+      "set": "eh01",
+      "x": 0.57,
+      "y": 0.373
+    },
+    {
+      "id": "shanghai",
+      "name": {
+        "en": "Shanghai",
+        "ru": "Шанхай"
+      },
+      "kind": "city",
+      "region": "asia",
+      "set": "eh01",
+      "x": 0.809,
+      "y": 0.526
+    },
+    {
+      "id": "tokyo",
+      "name": {
+        "en": "Tokyo",
+        "ru": "Токио"
+      },
+      "kind": "city",
+      "region": "asia",
+      "set": "eh01",
+      "x": 0.892,
+      "y": 0.433
+    },
+    {
+      "id": "sydney",
+      "name": {
+        "en": "Sydney",
+        "ru": "Сидней"
+      },
+      "kind": "city",
+      "region": "asia",
+      "set": "eh01",
+      "x": 0.878,
+      "y": 0.855
+    },
+    {
+      "id": "the-amazon",
+      "name": {
+        "en": "The Amazon",
+        "ru": "Амазония"
+      },
+      "kind": "wilderness",
+      "region": "america",
+      "set": "eh01",
+      "x": 0.239,
+      "y": 0.62
+    },
+    {
+      "id": "the-heart-of-africa",
+      "name": {
+        "en": "The Heart of Africa",
+        "ru": "Сердце Африки"
+      },
+      "kind": "wilderness",
+      "region": "europe",
+      "set": "eh01",
+      "x": 0.566,
+      "y": 0.723
+    },
+    {
+      "id": "the-himalayas",
+      "name": {
+        "en": "The Himalayas",
+        "ru": "Гималаи"
+      },
+      "kind": "wilderness",
+      "region": "asia",
+      "set": "eh01",
+      "x": 0.699,
+      "y": 0.454
+    },
+    {
+      "id": "tunguska",
+      "name": {
+        "en": "Tunguska",
+        "ru": "Тунгуска"
+      },
+      "kind": "wilderness",
+      "region": "asia",
+      "set": "eh01",
+      "x": 0.718,
+      "y": 0.308
+    },
+    {
+      "id": "antarctica",
+      "name": {
+        "en": "Antarctica",
+        "ru": "Антарктида"
+      },
+      "kind": "sea",
+      "region": "asia",
+      "set": "eh01",
+      "x": 0.818,
+      "y": 0.943
+    },
+    {
+      "id": "the-pyramids",
+      "name": {
+        "en": "The Pyramids",
+        "ru": "Пирамиды"
+      },
+      "kind": "wilderness",
+      "region": "europe",
+      "set": "eh01",
+      "x": 0.554,
+      "y": 0.624
+    },
+    {
+      "id": "space-1",
+      "name": {
+        "en": "Space 1",
+        "ru": "Локация 1"
+      },
+      "kind": "city",
+      "number": 1,
+      "set": "eh01",
+      "x": 0.062,
+      "y": 0.226
+    },
+    {
+      "id": "space-2",
+      "name": {
+        "en": "Space 2",
+        "ru": "Локация 2"
+      },
+      "kind": "sea",
+      "number": 2,
+      "set": "eh01",
+      "x": 0.034,
+      "y": 0.399
+    },
+    {
+      "id": "space-3",
+      "name": {
+        "en": "Space 3",
+        "ru": "Локация 3"
+      },
+      "kind": "sea",
+      "number": 3,
+      "set": "eh01",
+      "x": 0.109,
+      "y": 0.773
+    },
+    {
+      "id": "space-4",
+      "name": {
+        "en": "Space 4",
+        "ru": "Локация 4"
+      },
+      "kind": "wilderness",
+      "number": 4,
+      "set": "eh01",
+      "x": 0.162,
+      "y": 0.226
+    },
+    {
+      "id": "space-5",
+      "name": {
+        "en": "Space 5",
+        "ru": "Локация 5"
+      },
+      "kind": "city",
+      "number": 5,
+      "set": "eh01",
+      "x": 0.184,
+      "y": 0.302
+    },
+    {
+      "id": "space-6",
+      "name": {
+        "en": "Space 6",
+        "ru": "Локация 6"
+      },
+      "kind": "city",
+      "number": 6,
+      "set": "eh01",
+      "x": 0.155,
+      "y": 0.391
+    },
+    {
+      "id": "space-7",
+      "name": {
+        "en": "Space 7",
+        "ru": "Локация 7"
+      },
+      "kind": "city",
+      "number": 7,
+      "set": "eh01",
+      "x": 0.203,
+      "y": 0.508
+    },
+    {
+      "id": "space-8",
+      "name": {
+        "en": "Space 8",
+        "ru": "Локация 8"
+      },
+      "kind": "sea",
+      "number": 8,
+      "set": "eh01",
+      "x": 0.267,
+      "y": 0.419
+    },
+    {
+      "id": "space-9",
+      "name": {
+        "en": "Space 9",
+        "ru": "Локация 9"
+      },
+      "kind": "wilderness",
+      "number": 9,
+      "set": "eh01",
+      "x": 0.344,
+      "y": 0.163
+    },
+    {
+      "id": "space-10",
+      "name": {
+        "en": "Space 10",
+        "ru": "Локация 10"
+      },
+      "kind": "wilderness",
+      "number": 10,
+      "set": "eh01",
+      "x": 0.429,
+      "y": 0.57
+    },
+    {
+      "id": "space-11",
+      "name": {
+        "en": "Space 11",
+        "ru": "Локация 11"
+      },
+      "kind": "sea",
+      "number": 11,
+      "set": "eh01",
+      "x": 0.439,
+      "y": 0.773
+    },
+    {
+      "id": "space-12",
+      "name": {
+        "en": "Space 12",
+        "ru": "Локация 12"
+      },
+      "kind": "sea",
+      "number": 12,
+      "set": "eh01",
+      "x": 0.396,
+      "y": 0.827
+    },
+    {
+      "id": "space-13",
+      "name": {
+        "en": "Space 13",
+        "ru": "Локация 13"
+      },
+      "kind": "sea",
+      "number": 13,
+      "set": "eh01",
+      "x": 0.58,
+      "y": 0.134
+    },
+    {
+      "id": "space-14",
+      "name": {
+        "en": "Space 14",
+        "ru": "Локация 14"
+      },
+      "kind": "city",
+      "number": 14,
+      "set": "eh01",
+      "x": 0.549,
+      "y": 0.26
+    },
+    {
+      "id": "space-15",
+      "name": {
+        "en": "Space 15",
+        "ru": "Локация 15"
+      },
+      "kind": "city",
+      "number": 15,
+      "set": "eh01",
+      "x": 0.539,
+      "y": 0.791
+    },
+    {
+      "id": "space-16",
+      "name": {
+        "en": "Space 16",
+        "ru": "Локация 16"
+      },
+      "kind": "city",
+      "number": 16,
+      "set": "eh01",
+      "x": 0.674,
+      "y": 0.266
+    },
+    {
+      "id": "space-17",
+      "name": {
+        "en": "Space 17",
+        "ru": "Локация 17"
+      },
+      "kind": "city",
+      "number": 17,
+      "set": "eh01",
+      "x": 0.708,
+      "y": 0.53
+    },
+    {
+      "id": "space-18",
+      "name": {
+        "en": "Space 18",
+        "ru": "Локация 18"
+      },
+      "kind": "sea",
+      "number": 18,
+      "set": "eh01",
+      "x": 0.716,
+      "y": 0.795
+    },
+    {
+      "id": "space-19",
+      "name": {
+        "en": "Space 19",
+        "ru": "Локация 19"
+      },
+      "kind": "wilderness",
+      "number": 19,
+      "set": "eh01",
+      "x": 0.918,
+      "y": 0.264
+    },
+    {
+      "id": "space-20",
+      "name": {
+        "en": "Space 20",
+        "ru": "Локация 20"
+      },
+      "kind": "city",
+      "number": 20,
+      "set": "eh01",
+      "x": 0.846,
+      "y": 0.636
+    },
+    {
+      "id": "space-21",
+      "name": {
+        "en": "Space 21",
+        "ru": "Локация 21"
+      },
+      "kind": "wilderness",
+      "number": 21,
+      "set": "eh01",
+      "x": 0.88,
+      "y": 0.721
+    },
+    {
+      "id": "eh05-the-sahara",
+      "name": {
+        "en": "The Sahara",
+        "ru": "Сахара"
+      },
+      "kind": "wilderness",
+      "set": "eh05",
+      "x": 0.413,
+      "y": 0.518
+    },
+    {
+      "id": "eh05-alexandria",
+      "name": {
+        "en": "Alexandria",
+        "ru": "Александрия"
+      },
+      "kind": "city",
+      "set": "eh05",
+      "x": 0.482,
+      "y": 0.536
+    },
+    {
+      "id": "eh05-cairo",
+      "name": {
+        "en": "Cairo",
+        "ru": "Каир"
+      },
+      "kind": "city",
+      "set": "eh05",
+      "x": 0.617,
+      "y": 0.55
+    },
+    {
+      "id": "eh05-amarna",
+      "name": {
+        "en": "Amarna",
+        "ru": "Амарна"
+      },
+      "kind": "wilderness",
+      "set": "eh05",
+      "x": 0.479,
+      "y": 0.643
+    },
+    {
+      "id": "eh05-the-nile",
+      "name": {
+        "en": "The Nile",
+        "ru": "Нил"
+      },
+      "kind": "wilderness",
+      "set": "eh05",
+      "x": 0.495,
+      "y": 0.75
+    },
+    {
+      "id": "eh05-the-bent-pyramid",
+      "name": {
+        "en": "The Bent Pyramid",
+        "ru": "Ломаная пирамида"
+      },
+      "kind": "wilderness",
+      "set": "eh05",
+      "x": 0.558,
+      "y": 0.483
+    },
+    {
+      "id": "eh03-plateau-of-leng",
+      "name": {
+        "en": "Plateau of Leng",
+        "ru": "Плато Ленг"
+      },
+      "kind": "wilderness",
+      "set": "eh03",
+      "x": 0.397,
+      "y": 0.905
+    },
+    {
+      "id": "eh03-city-of-the-elder-things",
+      "name": {
+        "en": "City of the Elder Things",
+        "ru": "Город Старцев"
+      },
+      "kind": "wilderness",
+      "set": "eh03",
+      "x": 0.471,
+      "y": 0.905
+    },
+    {
+      "id": "eh03-snowy-mountains",
+      "name": {
+        "en": "Snowy Mountains",
+        "ru": "Снежные горы"
+      },
+      "kind": "wilderness",
+      "set": "eh03",
+      "x": 0.549,
+      "y": 0.903
+    },
+    {
+      "id": "eh03-frozen-waste",
+      "name": {
+        "en": "Frozen Waste",
+        "ru": "Ледяная пустыня"
+      },
+      "kind": "wilderness",
+      "set": "eh03",
+      "x": 0.624,
+      "y": 0.903
+    },
+    {
+      "id": "eh03-lake-camp",
+      "name": {
+        "en": "Lake Camp",
+        "ru": "Лагерь Лейка"
+      },
+      "kind": "wilderness",
+      "set": "eh03",
+      "x": 0.696,
+      "y": 0.903
+    },
+    {
+      "id": "eh03-miskatonic-outpost",
+      "name": {
+        "en": "Miskatonic Outpost",
+        "ru": "База Мискатонской экспедиции"
+      },
+      "kind": "wilderness",
+      "set": "eh03",
+      "x": 0.774,
+      "y": 0.907
+    },
+    {
+      "id": "eh07-unknown-kadath",
+      "name": {
+        "en": "Unknown Kadath",
+        "ru": "Неведомый Кадат"
+      },
+      "kind": "wilderness",
+      "set": "eh07",
+      "x": 0.157,
+      "y": 0.176
+    },
+    {
+      "id": "eh07-celephais",
+      "name": {
+        "en": "Celephais",
+        "ru": "Селефаис"
+      },
+      "kind": "city",
+      "set": "eh07",
+      "x": 0.25,
+      "y": 0.216
+    },
+    {
+      "id": "eh07-the-moon",
+      "name": {
+        "en": "The Moon",
+        "ru": "Луна"
+      },
+      "kind": "wilderness",
+      "set": "eh07",
+      "x": 0.383,
+      "y": 0.188
+    },
+    {
+      "id": "eh07-dylath-leen",
+      "name": {
+        "en": "Dylath-Leen",
+        "ru": "Дайлат-Лин"
+      },
+      "kind": "city",
+      "set": "eh07",
+      "x": 0.493,
+      "y": 0.162
+    },
+    {
+      "id": "eh07-ulthar",
+      "name": {
+        "en": "Ulthar",
+        "ru": "Ультар"
+      },
+      "kind": "city",
+      "set": "eh07",
+      "x": 0.626,
+      "y": 0.192
+    },
+    {
+      "id": "eh07-the-enchanted-wood",
+      "name": {
+        "en": "The Enchanted Wood",
+        "ru": "Зачарованный лес"
+      },
+      "kind": "wilderness",
+      "set": "eh07",
+      "x": 0.716,
+      "y": 0.16
+    },
+    {
+      "id": "eh07-the-underworld",
+      "name": {
+        "en": "The Underworld",
+        "ru": "Подземный мир"
+      },
+      "kind": "wilderness",
+      "set": "eh07",
+      "x": 0.808,
+      "y": 0.184
+    }
+  ],
+  "paths": [
+    {
+      "from": "san-francisco",
+      "to": "space-5",
+      "type": "train"
+    },
+    {
+      "from": "san-francisco",
+      "to": "space-6",
+      "type": "train"
+    },
+    {
+      "from": "space-5",
+      "to": "arkham",
+      "type": "train"
+    },
+    {
+      "from": "space-6",
+      "to": "space-7",
+      "type": "train"
+    },
+    {
+      "from": "london",
+      "to": "rome",
+      "type": "train"
+    },
+    {
+      "from": "london",
+      "to": "space-14",
+      "type": "train"
+    },
+    {
+      "from": "rome",
+      "to": "istanbul",
+      "type": "train"
+    },
+    {
+      "from": "istanbul",
+      "to": "space-14",
+      "type": "train"
+    },
+    {
+      "from": "istanbul",
+      "to": "space-16",
+      "type": "train"
+    },
+    {
+      "from": "space-14",
+      "to": "space-16",
+      "type": "train"
+    },
+    {
+      "from": "space-16",
+      "to": "tunguska",
+      "type": "train"
+    },
+    {
+      "from": "tunguska",
+      "to": "space-19",
+      "type": "train"
+    },
+    {
+      "from": "tunguska",
+      "to": "shanghai",
+      "type": "train"
+    },
+    {
+      "from": "istanbul",
+      "to": "space-17",
+      "type": "train"
+    },
+    {
+      "from": "space-17",
+      "to": "shanghai",
+      "type": "train"
+    },
+    {
+      "from": "istanbul",
+      "to": "eh05-cairo",
+      "type": "train"
+    },
+    {
+      "from": "space-1",
+      "to": "san-francisco",
+      "type": "ship"
+    },
+    {
+      "from": "space-1",
+      "to": "space-19",
+      "type": "ship"
+    },
+    {
+      "from": "san-francisco",
+      "to": "space-2",
+      "type": "ship"
+    },
+    {
+      "from": "space-2",
+      "to": "space-7",
+      "type": "ship"
+    },
+    {
+      "from": "space-2",
+      "to": "tokyo",
+      "type": "ship"
+    },
+    {
+      "from": "space-7",
+      "to": "space-8",
+      "type": "ship"
+    },
+    {
+      "from": "space-7",
+      "to": "buenos-aires",
+      "type": "ship"
+    },
+    {
+      "from": "arkham",
+      "to": "london",
+      "type": "ship"
+    },
+    {
+      "from": "arkham",
+      "to": "space-8",
+      "type": "ship"
+    },
+    {
+      "from": "arkham",
+      "to": "space-9",
+      "type": "ship"
+    },
+    {
+      "from": "space-8",
+      "to": "space-10",
+      "type": "ship"
+    },
+    {
+      "from": "space-8",
+      "to": "the-amazon",
+      "type": "ship"
+    },
+    {
+      "from": "the-amazon",
+      "to": "space-10",
+      "type": "ship"
+    },
+    {
+      "from": "space-10",
+      "to": "space-11",
+      "type": "ship"
+    },
+    {
+      "from": "space-10",
+      "to": "rome",
+      "type": "ship"
+    },
+    {
+      "from": "space-9",
+      "to": "london",
+      "type": "ship"
+    },
+    {
+      "from": "space-9",
+      "to": "space-13",
+      "type": "ship"
+    },
+    {
+      "from": "space-13",
+      "to": "london",
+      "type": "ship"
+    },
+    {
+      "from": "space-3",
+      "to": "buenos-aires",
+      "type": "ship"
+    },
+    {
+      "from": "space-3",
+      "to": "sydney",
+      "type": "ship"
+    },
+    {
+      "from": "buenos-aires",
+      "to": "space-11",
+      "type": "ship"
+    },
+    {
+      "from": "buenos-aires",
+      "to": "space-12",
+      "type": "ship"
+    },
+    {
+      "from": "space-11",
+      "to": "space-15",
+      "type": "ship"
+    },
+    {
+      "from": "space-12",
+      "to": "space-18",
+      "type": "ship"
+    },
+    {
+      "from": "space-15",
+      "to": "space-18",
+      "type": "ship"
+    },
+    {
+      "from": "space-15",
+      "to": "space-17",
+      "type": "ship"
+    },
+    {
+      "from": "rome",
+      "to": "space-15",
+      "type": "ship"
+    },
+    {
+      "from": "space-17",
+      "to": "space-20",
+      "type": "ship"
+    },
+    {
+      "from": "space-17",
+      "to": "eh05-cairo",
+      "type": "ship"
+    },
+    {
+      "from": "space-18",
+      "to": "sydney",
+      "type": "ship"
+    },
+    {
+      "from": "space-18",
+      "to": "antarctica",
+      "type": "ship"
+    },
+    {
+      "from": "antarctica",
+      "to": "sydney",
+      "type": "ship"
+    },
+    {
+      "from": "space-20",
+      "to": "sydney",
+      "type": "ship"
+    },
+    {
+      "from": "space-20",
+      "to": "shanghai",
+      "type": "ship"
+    },
+    {
+      "from": "space-20",
+      "to": "tokyo",
+      "type": "ship"
+    },
+    {
+      "from": "shanghai",
+      "to": "tokyo",
+      "type": "ship"
+    },
+    {
+      "from": "space-19",
+      "to": "tokyo",
+      "type": "ship"
+    },
+    {
+      "from": "eh07-unknown-kadath",
+      "to": "eh07-celephais",
+      "type": "ship"
+    },
+    {
+      "from": "eh07-unknown-kadath",
+      "to": "space-9",
+      "type": "ship"
+    },
+    {
+      "from": "eh07-celephais",
+      "to": "arkham",
+      "type": "ship"
+    },
+    {
+      "from": "eh07-the-moon",
+      "to": "space-9",
+      "type": "ship"
+    },
+    {
+      "from": "eh07-the-moon",
+      "to": "eh07-dylath-leen",
+      "type": "ship"
+    },
+    {
+      "from": "space-1",
+      "to": "space-4",
+      "type": "uncharted"
+    },
+    {
+      "from": "space-4",
+      "to": "space-5",
+      "type": "uncharted"
+    },
+    {
+      "from": "space-7",
+      "to": "the-amazon",
+      "type": "uncharted"
+    },
+    {
+      "from": "the-amazon",
+      "to": "buenos-aires",
+      "type": "uncharted"
+    },
+    {
+      "from": "space-10",
+      "to": "the-pyramids",
+      "type": "uncharted"
+    },
+    {
+      "from": "the-pyramids",
+      "to": "the-heart-of-africa",
+      "type": "uncharted"
+    },
+    {
+      "from": "the-heart-of-africa",
+      "to": "space-15",
+      "type": "uncharted"
+    },
+    {
+      "from": "the-himalayas",
+      "to": "space-17",
+      "type": "uncharted"
+    },
+    {
+      "from": "the-himalayas",
+      "to": "shanghai",
+      "type": "uncharted"
+    },
+    {
+      "from": "space-21",
+      "to": "sydney",
+      "type": "uncharted"
+    },
+    {
+      "from": "eh05-the-sahara",
+      "to": "eh05-alexandria",
+      "type": "uncharted"
+    },
+    {
+      "from": "eh05-the-nile",
+      "to": "space-15",
+      "type": "uncharted"
+    },
+    {
+      "from": "eh07-dylath-leen",
+      "to": "eh07-ulthar",
+      "type": "uncharted"
+    },
+    {
+      "from": "eh07-ulthar",
+      "to": "eh07-the-underworld",
+      "type": "uncharted"
+    },
+    {
+      "from": "eh03-plateau-of-leng",
+      "to": "eh03-city-of-the-elder-things",
+      "type": "uncharted"
+    },
+    {
+      "from": "eh03-city-of-the-elder-things",
+      "to": "eh03-snowy-mountains",
+      "type": "uncharted"
+    },
+    {
+      "from": "eh03-snowy-mountains",
+      "to": "eh03-frozen-waste",
+      "type": "uncharted"
+    },
+    {
+      "from": "eh03-frozen-waste",
+      "to": "eh03-lake-camp",
+      "type": "uncharted"
+    },
+    {
+      "from": "eh03-lake-camp",
+      "to": "eh03-miskatonic-outpost",
+      "type": "uncharted"
+    },
+    {
+      "from": "eh05-the-sahara",
+      "to": "space-10",
+      "type": "local"
+    },
+    {
+      "from": "eh05-the-bent-pyramid",
+      "to": "the-pyramids",
+      "type": "local"
+    },
+    {
+      "from": "eh05-cairo",
+      "to": "the-pyramids",
+      "type": "local"
+    },
+    {
+      "from": "the-pyramids",
+      "to": "eh05-amarna",
+      "type": "local"
+    },
+    {
+      "from": "eh05-the-nile",
+      "to": "the-pyramids",
+      "type": "local"
+    },
+    {
+      "from": "eh05-amarna",
+      "to": "eh05-the-nile",
+      "type": "local"
+    },
+    {
+      "from": "eh05-alexandria",
+      "to": "the-pyramids",
+      "type": "local"
+    },
+    {
+      "from": "antarctica",
+      "to": "eh03-miskatonic-outpost",
+      "type": "local"
+    },
+    {
+      "from": "eh07-ulthar",
+      "to": "eh07-the-enchanted-wood",
+      "type": "local"
+    }
+  ]
+}

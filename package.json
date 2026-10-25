@@ -1,14 +1,17 @@
 {
   "name": "eldritch-horror-app",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Browser app for the Eldritch Horror board game (fan project)",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "content:validate": "tsx scripts/validate-content.ts",
+    "content:extract-icons": "tsx scripts/extract-icons.ts",
+    "content:copy-core": "tsx scripts/copy-core-assets.ts",
+    "content:board-overlay": "tsx scripts/board-overlay.ts"
   },
-  "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "UNLICENSED",
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
@@ -16,5 +19,12 @@
       "onFail": "download"
     }
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  },
+  "private": true
 }
