@@ -1,32 +1,59 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+# Shown to the AI when creating artifacts. Constraints, not content to copy.
+context: |
+  Project: browser app for the Eldritch Horror board game (Fantasy Flight Games).
+  Fan project, non-commercial; never present it as official.
+  Greenfield: no application code yet. Product scope is defined through proposals.
+  Reference material (rulebooks, errata, board scans) lives in inspired/ — gitignored, read-only input.
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+  Tech stack: TypeScript, React, React Three Fiber, Three.js.
+  We use conventional commits (see .agents/skills/git-conventions).
 
-# Per-operation guidance (optional)
-# Add advisory guidance for how apply and archive work should be conducted.
-# This is separate from artifact rules above.
-# Example:
-#   operations:
-#     apply:
-#       guidance:
-#         - Keep test summaries concise
-#     archive:
-#       guidance:
-#         - Summarize the archive outcome before finishing
+  Project skills live in .agents/skills/. Load the named skill before the matching work:
+  - openspec-explore + grill-me: before proposing, when the idea or scope is unclear.
+  - glossary: whenever authoring or reviewing proposal, specs, design, tasks.
+  - gherkin-authoring: when writing scenarios.
+  - architectural-decision-records: for significant design decisions.
+  - test-driven-development: when implementing tasks.
+  - openspec-git-discipline: for commit/branch/merge timing across propose → apply → archive.
+  - react-three-fiber, threejs-*: for 3D scene work.
+  - vercel-react-best-practices, vercel-composition-patterns, split-react-components,
+    you-might-not-need-an-effect: for React code.
+  - simplify, deslop: before declaring implementation done.
+  - spec-as-source + acceptance-test-authoring: OPT-IN only. Not active unless a change or the user
+    says so explicitly. Default spec format is the schema's WHEN/THEN scenarios.
+
+rules:
+  proposal:
+    - Keep under 500 words. State the problem and why now before the solution.
+    - Include a "Non-goals" line under What Changes.
+    - Cite the rulebook section or reference file in inspired/ that motivates game-rule behavior.
+    - Use glossary terms consistently; add new domain terms (game phases, tokens, card types) to the glossary.
+  specs:
+    - One capability per spec directory, named in kebab-case after the game concept, not the UI.
+    - Requirements use SHALL and describe observable behavior, not implementation.
+    - "Scenarios follow gherkin-authoring rules: WHEN is one meaningful event, THEN is an outcome visible to the player; no UI clicks, store shapes or component names."
+    - Game-rule requirements must be traceable to the printed rules; mark deviations explicitly.
+  design:
+    - Record each significant decision with rejected alternatives and consequences (architectural-decision-records review checklist).
+    - Separate game state from view/presentation state; name which layer each decision touches.
+    - Name the 3D vs 2D rendering choice for every new screen or table element.
+    - Mark unknowns as open questions; do not invent constraints.
+  tasks:
+    - "Order tasks test-first: the failing test or acceptance check precedes the implementation task."
+    - Each task is one commit-sized unit, phrased so a conventional commit subject can be derived from it.
+    - Include a final task to run simplify/deslop and remove dead code.
+
+operations:
+  apply:
+    guidance:
+      - "Follow openspec-git-discipline: confirm the change is on main before starting; never commit, branch or merge without explicit user approval."
+      - Implement with test-driven-development (red, green, refactor). Keep test summaries concise.
+      - For React code apply vercel-react-best-practices, split-react-components and you-might-not-need-an-effect; for scenes apply react-three-fiber and the threejs-* skills.
+      - Finish a task group with simplify and deslop before marking its tasks complete.
+      - Commit messages follow git-conventions (conventional commits).
+  archive:
+    guidance:
+      - Archive only from main after implementation is merged.
+      - Summarize the archive outcome and any skipped sync before finishing.

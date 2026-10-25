@@ -1,0 +1,12 @@
+node_modules
+dist
+.DS_Store
+inspired/*.zip
+.playwright-mcp
+
+inspired
+.idea
+.cache
+
+sounds-src
+graphify-out
