@@ -23,3 +23,10 @@ export function distance(board: Board, from: string, to: string): number {
   }
   return Infinity;
 }
+
+/** Spaces of the enabled sets and the paths whose both ends are among them. */
+export function activeGraph(board: Board, enabled: Set<string>): Pick<Board, "spaces" | "paths"> {
+  const spaces = board.spaces.filter((s) => enabled.has(s.set));
+  const ids = new Set(spaces.map((s) => s.id));
+  return { spaces, paths: board.paths.filter((p) => ids.has(p.from) && ids.has(p.to)) };
+}

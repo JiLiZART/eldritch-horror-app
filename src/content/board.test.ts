@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { distance, reachable } from "./board";
+import { activeGraph, distance, reachable } from "./board";
 import type { Board } from "./types";
 
 const board: Board = JSON.parse(readFileSync(new URL("../../content/board/board.json", import.meta.url), "utf8"));
@@ -38,5 +38,19 @@ describe("board graph", () => {
   it("counts adjacent spaces as distance 1", () => {
     expect(distance(board, "san-francisco", "space-5")).toBe(1);
     expect(distance(board, "san-francisco", "arkham")).toBe(2);
+  });
+});
+
+describe("activeGraph", () => {
+  it("keeps only core spaces and paths between them", () => {
+    const g = activeGraph(board, new Set(["eh01"]));
+    expect(g.spaces).toHaveLength(36);
+    const ids = new Set(g.spaces.map((s) => s.id));
+    for (const p of g.paths) expect(ids.has(p.from) && ids.has(p.to)).toBe(true);
+  });
+  it("adds the Dreamlands spaces when eh07 is enabled", () => {
+    const g = activeGraph(board, new Set(["eh01", "eh07"]));
+    expect(g.spaces).toHaveLength(43);
+    expect(g.paths.some((p) => p.from.startsWith("eh07") || p.to.startsWith("eh07"))).toBe(true);
   });
 });

@@ -1,0 +1,70 @@
+:root {
+  color-scheme: dark;
+  font-family: system-ui, sans-serif;
+  background: #1a1612;
+  color: #e8dcc4;
+}
+body {
+  margin: 0;
+}
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 20rem;
+  height: 100vh;
+}
+.table {
+  min-width: 0;
+}
+.panel {
+  overflow: auto;
+  padding: 1rem;
+  border-left: 1px solid #3a3027;
+  font-size: 0.9rem;
+}
+.panel h1 {
+  font-size: 1.2rem;
+  margin: 0 0 1rem;
+}
+.panel h2 {
+  font-size: 1rem;
+}
+.panel fieldset {
+  border: 1px solid #3a3027;
+  margin: 0 0 1rem;
+}
+.panel label {
+  display: block;
+}
+.swatch {
+  display: inline-block;
+  margin-right: 0.75rem;
+}
+.swatch i {
+  display: inline-block;
+  width: 1.5rem;
+  height: 0.4rem;
+  vertical-align: middle;
+}
+.panel ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.panel button {
+  background: none;
+  border: 1px solid transparent;
+  color: inherit;
+  cursor: pointer;
+  padding: 0.1rem 0.3rem;
+}
+.panel button:hover,
+.panel button:focus-visible {
+  border-color: #e8dcc4;
+}
+.panel button[aria-pressed="true"] {
+  background: #e8dcc4;
+  color: #1a1612;
+}
+.spaces {
+  columns: 2;
+}
