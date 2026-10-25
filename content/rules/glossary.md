@@ -12,6 +12,10 @@ Observation, `}` Strength, `{` Will, `@` reckoning.
 
 ## Round structure
 
+### Round / Раунд
+One pass through the Action, Encounter and Mythos phases in that order; rounds repeat until the investigators win or lose.
+Source: manual_eng.pdf p.3; EH_reference.pdf p.20
+
 ### Action Phase / Фаза действий
 First of the three phases of a round. Starting with the lead investigator and going clockwise, each investigator performs up to 2 different actions; each action at most once per round and fully resolved before the next.
 Source: manual_eng.pdf p.3; EH_reference.pdf p.3, p.20

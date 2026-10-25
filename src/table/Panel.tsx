@@ -142,6 +142,7 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
             <th>H</th>
             <th>S</th>
             <th>Clues</th>
+            <th>Tickets</th>
             <th>Possessions</th>
           </tr>
         </thead>
@@ -156,6 +157,7 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
               <td>{i.health}</td>
               <td>{i.sanity}</td>
               <td>{i.clues}</td>
+              <td>{i.tickets.join(", ")}</td>
               <td>{i.possessions.map(cardName).join(", ")}</td>
             </tr>
           ))}

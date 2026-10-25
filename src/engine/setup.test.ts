@@ -36,6 +36,12 @@ describe("setup accepts a legal group", () => {
     expect(s.leadInvestigator).toBe(inv("leo-anderson"));
     expect(s.investigators.map((i) => i.id)).toEqual([inv("leo-anderson"), inv("lily-chen")]);
   });
+  it("starts round 1 in the Action phase with the lead active, no action taken and no tickets", () => {
+    const s = setup({ investigators: [inv("leo-anderson"), inv("lily-chen")] });
+    expect(s.round).toBe(1);
+    expect(s.phase).toEqual({ name: "action", active: inv("leo-anderson"), taken: [] });
+    expect(s.investigators.map((i) => i.tickets)).toEqual([[], []]);
+  });
 });
 
 describe("investigators start as printed", () => {

@@ -20,6 +20,8 @@ export interface MonsterOnBoard extends MonsterInstance {
   space: string;
 }
 
+export type Ticket = "train" | "ship";
+
 export interface InvestigatorState {
   id: string;
   space: string;
@@ -28,6 +30,19 @@ export interface InvestigatorState {
   clues: number;
   /** Card ids. */
   possessions: string[];
+  /** Travel tickets held, at most 2. */
+  tickets: Ticket[];
+}
+
+export type ActionName = "travel" | "rest" | "prepare-for-travel" | "trade";
+
+/** The phase in progress; one member today, later phases extend the union. */
+export interface ActionPhase {
+  name: "action";
+  /** Investigator id whose turn it is. */
+  active: string;
+  /** Actions the active investigator has performed this phase. */
+  taken: ActionName[];
 }
 
 /** Printed on the reference card for the investigator count. */
@@ -47,6 +62,8 @@ export interface GameState {
   /** Eldritch tokens per omen track space. */
   eldritchOnOmen: [number, number, number, number];
   referenceCard: ReferenceCard;
+  round: number;
+  phase: ActionPhase;
   leadInvestigator: string;
   investigators: InvestigatorState[];
   /** Space ids with an open gate. */

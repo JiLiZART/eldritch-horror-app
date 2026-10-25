@@ -14,6 +14,8 @@ export interface TableProps {
   pieces: Map<string, Piece[]>;
   enabled: Set<string>;
   selected: string | undefined;
+  /** Spaces of the travel route being picked, highlighted in order. */
+  route?: string[];
   onSelect: (id: string | undefined) => void;
   reducedMotion: boolean;
 }
@@ -36,7 +38,7 @@ export function Table(props: TableProps) {
   );
 }
 
-function Scene({ board, pieces, enabled, selected, onSelect, reducedMotion }: TableProps) {
+function Scene({ board, pieces, enabled, selected, route, onSelect, reducedMotion }: TableProps) {
   const graph = useMemo(() => activeGraph(board, enabled), [board, enabled]);
   const at = useMemo(() => new Map(board.spaces.map((s) => [s.id, boardToWorld(s, board)])), [board]);
   return (
@@ -47,7 +49,7 @@ function Scene({ board, pieces, enabled, selected, onSelect, reducedMotion }: Ta
         <Line key={`${p.from}-${p.to}`} points={[[...at.get(p.from)!, 0.01], [...at.get(p.to)!, 0.01]]} color={PATH_COLORS[p.type]} lineWidth={2} />
       ))}
       {graph.spaces.map((s) => (
-        <Marker key={s.id} space={s} position={at.get(s.id)!} selected={s.id === selected} onSelect={onSelect} />
+        <Marker key={s.id} space={s} position={at.get(s.id)!} selected={s.id === selected} onRoute={route?.includes(s.id) ?? false} onSelect={onSelect} />
       ))}
       {pieces.size > 0 && <Pieces pieces={pieces} at={at} />}
     </>
@@ -101,7 +103,17 @@ function BoardPlane({ board }: { board: Board }) {
   );
 }
 
-function Marker({ space, position, selected, onSelect }: { space: Space; position: [number, number]; selected: boolean; onSelect: (id: string) => void }) {
+interface MarkerProps {
+  space: Space;
+  position: [number, number];
+  selected: boolean;
+  /** Part of the travel route being picked. */
+  onRoute: boolean;
+  onSelect: (id: string) => void;
+}
+
+function Marker({ space, position, selected, onRoute, onSelect }: MarkerProps) {
+  const big = selected || onRoute;
   return (
     <mesh
       position={[...position, 0.02]}
@@ -110,8 +122,8 @@ function Marker({ space, position, selected, onSelect }: { space: Space; positio
         onSelect(space.id);
       }}
     >
-      <ringGeometry args={[selected ? 0.14 : 0.1, selected ? 0.2 : 0.14, 32]} />
-      <meshBasicMaterial color={selected ? "#ffffff" : "#ff00ff"} />
+      <ringGeometry args={[big ? 0.14 : 0.1, big ? 0.2 : 0.14, 32]} />
+      <meshBasicMaterial color={onRoute ? "#ffd400" : selected ? "#ffffff" : "#ff00ff"} />
     </mesh>
   );
 }

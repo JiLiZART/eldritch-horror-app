@@ -96,6 +96,8 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
     omen: 0,
     eldritchOnOmen,
     referenceCard,
+    round: 1,
+    phase: { name: "action", active: investigators[0]!.id, taken: [] },
     leadInvestigator: investigators[0]!.id,
     investigators,
     gates,
@@ -130,7 +132,7 @@ function placeInvestigator(i: Investigator, cards: Card[], decks: GameState["dec
   }
   const clues = i.starting.clues ?? 0;
   cluePool.splice(0, clues);
-  return { id: i.id, space: i.startingSpace, health: i.health, sanity: i.sanity, clues, possessions };
+  return { id: i.id, space: i.startingSpace, health: i.health, sanity: i.sanity, clues, possessions, tickets: [] };
 }
 
 /** Every non-epic token minus the sheet's set-aside monsters, shuffled. */
