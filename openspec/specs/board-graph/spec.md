@@ -6,7 +6,7 @@ Describe the game board as data so the engine can move investigators, spawn toke
 ## Requirements
 
 ### Requirement: Every space on the board is described
-The board data SHALL contain one entry per space drawn on `inspired/All_boards.jpg`, with a stable id, a display name in English and Russian, a kind (city, wilderness or sea), a region (America, Europe, Asia, or none), normalized coordinates on the board texture, and the set that activates it (core, Mountains of Madness, Under the Pyramids, The Dreamlands).
+The board data SHALL contain one entry per space drawn on `inspired/All_boards.jpg`, with a stable id, a display name in English and Russian, a kind (city, wilderness or sea), a region (America, Europe, Asia, or none), normalized coordinates on the board texture, and the set that activates it (core, Mountains of Madness, Under the Pyramids, The Dreamlands). Numbered spaces carry the kind printed on the board: 1, 5, 6, 7, 14, 15, 16, 17 and 20 are cities without a gate token.
 
 #### Scenario: Core space
 - **WHEN** the board data is loaded
@@ -18,7 +18,7 @@ The board data SHALL contain one entry per space drawn on `inspired/All_boards.j
 
 #### Scenario: Numbered sea space
 - **WHEN** the board data is loaded
-- **THEN** every numbered space 1 to 21 exists with kind sea or wilderness as printed, with no region
+- **THEN** every numbered space 1 to 21 exists with its printed kind, space 15 is a city and space 2 is a sea
 
 ### Requirement: Paths connect spaces with a type
 Each path SHALL join two existing spaces and carry one type: train, ship, uncharted, or local. Paths SHALL be undirected.
