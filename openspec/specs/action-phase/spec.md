@@ -6,7 +6,7 @@ Let investigators take their turns in the Action phase: Travel, Rest, Prepare fo
 ## Requirements
 
 ### Requirement: Investigators act in seat order
-Starting with the lead investigator and following seat order, one investigator at a time SHALL be active. The active investigator SHALL perform up to 2 actions in the phase, each action at most once, and SHALL be able to end the turn early. When the last seat ends its turn the Mythos phase SHALL begin. **Deviation**: the Encounter phase is not modelled yet, so the Mythos phase follows the Action phase directly, and the players are told so.
+Starting with the lead investigator and following seat order, one investigator at a time SHALL be active, skipping defeated investigators. The active investigator SHALL perform up to 2 actions in the phase, each action at most once, and SHALL be able to end the turn early. When the last seat ends its turn the Encounter phase SHALL begin.
 
 #### Scenario: First turn
 - **WHEN** a game starts with Leo Anderson then Lily Chen
@@ -25,8 +25,8 @@ Starting with the lead investigator and following seat order, one investigator a
 - **THEN** the action is refused with the rule that an investigator performs up to 2 actions, and nothing changes
 
 #### Scenario: Round advances
-- **WHEN** the last seat ends its turn and the mythos card is resolved and the next round is started
-- **THEN** round 2 begins in the Action phase with the lead investigator active, and the players are told the Encounter phase was skipped
+- **WHEN** the last seat ends its turn, every investigator finishes an encounter, the mythos card is resolved and the next round is started
+- **THEN** round 2 begins in the Action phase with the lead investigator active
 
 ### Requirement: Travel moves along paths
 Travel SHALL move the active investigator to an adjacent space, then 1 more space per travel ticket spent, each extra step along a path matching the spent ticket's type. A route that breaks these rules SHALL be refused with the rule named and the investigator SHALL stay put.

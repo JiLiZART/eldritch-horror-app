@@ -6,14 +6,14 @@ Resolve the Mythos phase at the end of each round: draw the top mythos card, app
 ## Requirements
 
 ### Requirement: The last turn opens the Mythos phase
-When the last seat ends its turn the top mythos card SHALL be drawn and the game SHALL enter the Mythos phase with that card showing. When no card can be drawn the investigators SHALL lose, and the reason SHALL be shown. **Deviation**: the Encounter phase is still skipped and the players are told so.
+When the last investigator finishes their encounter the top mythos card SHALL be drawn and the game SHALL enter the Mythos phase with that card showing. When no card can be drawn the investigators SHALL lose, and the reason SHALL be shown.
 
 #### Scenario: Card drawn
-- **WHEN** Lily Chen, the last seat, ends her turn with 16 cards in the mythos deck
+- **WHEN** Lily Chen, the last investigator, finishes her encounter with 16 cards in the mythos deck
 - **THEN** the phase is Mythos with the former top card showing and 15 cards remain
 
 #### Scenario: Deck exhausted
-- **WHEN** the last seat ends its turn with an empty mythos deck
+- **WHEN** the last investigator finishes their encounter with an empty mythos deck
 - **THEN** the game is lost and the reason names the mythos deck
 
 ### Requirement: Icons resolve in printed order
@@ -78,7 +78,7 @@ During the Mythos phase the players SHALL see the drawn card image, a button to 
 
 #### Scenario: Card shown
 - **WHEN** the Mythos phase begins
-- **THEN** the drawn card's image is shown with a Resolve button and the Encounter phase skip note
+- **THEN** the drawn card's image is shown with a Resolve button
 
 #### Scenario: Log shown
 - **WHEN** the card is resolved
