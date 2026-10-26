@@ -82,6 +82,8 @@ function leavePlay(state: GameState, card: MythosCard): GameState {
 /** Ends the Mythos phase: the lead may pass the token, then the next round's Action phase starts with the lead (manual p.3). */
 export function nextRound(state: GameState, lead = state.leadInvestigator): GameState {
   if (!mythosPhase(state).log) throw new Error("resolve the mythos card before the next round");
-  if (!state.investigators.some((i) => i.id === lead)) throw new Error(`no investigator ${lead} to take the lead`);
+  const chosen = state.investigators.find((i) => i.id === lead);
+  if (!chosen) throw new Error(`no investigator ${lead} to take the lead`);
+  if (chosen.defeated) throw new Error(`${lead} is defeated and cannot take the lead`);
   return { ...state, round: state.round + 1, leadInvestigator: lead, phase: { name: "action", active: lead, taken: [] } };
 }

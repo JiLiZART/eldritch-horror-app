@@ -88,9 +88,6 @@ export function Turn({ board, set, state, phase, error, route, onAct, onRoute }:
       <p aria-live="assertive" className="error">
         {error}
       </p>
-      <p>
-        <small>The Encounter phase is skipped; ending the last turn opens the Mythos phase.</small>
-      </p>
     </section>
   );
 }

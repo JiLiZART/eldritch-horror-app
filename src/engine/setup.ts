@@ -39,11 +39,6 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
 
   const random = rng(options.seed);
   const core = board.spaces.filter((s) => s.set === set.id);
-  const spaceByName = (name: string) => {
-    const space = core.find((s) => s.name.en === name);
-    if (!space) throw new Error(`no board space named ${name}`);
-    return space.id;
-  };
 
   // 1. Gate stack and clue pool. Gate tokens exist for the cities that carry a gate colour.
   const gateStack = shuffle(core.filter((s) => s.gate !== undefined).map((s) => s.id), random);
@@ -72,10 +67,7 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
 
   // 7. Reserve, gates with monsters, expedition, clues, mystery.
   const reserve = decks.asset.splice(0, 4);
-  const expedition = decks.encounters.expedition ?? [];
-  const topExpedition = set.encounterDecks.find((d) => d.id === "expedition")?.cards.find((c) => c.id === expedition[0]);
-  if (!topExpedition) throw new Error("the set has no expedition cards");
-  const activeExpedition = spaceByName(topExpedition.name.replace(/ - \d+$/, ""));
+  const activeExpedition = expeditionSpace({ board, set }, decks.encounters.expedition ?? []);
   const currentMystery = decks.mystery.shift();
   if (!currentMystery) throw new Error(`${ancientOne.id} has no mystery cards`);
 
@@ -104,6 +96,7 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
     decks,
     reserve,
     assetDiscard: [],
+    encounterDiscards: {},
     ongoingMythos: [],
     mythosDiscard: [],
     currentMystery,
@@ -168,4 +161,14 @@ function buildMythosDeck(set: GameSet, ancientOne: AncientOne, difficulty: GameS
   };
   const { stage1, stage2, stage3 } = ancientOne.mythos;
   return [...stage(stage1), ...stage(stage2), ...stage(stage3)];
+}
+
+/** The space of the top expedition card: the card is named after it ("Antarctica - 01"). */
+export function expeditionSpace({ board, set }: Content, expedition: string[]): string {
+  const top = set.encounterDecks.find((d) => d.id === "expedition")?.cards.find((c) => c.id === expedition[0]);
+  if (!top) throw new Error("the set has no expedition cards");
+  const name = top.name.replace(/ - \d+$/, "");
+  const space = board.spaces.find((s) => s.set === set.id && s.name.en === name);
+  if (!space) throw new Error(`no board space named ${name}`);
+  return space.id;
 }

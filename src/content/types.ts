@@ -137,6 +137,8 @@ export interface AncientOne {
   research: NamedCard[];
   special?: NamedCard[];
   mythos: { stage1: MythosStage; stage2: MythosStage; stage3: MythosStage };
+  /** The Cultist row printed on the sheet. */
+  cultists: MonsterCombat;
   /** Printed sheet setup. Text effects are not modelled. */
   setup?: {
     /** Monster id -> tokens removed from the cup at setup. */
@@ -159,10 +161,20 @@ export interface Card {
   value?: number;
 }
 
+/** The back of a monster token. A missing test is not printed; a missing toughness is a formula (epic) or on the Ancient One sheet (Cultist). */
+export interface MonsterCombat {
+  will?: { modifier: number; horror: number };
+  strength?: { modifier: number; damage: number };
+  toughness?: number;
+  /** The Cultist: its values are `AncientOne.cultists`. */
+  onAncientOneSheet?: true;
+}
+
 export interface Monster {
   id: string;
   name: string;
   epic?: boolean;
+  combat: MonsterCombat;
   /** Identical tokens in the set; 1 when absent. */
   count?: number;
   /** Space id the token back moves the monster to when spawned. */

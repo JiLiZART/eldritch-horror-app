@@ -9,6 +9,10 @@ describe("core set", () => {
     expect(cards.find((c) => c.name === ".38 Revolver")).toMatchObject({ value: 1, traits: ["Item", "Weapon"] });
   });
 
+  it("records the Byakhee's printed back", () => {
+    expect(monsters.find((m) => m.name === "Byakhee")!.combat).toEqual({ will: { modifier: 0, horror: 1 }, strength: { modifier: 0, damage: 2 }, toughness: 2 });
+  });
+
   it("has 12 investigators and 4 Ancient Ones", () => {
     expect(investigators).toHaveLength(12);
     expect(ancientOnes).toHaveLength(4);

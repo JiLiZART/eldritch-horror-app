@@ -83,10 +83,23 @@ describe("validateSet", () => {
   it("accepts a set whose images exist", () => {
     expect(validateSet({ ...emptySet, cards: [card("eh01/asset/x")] }, () => true)).toEqual([]);
   });
-  const monster = (id: string, extra: Partial<GameSet["monsters"][number]> = {}) => ({ id, name: id, images: { front: "m.png", back: "mb.png" }, ...extra });
+  const combat = { will: { modifier: 0, horror: 1 }, strength: { modifier: 0, damage: 1 }, toughness: 1 };
+  const monster = (id: string, extra: Partial<GameSet["monsters"][number]> = {}) => ({ id, name: id, combat, images: { front: "m.png", back: "mb.png" }, ...extra });
+  it("reports a non-epic monster without a toughness", () => {
+    const bad = { ...emptySet, monsters: [monster("eh01/monster/ghoul", { combat: { will: combat.will } })] };
+    expect(validateSet(bad, () => true).join("\n")).toContain("eh01/monster/ghoul has no toughness");
+  });
+  it("reports a non-epic monster without any test", () => {
+    const bad = { ...emptySet, monsters: [monster("eh01/monster/ghoul", { combat: { toughness: 1 } })] };
+    expect(validateSet(bad, () => true).join("\n")).toContain("eh01/monster/ghoul has no test");
+  });
+  it("accepts an epic monster whose toughness is a formula", () => {
+    const ok = { ...emptySet, monsters: [monster("eh01/monster/cthulhu", { epic: true, combat: { will: combat.will } })] };
+    expect(validateSet(ok, () => true)).toEqual([]);
+  });
   const ancient = (setup: NonNullable<GameSet["ancientOnes"][number]["setup"]>) => ({
     id: "eh01/ancient-one/x", name: "x", doom: 10, images: { front: "a.png" }, mysteries: [], research: [],
-    mythos: { stage1: { green: 1, yellow: 1, blue: 1 }, stage2: { green: 1, yellow: 1, blue: 1 }, stage3: { green: 1, yellow: 1, blue: 1 } }, setup,
+    mythos: { stage1: { green: 1, yellow: 1, blue: 1 }, stage2: { green: 1, yellow: 1, blue: 1 }, stage3: { green: 1, yellow: 1, blue: 1 } }, setup, cultists: combat,
   });
   it("reports a set-aside monster the set does not have", () => {
     const bad = { ...emptySet, monsters: [monster("eh01/monster/ghoul")], ancientOnes: [ancient({ setAsideMonsters: { "eh01/monster/nope": 1 } })] };

@@ -64,6 +64,10 @@ export function validateSet(set: GameSet, imageExists: (path: string) => boolean
   }
   for (const m of set.monsters) {
     check(m.id, m.images);
+    if (!m.epic && !m.combat.onAncientOneSheet) {
+      if (m.combat.toughness === undefined) errors.push(`${m.id} has no toughness`);
+      if (!m.combat.will && !m.combat.strength) errors.push(`${m.id} has no test`);
+    }
     if (m.spawnMoveTo !== undefined && spaceIds && !spaceIds.has(m.spawnMoveTo)) errors.push(`${m.id} spawns onto unknown space ${m.spawnMoveTo}`);
   }
   for (const d of set.encounterDecks) for (const c of d.cards) check(c.id, c.images);

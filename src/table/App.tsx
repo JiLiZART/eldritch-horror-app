@@ -5,6 +5,7 @@ import { travel } from "../engine/actions";
 import { setupGame } from "../engine/setup";
 import type { Lang } from "../content/types";
 import type { GameState, SetupOptions } from "../engine/types";
+import { Encounter } from "./Encounter";
 import { Mythos } from "./Mythos";
 import { NewGame } from "./NewGame";
 import { Panel } from "./Panel";
@@ -88,6 +89,7 @@ export function App() {
       <Panel board={board} set={set} lang={lang} onLang={chooseLang} state={game.state} pieces={pieces} spaces={spaces} enabled={enabled} onToggle={toggle} selected={selectedSpace} onSelect={select}>
         <NewGame set={set} running={game.state !== undefined} error={game.state ? undefined : game.error} onStart={start} onAbandon={() => setGame({})} />
         {game.state?.phase.name === "action" && <Turn board={board} set={set} state={game.state} phase={game.state.phase} error={game.error} route={route} onAct={act} onRoute={setRoute} />}
+        {game.state?.phase.name === "encounter" && <Encounter board={board} set={set} state={game.state} phase={game.state.phase} error={game.error} onAct={act} />}
         {game.state?.phase.name === "mythos" && <Mythos board={board} set={set} state={game.state} phase={game.state.phase} error={game.error} onAct={act} />}
         {game.state?.phase.name === "lost" && (
           <section className="turn">

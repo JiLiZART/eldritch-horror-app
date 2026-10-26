@@ -28,7 +28,7 @@ export function piecesOnSpace(state: GameState | undefined, set: GameSet): Map<s
   for (const space of state.clues) add(space, { kind: "clue", id: `clue:${space}`, image: `${tokens}/clues/clues-back.webp`, label: "Clue" });
   for (const m of state.monsters) {
     const monster = byId(set.monsters, m.id);
-    add(m.space, { kind: "monster", id: `${m.id}#${m.instance}`, image: monster.images.front, label: monster.name });
+    add(m.space, { kind: "monster", id: `${m.id}#${m.instance}`, image: monster.images.front, label: m.health > 0 ? `${monster.name} (${m.health} health lost)` : monster.name });
   }
   for (const i of state.investigators) {
     const investigator = byId(set.investigators, i.id);

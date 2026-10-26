@@ -2,6 +2,17 @@
   {
     "id": "eh01/monster/byakhee",
     "name": "Byakhee",
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 1
+      },
+      "strength": {
+        "modifier": 0,
+        "damage": 2
+      },
+      "toughness": 2
+    },
     "images": {
       "front": "cards/eh01/monster/byakhee.webp",
       "back": "cards/eh01/monster/byakhee-back.webp"
@@ -11,6 +22,13 @@
     "id": "eh01/monster/color-out-of-space",
     "name": "Color Out of Space",
     "spawnMoveTo": "tunguska",
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 2
+      },
+      "toughness": 2
+    },
     "images": {
       "front": "cards/eh01/monster/color-out-of-space.webp",
       "back": "cards/eh01/monster/color-out-of-space-back.webp"
@@ -20,6 +38,17 @@
     "id": "eh01/monster/cthonian",
     "name": "Cthonian",
     "spawnMoveTo": "the-heart-of-africa",
+    "combat": {
+      "will": {
+        "modifier": -1,
+        "horror": 2
+      },
+      "strength": {
+        "modifier": -2,
+        "damage": 3
+      },
+      "toughness": 4
+    },
     "images": {
       "front": "cards/eh01/monster/cthonian.webp",
       "back": "cards/eh01/monster/cthonian-back.webp"
@@ -29,6 +58,9 @@
     "id": "eh01/monster/cultist",
     "name": "Cultist",
     "count": 5,
+    "combat": {
+      "onAncientOneSheet": true
+    },
     "images": {
       "front": "cards/eh01/monster/cultist.webp",
       "back": "cards/eh01/monster/cultist-back.webp"
@@ -37,6 +69,17 @@
   {
     "id": "eh01/monster/dark-young",
     "name": "Dark Young",
+    "combat": {
+      "will": {
+        "modifier": -1,
+        "horror": 3
+      },
+      "strength": {
+        "modifier": -3,
+        "damage": 3
+      },
+      "toughness": 5
+    },
     "images": {
       "front": "cards/eh01/monster/dark-young.webp",
       "back": "cards/eh01/monster/dark-young-back.webp"
@@ -45,6 +88,17 @@
   {
     "id": "eh01/monster/deep-one",
     "name": "Deep One",
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 2
+      },
+      "strength": {
+        "modifier": -1,
+        "damage": 1
+      },
+      "toughness": 2
+    },
     "images": {
       "front": "cards/eh01/monster/deep-one.webp",
       "back": "cards/eh01/monster/deep-one-back.webp"
@@ -54,6 +108,17 @@
     "id": "eh01/monster/elder-thing",
     "name": "Elder Thing",
     "spawnMoveTo": "antarctica",
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 3
+      },
+      "strength": {
+        "modifier": -1,
+        "damage": 2
+      },
+      "toughness": 3
+    },
     "images": {
       "front": "cards/eh01/monster/elder-thing.webp",
       "back": "cards/eh01/monster/elder-thing-back.webp"
@@ -62,6 +127,13 @@
   {
     "id": "eh01/monster/ghost",
     "name": "Ghost",
+    "combat": {
+      "will": {
+        "modifier": -1,
+        "horror": 2
+      },
+      "toughness": 2
+    },
     "images": {
       "front": "cards/eh01/monster/ghost.webp",
       "back": "cards/eh01/monster/ghost-back.webp"
@@ -71,6 +143,17 @@
     "id": "eh01/monster/ghoul",
     "name": "Ghoul",
     "count": 2,
+    "combat": {
+      "will": {
+        "modifier": 1,
+        "horror": 1
+      },
+      "strength": {
+        "modifier": 0,
+        "damage": 2
+      },
+      "toughness": 1
+    },
     "images": {
       "front": "cards/eh01/monster/ghoul.webp",
       "back": "cards/eh01/monster/ghoul-back.webp"
@@ -80,6 +163,17 @@
     "id": "eh01/monster/gnoph-keh",
     "name": "Gnoph-Keh",
     "spawnMoveTo": "the-himalayas",
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 1
+      },
+      "strength": {
+        "modifier": -2,
+        "damage": 2
+      },
+      "toughness": 3
+    },
     "images": {
       "front": "cards/eh01/monster/gnoph-keh.webp",
       "back": "cards/eh01/monster/gnoph-keh-back.webp"
@@ -89,6 +183,17 @@
     "id": "eh01/monster/goat-spawn",
     "name": "Goat Spawn",
     "count": 2,
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 1
+      },
+      "strength": {
+        "modifier": -2,
+        "damage": 2
+      },
+      "toughness": 2
+    },
     "images": {
       "front": "cards/eh01/monster/goat-spawn.webp",
       "back": "cards/eh01/monster/goat-spawn-back.webp"
@@ -97,6 +202,17 @@
   {
     "id": "eh01/monster/gug",
     "name": "Gug",
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 2
+      },
+      "strength": {
+        "modifier": -2,
+        "damage": 3
+      },
+      "toughness": 4
+    },
     "images": {
       "front": "cards/eh01/monster/gug.webp",
       "back": "cards/eh01/monster/gug-back.webp"
@@ -105,6 +221,17 @@
   {
     "id": "eh01/monster/hound-of-tindalos",
     "name": "Hound of Tindalos",
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 2
+      },
+      "strength": {
+        "modifier": -1,
+        "damage": 3
+      },
+      "toughness": 3
+    },
     "images": {
       "front": "cards/eh01/monster/hound-of-tindalos.webp",
       "back": "cards/eh01/monster/hound-of-tindalos-back.webp"
@@ -113,6 +240,17 @@
   {
     "id": "eh01/monster/lloigor",
     "name": "Lloigor",
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 2
+      },
+      "strength": {
+        "modifier": -2,
+        "damage": 3
+      },
+      "toughness": 4
+    },
     "images": {
       "front": "cards/eh01/monster/lloigor.webp",
       "back": "cards/eh01/monster/lloigor-back.webp"
@@ -121,6 +259,17 @@
   {
     "id": "eh01/monster/maniac",
     "name": "Maniac",
+    "combat": {
+      "will": {
+        "modifier": 1,
+        "horror": 1
+      },
+      "strength": {
+        "modifier": -1,
+        "damage": 2
+      },
+      "toughness": 1
+    },
     "images": {
       "front": "cards/eh01/monster/maniac.webp",
       "back": "cards/eh01/monster/maniac-back.webp"
@@ -129,6 +278,17 @@
   {
     "id": "eh01/monster/mi-go",
     "name": "Mi-go",
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 1
+      },
+      "strength": {
+        "modifier": -2,
+        "damage": 2
+      },
+      "toughness": 3
+    },
     "images": {
       "front": "cards/eh01/monster/mi-go.webp",
       "back": "cards/eh01/monster/mi-go-back.webp"
@@ -138,6 +298,17 @@
     "id": "eh01/monster/mummy",
     "name": "Mummy",
     "spawnMoveTo": "the-pyramids",
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 2
+      },
+      "strength": {
+        "modifier": -2,
+        "damage": 2
+      },
+      "toughness": 3
+    },
     "images": {
       "front": "cards/eh01/monster/mummy.webp",
       "back": "cards/eh01/monster/mummy-back.webp"
@@ -146,6 +317,17 @@
   {
     "id": "eh01/monster/nightgaunt",
     "name": "Nightgaunt",
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 2
+      },
+      "strength": {
+        "modifier": -2,
+        "damage": 1
+      },
+      "toughness": 2
+    },
     "images": {
       "front": "cards/eh01/monster/nightgaunt.webp",
       "back": "cards/eh01/monster/nightgaunt-back.webp"
@@ -154,6 +336,13 @@
   {
     "id": "eh01/monster/riot",
     "name": "Riot",
+    "combat": {
+      "strength": {
+        "modifier": -3,
+        "damage": 3
+      },
+      "toughness": 3
+    },
     "images": {
       "front": "cards/eh01/monster/riot.webp",
       "back": "cards/eh01/monster/riot-back.webp"
@@ -163,6 +352,17 @@
     "id": "eh01/monster/serpent-people",
     "name": "Serpent People",
     "spawnMoveTo": "the-amazon",
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 2
+      },
+      "strength": {
+        "modifier": -1,
+        "damage": 3
+      },
+      "toughness": 2
+    },
     "images": {
       "front": "cards/eh01/monster/serpent-people.webp",
       "back": "cards/eh01/monster/serpent-people-back.webp"
@@ -171,6 +371,17 @@
   {
     "id": "eh01/monster/shoggoth",
     "name": "Shoggoth",
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 3
+      },
+      "strength": {
+        "modifier": -2,
+        "damage": 2
+      },
+      "toughness": 4
+    },
     "images": {
       "front": "cards/eh01/monster/shoggoth.webp",
       "back": "cards/eh01/monster/shoggoth-back.webp"
@@ -179,6 +390,17 @@
   {
     "id": "eh01/monster/skeleton",
     "name": "Skeleton",
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 2
+      },
+      "strength": {
+        "modifier": -2,
+        "damage": 1
+      },
+      "toughness": 2
+    },
     "images": {
       "front": "cards/eh01/monster/skeleton.webp",
       "back": "cards/eh01/monster/skeleton-back.webp"
@@ -187,6 +409,17 @@
   {
     "id": "eh01/monster/star-spawn",
     "name": "Star Spawn",
+    "combat": {
+      "will": {
+        "modifier": -1,
+        "horror": 3
+      },
+      "strength": {
+        "modifier": -3,
+        "damage": 3
+      },
+      "toughness": 5
+    },
     "images": {
       "front": "cards/eh01/monster/star-spawn.webp",
       "back": "cards/eh01/monster/star-spawn-back.webp"
@@ -195,6 +428,17 @@
   {
     "id": "eh01/monster/vampire",
     "name": "Vampire",
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 1
+      },
+      "strength": {
+        "modifier": -2,
+        "damage": 2
+      },
+      "toughness": 3
+    },
     "images": {
       "front": "cards/eh01/monster/vampire.webp",
       "back": "cards/eh01/monster/vampire-back.webp"
@@ -203,6 +447,17 @@
   {
     "id": "eh01/monster/warlock",
     "name": "Warlock",
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 1
+      },
+      "strength": {
+        "modifier": -1,
+        "damage": 1
+      },
+      "toughness": 1
+    },
     "images": {
       "front": "cards/eh01/monster/warlock.webp",
       "back": "cards/eh01/monster/warlock-back.webp"
@@ -211,6 +466,17 @@
   {
     "id": "eh01/monster/witch",
     "name": "Witch",
+    "combat": {
+      "will": {
+        "modifier": -1,
+        "horror": 0
+      },
+      "strength": {
+        "modifier": -1,
+        "damage": 1
+      },
+      "toughness": 1
+    },
     "images": {
       "front": "cards/eh01/monster/witch.webp",
       "back": "cards/eh01/monster/witch-back.webp"
@@ -219,6 +485,17 @@
   {
     "id": "eh01/monster/wraith",
     "name": "Wraith",
+    "combat": {
+      "will": {
+        "modifier": -1,
+        "horror": 2
+      },
+      "strength": {
+        "modifier": -1,
+        "damage": 2
+      },
+      "toughness": 3
+    },
     "images": {
       "front": "cards/eh01/monster/wraith.webp",
       "back": "cards/eh01/monster/wraith-back.webp"
@@ -227,6 +504,17 @@
   {
     "id": "eh01/monster/zombie",
     "name": "Zombie",
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 1
+      },
+      "strength": {
+        "modifier": -1,
+        "damage": 2
+      },
+      "toughness": 2
+    },
     "images": {
       "front": "cards/eh01/monster/zombie.webp",
       "back": "cards/eh01/monster/zombie-back.webp"
@@ -236,6 +524,16 @@
     "id": "eh01/monster/cthulhu",
     "name": "Cthulhu",
     "epic": true,
+    "combat": {
+      "will": {
+        "modifier": -2,
+        "horror": 5
+      },
+      "strength": {
+        "modifier": -2,
+        "damage": 4
+      }
+    },
     "images": {
       "front": "cards/eh01/monster/cthulhu.webp",
       "back": "cards/eh01/monster/cthulhu-back.webp"
@@ -245,6 +543,16 @@
     "id": "eh01/monster/cthylla",
     "name": "Cthylla",
     "epic": true,
+    "combat": {
+      "will": {
+        "modifier": -1,
+        "horror": 4
+      },
+      "strength": {
+        "modifier": -2,
+        "damage": 2
+      }
+    },
     "images": {
       "front": "cards/eh01/monster/cthylla.webp",
       "back": "cards/eh01/monster/cthylla-back.webp"
@@ -254,6 +562,16 @@
     "id": "eh01/monster/dunwich-horror",
     "name": "Dunwich Horror",
     "epic": true,
+    "combat": {
+      "will": {
+        "modifier": -1,
+        "horror": 3
+      },
+      "strength": {
+        "modifier": -2,
+        "damage": 3
+      }
+    },
     "images": {
       "front": "cards/eh01/monster/dunwich-horror.webp",
       "back": "cards/eh01/monster/dunwich-horror-back.webp"
@@ -263,6 +581,16 @@
     "id": "eh01/monster/nug",
     "name": "Nug",
     "epic": true,
+    "combat": {
+      "will": {
+        "modifier": -1,
+        "horror": 2
+      },
+      "strength": {
+        "modifier": -2,
+        "damage": 4
+      }
+    },
     "images": {
       "front": "cards/eh01/monster/nug.webp",
       "back": "cards/eh01/monster/nug-back.webp"
@@ -272,6 +600,16 @@
     "id": "eh01/monster/shub-niggurath",
     "name": "Shub-Niggurath",
     "epic": true,
+    "combat": {
+      "will": {
+        "modifier": -1,
+        "horror": 4
+      },
+      "strength": {
+        "modifier": -3,
+        "damage": 5
+      }
+    },
     "images": {
       "front": "cards/eh01/monster/shub-niggurath.webp",
       "back": "cards/eh01/monster/shub-niggurath-back.webp"
@@ -281,6 +619,16 @@
     "id": "eh01/monster/spinner-of-webs",
     "name": "Spinner of Webs",
     "epic": true,
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 2
+      },
+      "strength": {
+        "modifier": -2,
+        "damage": 2
+      }
+    },
     "images": {
       "front": "cards/eh01/monster/spinner-of-webs.webp",
       "back": "cards/eh01/monster/spinner-of-webs-back.webp"
@@ -290,6 +638,12 @@
     "id": "eh01/monster/tick-tock-men",
     "name": "Tick Tock Men",
     "epic": true,
+    "combat": {
+      "strength": {
+        "modifier": -2,
+        "damage": 3
+      }
+    },
     "images": {
       "front": "cards/eh01/monster/tick-tock-men.webp",
       "back": "cards/eh01/monster/tick-tock-men-back.webp"
@@ -299,6 +653,16 @@
     "id": "eh01/monster/wind-walker",
     "name": "Wind-Walker",
     "epic": true,
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 2
+      },
+      "strength": {
+        "modifier": -2,
+        "damage": 2
+      }
+    },
     "images": {
       "front": "cards/eh01/monster/wind-walker.webp",
       "back": "cards/eh01/monster/wind-walker-back.webp"
@@ -308,6 +672,17 @@
     "id": "eh01/monster/zombie-horde",
     "name": "Zombie Horde",
     "epic": true,
+    "combat": {
+      "will": {
+        "modifier": 0,
+        "horror": 2
+      },
+      "strength": {
+        "modifier": -3,
+        "damage": 3
+      },
+      "toughness": 5
+    },
     "images": {
       "front": "cards/eh01/monster/zombie-horde.webp",
       "back": "cards/eh01/monster/zombie-horde-back.webp"

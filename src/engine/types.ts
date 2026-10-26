@@ -18,6 +18,8 @@ export interface MonsterInstance {
 
 export interface MonsterOnBoard extends MonsterInstance {
   space: string;
+  /** Health lost in combat; defeated at the token's toughness. */
+  health: number;
 }
 
 export type Ticket = "train" | "ship";
@@ -32,6 +34,8 @@ export interface InvestigatorState {
   possessions: string[];
   /** Travel tickets held, at most 2. */
   tickets: Ticket[];
+  /** Set at 0 health or sanity; the investigator's turns are skipped from then on. */
+  defeated?: "health" | "sanity";
 }
 
 export type ActionName = "travel" | "rest" | "prepare-for-travel" | "trade" | "acquire-assets";
@@ -44,6 +48,18 @@ export interface ActionPhase {
   taken: ActionName[];
   /** Acquire Assets rolled and waiting for the cards to be chosen. */
   acquiring?: { dice: number[]; successes: number };
+}
+
+export interface EncounterPhase {
+  name: "encounter";
+  /** Investigator id whose encounter it is. */
+  active: string;
+  /** Fights and draws in rule words. */
+  log: string[];
+  /** Monsters fought this encounter, as `id#instance`. */
+  fought: string[];
+  /** The encounter card drawn, until the player finishes. */
+  card?: { deck: string; id: string };
 }
 
 export interface MythosPhase {
@@ -59,8 +75,8 @@ export interface LostPhase {
   reason: string;
 }
 
-/** The phase in progress. Deviation: the Encounter phase is skipped. */
-export type Phase = ActionPhase | MythosPhase | LostPhase;
+/** The phase in progress. */
+export type Phase = ActionPhase | EncounterPhase | MythosPhase | LostPhase;
 
 /** Printed on the reference card for the investigator count. */
 export interface ReferenceCard {
@@ -109,6 +125,8 @@ export interface GameState {
     encounters: Record<string, string[]>;
   };
   reserve: string[];
+  /** Keyed by encounter deck id, research included; index 0 is the last discard. */
+  encounterDiscards: Record<string, string[]>;
   /** Asset cards discarded from the reserve, reshuffled into the asset deck when it runs out. */
   assetDiscard: string[];
   /** Ongoing mythos cards in play, oldest first. */

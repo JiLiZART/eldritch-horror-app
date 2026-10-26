@@ -23,6 +23,13 @@
     "setup": {
       "eldritchTokensOnOmen": 1
     },
+    "cultists": {
+      "will": {
+        "modifier": 0,
+        "horror": 1
+      },
+      "toughness": 1
+    },
     "images": {
       "front": "cards/eh01/ancient-one/azathoth/sheet.webp",
       "back": "cards/eh01/ancient-one/azathoth/sheet-back.webp"
@@ -154,6 +161,13 @@
         "eh01/monster/deep-one": 1,
         "eh01/monster/star-spawn": 1
       }
+    },
+    "cultists": {
+      "strength": {
+        "modifier": 0,
+        "damage": 1
+      },
+      "toughness": 1
     },
     "images": {
       "front": "cards/eh01/ancient-one/cthulhu/sheet.webp",
@@ -338,6 +352,13 @@
         "eh01/monster/dark-young": 1
       }
     },
+    "cultists": {
+      "strength": {
+        "modifier": -1,
+        "damage": 1
+      },
+      "toughness": 1
+    },
     "images": {
       "front": "cards/eh01/ancient-one/shub-niggurath/sheet.webp",
       "back": "cards/eh01/ancient-one/shub-niggurath/sheet-back.webp"
@@ -463,6 +484,13 @@
         "yellow": 4,
         "blue": 0
       }
+    },
+    "cultists": {
+      "strength": {
+        "modifier": 0,
+        "damage": 1
+      },
+      "toughness": 1
     },
     "images": {
       "front": "cards/eh01/ancient-one/yog-sothoth/sheet.webp",

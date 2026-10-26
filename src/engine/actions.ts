@@ -1,5 +1,5 @@
 import type { Board, GameSet } from "../content/types";
-import { drawMythos } from "./mythos";
+import { nextStanding, startEncounters } from "./encounter";
 import { type Random, rng, shuffle } from "./rng";
 import { test } from "./test";
 import type { ActionName, ActionPhase, GameState, InvestigatorState, Ticket } from "./types";
@@ -40,11 +40,10 @@ function perform(state: GameState, action: ActionName, next: InvestigatorState):
   };
 }
 
-/** Passes to the next seat clockwise from the lead; once every seat has acted the Mythos phase draws its card (`drawMythos`). Deviation: the Encounter phase is skipped. */
+/** Passes to the next standing seat clockwise from the lead; once every seat has acted the Encounter phase begins. */
 export function endTurn(state: GameState): GameState {
-  const seat = state.investigators.findIndex((i) => i.id === notAcquiring(state).active);
-  const next = state.investigators[(seat + 1) % state.investigators.length]!;
-  return next.id === state.leadInvestigator ? drawMythos(state) : { ...state, phase: { name: "action", active: next.id, taken: [] } };
+  const next = nextStanding(state, notAcquiring(state).active);
+  return next === undefined ? startEncounters(state) : { ...state, phase: { name: "action", active: next, taken: [] } };
 }
 
 /** Rest: 1 health and 1 sanity up to the sheet maximums; not on a space with a monster. */

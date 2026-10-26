@@ -4,11 +4,15 @@ Resolve one combat encounter against one monster with the two printed tests. Sou
 ## ADDED Requirements
 
 ### Requirement: Monsters on the space must be fought
-While a monster stands on the investigator's space the investigator SHALL fight each monster there, one at a time, in the order of their choice, every non-epic monster before an epic one. Fighting a monster on another space or an epic monster while a non-epic one remains SHALL be refused with the rule named.
+While a monster stands on the investigator's space the investigator SHALL fight each monster there once, one at a time, in the order of their choice, every non-epic monster before an epic one. Fighting a monster on another space, a monster already fought this encounter, or an epic monster while a non-epic one remains SHALL be refused with the rule named.
 
 #### Scenario: Order of choice
 - **WHEN** Leo Anderson's space holds a Ghoul and a Cultist and he fights the Cultist first
 - **THEN** the Cultist fight resolves and the Ghoul still waits
+
+#### Scenario: Fought once
+- **WHEN** Leo Anderson fights the Ghoul that survived his fight this encounter
+- **THEN** the fight is refused because each monster is fought once per encounter
 
 #### Scenario: Elsewhere refused
 - **WHEN** Leo Anderson fights a Ghoul standing on another space

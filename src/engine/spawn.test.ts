@@ -44,7 +44,7 @@ describe("spawnMonster", () => {
   it("moves a monster whose token back names another space", () => {
     const s = { ...game(), monsterCup: [{ id: "eh01/monster/color-out-of-space", instance: 1 }] };
     const next = spawnMonster(s, content, "london");
-    expect(next.monsters.at(-1)).toEqual({ id: "eh01/monster/color-out-of-space", instance: 1, space: "tunguska" });
+    expect(next.monsters.at(-1)).toEqual({ id: "eh01/monster/color-out-of-space", instance: 1, space: "tunguska", health: 0 });
     expect(next.monsterCup).toEqual([]);
   });
   it("spawns nothing from an empty cup", () => {

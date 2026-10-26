@@ -15,7 +15,7 @@ When the last seat ends its Action turn the Encounter phase SHALL begin with the
 - **THEN** the phase is Mythos with the top mythos card showing
 
 ### Requirement: One encounter of the investigator's choice
-With no monster on the space the investigator SHALL draw exactly one card from a deck the space allows: the location deck of the space's region or the general deck on any space; the research deck when a clue token lies on the space; the other world deck when a gate stands on the space; the expedition deck when the active expedition token lies on the space. The drawn card SHALL be shown until the player finishes, then discarded to its deck's discard; a finished expedition encounter SHALL move the expedition token to the space named by the new top expedition card. A deck the space does not allow, a second draw, or finishing with a monster still on the space SHALL be refused with the rule named. **Deviation**: the card text is left to the players; rumor, defeated-investigator and special encounters are not offered; a Detained investigator is not modelled.
+With no monster on the space the investigator SHALL draw exactly one card from a deck the space allows: the location deck of the space's region or the general deck on any space; the research deck when a clue token lies on the space; the other world deck when a gate stands on the space; the expedition deck when the active expedition token lies on the space. The drawn card SHALL be shown until the player finishes, then discarded to its deck's discard; a finished expedition encounter SHALL move the expedition token to the space named by the new top expedition card. A deck the space does not allow, a second draw, a draw while a monster still stands on the space, or finishing while a monster on the space has not been fought SHALL be refused with the rule named; a survivor already fought ends the encounter without a draw. **Deviation**: the card text is left to the players; rumor, defeated-investigator and special encounters are not offered; a Detained investigator is not modelled.
 
 #### Scenario: Location encounter
 - **WHEN** Leo Anderson on Buenos Aires, with no monster there, draws from the America deck
@@ -36,6 +36,10 @@ With no monster on the space the investigator SHALL draw exactly one card from a
 #### Scenario: Monster blocks the draw
 - **WHEN** Leo Anderson on a space with a Ghoul draws from the general deck
 - **THEN** the draw is refused because the monster must be fought first
+
+#### Scenario: Survivor ends the encounter
+- **WHEN** Leo Anderson has fought a Ghoul that survived and finishes
+- **THEN** Lily Chen is encountering and no card was drawn
 
 #### Scenario: Encounter finished
 - **WHEN** Leo Anderson finishes with the America card showing

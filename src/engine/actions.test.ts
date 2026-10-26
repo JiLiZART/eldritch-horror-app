@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { acquireAssets, endTurn, prepareForTravel, rest, takeAssets, trade, travel } from "./actions";
+import { finishEncounter } from "./encounter";
 import { nextRound, resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
 import type { GameState, InvestigatorState } from "./types";
@@ -39,7 +40,7 @@ describe("investigators act in seat order", () => {
     expect(s.round).toBe(1);
   });
   it("starts the next round with the lead active after the last seat", () => {
-    const s = nextRound(resolveMythos(endTurn(endTurn(game())), { board, set }));
+    const s = nextRound(resolveMythos(finishEncounter(finishEncounter(endTurn(endTurn(game())), { board, set }), { board, set }), { board, set }));
     expect(s.round).toBe(2);
     expect(s.phase).toEqual({ name: "action", active: leo, taken: [] });
   });
@@ -82,7 +83,7 @@ describe("travel moves along paths", () => {
     expect(() => travel(west(), board, [])).toThrow();
   });
   it("is not blocked by a monster on the space", () => {
-    const s = { ...west(), monsters: [{ id: "eh01/monster/cultist", instance: 1, space: "san-francisco" }] };
+    const s = { ...west(), monsters: [{ id: "eh01/monster/cultist", instance: 1, space: "san-francisco", health: 0 }] };
     expect(who(travel(s, board, ["space-5"]), charlie).space).toBe("space-5");
   });
 });
@@ -98,7 +99,7 @@ describe("rest recovers health and sanity", () => {
     expect(s.phase).toMatchObject({ taken: ["rest"] });
   });
   it("is refused on a space with a monster", () => {
-    const s = { ...solo(akachi), monsters: [{ id: "eh01/monster/cultist", instance: 1, space: "space-15" }] };
+    const s = { ...solo(akachi), monsters: [{ id: "eh01/monster/cultist", instance: 1, space: "space-15", health: 0 }] };
     expect(() => rest(s, set)).toThrow(/monster/);
   });
 });
@@ -205,7 +206,7 @@ describe("Acquire Assets", () => {
     expect(() => acquireAssets(patch(shop(), charlie, { space: "space-2" }), board, set)).toThrow(/city/);
   });
   it("refuses a space with a monster, naming it", () => {
-    const s = { ...shop(), monsters: [{ id: "eh01/monster/cultist", instance: 1, space: "san-francisco" }] };
+    const s = { ...shop(), monsters: [{ id: "eh01/monster/cultist", instance: 1, space: "san-francisco", health: 0 }] };
     expect(() => acquireAssets(s, board, set)).toThrow(/eh01\/monster\/cultist/);
   });
   it("refuses ending the turn or another action before the choice", () => {

@@ -8,6 +8,7 @@ import { copyFileSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { basename, extname, join } from "node:path";
 import type { AncientOne, Card, EncounterDeck, Investigator, Monster, MythosCard, NamedCard } from "../src/content/types";
 import { assetValues } from "./asset-values";
+import { cultists, monsterStats } from "./monster-stats";
 import { mythosEffects } from "./mythos-effects";
 
 const root = join(import.meta.dirname, "..");
@@ -80,7 +81,10 @@ function monsters(srcDir: string, epic: boolean): Monster[] {
   for (const [name, imgs] of sides(srcDir, "monster")) {
     const count = monsterCounts[name];
     const moveTo = spawnMoveTo[name];
-    result.push({ id: `eh01/monster/${kebab(name)}`, name, ...(epic && { epic }), ...(count && { count }), ...(moveTo && { spawnMoveTo: moveTo }), images: { front: imgs.front!, back: imgs.back! } });
+    const id = `eh01/monster/${kebab(name)}`;
+    const combat = monsterStats[id];
+    if (!combat) throw new Error(`${id} has no entry in scripts/monster-stats.ts`);
+    result.push({ id, name, ...(epic && { epic }), ...(count && { count }), ...(moveTo && { spawnMoveTo: moveTo }), combat, images: { front: imgs.front!, back: imgs.back! } });
   }
   return result;
 }
@@ -174,6 +178,7 @@ function ancientOnes(): AncientOne[] {
       id: `eh01/ancient-one/${kebab(name)}`,
       name,
       ...setup,
+      cultists: cultists[name]!,
       images: { front: copy(srcDir, find("front"), dir, "sheet"), back: copy(srcDir, find("back"), dir, "sheet-back") },
       mysteries,
       research,

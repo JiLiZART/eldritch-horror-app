@@ -32,7 +32,7 @@ export function Mythos({ board, set, state, phase, error, onAct }: MythosProps) 
           <label>
             Lead investigator for the next round{" "}
             <select value={lead} onChange={(e) => setLead(e.target.value)}>
-              {state.investigators.map((i) => (
+              {state.investigators.filter((i) => !i.defeated).map((i) => (
                 <option key={i.id} value={i.id}>
                   {name(i.id)}
                 </option>
@@ -50,9 +50,6 @@ export function Mythos({ board, set, state, phase, error, onAct }: MythosProps) 
       )}
       <p aria-live="assertive" className="error">
         {error}
-      </p>
-      <p>
-        <small>The Encounter phase is skipped; the Mythos phase follows the last Action turn.</small>
       </p>
     </section>
   );

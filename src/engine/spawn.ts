@@ -31,7 +31,7 @@ export function spawnMonster(state: GameState, content: Content, space: string):
   if (token === undefined) return note(state, `the monster cup is empty: no monster spawns on ${spaceName(content, space)}`);
   const sheet = content.set.monsters.find((m) => m.id === token.id);
   const at = sheet?.spawnMoveTo ?? space;
-  return note({ ...state, monsters: [...state.monsters, { ...token, space: at }], monsterCup: cup }, `${sheet?.name ?? token.id} spawns on ${spaceName(content, at)}`);
+  return note({ ...state, monsters: [...state.monsters, { ...token, space: at, health: 0 }], monsterCup: cup }, `${sheet?.name ?? token.id} spawns on ${spaceName(content, at)}`);
 }
 
 /** Places the top clue of the pool; reshuffles the discard first, places nothing when both are empty. */

@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board, MythosCard } from "../content/types";
 import { endTurn } from "./actions";
+import { finishEncounter } from "./encounter";
 import { nextRound, resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
 import type { GameState } from "./types";
@@ -20,8 +21,9 @@ const game = (investigators = [leo, lily]) => setupGame(content, { ancientOne: "
 /** The Mythos phase at the end of round 1 with a made-up card on top. */
 const mythos = (card: Partial<MythosCard>, s = game()): { state: GameState; content: typeof content } => {
   const fake: MythosCard = { id: "eh01/mythos/test/card", name: "Test", color: "green", difficulty: "easy", trait: "event", effects: [], images: { front: "x.webp" }, ...card };
-  let drawn: GameState = { ...s, decks: { ...s.decks, mythos: [fake.id, ...s.decks.mythos] } };
-  while (drawn.phase.name === "action") drawn = endTurn(drawn);
+  // Monsters on the investigators' spaces would have to be fought first; the mythos tests are not about that.
+  let drawn: GameState = { ...s, decks: { ...s.decks, mythos: [fake.id, ...s.decks.mythos] }, monsters: s.monsters.filter((m) => !s.investigators.some((i) => i.space === m.space)) };
+  while (drawn.phase.name === "action" || drawn.phase.name === "encounter") drawn = drawn.phase.name === "action" ? endTurn(drawn) : finishEncounter(drawn, content);
   return { state: drawn, content: { board, set: { ...set, mythos: [...set.mythos, fake] } } };
 };
 const resolve = (card: Partial<MythosCard>, s?: GameState) => {
@@ -30,18 +32,21 @@ const resolve = (card: Partial<MythosCard>, s?: GameState) => {
 };
 const log = (s: GameState) => (s.phase.name === "mythos" ? (s.phase.log ?? []).join("\n") : "");
 
-describe("the last turn opens the Mythos phase", () => {
-  it("draws the top card when the last seat ends its turn", () => {
+/** The last encounter of round 1 finished. */
+const lastEncounter = (s: GameState) => finishEncounter(finishEncounter(endTurn(endTurn(s)), content), content);
+
+describe("the last encounter opens the Mythos phase", () => {
+  it("draws the top card when the last investigator finishes", () => {
     const s = game();
     const top = s.decks.mythos[0];
-    const next = endTurn(endTurn(s));
+    const next = lastEncounter(s);
     expect(next.phase).toEqual({ name: "mythos", card: top });
     expect(next.decks.mythos).toEqual(s.decks.mythos.slice(1));
     expect(next.round).toBe(1);
   });
   it("loses the game naming the mythos deck when no card can be drawn", () => {
     const s = game();
-    const next = endTurn(endTurn({ ...s, decks: { ...s.decks, mythos: [] } }));
+    const next = lastEncounter({ ...s, decks: { ...s.decks, mythos: [] } });
     expect(next.phase).toEqual({ name: "lost", reason: expect.stringMatching(/mythos deck/) });
   });
   it("keeps the seat order before the last seat", () => {
@@ -143,11 +148,11 @@ describe("the lead may pass the token", () => {
     expect(next.round).toBe(2);
     expect(next.phase).toEqual({ name: "action", active: lily, taken: [] });
   });
-  it("lets every seat act after the lead moved, then opens the Mythos phase", () => {
+  it("lets every seat act after the lead moved, then opens the Encounter phase with the lead", () => {
     const round2 = nextRound(resolve({ effects: ["advance-omen"] }), lily);
     const leoTurn = endTurn(round2);
     expect(leoTurn.phase).toEqual({ name: "action", active: leo, taken: [] });
-    expect(endTurn(leoTurn).phase).toMatchObject({ name: "mythos" });
+    expect(endTurn(leoTurn).phase).toEqual({ name: "encounter", active: lily, log: [], fought: [] });
   });
   it("keeps Leo Anderson as lead by default", () => {
     const next = nextRound(resolve({ effects: ["advance-omen"] }));
