@@ -1,6 +1,7 @@
 import type { Board, GameSet } from "../content/types";
 import { drawEncounter, fight, finishEncounter, monsterKey } from "../engine/encounter";
 import type { EncounterPhase, GameState } from "../engine/types";
+import { Effects } from "./Effects";
 import type { Act } from "./Turn";
 
 interface EncounterProps {
@@ -76,11 +77,12 @@ export function Encounter({ board, set, state, phase, error, onAct }: EncounterP
       <button type="button" disabled={unfought.length > 0} onClick={() => onAct((s) => finishEncounter(s, content))}>
         Finish
       </button>
+      <Effects key={phase.active} board={board} set={set} state={state} who={phase.active} onAct={onAct} />
       <p aria-live="assertive" className="error">
         {error}
       </p>
       <p>
-        <small>Card text and token text are left to the players; defeated investigators are not replaced.</small>
+        <small>Card text and token text are left to the players; defeated investigators are not replaced; pawn moves, Delayed and Detained are applied by the players.</small>
       </p>
     </section>
   );

@@ -53,6 +53,15 @@ describe("investigators start as printed", () => {
     expect(akachi.possessions[0]).toMatch(/^eh01\/spell\/mists-of-releh/);
     expect(s.decks.spell).not.toContain(akachi.possessions[0]);
   });
+  it("holds a starting condition apart from possessions", () => {
+    const sheet = set.investigators.find((i) => i.id === inv("lily-chen"))!;
+    const cursed = { ...sheet, starting: { ...sheet.starting, conditions: ["eh01/condition/cursed"] } };
+    const contrived = { board, set: { ...set, investigators: set.investigators.map((i) => (i.id === cursed.id ? cursed : i)) } };
+    const lily = setupGame(contrived, { ancientOne: ao("azathoth"), investigators: [inv("lily-chen")], seed: 1 }).investigators[0]!;
+    expect(lily.conditions).toHaveLength(1);
+    expect(lily.conditions[0]).toMatch(/^eh01\/condition\/cursed/);
+    expect(lily.possessions).toHaveLength(2);
+  });
   it("takes starting clues from the pool", () => {
     expect(s.cluePool.length + s.clues.length).toBe(36 - 1);
   });

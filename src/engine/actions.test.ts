@@ -145,6 +145,10 @@ describe("trade exchanges possessions on a shared space", () => {
   it("is refused when the giver lacks the card, naming it", () => {
     expect(() => trade(together(), { partner: jacqueline, give: { possessions: ["eh01/asset/nope"] }, receive: {} })).toThrow(/nope/);
   });
+  it("is refused when a condition is given", () => {
+    const s = patch(together(), charlie, { conditions: ["eh01/condition/cursed-1"] });
+    expect(() => trade(s, { partner: jacqueline, give: { possessions: ["eh01/condition/cursed-1"] }, receive: {} })).toThrow(/not possessions/);
+  });
   it("is refused when more clues are asked than held", () => {
     expect(() => trade(together(), { partner: jacqueline, give: {}, receive: { clues: 2 } })).toThrow(/clue/);
   });

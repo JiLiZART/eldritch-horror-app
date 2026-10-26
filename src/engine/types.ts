@@ -32,6 +32,8 @@ export interface InvestigatorState {
   clues: number;
   /** Card ids. */
   possessions: string[];
+  /** Condition card ids; not possessions, never traded. */
+  conditions: string[];
   /** Travel tickets held, at most 2. */
   tickets: Ticket[];
   /** Set at 0 health or sanity; the investigator's turns are skipped from then on. */
@@ -129,6 +131,7 @@ export interface GameState {
   encounterDiscards: Record<string, string[]>;
   /** Asset cards discarded from the reserve, reshuffled into the asset deck when it runs out. */
   assetDiscard: string[];
+  artifactDiscard: string[];
   /** Ongoing mythos cards in play, oldest first. */
   ongoingMythos: string[];
   mythosDiscard: string[];

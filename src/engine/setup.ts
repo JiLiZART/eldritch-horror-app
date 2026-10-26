@@ -96,6 +96,7 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
     decks,
     reserve,
     assetDiscard: [],
+    artifactDiscard: [],
     encounterDiscards: {},
     ongoingMythos: [],
     mythosDiscard: [],
@@ -111,6 +112,7 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
 /** Takes the printed starting cards out of their decks and starting clues out of the pool. */
 function placeInvestigator(i: Investigator, cards: Card[], decks: GameState["decks"], cluePool: string[]): InvestigatorState {
   const possessions: string[] = [];
+  const conditions: string[] = [];
   const refs = [...(i.starting.assets ?? []), ...(i.starting.spells ?? []), ...(i.starting.uniqueAssets ?? []), ...(i.starting.conditions ?? [])];
   for (const ref of refs) {
     // A starting item names the card; copies carry a -N suffix and any copy still in the deck will do.
@@ -120,11 +122,11 @@ function placeInvestigator(i: Investigator, cards: Card[], decks: GameState["dec
     const deck = decks[card.deck];
     const at = deck.findIndex(isCopy);
     if (at < 0) throw new Error(`no copy of ${ref} left for ${i.id}`);
-    possessions.push(...deck.splice(at, 1));
+    (card.deck === "condition" ? conditions : possessions).push(...deck.splice(at, 1));
   }
   const clues = i.starting.clues ?? 0;
   cluePool.splice(0, clues);
-  return { id: i.id, space: i.startingSpace, health: i.health, sanity: i.sanity, clues, possessions, tickets: [] };
+  return { id: i.id, space: i.startingSpace, health: i.health, sanity: i.sanity, clues, possessions, conditions, tickets: [] };
 }
 
 /** Every non-epic token minus the sheet's set-aside monsters, shuffled. */

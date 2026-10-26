@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Board, GameSet } from "../content/types";
 import { nextRound, resolveMythos } from "../engine/mythos";
 import type { GameState, MythosPhase } from "../engine/types";
+import { Effects } from "./Effects";
 import type { Act } from "./Turn";
 
 interface MythosProps {
@@ -42,6 +43,7 @@ export function Mythos({ board, set, state, phase, error, onAct }: MythosProps) 
           <button type="button" onClick={() => onAct((s) => nextRound(s, lead))}>
             Next round
           </button>
+          <Effects board={board} set={set} state={state} who={state.leadInvestigator} onAct={onAct} />
         </>
       ) : (
         <button type="button" onClick={() => onAct((s) => resolveMythos(s, { board, set }))}>

@@ -5,9 +5,10 @@ import type { GameState } from "./types";
 
 /** Spawning rules shared by setup and the Mythos phase (EH_reference.pdf p.3 gate, p.6 monster, p.13 clue). */
 
-/** Appends a line to the Mythos phase log; outside that phase there is nobody to tell. */
+/** Appends a line to the Encounter or Mythos phase log; outside those phases there is nobody to tell. */
 export function note(state: GameState, line: string): GameState {
-  return state.phase.name === "mythos" ? { ...state, phase: { ...state.phase, log: [...(state.phase.log ?? []), line] } } : state;
+  const { phase } = state;
+  return phase.name === "mythos" || phase.name === "encounter" ? { ...state, phase: { ...phase, log: [...(phase.log ?? []), line] } } : state;
 }
 
 export const spaceName = ({ board }: Content, id: string) => board.spaces.find((s) => s.id === id)?.name.en ?? id;

@@ -112,6 +112,7 @@ export interface Offer {
 function take(giver: InvestigatorState, offer: Offer): InvestigatorState {
   const possessions = [...giver.possessions];
   for (const card of offer.possessions ?? []) {
+    if (giver.conditions.includes(card)) throw new Error("conditions are not possessions");
     const at = possessions.indexOf(card);
     if (at < 0) throw new Error(`${giver.id} does not hold ${card}`);
     possessions.splice(at, 1);

@@ -1,0 +1,152 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { describe, expect, it } from "vitest";
+import { loadSet } from "../content/load";
+import type { Board } from "../content/types";
+import { endTurn } from "./actions";
+import { changeHealth, changeSanity, closeGate, discardCard, gainCard, gainClue, spendClue } from "./effects";
+import { finishEncounter } from "./encounter";
+import { resolveMythos } from "./mythos";
+import { setupGame } from "./setup";
+import { note } from "./spawn";
+import type { GameState, InvestigatorState } from "./types";
+
+const root = join(import.meta.dirname, "../..");
+const board: Board = JSON.parse(readFileSync(join(root, "content/board/board.json"), "utf8"));
+const set = loadSet(join(root, "content/sets/eh01"))!;
+const content = { board, set };
+const leo = "eh01/investigator/leo-anderson";
+const lily = "eh01/investigator/lily-chen";
+/** Leo Anderson leads on Buenos Aires, Lily Chen second on Shanghai; Azathoth at doom 15, no monster on either space for seed 3. */
+const game = () => setupGame(content, { ancientOne: "eh01/ancient-one/azathoth", investigators: [leo, lily], seed: 3 });
+const who = (s: GameState, id: string) => s.investigators.find((i) => i.id === id)!;
+const patch = (s: GameState, id: string, fields: Partial<InvestigatorState>): GameState => ({ ...s, investigators: s.investigators.map((i) => (i.id === id ? { ...i, ...fields } : i)) });
+/** The Encounter phase of round 1 with Leo Anderson encountering. */
+const encounters = () => endTurn(endTurn(game()));
+const log = (s: GameState) => (s.phase.name === "encounter" || s.phase.name === "mythos" ? (s.phase.log ?? []).join("\n") : "");
+const cardName = (id: string) => set.cards.find((c) => c.id === id)?.name;
+
+describe("card text is applied in the Encounter and Mythos phases", () => {
+  it("logs in the Encounter phase", () => {
+    expect(log(note(encounters(), "a line"))).toBe("a line");
+  });
+  it("logs the effect in rule words", () => {
+    expect(log(gainClue(encounters(), content, leo))).toMatch(/Leo Anderson gains 1 clue/);
+  });
+  it("is refused in the Action phase", () => {
+    expect(() => changeHealth(game(), content, leo, -1)).toThrow(/Encounter and Mythos/);
+  });
+  it("waits for the mythos card to be resolved", () => {
+    const mythos = finishEncounter(finishEncounter(encounters(), content), content);
+    expect(() => spendClue(mythos, content, leo)).toThrow(/resolved/);
+    const s = changeSanity(resolveMythos(mythos, content), content, leo, -1);
+    expect(who(s, leo).sanity).toBe(5);
+    expect(log(s)).toMatch(/loses 1 sanity/);
+  });
+  it("is refused on a defeated investigator", () => {
+    expect(() => changeHealth(patch(encounters(), leo, { defeated: "health" }), content, leo, 1)).toThrow(/defeated/);
+  });
+});
+
+describe("health and sanity change by card text", () => {
+  it("gains up to the sheet maximum", () => {
+    expect(who(changeHealth(patch(encounters(), leo, { health: 5 }), content, leo, 2), leo).health).toBe(6);
+  });
+  it("defeats at 0", () => {
+    const s = changeSanity(patch(encounters(), lily, { sanity: 2 }), content, lily, -2);
+    expect(who(s, lily).defeated).toBe("sanity");
+    expect(s.doom).toBe(14);
+  });
+});
+
+describe("clues are gained and spent", () => {
+  it("takes the token on the space first", () => {
+    const s = gainClue({ ...encounters(), clues: ["shanghai"] }, content, lily);
+    expect(who(s, lily).clues).toBe(1);
+    expect(s.clues).not.toContain("shanghai");
+    expect(log(s)).toMatch(/Shanghai/);
+  });
+  it("takes the top of the pool otherwise", () => {
+    const before = encounters();
+    const s = gainClue(before, content, leo);
+    expect(who(s, leo).clues).toBe(1);
+    expect(s.cluePool).toEqual(before.cluePool.slice(1));
+  });
+  it("reshuffles the discard into an empty pool", () => {
+    const s = gainClue({ ...encounters(), cluePool: [], clueDiscard: ["rome", "london"] }, content, leo);
+    expect(s.cluePool).toHaveLength(1);
+    expect(s.clueDiscard).toEqual([]);
+  });
+  it("is refused with no clue anywhere", () => {
+    expect(() => gainClue({ ...encounters(), cluePool: [], clueDiscard: [] }, content, leo)).toThrow(/no clue can be gained/);
+  });
+  it("spends one and refuses with none", () => {
+    expect(who(spendClue(patch(encounters(), leo, { clues: 1 }), content, leo), leo).clues).toBe(0);
+    expect(() => spendClue(encounters(), content, leo)).toThrow(/holds no clue/);
+  });
+});
+
+describe("a gate on the space is closed", () => {
+  it("discards the gate token and leaves the monsters", () => {
+    const open = { ...encounters(), gates: ["buenos-aires"], monsters: [{ id: "eh01/monster/ghoul", instance: 1, space: "buenos-aires", health: 0 }] };
+    const s = closeGate(open, content, leo);
+    expect(s.gates).toEqual([]);
+    expect(s.gateDiscard[0]).toBe("buenos-aires");
+    expect(s.monsters).toHaveLength(1);
+  });
+  it("is refused without a gate", () => {
+    expect(() => closeGate(encounters(), content, leo)).toThrow(/no gate stands on Buenos Aires/);
+  });
+});
+
+describe("cards are gained and discarded", () => {
+  it("draws a random spell from the bottom", () => {
+    const before = encounters();
+    const s = gainCard(before, content, leo, "spell");
+    expect(who(s, leo).possessions).toContain(before.decks.spell.at(-1));
+    expect(s.decks.spell).toEqual(before.decks.spell.slice(0, -1));
+  });
+  it("draws a random asset from the top", () => {
+    const before = encounters();
+    expect(who(gainCard(before, content, leo, "asset"), leo).possessions).toContain(before.decks.asset[0]);
+  });
+  it("gains a condition by name, held apart", () => {
+    const before = encounters();
+    const s = gainCard(before, content, lily, "condition", "Cursed");
+    expect(who(s, lily).conditions.map(cardName)).toEqual(["Cursed"]);
+    expect(who(s, lily).possessions).toEqual(who(before, lily).possessions);
+    expect(s.decks.condition.filter((c) => cardName(c) === "Cursed")).toHaveLength(2);
+  });
+  it("refuses a duplicate spell or condition", () => {
+    const cursed = gainCard(encounters(), content, lily, "condition", "Cursed");
+    expect(() => gainCard(cursed, content, lily, "condition", "Cursed")).toThrow(/already has Cursed/);
+  });
+  it("refuses an empty deck or an absent name", () => {
+    expect(() => gainCard({ ...encounters(), decks: { ...encounters().decks, artifact: [] } }, content, leo, "artifact")).toThrow(/artifact deck is empty/);
+    expect(() => gainCard(encounters(), content, leo, "condition", "Nope")).toThrow(/no Nope in the condition deck/);
+  });
+  it("shuffles a discarded spell back into its deck", () => {
+    const before = encounters();
+    const spell = before.decks.spell.at(-1)!;
+    const s = discardCard(gainCard(before, content, leo, "spell"), content, leo, spell);
+    expect(who(s, leo).possessions).not.toContain(spell);
+    expect(s.decks.spell).toHaveLength(before.decks.spell.length);
+    expect(s.decks.spell).toContain(spell);
+  });
+  it("discards an asset and an artifact to their piles", () => {
+    const before = encounters();
+    const asset = before.decks.asset[0]!;
+    const artifact = before.decks.artifact[0]!;
+    const s = discardCard(discardCard(gainCard(gainCard(before, content, leo, "asset"), content, leo, "artifact"), content, leo, asset), content, leo, artifact);
+    expect(s.assetDiscard[0]).toBe(asset);
+    expect(s.artifactDiscard[0]).toBe(artifact);
+  });
+  it("discards a held condition", () => {
+    const cursed = gainCard(encounters(), content, lily, "condition", "Cursed");
+    const s = discardCard(cursed, content, lily, who(cursed, lily).conditions[0]!);
+    expect(who(s, lily).conditions).toEqual([]);
+  });
+  it("refuses a card not held", () => {
+    expect(() => discardCard(encounters(), content, leo, "eh01/asset/nope")).toThrow(/does not hold/);
+  });
+});
