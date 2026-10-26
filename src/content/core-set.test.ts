@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "./load";
 
 describe("core set", () => {
-  const { investigators, ancientOnes, monsters, encounterDecks: decks } = loadSet(join(import.meta.dirname, "../../content/sets/eh01"))!;
+  const { investigators, ancientOnes, monsters, mythos, encounterDecks: decks } = loadSet(join(import.meta.dirname, "../../content/sets/eh01"))!;
 
   it("has 12 investigators and 4 Ancient Ones", () => {
     expect(investigators).toHaveLength(12);
@@ -52,5 +52,12 @@ describe("core set", () => {
     expect(monsters.filter((m) => !m.epic).reduce((n, m) => n + (m.count ?? 1), 0)).toBe(34);
     expect(byName("Color Out of Space").spawnMoveTo).toBe("tunguska");
     expect(byName("Cultist").spawnMoveTo).toBeUndefined();
+  });
+
+  it("records the printed trait and icon row of every mythos card", () => {
+    const card = mythos.find((m) => m.id === "eh01/mythos/green/a-proposition")!;
+    expect(card.trait).toBe("event");
+    expect(card.effects).toEqual(["advance-omen", "reckoning", "spawn-clues"]);
+    for (const m of mythos) expect(m.effects.length, m.id).toBeGreaterThan(0);
   });
 });

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Board, GameSet } from "../content/types";
 import { endTurn, prepareForTravel, rest, travel } from "../engine/actions";
-import type { GameState, Ticket } from "../engine/types";
+import type { ActionPhase, GameState, Ticket } from "../engine/types";
 import { Trade } from "./Trade";
 
 export type Act = (fn: (state: GameState) => GameState) => void;
@@ -10,6 +10,7 @@ interface TurnProps {
   board: Board;
   set: GameSet;
   state: GameState;
+  phase: ActionPhase;
   /** Why the last action was refused, in the rule's words. */
   error: string | undefined;
   /** Travel route being picked; undefined outside route mode. */
@@ -21,10 +22,10 @@ interface TurnProps {
 const TICKETS: Ticket[] = ["train", "ship"];
 
 /** The turn in progress and its action controls (design D6). Rules stay in the engine; this only drafts and dispatches. */
-export function Turn({ board, set, state, error, route, onAct, onRoute }: TurnProps) {
+export function Turn({ board, set, state, phase, error, route, onAct, onRoute }: TurnProps) {
   const [discard, setDiscard] = useState<Ticket>("train");
   const [trading, setTrading] = useState(false);
-  const me = state.investigators.find((i) => i.id === state.phase.active)!;
+  const me = state.investigators.find((i) => i.id === phase.active)!;
   const name = (id: string) => set.investigators.find((i) => i.id === id)?.name ?? id;
   const spaceName = (id: string) => board.spaces.find((s) => s.id === id)?.name.en ?? id;
   const full = me.tickets.length >= 2;
@@ -32,7 +33,7 @@ export function Turn({ board, set, state, error, route, onAct, onRoute }: TurnPr
     <section className="turn">
       <h2>Round {state.round}, Action phase</h2>
       <p>
-        {name(me.id)} is active, {2 - state.phase.taken.length} actions left, tickets: {me.tickets.join(", ") || "none"}
+        {name(me.id)} is active, {2 - phase.taken.length} actions left, tickets: {me.tickets.join(", ") || "none"}
       </p>
       {route ? (
         <div>
@@ -77,12 +78,12 @@ export function Turn({ board, set, state, error, route, onAct, onRoute }: TurnPr
           </button>
         </div>
       )}
-      {trading && !route && <Trade set={set} state={state} onAct={onAct} onClose={() => setTrading(false)} />}
+      {trading && !route && <Trade set={set} state={state} active={me.id} onAct={onAct} onClose={() => setTrading(false)} />}
       <p aria-live="assertive" className="error">
         {error}
       </p>
       <p>
-        <small>Encounter and Mythos phases are not modelled yet; ending the last turn starts the next round's Action phase.</small>
+        <small>The Encounter phase is skipped; ending the last turn opens the Mythos phase.</small>
       </p>
     </section>
   );

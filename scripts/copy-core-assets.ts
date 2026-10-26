@@ -7,6 +7,7 @@ import { execFileSync } from "node:child_process";
 import { copyFileSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { basename, extname, join } from "node:path";
 import type { AncientOne, Card, EncounterDeck, Investigator, Monster, MythosCard, NamedCard } from "../src/content/types";
+import { mythosEffects } from "./mythos-effects";
 
 const root = join(import.meta.dirname, "..");
 const src = join(root, "inspired/ttp-eldritch-horror-master/assets/01 Core");
@@ -122,7 +123,10 @@ function mythos(): MythosCard[] {
       const m = /^(Easy|Medium|Hard) - (.*)$/.exec(stem(f));
       if (!m || /errata/i.test(m[2]!)) continue;
       const difficulty = m[1]!.toLowerCase() as MythosCard["difficulty"];
-      result.push({ id: `eh01/mythos/${color}/${kebab(m[2]!)}`, name: m[2]!, color, difficulty, images: { front: copy(dir, f, `mythos/${color}`, kebab(m[2]!)), back: backs[difficulty]! } });
+      const id = `eh01/mythos/${color}/${kebab(m[2]!)}`;
+      const icons = mythosEffects[id];
+      if (!icons) throw new Error(`${id} has no entry in scripts/mythos-effects.ts`);
+      result.push({ id, name: m[2]!, color, difficulty, ...icons, images: { front: copy(dir, f, `mythos/${color}`, kebab(m[2]!)), back: backs[difficulty]! } });
     }
   }
   return result;

@@ -4,6 +4,12 @@
     "name": "A proposition",
     "color": "green",
     "difficulty": "easy",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "reckoning",
+      "spawn-clues"
+    ],
     "images": {
       "front": "cards/eh01/mythos/green/a-proposition.webp",
       "back": "cards/eh01/mythos/green/easy-back.webp"
@@ -14,6 +20,12 @@
     "name": "Buying Information",
     "color": "green",
     "difficulty": "easy",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "reckoning",
+      "spawn-clues"
+    ],
     "images": {
       "front": "cards/eh01/mythos/green/buying-information.webp",
       "back": "cards/eh01/mythos/green/easy-back.webp"
@@ -24,6 +36,12 @@
     "name": "Heart of Corruption",
     "color": "green",
     "difficulty": "easy",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "reckoning",
+      "spawn-clues"
+    ],
     "images": {
       "front": "cards/eh01/mythos/green/heart-of-corruption.webp",
       "back": "cards/eh01/mythos/green/easy-back.webp"
@@ -34,6 +52,12 @@
     "name": "Support of the Church",
     "color": "green",
     "difficulty": "easy",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "reckoning",
+      "spawn-clues"
+    ],
     "images": {
       "front": "cards/eh01/mythos/green/support-of-the-church.webp",
       "back": "cards/eh01/mythos/green/easy-back.webp"
@@ -44,6 +68,12 @@
     "name": "That Which Consumes",
     "color": "green",
     "difficulty": "easy",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "reckoning",
+      "spawn-clues"
+    ],
     "images": {
       "front": "cards/eh01/mythos/green/that-which-consumes.webp",
       "back": "cards/eh01/mythos/green/easy-back.webp"
@@ -54,6 +84,12 @@
     "name": "From Beyond",
     "color": "green",
     "difficulty": "hard",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "reckoning",
+      "spawn-clues"
+    ],
     "images": {
       "front": "cards/eh01/mythos/green/from-beyond.webp",
       "back": "cards/eh01/mythos/green/hard-back.webp"
@@ -64,6 +100,12 @@
     "name": "Rising Terror",
     "color": "green",
     "difficulty": "hard",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "reckoning",
+      "spawn-clues"
+    ],
     "images": {
       "front": "cards/eh01/mythos/green/rising-terror.webp",
       "back": "cards/eh01/mythos/green/hard-back.webp"
@@ -74,6 +116,12 @@
     "name": "Strange Sightings",
     "color": "green",
     "difficulty": "hard",
+    "trait": "ongoing",
+    "effects": [
+      "advance-omen",
+      "reckoning",
+      "spawn-clues"
+    ],
     "images": {
       "front": "cards/eh01/mythos/green/strange-sightings.webp",
       "back": "cards/eh01/mythos/green/hard-back.webp"
@@ -84,6 +132,12 @@
     "name": "Tied to a Dark Purpose",
     "color": "green",
     "difficulty": "hard",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "reckoning",
+      "spawn-clues"
+    ],
     "images": {
       "front": "cards/eh01/mythos/green/tied-to-a-dark-purpose.webp",
       "back": "cards/eh01/mythos/green/hard-back.webp"
@@ -94,6 +148,12 @@
     "name": "Torn Asunder",
     "color": "green",
     "difficulty": "hard",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "reckoning",
+      "spawn-clues"
+    ],
     "images": {
       "front": "cards/eh01/mythos/green/torn-asunder.webp",
       "back": "cards/eh01/mythos/green/hard-back.webp"
@@ -104,6 +164,12 @@
     "name": "Blood Flows",
     "color": "green",
     "difficulty": "medium",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "reckoning",
+      "spawn-clues"
+    ],
     "images": {
       "front": "cards/eh01/mythos/green/blood-flows.webp",
       "back": "cards/eh01/mythos/green/medium-back.webp"
@@ -114,6 +180,12 @@
     "name": "Calling the Elder Things",
     "color": "green",
     "difficulty": "medium",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "reckoning",
+      "spawn-clues"
+    ],
     "images": {
       "front": "cards/eh01/mythos/green/calling-the-elder-things.webp",
       "back": "cards/eh01/mythos/green/medium-back.webp"
@@ -124,6 +196,12 @@
     "name": "Dimensional Instability",
     "color": "green",
     "difficulty": "medium",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "reckoning",
+      "spawn-clues"
+    ],
     "images": {
       "front": "cards/eh01/mythos/green/dimensional-instability.webp",
       "back": "cards/eh01/mythos/green/medium-back.webp"
@@ -134,6 +212,12 @@
     "name": "Driven to Bankruptcy",
     "color": "green",
     "difficulty": "medium",
+    "trait": "ongoing",
+    "effects": [
+      "advance-omen",
+      "reckoning",
+      "spawn-clues"
+    ],
     "images": {
       "front": "cards/eh01/mythos/green/driven-to-bankruptcy.webp",
       "back": "cards/eh01/mythos/green/medium-back.webp"
@@ -144,6 +228,12 @@
     "name": "Legitimate Banking",
     "color": "green",
     "difficulty": "medium",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "reckoning",
+      "spawn-clues"
+    ],
     "images": {
       "front": "cards/eh01/mythos/green/legitimate-banking.webp",
       "back": "cards/eh01/mythos/green/medium-back.webp"
@@ -154,6 +244,12 @@
     "name": "No Peace For the Fallen",
     "color": "green",
     "difficulty": "medium",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "reckoning",
+      "spawn-clues"
+    ],
     "images": {
       "front": "cards/eh01/mythos/green/no-peace-for-the-fallen.webp",
       "back": "cards/eh01/mythos/green/medium-back.webp"
@@ -164,6 +260,12 @@
     "name": "Patrolling the Border",
     "color": "green",
     "difficulty": "medium",
+    "trait": "ongoing",
+    "effects": [
+      "advance-omen",
+      "reckoning",
+      "spawn-clues"
+    ],
     "images": {
       "front": "cards/eh01/mythos/green/patrolling-the-border.webp",
       "back": "cards/eh01/mythos/green/medium-back.webp"
@@ -174,6 +276,12 @@
     "name": "Unexpected Betrayal",
     "color": "green",
     "difficulty": "medium",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "reckoning",
+      "spawn-clues"
+    ],
     "images": {
       "front": "cards/eh01/mythos/green/unexpected-betrayal.webp",
       "back": "cards/eh01/mythos/green/medium-back.webp"
@@ -184,6 +292,12 @@
     "name": "Everyone Has a Price",
     "color": "yellow",
     "difficulty": "easy",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/everyone-has-a-price.webp",
       "back": "cards/eh01/mythos/yellow/easy-back.webp"
@@ -194,6 +308,12 @@
     "name": "Omen of Good Fortune",
     "color": "yellow",
     "difficulty": "easy",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/omen-of-good-fortune.webp",
       "back": "cards/eh01/mythos/yellow/easy-back.webp"
@@ -204,6 +324,12 @@
     "name": "Rally the People",
     "color": "yellow",
     "difficulty": "easy",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/rally-the-people.webp",
       "back": "cards/eh01/mythos/yellow/easy-back.webp"
@@ -214,6 +340,12 @@
     "name": "Silver Twilight Aid",
     "color": "yellow",
     "difficulty": "easy",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/silver-twilight-aid.webp",
       "back": "cards/eh01/mythos/yellow/easy-back.webp"
@@ -224,6 +356,12 @@
     "name": "The World Fights Back",
     "color": "yellow",
     "difficulty": "easy",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/the-world-fights-back.webp",
       "back": "cards/eh01/mythos/yellow/easy-back.webp"
@@ -234,6 +372,12 @@
     "name": "All For Nothing",
     "color": "yellow",
     "difficulty": "hard",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/all-for-nothing.webp",
       "back": "cards/eh01/mythos/yellow/hard-back.webp"
@@ -244,6 +388,12 @@
     "name": "Desperate Times",
     "color": "yellow",
     "difficulty": "hard",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/desperate-times.webp",
       "back": "cards/eh01/mythos/yellow/hard-back.webp"
@@ -254,6 +404,12 @@
     "name": "Eyes Everywhere",
     "color": "yellow",
     "difficulty": "hard",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/eyes-everywhere.webp",
       "back": "cards/eh01/mythos/yellow/hard-back.webp"
@@ -264,6 +420,12 @@
     "name": "Perplexing Stars",
     "color": "yellow",
     "difficulty": "hard",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/perplexing-stars.webp",
       "back": "cards/eh01/mythos/yellow/hard-back.webp"
@@ -274,6 +436,12 @@
     "name": "The Storm",
     "color": "yellow",
     "difficulty": "hard",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/the-storm.webp",
       "back": "cards/eh01/mythos/yellow/hard-back.webp"
@@ -284,6 +452,12 @@
     "name": "A Dark Power",
     "color": "yellow",
     "difficulty": "medium",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/a-dark-power.webp",
       "back": "cards/eh01/mythos/yellow/medium-back.webp"
@@ -294,6 +468,12 @@
     "name": "Ancient Guardians",
     "color": "yellow",
     "difficulty": "medium",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/ancient-guardians.webp",
       "back": "cards/eh01/mythos/yellow/medium-back.webp"
@@ -304,6 +484,12 @@
     "name": "Arrests Made in Murder Case!",
     "color": "yellow",
     "difficulty": "medium",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/arrests-made-in-murder-case.webp",
       "back": "cards/eh01/mythos/yellow/medium-back.webp"
@@ -314,6 +500,12 @@
     "name": "Burden of Greed",
     "color": "yellow",
     "difficulty": "medium",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/burden-of-greed.webp",
       "back": "cards/eh01/mythos/yellow/medium-back.webp"
@@ -324,6 +516,12 @@
     "name": "From Bad to Worse",
     "color": "yellow",
     "difficulty": "medium",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/from-bad-to-worse.webp",
       "back": "cards/eh01/mythos/yellow/medium-back.webp"
@@ -334,6 +532,12 @@
     "name": "Haunting Nightmares",
     "color": "yellow",
     "difficulty": "medium",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/haunting-nightmares.webp",
       "back": "cards/eh01/mythos/yellow/medium-back.webp"
@@ -344,6 +548,12 @@
     "name": "Heat Wave Singes the Globe",
     "color": "yellow",
     "difficulty": "medium",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/heat-wave-singes-the-globe.webp",
       "back": "cards/eh01/mythos/yellow/medium-back.webp"
@@ -354,6 +564,12 @@
     "name": "The Bermuda Triangle",
     "color": "yellow",
     "difficulty": "medium",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/the-bermuda-triangle.webp",
       "back": "cards/eh01/mythos/yellow/medium-back.webp"
@@ -364,6 +580,12 @@
     "name": "The World Shakes",
     "color": "yellow",
     "difficulty": "medium",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/the-world-shakes.webp",
       "back": "cards/eh01/mythos/yellow/medium-back.webp"
@@ -374,6 +596,12 @@
     "name": "Tide of Despair",
     "color": "yellow",
     "difficulty": "medium",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/tide-of-despair.webp",
       "back": "cards/eh01/mythos/yellow/medium-back.webp"
@@ -384,6 +612,12 @@
     "name": "Treacherous Magic",
     "color": "yellow",
     "difficulty": "medium",
+    "trait": "event",
+    "effects": [
+      "advance-omen",
+      "spawn-gates",
+      "monster-surge"
+    ],
     "images": {
       "front": "cards/eh01/mythos/yellow/treacherous-magic.webp",
       "back": "cards/eh01/mythos/yellow/medium-back.webp"
@@ -394,6 +628,12 @@
     "name": "Fractured Reality",
     "color": "blue",
     "difficulty": "easy",
+    "trait": "ongoing",
+    "effects": [
+      "spawn-clues",
+      "place-rumor",
+      "place-eldritch-tokens"
+    ],
     "images": {
       "front": "cards/eh01/mythos/blue/fractured-reality.webp",
       "back": "cards/eh01/mythos/blue/easy-back.webp"
@@ -404,6 +644,12 @@
     "name": "Growing Madness",
     "color": "blue",
     "difficulty": "easy",
+    "trait": "ongoing",
+    "effects": [
+      "spawn-clues",
+      "place-rumor",
+      "place-eldritch-tokens"
+    ],
     "images": {
       "front": "cards/eh01/mythos/blue/growing-madness.webp",
       "back": "cards/eh01/mythos/blue/easy-back.webp"
@@ -414,6 +660,11 @@
     "name": "Lost Knowledge",
     "color": "blue",
     "difficulty": "easy",
+    "trait": "ongoing",
+    "effects": [
+      "spawn-clues",
+      "place-eldritch-tokens"
+    ],
     "images": {
       "front": "cards/eh01/mythos/blue/lost-knowledge.webp",
       "back": "cards/eh01/mythos/blue/easy-back.webp"
@@ -424,6 +675,10 @@
     "name": "Secrets of the Past",
     "color": "blue",
     "difficulty": "easy",
+    "trait": "ongoing",
+    "effects": [
+      "spawn-clues"
+    ],
     "images": {
       "front": "cards/eh01/mythos/blue/secrets-of-the-past.webp",
       "back": "cards/eh01/mythos/blue/easy-back.webp"
@@ -434,6 +689,12 @@
     "name": "Dimensions Collide",
     "color": "blue",
     "difficulty": "hard",
+    "trait": "ongoing",
+    "effects": [
+      "spawn-clues",
+      "place-rumor",
+      "place-eldritch-tokens"
+    ],
     "images": {
       "front": "cards/eh01/mythos/blue/dimensions-collide.webp",
       "back": "cards/eh01/mythos/blue/hard-back.webp"
@@ -444,6 +705,11 @@
     "name": "Mysterious Lights",
     "color": "blue",
     "difficulty": "hard",
+    "trait": "ongoing",
+    "effects": [
+      "spawn-clues",
+      "place-rumor"
+    ],
     "images": {
       "front": "cards/eh01/mythos/blue/mysterious-lights.webp",
       "back": "cards/eh01/mythos/blue/hard-back.webp"
@@ -454,6 +720,11 @@
     "name": "Spreading Sickness",
     "color": "blue",
     "difficulty": "hard",
+    "trait": "ongoing",
+    "effects": [
+      "spawn-clues",
+      "place-rumor"
+    ],
     "images": {
       "front": "cards/eh01/mythos/blue/spreading-sickness.webp",
       "back": "cards/eh01/mythos/blue/hard-back.webp"
@@ -464,6 +735,11 @@
     "name": "Web Between Worlds",
     "color": "blue",
     "difficulty": "hard",
+    "trait": "ongoing",
+    "effects": [
+      "spawn-clues",
+      "place-eldritch-tokens"
+    ],
     "images": {
       "front": "cards/eh01/mythos/blue/web-between-worlds.webp",
       "back": "cards/eh01/mythos/blue/hard-back.webp"
@@ -474,6 +750,12 @@
     "name": "Faded From Society",
     "color": "blue",
     "difficulty": "medium",
+    "trait": "ongoing",
+    "effects": [
+      "spawn-clues",
+      "place-rumor",
+      "place-eldritch-tokens"
+    ],
     "images": {
       "front": "cards/eh01/mythos/blue/faded-from-society.webp",
       "back": "cards/eh01/mythos/blue/medium-back.webp"
@@ -484,6 +766,11 @@
     "name": "Return of the Ancient Ones",
     "color": "blue",
     "difficulty": "medium",
+    "trait": "ongoing",
+    "effects": [
+      "spawn-clues",
+      "place-rumor"
+    ],
     "images": {
       "front": "cards/eh01/mythos/blue/return-of-the-ancient-ones.webp",
       "back": "cards/eh01/mythos/blue/medium-back.webp"
@@ -494,6 +781,11 @@
     "name": "Stars Aligned",
     "color": "blue",
     "difficulty": "medium",
+    "trait": "ongoing",
+    "effects": [
+      "spawn-clues",
+      "place-rumor"
+    ],
     "images": {
       "front": "cards/eh01/mythos/blue/stars-aligned.webp",
       "back": "cards/eh01/mythos/blue/medium-back.webp"
@@ -504,6 +796,11 @@
     "name": "The Wind-Walker",
     "color": "blue",
     "difficulty": "medium",
+    "trait": "ongoing",
+    "effects": [
+      "spawn-clues",
+      "place-eldritch-tokens"
+    ],
     "images": {
       "front": "cards/eh01/mythos/blue/the-wind-walker.webp",
       "back": "cards/eh01/mythos/blue/medium-back.webp"

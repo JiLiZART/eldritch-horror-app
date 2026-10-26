@@ -88,6 +88,24 @@ describe("validateSet", () => {
     const bad = { ...emptySet, monsters: [monster("eh01/monster/mummy", { spawnMoveTo: "atlantis" })] };
     expect(validateSet(bad, () => true, board).join("\n")).toContain("eh01/monster/mummy");
   });
+  const mythos = (extra: Partial<GameSet["mythos"][number]> = {}) => ({
+    id: "eh01/mythos/green/x", name: "x", color: "green" as const, difficulty: "easy" as const, trait: "event" as const, effects: ["advance-omen" as const], images: { front: "m.png" }, ...extra,
+  });
+  it("reports an unknown mythos trait naming the card", () => {
+    const bad = { ...emptySet, mythos: [mythos({ trait: "rumor" as "event" })] };
+    expect(validateSet(bad, () => true).join("\n")).toMatch(/eh01\/mythos\/green\/x.*rumor/);
+  });
+  it("reports an unknown mythos effect naming the card", () => {
+    const bad = { ...emptySet, mythos: [mythos({ effects: ["advance-omen", "summon-dragons" as "reckoning"] })] };
+    expect(validateSet(bad, () => true).join("\n")).toMatch(/eh01\/mythos\/green\/x.*summon-dragons/);
+  });
+  it("reports a mythos card without icons", () => {
+    const bad = { ...emptySet, mythos: [mythos({ effects: [] })] };
+    expect(validateSet(bad, () => true).join("\n")).toContain("eh01/mythos/green/x");
+  });
+  it("accepts a mythos card with a known trait and icons", () => {
+    expect(validateSet({ ...emptySet, mythos: [mythos()] }, () => true)).toEqual([]);
+  });
   it("accepts set-aside monsters and relocations that resolve", () => {
     const ok = { ...emptySet, monsters: [monster("eh01/monster/ghoul", { count: 2, spawnMoveTo: "a" })], ancientOnes: [ancient({ setAsideMonsters: { "eh01/monster/ghoul": 2 } })] };
     expect(validateSet(ok, () => true, board)).toEqual([]);

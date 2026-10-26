@@ -37,6 +37,12 @@ describe("board graph", () => {
     }
     expect(dream.length).toBeGreaterThan(0);
   });
+  it("carries the printed gate colour on the 9 named core cities", () => {
+    expect(byId("arkham")?.gate).toBe("red");
+    expect(board.spaces.filter((s) => s.gate !== undefined).map((s) => s.id).sort()).toEqual(
+      ["arkham", "buenos-aires", "istanbul", "london", "rome", "san-francisco", "shanghai", "sydney", "tokyo"],
+    );
+  });
   it("counts adjacent spaces as distance 1", () => {
     expect(distance(board, "san-francisco", "space-5")).toBe(1);
     expect(distance(board, "san-francisco", "arkham")).toBe(2);

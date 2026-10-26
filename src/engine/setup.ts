@@ -1,5 +1,6 @@
 import type { AncientOne, Board, Card, GameSet, Investigator, Monster, MythosColor, MythosStage } from "../content/types";
 import { rng, shuffle, type Random } from "./rng";
+import { spawnClue, spawnGate } from "./spawn";
 import type { GameState, InvestigatorState, MonsterInstance, ReferenceCard, SetupOptions } from "./types";
 
 export interface Content {
@@ -44,9 +45,8 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
     return space.id;
   };
 
-  // 1. Gate stack and clue pool.
-  // Gate tokens exist for the named cities only; numbered city spaces have none.
-  const gateStack = shuffle(core.filter((s) => s.kind === "city" && s.number === undefined).map((s) => s.id), random);
+  // 1. Gate stack and clue pool. Gate tokens exist for the cities that carry a gate colour.
+  const gateStack = shuffle(core.filter((s) => s.gate !== undefined).map((s) => s.id), random);
   const cluePool = shuffle(core.map((s) => s.id), random);
 
   // Decks, shuffled.
@@ -72,23 +72,14 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
 
   // 7. Reserve, gates with monsters, expedition, clues, mystery.
   const reserve = decks.asset.splice(0, 4);
-  const gates: string[] = [];
-  const monsters: GameState["monsters"] = [];
-  for (let n = 0; n < referenceCard.gates; n++) {
-    const space = gateStack.shift()!;
-    gates.push(space);
-    const token = monsterCup.shift();
-    if (token) monsters.push({ ...token, space: set.monsters.find((m) => m.id === token.id)?.spawnMoveTo ?? space });
-  }
   const expedition = decks.encounters.expedition ?? [];
   const topExpedition = set.encounterDecks.find((d) => d.id === "expedition")?.cards.find((c) => c.id === expedition[0]);
   if (!topExpedition) throw new Error("the set has no expedition cards");
   const activeExpedition = spaceByName(topExpedition.name.replace(/ - \d+$/, ""));
-  const clues = cluePool.splice(0, referenceCard.clues);
   const currentMystery = decks.mystery.shift();
   if (!currentMystery) throw new Error(`${ancientOne.id} has no mystery cards`);
 
-  return {
+  let state: GameState = {
     seed: options.seed,
     difficulty,
     ancientOne: ancientOne.id,
@@ -100,20 +91,26 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
     phase: { name: "action", active: investigators[0]!.id, taken: [] },
     leadInvestigator: investigators[0]!.id,
     investigators,
-    gates,
+    gates: [],
     gateStack,
     gateDiscard: [],
-    clues,
+    clues: [],
     cluePool,
     clueDiscard: [],
-    monsters,
+    monsters: [],
     monsterCup,
     setAsideMonsters,
     decks,
     reserve,
+    ongoingMythos: [],
+    mythosDiscard: [],
     currentMystery,
     activeExpedition,
   };
+  const content = { board, set };
+  for (let n = 0; n < referenceCard.gates; n++) state = spawnGate(state, content, random);
+  for (let n = 0; n < referenceCard.clues; n++) state = spawnClue(state, content, random);
+  return state;
 }
 
 /** Takes the printed starting cards out of their decks and starting clues out of the pool. */

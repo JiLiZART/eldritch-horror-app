@@ -1,3 +1,4 @@
+import enums from "../../content/rules/enums.json";
 import { reachable } from "./board";
 import type { Board, GameSet, IconManifest, Images } from "./types";
 
@@ -61,7 +62,13 @@ export function validateSet(set: GameSet, imageExists: (path: string) => boolean
     if (m.spawnMoveTo !== undefined && spaceIds && !spaceIds.has(m.spawnMoveTo)) errors.push(`${m.id} spawns onto unknown space ${m.spawnMoveTo}`);
   }
   for (const d of set.encounterDecks) for (const c of d.cards) check(c.id, c.images);
-  for (const m of set.mythos) check(m.id, m.images);
+  const effectIds = new Set(enums.mythosEffects.map((e) => e.id));
+  for (const m of set.mythos) {
+    check(m.id, m.images);
+    if (!enums.mythosTraits.includes(m.trait)) errors.push(`${m.id} has unknown trait ${m.trait}`);
+    for (const e of m.effects) if (!effectIds.has(e)) errors.push(`${m.id} has unknown effect ${e}`);
+    if (m.effects.length === 0) errors.push(`${m.id} has no icons`);
+  }
   for (const p of set.preludes) check(p.id, p.images);
   return errors;
 }

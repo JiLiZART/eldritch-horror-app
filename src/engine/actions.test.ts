@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn, prepareForTravel, rest, trade, travel } from "./actions";
+import { nextRound, resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
 import type { GameState, InvestigatorState } from "./types";
 
@@ -38,9 +39,13 @@ describe("investigators act in seat order", () => {
     expect(s.round).toBe(1);
   });
   it("starts the next round with the lead active after the last seat", () => {
-    const s = endTurn(endTurn(game()));
+    const s = nextRound(resolveMythos(endTurn(endTurn(game())), { board, set }));
     expect(s.round).toBe(2);
     expect(s.phase).toEqual({ name: "action", active: leo, taken: [] });
+  });
+  it("refuses actions outside the Action phase", () => {
+    const s = endTurn(endTurn(game()));
+    expect(() => rest(s, set)).toThrow(/Action phase/);
   });
   it("refuses the same action twice naming the once-per-phase rule", () => {
     const s = rest(game(), set);
@@ -57,7 +62,7 @@ describe("travel moves along paths", () => {
   it("moves to an adjacent space and spends Travel for the phase", () => {
     const s = travel(west(), board, ["space-5"]);
     expect(who(s, charlie).space).toBe("space-5");
-    expect(s.phase.taken).toEqual(["travel"]);
+    expect(s.phase).toMatchObject({ taken: ["travel"] });
   });
   it("goes one space further per matching ticket and spends it", () => {
     const s = travel(patch(west(), charlie, { tickets: ["train"] }), board, ["space-5", "arkham"]);
@@ -90,7 +95,7 @@ describe("rest recovers health and sanity", () => {
   it("never exceeds the sheet maximums and still spends Rest", () => {
     const s = rest(solo(akachi), set);
     expect(who(s, akachi)).toMatchObject({ health: 5, sanity: 7 });
-    expect(s.phase.taken).toEqual(["rest"]);
+    expect(s.phase).toMatchObject({ taken: ["rest"] });
   });
   it("is refused on a space with a monster", () => {
     const s = { ...solo(akachi), monsters: [{ id: "eh01/monster/cultist", instance: 1, space: "space-15" }] };
@@ -131,7 +136,7 @@ describe("trade exchanges possessions on a shared space", () => {
     expect(who(s, jacqueline).clues).toBe(0);
     expect(who(s, charlie).possessions).not.toContain(assistant);
     expect(who(s, charlie).clues).toBe(1);
-    expect(s.phase.taken).toEqual(["trade"]);
+    expect(s.phase).toMatchObject({ taken: ["trade"] });
   });
   it("is refused with a partner on another space", () => {
     expect(() => trade(west(), { partner: jacqueline, give: {}, receive: {} })).toThrow(/same space/);

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { neighbors } from "../content/board";
 import type { Board, GameSet, Space } from "../content/types";
+import { OMEN_TRACK } from "../engine/omen";
 import type { GameState } from "../engine/types";
 import type { Piece } from "./pieces";
 import { BOARD_SETS, PATH_COLORS } from "./sets";
@@ -98,9 +99,6 @@ export function Panel({ board, set, state, pieces, spaces, enabled, onToggle, se
   );
 }
 
-/** Omen track spaces clockwise from the green comet. */
-const OMEN = ["green", "blue", "red", "blue"];
-
 function Status({ board, set, state }: { board: Board; set: GameSet; state: GameState }) {
   const ancientOne = set.ancientOnes.find((a) => a.id === state.ancientOne);
   const mystery = ancientOne?.mysteries.find((m) => m.id === state.currentMystery);
@@ -108,15 +106,19 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
   const spaceName = (id: string) => board.spaces.find((s) => s.id === id)?.name.en ?? id;
   const { encounters, ...decks } = state.decks;
   const sizes = Object.entries({ ...decks, ...encounters, "monster cup": state.monsterCup, "gate stack": state.gateStack, "clue pool": state.cluePool });
+  const ongoing = state.ongoingMythos.map((id) => set.mythos.find((m) => m.id === id)).filter((m) => m !== undefined);
   return (
     <section className="status">
       <h2>{ancientOne?.name ?? state.ancientOne}</h2>
       <dl>
         <dt>Doom</dt>
-        <dd>{state.doom}</dd>
+        <dd>
+          {state.doom}
+          {state.doom <= 0 && " (the Ancient One awakens; awakening is not modelled)"}
+        </dd>
         <dt>Omen</dt>
         <dd>
-          {OMEN[state.omen]}, {state.eldritchOnOmen[state.omen]} eldritch
+          {OMEN_TRACK[state.omen]}, {state.eldritchOnOmen[state.omen]} eldritch
         </dd>
         <dt>Reference card</dt>
         <dd>
@@ -130,6 +132,12 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
             const card = set.cards.find((c) => c.id === id);
             return card && <img key={id} src={`/${card.images.front}`} alt={card.name} />;
           })}
+        </dd>
+        <dt>Ongoing mythos</dt>
+        <dd className="cards">
+          {ongoing.map((m) => (
+            <img key={m.id} src={`/${m.images.front}`} alt={m.name} />
+          ))}
         </dd>
         <dt>Decks</dt>
         <dd>{sizes.map(([name, cards]) => `${name} ${cards.length}`).join(", ")}</dd>

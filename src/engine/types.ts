@@ -36,7 +36,6 @@ export interface InvestigatorState {
 
 export type ActionName = "travel" | "rest" | "prepare-for-travel" | "trade";
 
-/** The phase in progress; one member today, later phases extend the union. */
 export interface ActionPhase {
   name: "action";
   /** Investigator id whose turn it is. */
@@ -44,6 +43,22 @@ export interface ActionPhase {
   /** Actions the active investigator has performed this phase. */
   taken: ActionName[];
 }
+
+export interface MythosPhase {
+  name: "mythos";
+  /** Mythos card id drawn this round. */
+  card: string;
+  /** Resolution steps in rule words; present once the card is resolved. */
+  log?: string[];
+}
+
+export interface LostPhase {
+  name: "lost";
+  reason: string;
+}
+
+/** The phase in progress. Deviation: the Encounter phase is skipped. */
+export type Phase = ActionPhase | MythosPhase | LostPhase;
 
 /** Printed on the reference card for the investigator count. */
 export interface ReferenceCard {
@@ -63,7 +78,7 @@ export interface GameState {
   eldritchOnOmen: [number, number, number, number];
   referenceCard: ReferenceCard;
   round: number;
-  phase: ActionPhase;
+  phase: Phase;
   leadInvestigator: string;
   investigators: InvestigatorState[];
   /** Space ids with an open gate. */
@@ -90,6 +105,9 @@ export interface GameState {
     encounters: Record<string, string[]>;
   };
   reserve: string[];
+  /** Ongoing mythos cards in play, oldest first. */
+  ongoingMythos: string[];
+  mythosDiscard: string[];
   currentMystery: string;
   /** Space id of the active expedition token. */
   activeExpedition: string;

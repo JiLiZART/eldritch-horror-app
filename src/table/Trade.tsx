@@ -7,13 +7,15 @@ import type { Act } from "./Turn";
 interface TradeProps {
   set: GameSet;
   state: GameState;
+  /** Investigator id whose turn it is. */
+  active: string;
   onAct: Act;
   onClose: () => void;
 }
 
 /** Trade form (design D4): one offer per side, confirmed in one action. */
-export function Trade({ set, state, onAct, onClose }: TradeProps) {
-  const me = state.investigators.find((i) => i.id === state.phase.active)!;
+export function Trade({ set, state, active, onAct, onClose }: TradeProps) {
+  const me = state.investigators.find((i) => i.id === active)!;
   const partners = state.investigators.filter((i) => i.id !== me.id && i.space === me.space);
   const [partner, setPartner] = useState(partners[0]?.id ?? "");
   const [give, setGive] = useState<Offer>({});

@@ -10,6 +10,8 @@ export interface Localized {
 export type SpaceKind = "city" | "wilderness" | "sea";
 export type Region = "america" | "europe" | "asia";
 export type PathType = "train" | "ship" | "uncharted" | "local";
+/** Omen track colours; the green and red spaces are the comet and the ring. */
+export type OmenColor = "green" | "blue" | "red";
 
 export interface Space {
   id: string;
@@ -21,6 +23,8 @@ export interface Space {
   number?: number;
   /** The set that activates this space. Core spaces are "eh01". */
   set: SetId;
+  /** Omen colour printed on the city's gate token; only these cities enter the gate stack. */
+  gate?: OmenColor;
   /** Normalized coordinates on the board texture, 0..1 from the top-left corner. */
   x: number;
   y: number;
@@ -128,11 +132,17 @@ export interface EncounterDeck {
   cards: NamedCard[];
 }
 
+export type MythosTrait = "event" | "ongoing";
+/** Icon ids from content/rules/enums.json mythosEffects, in printed order. */
+export type MythosEffect = "advance-omen" | "reckoning" | "spawn-gates" | "monster-surge" | "spawn-clues" | "place-rumor" | "place-eldritch-tokens" | "resolve-text";
+
 export interface MythosCard {
   id: string;
   name: string;
   color: MythosColor;
   difficulty: "easy" | "medium" | "hard";
+  trait: MythosTrait;
+  effects: MythosEffect[];
   images: Images;
 }
 

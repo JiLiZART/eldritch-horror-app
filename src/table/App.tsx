@@ -4,6 +4,7 @@ import { content } from "../content/client";
 import { travel } from "../engine/actions";
 import { setupGame } from "../engine/setup";
 import type { GameState, SetupOptions } from "../engine/types";
+import { Mythos } from "./Mythos";
 import { NewGame } from "./NewGame";
 import { Panel } from "./Panel";
 import { piecesOnSpace } from "./pieces";
@@ -67,7 +68,14 @@ export function App() {
       </main>
       <Panel board={board} set={set} state={game.state} pieces={pieces} spaces={spaces} enabled={enabled} onToggle={toggle} selected={selectedSpace} onSelect={select}>
         <NewGame set={set} running={game.state !== undefined} error={game.state ? undefined : game.error} onStart={start} onAbandon={() => setGame({})} />
-        {game.state && <Turn board={board} set={set} state={game.state} error={game.error} route={route} onAct={act} onRoute={setRoute} />}
+        {game.state?.phase.name === "action" && <Turn board={board} set={set} state={game.state} phase={game.state.phase} error={game.error} route={route} onAct={act} onRoute={setRoute} />}
+        {game.state?.phase.name === "mythos" && <Mythos board={board} set={set} state={game.state} phase={game.state.phase} error={game.error} onAct={act} />}
+        {game.state?.phase.name === "lost" && (
+          <section className="turn">
+            <h2>The investigators lose</h2>
+            <p>{game.state.phase.reason}</p>
+          </section>
+        )}
       </Panel>
     </div>
   );

@@ -76,6 +76,9 @@ body {
   margin: 0 0.2rem 0.2rem 0;
   vertical-align: top;
 }
+.cards img.mythos-card {
+  width: 14rem;
+}
 .status table {
   border-collapse: collapse;
   width: 100%;

@@ -15,6 +15,7 @@
       "kind": "city",
       "region": "america",
       "set": "eh01",
+      "gate": "green",
       "x": 0.066,
       "y": 0.348
     },
@@ -27,6 +28,7 @@
       "kind": "city",
       "region": "america",
       "set": "eh01",
+      "gate": "red",
       "x": 0.238,
       "y": 0.359
     },
@@ -39,6 +41,7 @@
       "kind": "city",
       "region": "america",
       "set": "eh01",
+      "gate": "blue",
       "x": 0.233,
       "y": 0.772
     },
@@ -51,6 +54,7 @@
       "kind": "city",
       "region": "europe",
       "set": "eh01",
+      "gate": "blue",
       "x": 0.407,
       "y": 0.304
     },
@@ -63,6 +67,7 @@
       "kind": "city",
       "region": "europe",
       "set": "eh01",
+      "gate": "red",
       "x": 0.466,
       "y": 0.417
     },
@@ -75,6 +80,7 @@
       "kind": "city",
       "region": "europe",
       "set": "eh01",
+      "gate": "green",
       "x": 0.57,
       "y": 0.373
     },
@@ -87,6 +93,7 @@
       "kind": "city",
       "region": "asia",
       "set": "eh01",
+      "gate": "red",
       "x": 0.809,
       "y": 0.526
     },
@@ -99,6 +106,7 @@
       "kind": "city",
       "region": "asia",
       "set": "eh01",
+      "gate": "blue",
       "x": 0.892,
       "y": 0.433
     },
@@ -111,6 +119,7 @@
       "kind": "city",
       "region": "asia",
       "set": "eh01",
+      "gate": "red",
       "x": 0.878,
       "y": 0.855
     },

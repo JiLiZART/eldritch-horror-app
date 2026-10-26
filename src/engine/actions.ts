@@ -1,36 +1,41 @@
 import type { Board, GameSet } from "../content/types";
-import type { ActionName, GameState, InvestigatorState, Ticket } from "./types";
+import { drawMythos } from "./mythos";
+import type { ActionName, ActionPhase, GameState, InvestigatorState, Ticket } from "./types";
 
 /** Action phase rules (manual_eng.pdf p.3; EH_reference.pdf p.6–10). Each function returns the next state or throws the rule it breaks. */
 
+/** Actions belong to the Action phase. */
+function actionPhase(state: GameState): ActionPhase {
+  if (state.phase.name !== "action") throw new Error("actions are performed in the Action phase only");
+  return state.phase;
+}
+
 function active(state: GameState): InvestigatorState {
-  return state.investigators.find((i) => i.id === state.phase.active)!;
+  return state.investigators.find((i) => i.id === actionPhase(state).active)!;
 }
 
 /** Up to 2 different actions per investigator per phase. */
 function mayAct(state: GameState, action: ActionName): void {
-  if (state.phase.taken.length >= 2) throw new Error("an investigator performs up to 2 actions per phase");
-  if (state.phase.taken.includes(action)) throw new Error("each action may be performed once per phase");
+  const { taken } = actionPhase(state);
+  if (taken.length >= 2) throw new Error("an investigator performs up to 2 actions per phase");
+  if (taken.includes(action)) throw new Error("each action may be performed once per phase");
 }
 
 /** Records the action and replaces the active investigator's state. */
 function perform(state: GameState, action: ActionName, next: InvestigatorState): GameState {
+  const phase = actionPhase(state);
   return {
     ...state,
-    phase: { ...state.phase, taken: [...state.phase.taken, action] },
+    phase: { ...phase, taken: [...phase.taken, action] },
     investigators: state.investigators.map((i) => (i.id === next.id ? next : i)),
   };
 }
 
-/** Passes to the next seat; after the last seat the next round starts with the lead. Deviation: Encounter and Mythos phases are skipped. */
+/** Passes to the next seat clockwise from the lead; once every seat has acted the Mythos phase draws its card (`drawMythos`). Deviation: the Encounter phase is skipped. */
 export function endTurn(state: GameState): GameState {
-  const seat = state.investigators.findIndex((i) => i.id === state.phase.active);
-  const next = state.investigators[seat + 1];
-  return {
-    ...state,
-    round: next ? state.round : state.round + 1,
-    phase: { name: "action", active: next ? next.id : state.leadInvestigator, taken: [] },
-  };
+  const seat = state.investigators.findIndex((i) => i.id === actionPhase(state).active);
+  const next = state.investigators[(seat + 1) % state.investigators.length]!;
+  return next.id === state.leadInvestigator ? drawMythos(state) : { ...state, phase: { name: "action", active: next.id, taken: [] } };
 }
 
 /** Rest: 1 health and 1 sanity up to the sheet maximums; not on a space with a monster. */
