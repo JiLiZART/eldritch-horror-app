@@ -3,7 +3,11 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "./load";
 
 describe("core set", () => {
-  const { investigators, ancientOnes, monsters, mythos, encounterDecks: decks } = loadSet(join(import.meta.dirname, "../../content/sets/eh01"))!;
+  const { investigators, ancientOnes, monsters, mythos, cards, encounterDecks: decks } = loadSet(join(import.meta.dirname, "../../content/sets/eh01"))!;
+
+  it("records the .38 Revolver's printed value and traits", () => {
+    expect(cards.find((c) => c.name === ".38 Revolver")).toMatchObject({ value: 1, traits: ["Item", "Weapon"] });
+  });
 
   it("has 12 investigators and 4 Ancient Ones", () => {
     expect(investigators).toHaveLength(12);

@@ -34,7 +34,7 @@ export interface InvestigatorState {
   tickets: Ticket[];
 }
 
-export type ActionName = "travel" | "rest" | "prepare-for-travel" | "trade";
+export type ActionName = "travel" | "rest" | "prepare-for-travel" | "trade" | "acquire-assets";
 
 export interface ActionPhase {
   name: "action";
@@ -42,6 +42,8 @@ export interface ActionPhase {
   active: string;
   /** Actions the active investigator has performed this phase. */
   taken: ActionName[];
+  /** Acquire Assets rolled and waiting for the cards to be chosen. */
+  acquiring?: { dice: number[]; successes: number };
 }
 
 export interface MythosPhase {
@@ -69,6 +71,8 @@ export interface ReferenceCard {
 
 export interface GameState {
   seed: number;
+  /** Tests rolled so far; seeds the next test's dice. */
+  rolls: number;
   difficulty: Difficulty;
   ancientOne: string;
   doom: number;
@@ -105,6 +109,8 @@ export interface GameState {
     encounters: Record<string, string[]>;
   };
   reserve: string[];
+  /** Asset cards discarded from the reserve, reshuffled into the asset deck when it runs out. */
+  assetDiscard: string[];
   /** Ongoing mythos cards in play, oldest first. */
   ongoingMythos: string[];
   mythosDiscard: string[];

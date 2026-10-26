@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
-import { endTurn, prepareForTravel, rest, trade, travel } from "./actions";
+import { acquireAssets, endTurn, prepareForTravel, rest, takeAssets, trade, travel } from "./actions";
 import { nextRound, resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
 import type { GameState, InvestigatorState } from "./types";
@@ -152,5 +152,71 @@ describe("trade exchanges possessions on a shared space", () => {
     const t = trade(s, { partner: jacqueline, give: { tickets: ["train"] }, receive: { tickets: ["ship"] } });
     expect(who(t, charlie).tickets).toEqual(["ship"]);
     expect(who(t, jacqueline).tickets).toEqual(["train"]);
+  });
+});
+
+describe("Acquire Assets", () => {
+  const asset = (name: string) => `eh01/asset/${name}`;
+  const [revolver, automatic, tome, bandages] = ["38-revolver", "45-automatic", "arcane-tome", "bandages"].map(asset) as [string, string, string, string];
+  /** Charlie Kane on San Francisco, no monster, a reserve of known values: 1, 2, 3, 1. */
+  const shop = (): GameState => ({ ...west(), monsters: [], reserve: [revolver, automatic, tome, bandages] });
+  /** The Influence test already rolled with `successes`. */
+  const rolled = (successes: number, s = shop()): GameState => ({
+    ...s,
+    phase: { name: "action", active: charlie, taken: [], acquiring: { dice: Array(successes).fill(5), successes } },
+  });
+
+  it("tests Influence and waits for the choice", () => {
+    const s = acquireAssets(shop(), board, set);
+    expect(s.phase).toMatchObject({ taken: [] });
+    const { acquiring } = s.phase as { acquiring: { dice: number[]; successes: number } };
+    expect(acquiring.dice).toHaveLength(4);
+    expect(acquiring.successes).toBe(acquiring.dice.filter((d) => d >= 5).length);
+    expect(s.rolls).toBe(shop().rolls + 1);
+    expect(s.reserve).toEqual(shop().reserve);
+  });
+  it("gains cards within the result and refills the reserve", () => {
+    const s = takeAssets(rolled(3), set, [revolver, automatic]);
+    expect(who(s, charlie).possessions).toEqual(expect.arrayContaining([revolver, automatic]));
+    expect(s.reserve).toHaveLength(4);
+    expect(s.reserve).toEqual(expect.arrayContaining([tome, bandages]));
+    expect(s.decks.asset).toHaveLength(shop().decks.asset.length - 2);
+    expect(s.phase).toEqual({ name: "action", active: charlie, taken: ["acquire-assets"] });
+  });
+  it("refuses cards worth more than the result and keeps the reserve", () => {
+    const s = rolled(2);
+    expect(() => takeAssets(s, set, [tome])).toThrow(/total value 3.*result 2/);
+    expect(s.reserve).toEqual(shop().reserve);
+  });
+  it("discards 1 reserve card when nothing is gained", () => {
+    const s = takeAssets(rolled(0), set, [], tome);
+    expect(s.assetDiscard).toEqual([tome]);
+    expect(s.reserve).toHaveLength(4);
+    expect(s.reserve).not.toContain(tome);
+    expect(s.phase).toMatchObject({ taken: ["acquire-assets"] });
+  });
+  it("refuses a discard alongside a gain", () => {
+    expect(() => takeAssets(rolled(3), set, [revolver], tome)).toThrow(/only when no card is gained/);
+  });
+  it("refuses a card that is not in the reserve", () => {
+    expect(() => takeAssets(rolled(3), set, [asset("axe")])).toThrow(/not in the reserve/);
+  });
+  it("refuses a space that is not a city", () => {
+    expect(() => acquireAssets(patch(shop(), charlie, { space: "space-2" }), board, set)).toThrow(/city/);
+  });
+  it("refuses a space with a monster, naming it", () => {
+    const s = { ...shop(), monsters: [{ id: "eh01/monster/cultist", instance: 1, space: "san-francisco" }] };
+    expect(() => acquireAssets(s, board, set)).toThrow(/eh01\/monster\/cultist/);
+  });
+  it("refuses ending the turn or another action before the choice", () => {
+    expect(() => endTurn(rolled(1))).toThrow(/finish Acquire Assets first/);
+    expect(() => rest(rolled(1), set)).toThrow(/finish Acquire Assets first/);
+  });
+  it("shuffles the asset discard into an empty deck to refill", () => {
+    const base = rolled(1);
+    const s = takeAssets({ ...base, decks: { ...base.decks, asset: [] }, assetDiscard: [asset("axe"), asset("whiskey")] }, set, [revolver]);
+    expect(s.reserve).toHaveLength(4);
+    expect(s.assetDiscard).toEqual([]);
+    expect(s.decks.asset).toHaveLength(1);
   });
 });

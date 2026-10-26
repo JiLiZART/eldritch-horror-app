@@ -153,7 +153,10 @@ export interface Card {
   name: string;
   deck: Deck;
   images: Images;
+  /** Trait line in printed order; required on assets. */
   traits?: string[];
+  /** Printed value in the corner; required on assets. */
+  value?: number;
 }
 
 export interface Monster {

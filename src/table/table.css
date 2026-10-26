@@ -76,6 +76,24 @@ body {
   margin: 0 0.2rem 0.2rem 0;
   vertical-align: top;
 }
+.cards figure {
+  display: inline-block;
+  margin: 0;
+  text-align: center;
+  font-size: 0.75rem;
+}
+.dice b {
+  font-size: 1.6rem;
+  font-weight: normal;
+  opacity: 0.6;
+}
+.dice b.success {
+  opacity: 1;
+  color: #9be29b;
+}
+.acquire label {
+  display: block;
+}
 .cards img.mythos-card {
   width: 14rem;
 }

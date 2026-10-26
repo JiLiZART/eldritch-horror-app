@@ -18,7 +18,7 @@ See proposal.md. Actions in `src/engine/actions.ts` are pure functions that refu
 - Rejected: OCR of the corner digit. 40 cards by eye is one sitting and the mythos table set the pattern.
 
 ### D2. Dice come from a roll counter on the state
-`src/engine/test.ts`: `test(state, investigatorId, skill, modifier)` returns `{ state, dice, successes }`, rolling `max(1, skill + modifier)` dice with `rng(state.seed * 31 + state.rolls)` and returning the state with `rolls + 1`. `GameState.rolls: number` starts at 0. Layer: game state and engine.
+`src/engine/test.ts`: `test(state, set, investigatorId, skill, modifier)` (the set supplies the printed skill) returns `{ state, dice, successes }`, rolling `max(1, skill + modifier)` dice with `rng(state.seed * 31 + state.rolls)` and returning the state with `rolls + 1`. `GameState.rolls: number` starts at 0. Layer: game state and engine.
 - Rejected: seeding from the round as the Mythos phase does. Two tests in one round would roll the same dice.
 - Rejected: `Math.random`. Replays and tests need determinism; the state already carries the seed.
 

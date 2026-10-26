@@ -3,6 +3,11 @@
     "id": "eh01/asset/18-derringer",
     "name": ".18 Derringer",
     "deck": "asset",
+    "value": 1,
+    "traits": [
+      "Trinket",
+      "Weapon"
+    ],
     "images": {
       "front": "cards/eh01/asset/18-derringer.webp"
     }
@@ -11,6 +16,11 @@
     "id": "eh01/asset/38-revolver",
     "name": ".38 Revolver",
     "deck": "asset",
+    "value": 1,
+    "traits": [
+      "Item",
+      "Weapon"
+    ],
     "images": {
       "front": "cards/eh01/asset/38-revolver.webp"
     }
@@ -19,6 +29,11 @@
     "id": "eh01/asset/45-automatic",
     "name": ".45 Automatic",
     "deck": "asset",
+    "value": 2,
+    "traits": [
+      "Item",
+      "Weapon"
+    ],
     "images": {
       "front": "cards/eh01/asset/45-automatic.webp"
     }
@@ -27,6 +42,10 @@
     "id": "eh01/asset/agency-quarantine",
     "name": "Agency Quarantine",
     "deck": "asset",
+    "value": 4,
+    "traits": [
+      "Service"
+    ],
     "images": {
       "front": "cards/eh01/asset/agency-quarantine.webp"
     }
@@ -35,6 +54,11 @@
     "id": "eh01/asset/arcane-manuscripts",
     "name": "Arcane Manuscripts",
     "deck": "asset",
+    "value": 1,
+    "traits": [
+      "Item",
+      "Tome"
+    ],
     "images": {
       "front": "cards/eh01/asset/arcane-manuscripts.webp"
     }
@@ -43,6 +67,10 @@
     "id": "eh01/asset/arcane-scholar",
     "name": "Arcane Scholar",
     "deck": "asset",
+    "value": 2,
+    "traits": [
+      "Ally"
+    ],
     "images": {
       "front": "cards/eh01/asset/arcane-scholar.webp"
     }
@@ -51,6 +79,11 @@
     "id": "eh01/asset/arcane-tome",
     "name": "Arcane Tome",
     "deck": "asset",
+    "value": 3,
+    "traits": [
+      "Item",
+      "Tome"
+    ],
     "images": {
       "front": "cards/eh01/asset/arcane-tome.webp"
     }
@@ -59,6 +92,11 @@
     "id": "eh01/asset/axe",
     "name": "Axe",
     "deck": "asset",
+    "value": 2,
+    "traits": [
+      "Item",
+      "Weapon"
+    ],
     "images": {
       "front": "cards/eh01/asset/axe.webp"
     }
@@ -67,6 +105,10 @@
     "id": "eh01/asset/bandages",
     "name": "Bandages",
     "deck": "asset",
+    "value": 1,
+    "traits": [
+      "Item"
+    ],
     "images": {
       "front": "cards/eh01/asset/bandages.webp"
     }
@@ -75,6 +117,11 @@
     "id": "eh01/asset/bull-whip",
     "name": "Bull Whip",
     "deck": "asset",
+    "value": 1,
+    "traits": [
+      "Item",
+      "Weapon"
+    ],
     "images": {
       "front": "cards/eh01/asset/bull-whip.webp"
     }
@@ -83,6 +130,11 @@
     "id": "eh01/asset/carbine-rifle",
     "name": "Carbine Rifle",
     "deck": "asset",
+    "value": 3,
+    "traits": [
+      "Item",
+      "Weapon"
+    ],
     "images": {
       "front": "cards/eh01/asset/carbine-rifle.webp"
     }
@@ -91,6 +143,10 @@
     "id": "eh01/asset/cat-burglar",
     "name": "Cat Burglar",
     "deck": "asset",
+    "value": 1,
+    "traits": [
+      "Ally"
+    ],
     "images": {
       "front": "cards/eh01/asset/cat-burglar.webp"
     }
@@ -99,6 +155,10 @@
     "id": "eh01/asset/charter-flight",
     "name": "Charter Flight",
     "deck": "asset",
+    "value": 1,
+    "traits": [
+      "Service"
+    ],
     "images": {
       "front": "cards/eh01/asset/charter-flight.webp"
     }
@@ -107,6 +167,11 @@
     "id": "eh01/asset/delivery-service",
     "name": "Delivery Service",
     "deck": "asset",
+    "value": 1,
+    "traits": [
+      "Service",
+      "Teamwork"
+    ],
     "images": {
       "front": "cards/eh01/asset/delivery-service.webp"
     }
@@ -115,6 +180,11 @@
     "id": "eh01/asset/double-barreled-shotgun",
     "name": "Double-barreled Shotgun",
     "deck": "asset",
+    "value": 4,
+    "traits": [
+      "Item",
+      "Weapon"
+    ],
     "images": {
       "front": "cards/eh01/asset/double-barreled-shotgun.webp"
     }
@@ -123,6 +193,11 @@
     "id": "eh01/asset/dynamite",
     "name": "Dynamite",
     "deck": "asset",
+    "value": 3,
+    "traits": [
+      "Item",
+      "Weapon"
+    ],
     "images": {
       "front": "cards/eh01/asset/dynamite.webp"
     }
@@ -131,6 +206,10 @@
     "id": "eh01/asset/fine-clothes",
     "name": "Fine Clothes",
     "deck": "asset",
+    "value": 2,
+    "traits": [
+      "Item"
+    ],
     "images": {
       "front": "cards/eh01/asset/fine-clothes.webp"
     }
@@ -139,6 +218,10 @@
     "id": "eh01/asset/fishing-net",
     "name": "Fishing Net",
     "deck": "asset",
+    "value": 2,
+    "traits": [
+      "Item"
+    ],
     "images": {
       "front": "cards/eh01/asset/fishing-net.webp"
     }
@@ -147,6 +230,10 @@
     "id": "eh01/asset/hired-muscle",
     "name": "Hired Muscle",
     "deck": "asset",
+    "value": 2,
+    "traits": [
+      "Ally"
+    ],
     "images": {
       "front": "cards/eh01/asset/hired-muscle.webp"
     }
@@ -155,6 +242,10 @@
     "id": "eh01/asset/holy-cross",
     "name": "Holy Cross",
     "deck": "asset",
+    "value": 2,
+    "traits": [
+      "Item"
+    ],
     "images": {
       "front": "cards/eh01/asset/holy-cross.webp"
     }
@@ -163,6 +254,11 @@
     "id": "eh01/asset/holy-water",
     "name": "Holy Water",
     "deck": "asset",
+    "value": 2,
+    "traits": [
+      "Item",
+      "Magical"
+    ],
     "images": {
       "front": "cards/eh01/asset/holy-water.webp"
     }
@@ -171,6 +267,10 @@
     "id": "eh01/asset/kerosene",
     "name": "Kerosene",
     "deck": "asset",
+    "value": 1,
+    "traits": [
+      "Item"
+    ],
     "images": {
       "front": "cards/eh01/asset/kerosene.webp"
     }
@@ -179,6 +279,11 @@
     "id": "eh01/asset/king-james-bible",
     "name": "King James Bible",
     "deck": "asset",
+    "value": 2,
+    "traits": [
+      "Item",
+      "Tome"
+    ],
     "images": {
       "front": "cards/eh01/asset/king-james-bible.webp"
     }
@@ -187,6 +292,10 @@
     "id": "eh01/asset/lodge-researcher",
     "name": "Lodge Researcher",
     "deck": "asset",
+    "value": 3,
+    "traits": [
+      "Ally"
+    ],
     "images": {
       "front": "cards/eh01/asset/lodge-researcher.webp"
     }
@@ -195,6 +304,10 @@
     "id": "eh01/asset/lucky-cigarette-case",
     "name": "Lucky Cigarette Case",
     "deck": "asset",
+    "value": 2,
+    "traits": [
+      "Trinket"
+    ],
     "images": {
       "front": "cards/eh01/asset/lucky-cigarette-case.webp"
     }
@@ -203,6 +316,10 @@
     "id": "eh01/asset/lucky-rabbit-s-foot",
     "name": "Lucky Rabbit's Foot",
     "deck": "asset",
+    "value": 1,
+    "traits": [
+      "Trinket"
+    ],
     "images": {
       "front": "cards/eh01/asset/lucky-rabbit-s-foot.webp"
     }
@@ -211,6 +328,10 @@
     "id": "eh01/asset/personal-assistant",
     "name": "Personal Assistant",
     "deck": "asset",
+    "value": 2,
+    "traits": [
+      "Ally"
+    ],
     "images": {
       "front": "cards/eh01/asset/personal-assistant.webp"
     }
@@ -219,6 +340,10 @@
     "id": "eh01/asset/pocket-watch",
     "name": "Pocket Watch",
     "deck": "asset",
+    "value": 1,
+    "traits": [
+      "Trinket"
+    ],
     "images": {
       "front": "cards/eh01/asset/pocket-watch.webp"
     }
@@ -227,6 +352,10 @@
     "id": "eh01/asset/private-care",
     "name": "Private Care",
     "deck": "asset",
+    "value": 2,
+    "traits": [
+      "Service"
+    ],
     "images": {
       "front": "cards/eh01/asset/private-care.webp"
     }
@@ -235,6 +364,10 @@
     "id": "eh01/asset/private-investigator",
     "name": "Private Investigator",
     "deck": "asset",
+    "value": 2,
+    "traits": [
+      "Ally"
+    ],
     "images": {
       "front": "cards/eh01/asset/private-investigator.webp"
     }
@@ -243,6 +376,10 @@
     "id": "eh01/asset/protective-amulet",
     "name": "Protective Amulet",
     "deck": "asset",
+    "value": 1,
+    "traits": [
+      "Item"
+    ],
     "images": {
       "front": "cards/eh01/asset/protective-amulet.webp"
     }
@@ -251,6 +388,10 @@
     "id": "eh01/asset/puzzle-box",
     "name": "Puzzle Box",
     "deck": "asset",
+    "value": 3,
+    "traits": [
+      "Trinket"
+    ],
     "images": {
       "front": "cards/eh01/asset/puzzle-box.webp"
     }
@@ -259,6 +400,10 @@
     "id": "eh01/asset/sanctuary",
     "name": "Sanctuary",
     "deck": "asset",
+    "value": 2,
+    "traits": [
+      "Service"
+    ],
     "images": {
       "front": "cards/eh01/asset/sanctuary.webp"
     }
@@ -267,6 +412,10 @@
     "id": "eh01/asset/silver-twilight-ritual",
     "name": "Silver Twilight Ritual",
     "deck": "asset",
+    "value": 3,
+    "traits": [
+      "Service"
+    ],
     "images": {
       "front": "cards/eh01/asset/silver-twilight-ritual.webp"
     }
@@ -275,6 +424,12 @@
     "id": "eh01/asset/spirit-dagger",
     "name": "Spirit Dagger",
     "deck": "asset",
+    "value": 2,
+    "traits": [
+      "Item",
+      "Weapon",
+      "Magical"
+    ],
     "images": {
       "front": "cards/eh01/asset/spirit-dagger.webp"
     }
@@ -283,6 +438,10 @@
     "id": "eh01/asset/urban-guide",
     "name": "Urban Guide",
     "deck": "asset",
+    "value": 4,
+    "traits": [
+      "Ally"
+    ],
     "images": {
       "front": "cards/eh01/asset/urban-guide.webp"
     }
@@ -291,6 +450,10 @@
     "id": "eh01/asset/vatican-missionary",
     "name": "Vatican Missionary",
     "deck": "asset",
+    "value": 2,
+    "traits": [
+      "Ally"
+    ],
     "images": {
       "front": "cards/eh01/asset/vatican-missionary.webp"
     }
@@ -299,6 +462,10 @@
     "id": "eh01/asset/whiskey",
     "name": "Whiskey",
     "deck": "asset",
+    "value": 1,
+    "traits": [
+      "Item"
+    ],
     "images": {
       "front": "cards/eh01/asset/whiskey.webp"
     }
@@ -307,6 +474,11 @@
     "id": "eh01/asset/wireless-report",
     "name": "Wireless Report",
     "deck": "asset",
+    "value": 1,
+    "traits": [
+      "Service",
+      "Teamwork"
+    ],
     "images": {
       "front": "cards/eh01/asset/wireless-report.webp"
     }
@@ -315,6 +487,10 @@
     "id": "eh01/asset/witch-doctor",
     "name": "Witch Doctor",
     "deck": "asset",
+    "value": 3,
+    "traits": [
+      "Ally"
+    ],
     "images": {
       "front": "cards/eh01/asset/witch-doctor.webp"
     }

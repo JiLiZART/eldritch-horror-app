@@ -141,7 +141,14 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
         <dd className="cards">
           {state.reserve.map((id) => {
             const card = set.cards.find((c) => c.id === id);
-            return card && <img key={id} src={`/${card.images.front}`} alt={card.name} />;
+            return (
+              card && (
+                <figure key={id}>
+                  <img src={`/${card.images.front}`} alt={card.name} />
+                  <figcaption>value {card.value}</figcaption>
+                </figure>
+              )
+            );
           })}
         </dd>
         <dt>Ongoing mythos</dt>

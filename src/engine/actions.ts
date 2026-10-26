@@ -1,5 +1,7 @@
 import type { Board, GameSet } from "../content/types";
 import { drawMythos } from "./mythos";
+import { type Random, rng, shuffle } from "./rng";
+import { test } from "./test";
 import type { ActionName, ActionPhase, GameState, InvestigatorState, Ticket } from "./types";
 
 /** Action phase rules (manual_eng.pdf p.3; EH_reference.pdf p.6–10). Each function returns the next state or throws the rule it breaks. */
@@ -14,9 +16,16 @@ function active(state: GameState): InvestigatorState {
   return state.investigators.find((i) => i.id === actionPhase(state).active)!;
 }
 
+/** Nothing else happens while Acquire Assets waits for its choice. */
+function notAcquiring(state: GameState): ActionPhase {
+  const phase = actionPhase(state);
+  if (phase.acquiring) throw new Error("finish Acquire Assets first: choose the cards to gain");
+  return phase;
+}
+
 /** Up to 2 different actions per investigator per phase. */
 function mayAct(state: GameState, action: ActionName): void {
-  const { taken } = actionPhase(state);
+  const { taken } = notAcquiring(state);
   if (taken.length >= 2) throw new Error("an investigator performs up to 2 actions per phase");
   if (taken.includes(action)) throw new Error("each action may be performed once per phase");
 }
@@ -33,7 +42,7 @@ function perform(state: GameState, action: ActionName, next: InvestigatorState):
 
 /** Passes to the next seat clockwise from the lead; once every seat has acted the Mythos phase draws its card (`drawMythos`). Deviation: the Encounter phase is skipped. */
 export function endTurn(state: GameState): GameState {
-  const seat = state.investigators.findIndex((i) => i.id === actionPhase(state).active);
+  const seat = state.investigators.findIndex((i) => i.id === notAcquiring(state).active);
   const next = state.investigators[(seat + 1) % state.investigators.length]!;
   return next.id === state.leadInvestigator ? drawMythos(state) : { ...state, phase: { name: "action", active: next.id, taken: [] } };
 }
@@ -135,4 +144,62 @@ export function trade(state: GameState, { partner, give, receive }: { partner: s
   const next = add(take(other, receive), give);
   const done = perform(state, "trade", add(take(me, give), receive));
   return { ...done, investigators: done.investigators.map((i) => (i.id === other.id ? next : i)) };
+}
+
+/** Draws asset cards until the reserve holds 4, shuffling the asset discard into an empty deck; stops when both run out. */
+export function refillReserve(state: GameState, random: Random): GameState {
+  let deck = [...state.decks.asset];
+  let discard = state.assetDiscard;
+  const reserve = [...state.reserve];
+  while (reserve.length < 4) {
+    if (deck.length === 0) {
+      if (discard.length === 0) break;
+      deck = shuffle(discard, random);
+      discard = [];
+    }
+    reserve.push(deck.shift()!);
+  }
+  return { ...state, reserve, assetDiscard: discard, decks: { ...state.decks, asset: deck } };
+}
+
+/** Acquire Assets, step 1: on a city without a monster, test Influence and wait for the choice (`takeAssets`). */
+export function acquireAssets(state: GameState, board: Board, set: GameSet): GameState {
+  mayAct(state, "acquire-assets");
+  const me = active(state);
+  const space = board.spaces.find((s) => s.id === me.space);
+  if (space?.kind !== "city") throw new Error(`Acquire Assets needs a city space; ${me.space} is ${space?.kind ?? "unknown"}`);
+  const monster = state.monsters.find((m) => m.space === me.space);
+  if (monster) throw new Error(`Acquire Assets is not allowed on a space with a monster (${monster.id})`);
+  const { state: next, dice, successes } = test(state, set, me.id, "influence", 0);
+  return { ...next, phase: { ...actionPhase(state), acquiring: { dice, successes } } };
+}
+
+/**
+ * Acquire Assets, step 2: gain reserve cards with a total value at most the result, or, gaining none, discard 1 reserve card.
+ * Deviation: the Bank Loan and Debt are not modelled.
+ */
+export function takeAssets(state: GameState, set: GameSet, cards: string[], discard?: string): GameState {
+  const phase = actionPhase(state);
+  if (!phase.acquiring) throw new Error("no Acquire Assets roll is waiting for a choice");
+  const { successes } = phase.acquiring;
+  const reserve = [...state.reserve];
+  const pick = (card: string) => {
+    const at = reserve.indexOf(card);
+    if (at < 0) throw new Error(`${card} is not in the reserve`);
+    reserve.splice(at, 1);
+  };
+  for (const card of cards) pick(card);
+  const total = cards.reduce((sum, id) => sum + (set.cards.find((c) => c.id === id)?.value ?? 0), 0);
+  if (total > successes) throw new Error(`the cards' total value ${total} exceeds the result ${successes}`);
+  if (discard !== undefined) {
+    if (cards.length > 0) throw new Error("a reserve card may be discarded only when no card is gained");
+    pick(discard);
+  }
+  const me = active(state);
+  const { acquiring: _, ...chosen } = phase;
+  const bought = perform({ ...state, phase: chosen, reserve, assetDiscard: discard ? [...state.assetDiscard, discard] : state.assetDiscard }, "acquire-assets", {
+    ...me,
+    possessions: [...me.possessions, ...cards],
+  });
+  return refillReserve(bought, rng(state.seed * 37 + state.rolls));
 }

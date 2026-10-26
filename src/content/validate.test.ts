@@ -54,7 +54,15 @@ describe("validateBoard", () => {
 });
 
 describe("validateSet", () => {
-  const card = (id: string) => ({ id, name: id, deck: "asset" as const, images: { front: `cards/${id}.png` } });
+  const card = (id: string) => ({ id, name: id, deck: "asset" as const, value: 1, traits: ["Item"], images: { front: `cards/${id}.png` } });
+  it("reports an asset without a value", () => {
+    const { value: _, ...bad } = card("eh01/asset/x");
+    expect(validateSet({ ...emptySet, cards: [bad] }, () => true).join("\n")).toContain("eh01/asset/x has no value");
+  });
+  it("reports an asset without traits", () => {
+    const bad = { ...card("eh01/asset/x"), traits: [] };
+    expect(validateSet({ ...emptySet, cards: [bad] }, () => true).join("\n")).toContain("eh01/asset/x has no traits");
+  });
   it("reports duplicate ids", () => {
     const bad = { ...emptySet, cards: [card("eh01/asset/x"), card("eh01/asset/x")] };
     expect(validateSet(bad, () => true).join("\n")).toContain("eh01/asset/x");

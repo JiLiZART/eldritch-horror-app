@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type { Board, GameSet } from "../content/types";
-import { endTurn, prepareForTravel, rest, travel } from "../engine/actions";
+import { acquireAssets, endTurn, prepareForTravel, rest, travel } from "../engine/actions";
 import type { ActionPhase, GameState, Ticket } from "../engine/types";
+import { Acquire } from "./Acquire";
 import { Trade } from "./Trade";
 
 export type Act = (fn: (state: GameState) => GameState) => void;
@@ -70,6 +71,9 @@ export function Turn({ board, set, state, phase, error, route, onAct, onRoute }:
               </select>
             </label>
           )}
+          <button type="button" onClick={() => onAct((s) => acquireAssets(s, board, set))}>
+            Acquire Assets
+          </button>{" "}
           <button type="button" onClick={() => setTrading((on) => !on)}>
             Trade
           </button>{" "}
@@ -78,6 +82,8 @@ export function Turn({ board, set, state, phase, error, route, onAct, onRoute }:
           </button>
         </div>
       )}
+      {/* Keyed on the roll so a new roll starts with nothing chosen. */}
+      {phase.acquiring && <Acquire key={state.rolls} set={set} state={state} roll={phase.acquiring} onAct={onAct} />}
       {trading && !route && <Trade set={set} state={state} active={me.id} onAct={onAct} onClose={() => setTrading(false)} />}
       <p aria-live="assertive" className="error">
         {error}

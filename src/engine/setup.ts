@@ -81,6 +81,7 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
 
   let state: GameState = {
     seed: options.seed,
+    rolls: 0,
     difficulty,
     ancientOne: ancientOne.id,
     doom: ancientOne.doom,
@@ -102,6 +103,7 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
     setAsideMonsters,
     decks,
     reserve,
+    assetDiscard: [],
     ongoingMythos: [],
     mythosDiscard: [],
     currentMystery,

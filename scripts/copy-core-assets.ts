@@ -7,6 +7,7 @@ import { execFileSync } from "node:child_process";
 import { copyFileSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { basename, extname, join } from "node:path";
 import type { AncientOne, Card, EncounterDeck, Investigator, Monster, MythosCard, NamedCard } from "../src/content/types";
+import { assetValues } from "./asset-values";
 import { mythosEffects } from "./mythos-effects";
 
 const root = join(import.meta.dirname, "..");
@@ -55,7 +56,10 @@ function cards(srcDir: string, deck: Card["deck"], dir: string): Card[] {
   const result: Card[] = [];
   for (const [name, imgs] of sides(srcDir, dir)) {
     // Copies are numbered in the source ("Mists of Releh 2"); the printed name has no number.
-    result.push({ id: `eh01/${dir}/${kebab(name)}`, name: name.replace(/ \d+$/, ""), deck, images: { front: imgs.front!, ...(imgs.back && { back: imgs.back }) } });
+    const id = `eh01/${dir}/${kebab(name)}`;
+    const printed = deck === "asset" ? assetValues[id] : undefined;
+    if (deck === "asset" && !printed) throw new Error(`${id} has no entry in scripts/asset-values.ts`);
+    result.push({ id, name: name.replace(/ \d+$/, ""), deck, ...printed, images: { front: imgs.front!, ...(imgs.back && { back: imgs.back }) } });
   }
   return result;
 }

@@ -56,7 +56,12 @@ export function validateSet(set: GameSet, imageExists: (path: string) => boolean
       if (!monsterIds.has(id)) errors.push(`${a.id} sets aside unknown monster ${id}`);
     }
   }
-  for (const c of set.cards) check(c.id, c.images);
+  for (const c of set.cards) {
+    check(c.id, c.images);
+    if (c.deck !== "asset") continue;
+    if (c.value === undefined) errors.push(`${c.id} has no value`);
+    if (!c.traits?.length) errors.push(`${c.id} has no traits`);
+  }
   for (const m of set.monsters) {
     check(m.id, m.images);
     if (m.spawnMoveTo !== undefined && spaceIds && !spaceIds.has(m.spawnMoveTo)) errors.push(`${m.id} spawns onto unknown space ${m.spawnMoveTo}`);
