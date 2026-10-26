@@ -11,7 +11,8 @@
     "content:validate": "tsx scripts/validate-content.ts",
     "content:extract-icons": "tsx scripts/extract-icons.ts",
     "content:copy-core": "tsx scripts/copy-core-assets.ts",
-    "content:board-overlay": "tsx scripts/board-overlay.ts"
+    "content:board-overlay": "tsx scripts/board-overlay.ts",
+    "content:board-localization": "tsx scripts/board-localization.ts"
   },
   "author": "",
   "license": "UNLICENSED",

@@ -4,7 +4,7 @@
     "width": 9437,
     "height": 6198
   },
-  "texture": "board/all-boards.webp",
+  "texture": "board/board-textless.webp",
   "spaces": [
     {
       "id": "san-francisco",

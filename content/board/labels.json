@@ -1,0 +1,1016 @@
+{
+  "width": 9437,
+  "height": 6198,
+  "locations": [
+    {
+      "space": "eh07-unknown-kadath",
+      "x": 1399,
+      "y": 608,
+      "w": 669,
+      "h": 599,
+      "image": "board/locations/eh07-unknown-kadath.webp",
+      "slots": [
+        {
+          "key": "loc.eh07-unknown-kadath.name",
+          "x": 244,
+          "y": 445,
+          "w": 301,
+          "h": 92,
+          "lines": 2,
+          "bold": true
+        }
+      ]
+    },
+    {
+      "space": "eh07-celephais",
+      "x": 2247,
+      "y": 922,
+      "w": 644,
+      "h": 535,
+      "image": "board/locations/eh07-celephais.webp",
+      "slots": [
+        {
+          "key": "loc.eh07-celephais.name",
+          "x": 234,
+          "y": 387,
+          "w": 230,
+          "h": 38,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.eh07-celephais.subtitle",
+          "x": 163,
+          "y": 474,
+          "w": 356,
+          "h": 35
+        }
+      ]
+    },
+    {
+      "space": "eh07-the-moon",
+      "x": 3526,
+      "y": 692,
+      "w": 676,
+      "h": 584,
+      "image": "board/locations/eh07-the-moon.webp",
+      "slots": [
+        {
+          "key": "loc.eh07-the-moon.name",
+          "x": 317,
+          "y": 463,
+          "w": 131,
+          "h": 40,
+          "lines": 1,
+          "bold": true
+        }
+      ]
+    },
+    {
+      "space": "eh07-dylath-leen",
+      "x": 4575,
+      "y": 576,
+      "w": 647,
+      "h": 547,
+      "image": "board/locations/eh07-dylath-leen.webp",
+      "slots": [
+        {
+          "key": "loc.eh07-dylath-leen.name",
+          "x": 192,
+          "y": 390,
+          "w": 308,
+          "h": 41,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.eh07-dylath-leen.subtitle",
+          "x": 283,
+          "y": 472,
+          "w": 108,
+          "h": 23
+        }
+      ]
+    },
+    {
+      "space": "eh07-ulthar",
+      "x": 5834,
+      "y": 761,
+      "w": 625,
+      "h": 533,
+      "image": "board/locations/eh07-ulthar.webp",
+      "slots": [
+        {
+          "key": "loc.eh07-ulthar.name",
+          "x": 266,
+          "y": 386,
+          "w": 171,
+          "h": 39,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.eh07-ulthar.subtitle",
+          "x": 205,
+          "y": 477,
+          "w": 285,
+          "h": 27
+        }
+      ]
+    },
+    {
+      "space": "eh07-the-enchanted-wood",
+      "x": 6684,
+      "y": 524,
+      "w": 634,
+      "h": 580,
+      "image": "board/locations/eh07-the-enchanted-wood.webp",
+      "slots": [
+        {
+          "key": "loc.eh07-the-enchanted-wood.name",
+          "x": 202,
+          "y": 433,
+          "w": 367,
+          "h": 91,
+          "lines": 2,
+          "bold": true
+        }
+      ]
+    },
+    {
+      "space": "eh07-the-underworld",
+      "x": 7554,
+      "y": 679,
+      "w": 666,
+      "h": 544,
+      "image": "board/locations/eh07-the-underworld.webp",
+      "slots": [
+        {
+          "key": "loc.eh07-the-underworld.name",
+          "x": 174,
+          "y": 450,
+          "w": 402,
+          "h": 39,
+          "lines": 1,
+          "bold": true
+        }
+      ]
+    },
+    {
+      "space": "san-francisco",
+      "x": 511,
+      "y": 1579,
+      "w": 871,
+      "h": 733,
+      "image": "board/locations/san-francisco.webp",
+      "slots": [
+        {
+          "key": "loc.san-francisco.name",
+          "x": 228,
+          "y": 513,
+          "w": 531,
+          "h": 78,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.san-francisco.subtitle",
+          "x": 333,
+          "y": 631,
+          "w": 285,
+          "h": 34
+        }
+      ]
+    },
+    {
+      "space": "arkham",
+      "x": 2125,
+      "y": 1719,
+      "w": 883,
+      "h": 666,
+      "image": "board/locations/arkham.webp",
+      "slots": [
+        {
+          "key": "loc.arkham.name",
+          "x": 335,
+          "y": 450,
+          "w": 268,
+          "h": 52,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.arkham.subtitle",
+          "x": 302,
+          "y": 568,
+          "w": 346,
+          "h": 41
+        }
+      ]
+    },
+    {
+      "space": "london",
+      "x": 3722,
+      "y": 1299,
+      "w": 873,
+      "h": 727,
+      "image": "board/locations/london.webp",
+      "slots": [
+        {
+          "key": "loc.london.name",
+          "x": 329,
+          "y": 517,
+          "w": 280,
+          "h": 55,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.london.subtitle",
+          "x": 348,
+          "y": 628,
+          "w": 254,
+          "h": 34
+        }
+      ]
+    },
+    {
+      "space": "rome",
+      "x": 4284,
+      "y": 2075,
+      "w": 838,
+      "h": 668,
+      "image": "board/locations/rome.webp",
+      "slots": [
+        {
+          "key": "loc.rome.name",
+          "x": 378,
+          "y": 473,
+          "w": 144,
+          "h": 52,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.rome.subtitle",
+          "x": 323,
+          "y": 590,
+          "w": 260,
+          "h": 41
+        }
+      ]
+    },
+    {
+      "space": "istanbul",
+      "x": 5279,
+      "y": 1788,
+      "w": 826,
+      "h": 665,
+      "image": "board/locations/istanbul.webp",
+      "slots": [
+        {
+          "key": "loc.istanbul.name",
+          "x": 301,
+          "y": 474,
+          "w": 296,
+          "h": 55,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.istanbul.subtitle",
+          "x": 300,
+          "y": 586,
+          "w": 303,
+          "h": 37
+        }
+      ]
+    },
+    {
+      "space": "tunguska",
+      "x": 6653,
+      "y": 1371,
+      "w": 886,
+      "h": 618,
+      "image": "board/locations/tunguska.webp",
+      "slots": [
+        {
+          "key": "loc.tunguska.name",
+          "x": 357,
+          "y": 494,
+          "w": 337,
+          "h": 52,
+          "lines": 1,
+          "bold": true
+        }
+      ]
+    },
+    {
+      "space": "the-himalayas",
+      "x": 6467,
+      "y": 2297,
+      "w": 882,
+      "h": 620,
+      "image": "board/locations/the-himalayas.webp",
+      "slots": [
+        {
+          "key": "loc.the-himalayas.name",
+          "x": 370,
+          "y": 494,
+          "w": 310,
+          "h": 51,
+          "lines": 1,
+          "bold": true
+        }
+      ]
+    },
+    {
+      "space": "tokyo",
+      "x": 8326,
+      "y": 2126,
+      "w": 826,
+      "h": 687,
+      "image": "board/locations/tokyo.webp",
+      "slots": [
+        {
+          "key": "loc.tokyo.name",
+          "x": 334,
+          "y": 514,
+          "w": 227,
+          "h": 54,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.tokyo.subtitle",
+          "x": 304,
+          "y": 633,
+          "w": 300,
+          "h": 42
+        }
+      ]
+    },
+    {
+      "space": "shanghai",
+      "x": 7547,
+      "y": 2676,
+      "w": 821,
+      "h": 705,
+      "image": "board/locations/shanghai.webp",
+      "slots": [
+        {
+          "key": "loc.shanghai.name",
+          "x": 290,
+          "y": 520,
+          "w": 304,
+          "h": 57,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.shanghai.subtitle",
+          "x": 306,
+          "y": 637,
+          "w": 282,
+          "h": 35
+        }
+      ]
+    },
+    {
+      "space": "eh05-the-bent-pyramid",
+      "x": 5198,
+      "y": 2588,
+      "w": 602,
+      "h": 485,
+      "image": "board/locations/eh05-the-bent-pyramid.webp",
+      "slots": [
+        {
+          "key": "loc.eh05-the-bent-pyramid.name",
+          "x": 141,
+          "y": 376,
+          "w": 448,
+          "h": 56,
+          "lines": 1,
+          "bold": true
+        }
+      ]
+    },
+    {
+      "space": "eh05-the-sahara",
+      "x": 3822,
+      "y": 2809,
+      "w": 602,
+      "h": 495,
+      "image": "board/locations/eh05-the-sahara.webp",
+      "slots": [
+        {
+          "key": "loc.eh05-the-sahara.name",
+          "x": 227,
+          "y": 356,
+          "w": 185,
+          "h": 41,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.eh05-the-sahara.subtitle",
+          "x": 186,
+          "y": 445,
+          "w": 284,
+          "h": 26
+        }
+      ]
+    },
+    {
+      "space": "eh05-alexandria",
+      "x": 4469,
+      "y": 2919,
+      "w": 614,
+      "h": 495,
+      "image": "board/locations/eh05-alexandria.webp",
+      "slots": [
+        {
+          "key": "loc.eh05-alexandria.name",
+          "x": 159,
+          "y": 366,
+          "w": 351,
+          "h": 44,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.eh05-alexandria.subtitle",
+          "x": 207,
+          "y": 447,
+          "w": 254,
+          "h": 25
+        }
+      ]
+    },
+    {
+      "space": "eh05-cairo",
+      "x": 5747,
+      "y": 3005,
+      "w": 606,
+      "h": 498,
+      "image": "board/locations/eh05-cairo.webp",
+      "slots": [
+        {
+          "key": "loc.eh05-cairo.name",
+          "x": 255,
+          "y": 363,
+          "w": 135,
+          "h": 39,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.eh05-cairo.subtitle",
+          "x": 167,
+          "y": 452,
+          "w": 339,
+          "h": 26
+        }
+      ]
+    },
+    {
+      "space": "the-pyramids",
+      "x": 5126,
+      "y": 3460,
+      "w": 650,
+      "h": 479,
+      "image": "board/locations/the-pyramids.webp",
+      "slots": [
+        {
+          "key": "loc.the-pyramids.name",
+          "x": 259,
+          "y": 385,
+          "w": 296,
+          "h": 43,
+          "lines": 1,
+          "bold": true
+        }
+      ]
+    },
+    {
+      "space": "eh05-amarna",
+      "x": 4431,
+      "y": 3556,
+      "w": 648,
+      "h": 527,
+      "image": "board/locations/eh05-amarna.webp",
+      "slots": [
+        {
+          "key": "loc.eh05-amarna.name",
+          "x": 238,
+          "y": 392,
+          "w": 205,
+          "h": 38,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.eh05-amarna.subtitle",
+          "x": 290,
+          "y": 472,
+          "w": 90,
+          "h": 24
+        }
+      ]
+    },
+    {
+      "space": "the-heart-of-africa",
+      "x": 5267,
+      "y": 4072,
+      "w": 662,
+      "h": 480,
+      "image": "board/locations/the-heart-of-africa.webp",
+      "slots": [
+        {
+          "key": "loc.the-heart-of-africa.name",
+          "x": 179,
+          "y": 386,
+          "w": 407,
+          "h": 47,
+          "lines": 1,
+          "bold": true
+        }
+      ]
+    },
+    {
+      "space": "eh05-the-nile",
+      "x": 4587,
+      "y": 4228,
+      "w": 649,
+      "h": 533,
+      "image": "board/locations/eh05-the-nile.webp",
+      "slots": [
+        {
+          "key": "loc.eh05-the-nile.name",
+          "x": 284,
+          "y": 382,
+          "w": 110,
+          "h": 39,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.eh05-the-nile.subtitle",
+          "x": 205,
+          "y": 476,
+          "w": 287,
+          "h": 26
+        }
+      ]
+    },
+    {
+      "space": "the-amazon",
+      "x": 2183,
+      "y": 3331,
+      "w": 761,
+      "h": 610,
+      "image": "board/locations/the-amazon.webp",
+      "slots": [
+        {
+          "key": "loc.the-amazon.name",
+          "x": 319,
+          "y": 498,
+          "w": 353,
+          "h": 48,
+          "lines": 1,
+          "bold": true
+        }
+      ]
+    },
+    {
+      "space": "buenos-aires",
+      "x": 2078,
+      "y": 4225,
+      "w": 878,
+      "h": 713,
+      "image": "board/locations/buenos-aires.webp",
+      "slots": [
+        {
+          "key": "loc.buenos-aires.name",
+          "x": 233,
+          "y": 504,
+          "w": 502,
+          "h": 70,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.buenos-aires.subtitle",
+          "x": 260,
+          "y": 627,
+          "w": 418,
+          "h": 34
+        }
+      ]
+    },
+    {
+      "space": "sydney",
+      "x": 8173,
+      "y": 4720,
+      "w": 864,
+      "h": 700,
+      "image": "board/locations/sydney.webp",
+      "slots": [
+        {
+          "key": "loc.sydney.name",
+          "x": 312,
+          "y": 516,
+          "w": 274,
+          "h": 59,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.sydney.subtitle",
+          "x": 310,
+          "y": 632,
+          "w": 286,
+          "h": 36
+        }
+      ]
+    },
+    {
+      "space": "antarctica",
+      "x": 7657,
+      "y": 5440,
+      "w": 660,
+      "h": 472,
+      "image": "board/locations/antarctica.webp",
+      "slots": [
+        {
+          "key": "loc.antarctica.name",
+          "x": 215,
+          "y": 379,
+          "w": 336,
+          "h": 41,
+          "lines": 1,
+          "bold": true
+        }
+      ]
+    },
+    {
+      "space": "eh03-plateau-of-leng",
+      "x": 3439,
+      "y": 5302,
+      "w": 608,
+      "h": 680,
+      "image": "board/locations/eh03-plateau-of-leng.webp",
+      "slots": [
+        {
+          "key": "loc.eh03-plateau-of-leng.name",
+          "x": 153,
+          "y": 376,
+          "w": 307,
+          "h": 45,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.eh03-plateau-of-leng.rules",
+          "x": 86,
+          "y": 488,
+          "w": 460,
+          "h": 170,
+          "align": "left",
+          "size": 22
+        }
+      ]
+    },
+    {
+      "space": "eh03-city-of-the-elder-things",
+      "x": 4145,
+      "y": 5282,
+      "w": 606,
+      "h": 681,
+      "image": "board/locations/eh03-city-of-the-elder-things.webp",
+      "slots": [
+        {
+          "key": "loc.eh03-city-of-the-elder-things.name",
+          "x": 116,
+          "y": 321,
+          "w": 374,
+          "h": 55,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.eh03-city-of-the-elder-things.rules",
+          "x": 91,
+          "y": 444,
+          "w": 430,
+          "h": 135,
+          "align": "left",
+          "size": 22
+        }
+      ]
+    },
+    {
+      "space": "eh03-snowy-mountains",
+      "x": 4872,
+      "y": 5282,
+      "w": 610,
+      "h": 740,
+      "image": "board/locations/eh03-snowy-mountains.webp",
+      "slots": [
+        {
+          "key": "loc.eh03-snowy-mountains.name",
+          "x": 12,
+          "y": 325,
+          "w": 483,
+          "h": 88,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.eh03-snowy-mountains.rules",
+          "x": 84,
+          "y": 433,
+          "w": 441,
+          "h": 246,
+          "align": "left",
+          "size": 22
+        }
+      ]
+    },
+    {
+      "space": "eh03-frozen-waste",
+      "x": 5573,
+      "y": 5282,
+      "w": 609,
+      "h": 663,
+      "image": "board/locations/eh03-frozen-waste.webp",
+      "slots": [
+        {
+          "key": "loc.eh03-frozen-waste.name",
+          "x": 64,
+          "y": 313,
+          "w": 471,
+          "h": 49,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.eh03-frozen-waste.rules",
+          "x": 79,
+          "y": 416,
+          "w": 441,
+          "h": 135,
+          "align": "left",
+          "size": 22
+        }
+      ]
+    },
+    {
+      "space": "eh03-lake-camp",
+      "x": 6273,
+      "y": 5282,
+      "w": 604,
+      "h": 692,
+      "image": "board/locations/eh03-lake-camp.webp",
+      "slots": [
+        {
+          "key": "loc.eh03-lake-camp.name",
+          "x": 131,
+          "y": 277,
+          "w": 437,
+          "h": 81,
+          "lines": 1,
+          "bold": true
+        },
+        {
+          "key": "loc.eh03-lake-camp.rules",
+          "x": 82,
+          "y": 396,
+          "w": 442,
+          "h": 215,
+          "align": "left",
+          "size": 22
+        }
+      ]
+    },
+    {
+      "space": "eh03-miskatonic-outpost",
+      "x": 6960,
+      "y": 5358,
+      "w": 616,
+      "h": 659,
+      "image": "board/locations/eh03-miskatonic-outpost.webp",
+      "slots": [
+        {
+          "key": "loc.eh03-miskatonic-outpost.name",
+          "x": 67,
+          "y": 376,
+          "w": 480,
+          "h": 79,
+          "lines": 2,
+          "bold": true
+        },
+        {
+          "key": "loc.eh03-miskatonic-outpost.rules",
+          "x": 85,
+          "y": 481,
+          "w": 442,
+          "h": 161,
+          "align": "left",
+          "size": 22
+        }
+      ]
+    }
+  ],
+  "slots": [
+    {
+      "key": "board.rules_title",
+      "x": 303.2,
+      "y": 660.56,
+      "w": 786.6,
+      "h": 48.800000000000004,
+      "bold": true
+    },
+    {
+      "key": "board.rules_dreamlands",
+      "x": 172.1,
+      "y": 733.76,
+      "w": 1075.02,
+      "h": 283.03999999999996,
+      "align": "left",
+      "size": 30
+    },
+    {
+      "key": "board.rules_title",
+      "x": 6030.4,
+      "y": 3723.2,
+      "w": 478.2,
+      "h": 53.5,
+      "bold": true
+    },
+    {
+      "key": "board.rules_egypt",
+      "x": 5950.7,
+      "y": 3803.45,
+      "w": 653.54,
+      "h": 310.29999999999995,
+      "align": "left",
+      "size": 30
+    },
+    {
+      "key": "board.rules_title",
+      "x": 8534.8,
+      "y": 5606.48,
+      "w": 503.4,
+      "h": 62.900000000000006,
+      "bold": true
+    },
+    {
+      "key": "board.rules_antarctica",
+      "x": 8450.9,
+      "y": 5700.83,
+      "w": 687.9799999999999,
+      "h": 364.82,
+      "align": "left",
+      "size": 30
+    },
+    {
+      "key": "board.doom_track_title",
+      "x": 3460,
+      "y": 408,
+      "w": 1835,
+      "h": 126,
+      "bold": true
+    },
+    {
+      "key": "board.reserve_title",
+      "x": 498,
+      "y": 5268,
+      "w": 2385,
+      "h": 158,
+      "bold": true
+    },
+    {
+      "key": "board.legend_title",
+      "x": 490,
+      "y": 3370,
+      "w": 720,
+      "h": 65,
+      "bold": true
+    },
+    {
+      "key": "board.legend_paths",
+      "x": 230,
+      "y": 3545,
+      "w": 500,
+      "h": 60,
+      "bold": true
+    },
+    {
+      "key": "board.legend_locations",
+      "x": 930,
+      "y": 3545,
+      "w": 480,
+      "h": 60,
+      "bold": true
+    },
+    {
+      "key": "board.legend_train",
+      "x": 210,
+      "y": 3685,
+      "w": 350,
+      "h": 50,
+      "align": "right",
+      "bold": true
+    },
+    {
+      "key": "board.legend_trail",
+      "x": 210,
+      "y": 3843,
+      "w": 350,
+      "h": 50,
+      "align": "right",
+      "bold": true
+    },
+    {
+      "key": "board.legend_ship",
+      "x": 210,
+      "y": 3985,
+      "w": 350,
+      "h": 50,
+      "align": "right",
+      "bold": true
+    },
+    {
+      "key": "board.legend_local",
+      "x": 210,
+      "y": 4145,
+      "w": 350,
+      "h": 50,
+      "align": "right",
+      "bold": true
+    },
+    {
+      "key": "board.legend_city",
+      "x": 920,
+      "y": 3708,
+      "w": 350,
+      "h": 55,
+      "align": "right",
+      "bold": true
+    },
+    {
+      "key": "board.legend_wilderness",
+      "x": 920,
+      "y": 3925,
+      "w": 350,
+      "h": 50,
+      "align": "right",
+      "bold": true
+    },
+    {
+      "key": "board.legend_sea",
+      "x": 920,
+      "y": 4152,
+      "w": 350,
+      "h": 50,
+      "align": "right",
+      "bold": true
+    },
+    {
+      "key": "board.card_bank_loan_title",
+      "x": 200,
+      "y": 5430,
+      "w": 340,
+      "h": 50
+    },
+    {
+      "key": "board.card_bank_loan_type",
+      "x": 200,
+      "y": 5800,
+      "w": 290,
+      "h": 40,
+      "bold": true
+    },
+    {
+      "key": "board.card_bank_loan_text",
+      "x": 150,
+      "y": 5845,
+      "w": 400,
+      "h": 170,
+      "size": 30
+    },
+    {
+      "key": "board.omens_title",
+      "x": 8935,
+      "y": 501,
+      "w": 690,
+      "h": 65,
+      "bold": true,
+      "arc": {
+        "radius": 600,
+        "angle": 117
+      }
+    }
+  ]
+}

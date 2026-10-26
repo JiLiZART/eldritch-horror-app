@@ -44,6 +44,50 @@ export interface Board {
   paths: Path[];
 }
 
+export type Lang = keyof Localized;
+
+/** Where one board string is drawn, in pixels of the board source image. */
+export interface LabelSlot {
+  /** Key into the board string tables (`loc.<space>.name`, `board.doom_track_title`). */
+  key: string;
+  /** Top-left corner and size; relative to the cut-out for location slots. With `arc`, x/y is the circle centre and w the arc length. */
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  /** Printed line count of a location name. */
+  lines?: number;
+  /** Starting font size for multi-line text; otherwise the slot height divided by `lines`. */
+  size?: number;
+  align?: "left" | "center" | "right";
+  bold?: boolean;
+  /** Text centred on `angle` degrees (clockwise from +x, y down) along a circle of `radius`, tops facing inward. */
+  arc?: { radius: number; angle: number };
+}
+
+export interface LocationArt {
+  space: string;
+  /** Cut-out rectangle on the board, in source pixels. */
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  /** Path under public/. */
+  image: string;
+  slots: LabelSlot[];
+}
+
+/** Board string tables per language, keyed like `LabelSlot.key`. */
+export type BoardStrings = Record<Lang, Record<string, string>>;
+
+export interface BoardLabels {
+  /** Source image size the pixel coordinates refer to. */
+  width: number;
+  height: number;
+  locations: LocationArt[];
+  slots: LabelSlot[];
+}
+
 export type Skill = "lore" | "influence" | "observation" | "strength" | "will";
 export type Skills = Record<Skill, number>;
 

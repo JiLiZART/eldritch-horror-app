@@ -3,13 +3,17 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { type ComponentRef, Suspense, useEffect, useMemo, useRef } from "react";
 import { SRGBColorSpace, type Texture, Vector3 } from "three";
 import { activeGraph } from "../content/board";
-import type { Board, Space } from "../content/types";
+import type { Board, BoardLabels, Space } from "../content/types";
+import { BoardText } from "./BoardText";
 import { boardSize, boardToWorld, spreadOnCircle } from "./geometry";
 import type { Piece, PieceKind } from "./pieces";
 import { PATH_COLORS } from "./sets";
 
 export interface TableProps {
   board: Board;
+  labels: BoardLabels;
+  /** Board strings of the chosen language. */
+  strings: Record<string, string>;
   /** Pieces grouped by space id; empty when no game is in progress. */
   pieces: Map<string, Piece[]>;
   enabled: Set<string>;
@@ -38,13 +42,15 @@ export function Table(props: TableProps) {
   );
 }
 
-function Scene({ board, pieces, enabled, selected, route, onSelect, reducedMotion }: TableProps) {
+function Scene({ board, labels, strings, pieces, enabled, selected, route, onSelect, reducedMotion }: TableProps) {
   const graph = useMemo(() => activeGraph(board, enabled), [board, enabled]);
   const at = useMemo(() => new Map(board.spaces.map((s) => [s.id, boardToWorld(s, board)])), [board]);
+  const active = useMemo(() => new Set(graph.spaces.map((s) => s.id)), [graph]);
   return (
     <>
       <CameraRig board={board} target={selected ? at.get(selected) : undefined} reducedMotion={reducedMotion} />
       <BoardPlane board={board} />
+      <BoardText labels={labels} strings={strings} active={active} selected={selected} onSelect={onSelect} reducedMotion={reducedMotion} />
       {graph.paths.map((p) => (
         <Line key={`${p.from}-${p.to}`} points={[[...at.get(p.from)!, 0.01], [...at.get(p.to)!, 0.01]]} color={PATH_COLORS[p.type]} lineWidth={2} />
       ))}

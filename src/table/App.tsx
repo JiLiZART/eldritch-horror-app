@@ -3,6 +3,7 @@ import { activeGraph } from "../content/board";
 import { content } from "../content/client";
 import { travel } from "../engine/actions";
 import { setupGame } from "../engine/setup";
+import type { Lang } from "../content/types";
 import type { GameState, SetupOptions } from "../engine/types";
 import { Mythos } from "./Mythos";
 import { NewGame } from "./NewGame";
@@ -12,8 +13,26 @@ import { Table } from "./Table";
 import { type Act, Turn } from "./Turn";
 import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
 
+const LANG_KEY = "eh.board-lang";
+
+/** Remembered board language; otherwise Russian for a Russian-preferring browser. */
+function initialLang(): Lang {
+  try {
+    const saved = localStorage.getItem(LANG_KEY);
+    if (saved === "en" || saved === "ru") return saved;
+  } catch {}
+  return navigator.language.toLowerCase().startsWith("ru") ? "ru" : "en";
+}
+
 export function App() {
-  const { board, set } = use(content);
+  const { board, set, labels, strings } = use(content);
+  const [lang, setLang] = useState(initialLang);
+  const chooseLang = (next: Lang) => {
+    setLang(next);
+    try {
+      localStorage.setItem(LANG_KEY, next);
+    } catch {}
+  };
   const [enabled, setEnabled] = useState(() => new Set(["eh01"]));
   const [selected, setSelected] = useState<string>();
   /** The game in progress, or the reason the last start was refused. */
@@ -64,9 +83,9 @@ export function App() {
   return (
     <div className="layout">
       <main className="table">
-        <Table board={board} pieces={pieces} enabled={enabled} selected={selectedSpace?.id} route={route} onSelect={select} reducedMotion={reducedMotion} />
+        <Table board={board} labels={labels} strings={strings[lang]} pieces={pieces} enabled={enabled} selected={selectedSpace?.id} route={route} onSelect={select} reducedMotion={reducedMotion} />
       </main>
-      <Panel board={board} set={set} state={game.state} pieces={pieces} spaces={spaces} enabled={enabled} onToggle={toggle} selected={selectedSpace} onSelect={select}>
+      <Panel board={board} set={set} lang={lang} onLang={chooseLang} state={game.state} pieces={pieces} spaces={spaces} enabled={enabled} onToggle={toggle} selected={selectedSpace} onSelect={select}>
         <NewGame set={set} running={game.state !== undefined} error={game.state ? undefined : game.error} onStart={start} onAbandon={() => setGame({})} />
         {game.state?.phase.name === "action" && <Turn board={board} set={set} state={game.state} phase={game.state.phase} error={game.error} route={route} onAct={act} onRoute={setRoute} />}
         {game.state?.phase.name === "mythos" && <Mythos board={board} set={set} state={game.state} phase={game.state.phase} error={game.error} onAct={act} />}

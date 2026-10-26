@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { neighbors } from "../content/board";
-import type { Board, GameSet, Space } from "../content/types";
+import type { Board, GameSet, Lang, Space } from "../content/types";
 import { OMEN_TRACK } from "../engine/omen";
 import type { GameState } from "../engine/types";
 import type { Piece } from "./pieces";
@@ -10,6 +10,9 @@ interface PanelProps {
   board: Board;
   set: GameSet;
   state: GameState | undefined;
+  /** Language of the text printed on the board. */
+  lang: Lang;
+  onLang: (lang: Lang) => void;
   pieces: Map<string, Piece[]>;
   spaces: Space[];
   enabled: Set<string>;
@@ -21,13 +24,21 @@ interface PanelProps {
 
 const SET_NAMES: Record<string, string> = { eh01: "Core", ...Object.fromEntries(BOARD_SETS.map((s) => [s.id, s.name])) };
 
-export function Panel({ board, set, state, pieces, spaces, enabled, onToggle, selected, onSelect, children }: PanelProps) {
+export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled, onToggle, selected, onSelect, children }: PanelProps) {
   const pathType = (a: string, b: string) => board.paths.find((p) => (p.from === a && p.to === b) || (p.from === b && p.to === a))?.type;
   return (
     <aside className="panel">
       <h1>Eldritch Horror</h1>
       {children}
       {state && <Status board={board} set={set} state={state} />}
+      <fieldset>
+        <legend>Board language</legend>
+        {(["en", "ru"] as const).map((l) => (
+          <label key={l}>
+            <input type="radio" name="board-lang" checked={lang === l} onChange={() => onLang(l)} /> {l === "en" ? "English" : "Русский"}
+          </label>
+        ))}
+      </fieldset>
       <fieldset>
         <legend>Sets</legend>
         <label>

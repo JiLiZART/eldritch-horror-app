@@ -1,5 +1,5 @@
 import { assembleSet, SET_FILES } from "./set-files";
-import type { Board, GameSet } from "./types";
+import type { Board, BoardLabels, BoardStrings, GameSet } from "./types";
 
 /** Fetches JSON; a 404 is `undefined` (optional set lists), any other failure throws. */
 const json = async <T>(path: string): Promise<T | undefined> => {
@@ -24,6 +24,10 @@ async function fetchSet(id: string): Promise<GameSet> {
 }
 
 /** Static content served next to the app; fetched once per page load. */
-export const content: Promise<{ board: Board; set: GameSet }> = Promise.all([required<Board>("/content/board/board.json"), fetchSet("eh01")]).then(
-  ([board, set]) => ({ board, set }),
-);
+export const content: Promise<{ board: Board; set: GameSet; labels: BoardLabels; strings: BoardStrings }> = Promise.all([
+  required<Board>("/content/board/board.json"),
+  fetchSet("eh01"),
+  required<BoardLabels>("/content/board/labels.json"),
+  required<Record<string, string>>("/content/board/i18n/en.json"),
+  required<Record<string, string>>("/content/board/i18n/ru.json"),
+]).then(([board, set, labels, en, ru]) => ({ board, set, labels, strings: { en, ru } }));
