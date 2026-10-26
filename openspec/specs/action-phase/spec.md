@@ -106,3 +106,42 @@ While a game is in progress the players SHALL see the round, the phase, the acti
 #### Scenario: Route preview
 - **WHEN** the active investigator picks space 5 and then Arkham as a travel route
 - **THEN** both spaces are highlighted on the table and the move happens only on confirmation
+
+### Requirement: Acquire Assets buys from the reserve
+Acquire Assets SHALL be allowed only on a city space without a monster. It SHALL test Influence, show the roll, then let the active investigator gain reserve cards whose printed values add up to at most the result; when no card is gained, 1 reserve card MAY be discarded. The reserve SHALL be refilled to 4 from the asset deck, the asset discard reshuffled in when the deck is empty. Until the cards are chosen no other action and no end of turn SHALL be accepted. A choice that breaks these rules SHALL be refused with the rule named and the reserve left as it was. Source: `inspired/manual_eng.pdf` p.3 "Acquire Assets"; `inspired/EH_reference.pdf` p.9 (Приобретение активов), p.10 (Резерв). **Deviation**: the Bank Loan and Debt are not modelled.
+
+#### Scenario: Influence tested
+- **WHEN** Charlie Kane on San Francisco with no monster present acquires assets
+- **THEN** the Influence dice are shown with the result, and the reserve waits for his choice
+
+#### Scenario: Cards gained
+- **WHEN** the result is 3 and Charlie Kane takes a value 1 card and a value 2 card from the reserve
+- **THEN** both cards are among his possessions, the reserve holds 4 cards again, and Acquire Assets is spent for the phase
+
+#### Scenario: Too expensive
+- **WHEN** the result is 2 and Charlie Kane takes a value 3 card
+- **THEN** the choice is refused because the total value exceeds the result, and the reserve is unchanged
+
+#### Scenario: Nothing gained
+- **WHEN** the result is 0 and Charlie Kane discards 1 reserve card
+- **THEN** that card is on the asset discard, the reserve holds 4 cards again, and Acquire Assets is spent
+
+#### Scenario: Discard only when empty-handed
+- **WHEN** Charlie Kane takes a value 1 card and discards another
+- **THEN** the choice is refused because a card may be discarded only when none is gained
+
+#### Scenario: Not a city
+- **WHEN** an investigator on space 2 acquires assets
+- **THEN** the action is refused because Acquire Assets needs a city space
+
+#### Scenario: Monster present
+- **WHEN** an investigator on a city with a monster acquires assets
+- **THEN** the action is refused naming the monster
+
+#### Scenario: Turn cannot end mid-choice
+- **WHEN** Charlie Kane ends his turn after rolling and before choosing
+- **THEN** the end of turn is refused until the choice is made
+
+#### Scenario: Deck runs out
+- **WHEN** the asset deck is empty, 2 cards sit on the asset discard, and 1 reserve card is gained
+- **THEN** the discard is shuffled into the deck and the reserve is refilled from it
