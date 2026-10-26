@@ -82,7 +82,7 @@ Prepare for Travel SHALL give the active investigator 1 train or ship ticket, on
 - **THEN** he holds 1 train ticket and 1 ship ticket
 
 ### Requirement: Trade exchanges possessions on a shared space
-Trade SHALL let the active investigator and another investigator on the same space exchange any of their possessions, clue tokens and travel tickets in both directions in one action. Items not held by the giver, or a partner on another space, SHALL be refused.
+Trade SHALL let the active investigator and another investigator on the same space exchange any of their possessions, clue tokens and travel tickets in both directions in one action. Items not held by the giver, conditions, or a partner on another space, SHALL be refused.
 
 #### Scenario: Cards and clues
 - **WHEN** Charlie Kane, on the same space as Jacqueline Fine, trades Personal Assistant for 1 clue
@@ -95,6 +95,10 @@ Trade SHALL let the active investigator and another investigator on the same spa
 #### Scenario: Not owned
 - **WHEN** an investigator gives a card they do not hold
 - **THEN** the trade is refused naming the card
+
+#### Scenario: Condition refused
+- **WHEN** an investigator gives a condition card they hold
+- **THEN** the trade is refused because conditions are not possessions
 
 ### Requirement: The turn is shown beside the board
 While a game is in progress the players SHALL see the round, the phase, the active investigator, the actions left and each investigator's tickets, and the action controls SHALL explain a refusal in the rule's words. A travel route SHALL be previewed on the table before it is confirmed.
