@@ -1,6 +1,8 @@
 import { useState } from "react";
 import type { Board, Deck, GameSet } from "../content/types";
-import { changeHealth, changeSanity, closeGate, delay, discardCard, gainCard, gainClue, moveInvestigator, spendClue } from "../engine/effects";
+import { changeHealth, changeSanity, closeGate, delay, discardCard, discardMonster, gainCard, gainClue, moveInvestigator, moveMonster, moveMonsterToward, spendClue } from "../engine/effects";
+import { monsterKey } from "../engine/encounter";
+import { spaceName } from "../engine/spawn";
 import type { GameState } from "../engine/types";
 import type { Act } from "./Turn";
 
@@ -21,10 +23,12 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
   const [deck, setDeck] = useState<Deck>("asset");
   const [cardName, setCardName] = useState("");
   const [space, setSpace] = useState(board.spaces[0]!.id);
+  const [monster, setMonster] = useState("");
   const content = { board, set };
   const me = state.investigators.find((i) => i.id === id) ?? state.investigators[0]!;
   const name = (x: string) => set.investigators.find((i) => i.id === x)?.name ?? x;
   const cardTitle = (x: string) => set.cards.find((c) => c.id === x)?.name ?? x;
+  const chosen = state.monsters.find((m) => monsterKey(m) === monster) ?? state.monsters[0];
   const names = [...new Set(set.cards.filter((c) => c.deck === deck).map((c) => c.name))].sort();
   const pickDeck = (next: Deck) => {
     setDeck(next);
@@ -88,6 +92,29 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
           Move
         </button>
       </p>
+      {chosen && (
+        <p>
+          <label>
+            Monster{" "}
+            <select value={monsterKey(chosen)} onChange={(e) => setMonster(e.target.value)}>
+              {state.monsters.map((m) => (
+                <option key={monsterKey(m)} value={monsterKey(m)}>
+                  {set.monsters.find((x) => x.id === m.id)?.name ?? m.id} on {spaceName(content, m.space)}
+                </option>
+              ))}
+            </select>
+          </label>{" "}
+          <button type="button" onClick={() => onAct((s) => moveMonster(s, content, chosen, space))}>
+            Move to {spaceName(content, space)}
+          </button>
+          <button type="button" onClick={() => onAct((s) => moveMonsterToward(s, content, chosen))}>
+            Toward nearest investigator
+          </button>
+          <button type="button" onClick={() => onAct((s) => discardMonster(s, content, chosen))}>
+            Discard
+          </button>
+        </p>
+      )}
       <p>
         <label>
           Deck{" "}

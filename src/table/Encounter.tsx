@@ -82,7 +82,7 @@ export function Encounter({ board, set, state, phase, error, onAct }: EncounterP
         {error}
       </p>
       <p>
-        <small>Card text and token text are left to the players; defeated investigators are not replaced; pawn moves, Delayed and Detained are applied by the players.</small>
+        <small>Card text and token text are left to the players; defeated investigators are not replaced; Detained is applied by the players.</small>
       </p>
     </section>
   );

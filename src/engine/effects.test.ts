@@ -4,12 +4,12 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn } from "./actions";
-import { changeHealth, changeSanity, closeGate, delay, discardCard, gainCard, gainClue, moveInvestigator, spendClue } from "./effects";
+import { changeHealth, changeSanity, closeGate, delay, discardCard, discardMonster, gainCard, gainClue, moveInvestigator, moveMonster, moveMonsterToward, spendClue } from "./effects";
 import { finishEncounter } from "./encounter";
 import { resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
 import { note } from "./spawn";
-import type { GameState, InvestigatorState } from "./types";
+import type { GameState, InvestigatorState, MonsterOnBoard } from "./types";
 
 const root = join(import.meta.dirname, "../..");
 const board: Board = JSON.parse(readFileSync(join(root, "content/board/board.json"), "utf8"));
@@ -25,6 +25,15 @@ const patch = (s: GameState, id: string, fields: Partial<InvestigatorState>): Ga
 const encounters = () => endTurn(endTurn(game()));
 const log = (s: GameState) => (s.phase.name === "encounter" || s.phase.name === "mythos" ? (s.phase.log ?? []).join("\n") : "");
 const cardName = (id: string) => set.cards.find((c) => c.id === id)?.name;
+const byakhee = { id: "eh01/monster/byakhee", instance: 0 };
+const cthulhu = { id: "eh01/monster/cthulhu", instance: 0 };
+/** The Encounter phase with one monster standing on `space`, taken out of the cup. */
+const withMonster = (monster: { id: string; instance: number }, space: string): GameState => {
+  const s = encounters();
+  const token: MonsterOnBoard = { ...monster, space, health: 0 };
+  return { ...s, monsters: [...s.monsters, token], monsterCup: s.monsterCup.filter((m) => m.id !== monster.id) };
+};
+const on = (s: GameState, id: string) => s.monsters.filter((m) => m.id === id).map((m) => m.space);
 
 describe("card text is applied in the Encounter and Mythos phases", () => {
   it("logs in the Encounter phase", () => {
@@ -176,5 +185,45 @@ describe("cards are gained and discarded", () => {
   });
   it("refuses a card not held", () => {
     expect(() => discardCard(encounters(), content, leo, "eh01/asset/nope")).toThrow(/does not hold/);
+  });
+});
+
+describe("a monster is moved by card text", () => {
+  it("moves to a named space", () => {
+    const s = moveMonster(withMonster(byakhee, "london"), content, byakhee, "arkham");
+    expect(on(s, byakhee.id)).toEqual(["arkham"]);
+    expect(log(s)).toMatch(/the Byakhee moves to Arkham/);
+  });
+  it("moves one space toward the nearest investigator", () => {
+    const s = moveMonsterToward(patch(withMonster(byakhee, "arkham"), leo, { space: "london" }), content, byakhee);
+    expect(on(s, byakhee.id)).toEqual(["london"]);
+    expect(log(s)).toMatch(/the Byakhee moves to London/);
+  });
+  it("stays when already with an investigator", () => {
+    const before = patch(withMonster(byakhee, "london"), leo, { space: "london" });
+    const s = moveMonsterToward(before, content, byakhee);
+    expect(s.monsters).toEqual(before.monsters);
+    expect(log(s)).toMatch(/the Byakhee is already with Leo Anderson/);
+  });
+  it("refuses a monster not on the board", () => {
+    expect(() => moveMonster(encounters(), content, { id: "eh01/monster/byakhee", instance: 9 }, "arkham")).toThrow(/no Byakhee on the board/);
+  });
+  it("refuses an unknown space", () => {
+    expect(() => moveMonster(withMonster(byakhee, "london"), content, byakhee, "atlantis")).toThrow(/no space atlantis/);
+  });
+});
+
+describe("a monster is discarded by card text", () => {
+  it("returns a non-epic monster to the cup", () => {
+    const s = discardMonster(withMonster(byakhee, "london"), content, byakhee);
+    expect(on(s, byakhee.id)).toEqual([]);
+    expect(s.monsterCup).toContainEqual(byakhee);
+    expect(log(s)).toMatch(/the Byakhee is discarded and returns to the cup/);
+  });
+  it("removes an epic monster from the game", () => {
+    const s = discardMonster(withMonster(cthulhu, "arkham"), content, cthulhu);
+    expect(on(s, cthulhu.id)).toEqual([]);
+    expect(s.monsterCup).not.toContainEqual(cthulhu);
+    expect(log(s)).toMatch(/the Cthulhu is discarded and leaves the game/);
   });
 });

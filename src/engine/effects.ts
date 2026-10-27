@@ -1,18 +1,24 @@
+import { distance, neighbors } from "../content/board";
 import type { Deck } from "../content/types";
 import { defeat } from "./encounter";
 import { reshuffle } from "./rng";
 import type { Content } from "./setup";
 import { note, spaceName } from "./spawn";
-import type { GameState, InvestigatorState } from "./types";
+import type { GameState, InvestigatorState, MonsterInstance, MonsterOnBoard } from "./types";
 
 /** Card text applied by the players (manual_eng.pdf p.3–4): health, sanity, clues, gates and cards. The text itself stays with the players. */
 
 const DOUBLE_SIDED: Deck[] = ["spell", "condition", "unique-asset"];
 
-/** The investigator an effect may touch: standing, in the Encounter phase or the resolved Mythos phase. */
-function subject(state: GameState, id: string): InvestigatorState {
+/** Card text is applied in the Encounter phase or the resolved Mythos phase. */
+function textPhase(state: GameState): void {
   if (state.phase.name !== "encounter" && state.phase.name !== "mythos") throw new Error("card text is applied in the Encounter and Mythos phases");
   if (state.phase.name === "mythos" && !state.phase.log) throw new Error("the mythos card is resolved first");
+}
+
+/** The investigator an effect may touch: standing. */
+function subject(state: GameState, id: string): InvestigatorState {
+  textPhase(state);
   const me = state.investigators.find((i) => i.id === id);
   if (!me) throw new Error(`no investigator ${id}`);
   if (me.defeated) throw new Error(`${id} is defeated and cannot be affected`);
@@ -97,4 +103,40 @@ export function discardCard(state: GameState, content: Content, id: string, card
     s = { ...s, decks: { ...s.decks, [card.deck]: items }, rolls };
   }
   return note(s, `${name(content, id)} discards ${card.name}`);
+}
+
+/** The token on the board, with its sheet name. */
+function monsterOn(state: GameState, { set }: Content, monster: MonsterInstance): { token: MonsterOnBoard; label: string; epic: boolean } {
+  textPhase(state);
+  const sheet = set.monsters.find((m) => m.id === monster.id);
+  const token = state.monsters.find((m) => m.id === monster.id && m.instance === monster.instance);
+  if (!token) throw new Error(`no ${sheet?.name ?? monster.id} on the board`);
+  return { token, label: `the ${sheet?.name ?? monster.id}`, epic: sheet?.epic ?? false };
+}
+
+/** Card text moves the token anywhere; lost health stays with it. Whether an epic monster may move is the players' call. */
+export function moveMonster(state: GameState, content: Content, monster: MonsterInstance, space: string): GameState {
+  const { token, label } = monsterOn(state, content, monster);
+  if (!content.board.spaces.some((s) => s.id === space)) throw new Error(`no space ${space} on the board`);
+  return note({ ...state, monsters: state.monsters.map((m) => (m === token ? { ...m, space } : m)) }, `${label} moves to ${spaceName(content, space)}`);
+}
+
+/** 1 space along a shortest route to the nearest standing investigator (EH_reference p.2). Deviation: ties by seat order and board order, not the active investigator's choice. */
+export function moveMonsterToward(state: GameState, content: Content, monster: MonsterInstance): GameState {
+  const { token, label } = monsterOn(state, content, monster);
+  const standing = state.investigators.filter((i) => !i.defeated);
+  const nearest = standing.reduce((best, i) => (distance(content.board, token.space, i.space) < distance(content.board, token.space, best.space) ? i : best));
+  const far = distance(content.board, token.space, nearest.space);
+  if (far === 0) return note(state, `${label} is already with ${name(content, nearest.id)}`);
+  const step = neighbors(content.board, token.space).find((n) => distance(content.board, n, nearest.space) === far - 1)!;
+  return moveMonster(state, content, monster, step);
+}
+
+/** A non-epic token returns to the cup, appended as after combat; an epic token leaves the game (EH_reference p.11, p.13). */
+export function discardMonster(state: GameState, content: Content, monster: MonsterInstance): GameState {
+  const { token, label, epic } = monsterOn(state, content, monster);
+  const left = { ...state, monsters: state.monsters.filter((m) => m !== token) };
+  return epic
+    ? note(left, `${label} is discarded and leaves the game`)
+    : note({ ...left, monsterCup: [...left.monsterCup, { id: token.id, instance: token.instance }] }, `${label} is discarded and returns to the cup`);
 }
