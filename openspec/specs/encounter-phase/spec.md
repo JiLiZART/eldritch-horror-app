@@ -52,11 +52,15 @@ With no monster on the space the investigator SHALL draw exactly one card from a
 - **THEN** the expedition token lies on the space named by the new top expedition card
 
 ### Requirement: An investigator at 0 health or sanity is defeated
-When an investigator's health or sanity reaches 0 they SHALL be defeated at once: doom advances by 1, their turns are skipped for the rest of the game, and the lead token passes to the next seat when the defeated investigator held it. When every investigator is defeated the game SHALL be lost with the reason shown. The defeated investigator SHALL be shown as such beside the board. **Deviation**: the pawn stays where it fell and no replacement investigator is chosen; the players are told so.
+When an investigator's health or sanity reaches 0 they SHALL be defeated at once: doom advances by 1, their pawn moves to the nearest city space and lies there, their conditions are shuffled back into the condition deck, their turns are skipped for the rest of the game, and the lead token passes to the next seat when the defeated investigator held it. When every investigator is defeated the game SHALL be lost with the reason shown. The defeated investigator SHALL be shown as such beside the board and on the table. **Deviation**: among several nearest cities the first in board order is taken; no replacement investigator is chosen, and the players are told so.
 
 #### Scenario: Defeated by horror
 - **WHEN** Leo Anderson at 1 sanity loses 1 sanity in combat at doom 12
 - **THEN** he is defeated by sanity, doom is 11, and Lily Chen is encountering
+
+#### Scenario: Relocated
+- **WHEN** Leo Anderson on space 2 holding Cursed is defeated
+- **THEN** his pawn lies on San Francisco and Cursed is back in the condition deck
 
 #### Scenario: Lead passes
 - **WHEN** the lead investigator is defeated
