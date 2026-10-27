@@ -191,21 +191,30 @@ describe("an investigator at 0 health or sanity is defeated", () => {
     expect(next.doom).toBe(11);
     expect(next.phase).toMatchObject({ name: "encounter", active: lily });
   });
+  it("still lets a delayed investigator encounter", () => {
+    expect(finishEncounter(patch(encounters(), lily, { delayed: true }), content).phase).toMatchObject({ name: "encounter", active: lily });
+  });
+  it("lies in the nearest city with its conditions back in the deck", () => {
+    const s = defeat(patch(encounters(), leo, { space: "space-2", conditions: ["eh01/condition/cursed-1"] }), content, leo, "health");
+    expect(who(s, leo).space).toBe("san-francisco");
+    expect(who(s, leo).conditions).toEqual([]);
+    expect(s.decks.condition).toContain("eh01/condition/cursed-1");
+  });
   it("passes the lead to the next seat", () => {
-    expect(defeat(encounters(), leo, "health").leadInvestigator).toBe(lily);
+    expect(defeat(encounters(), content, leo, "health").leadInvestigator).toBe(lily);
   });
   it("is skipped in the Action phase and the Encounter phase", () => {
-    const beaten = defeat(encounters(), leo, "health");
+    const beaten = defeat(encounters(), content, leo, "health");
     const round2 = nextRound(resolveMythos(finishEncounter(beaten, content), content));
     expect(round2.phase).toEqual({ name: "action", active: lily, taken: [] });
     expect(endTurn(rest(round2, set)).phase).toEqual({ name: "encounter", active: lily, log: [], fought: [] });
   });
   it("refuses a defeated investigator as the lead", () => {
-    const beaten = defeat(encounters(), leo, "health");
+    const beaten = defeat(encounters(), content, leo, "health");
     expect(() => nextRound(resolveMythos(finishEncounter(beaten, content), content), leo)).toThrow(/defeated/);
   });
   it("loses the game when every investigator is defeated", () => {
     const s = endTurn(game([leo]));
-    expect(defeat(s, leo, "health").phase).toEqual({ name: "lost", reason: expect.stringMatching(/every investigator is defeated/) });
+    expect(defeat(s, content, leo, "health").phase).toEqual({ name: "lost", reason: expect.stringMatching(/every investigator is defeated/) });
   });
 });

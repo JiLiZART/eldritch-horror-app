@@ -26,6 +26,7 @@ function notAcquiring(state: GameState): ActionPhase {
 /** Up to 2 different actions per investigator per phase. */
 function mayAct(state: GameState, action: ActionName): void {
   const { taken } = notAcquiring(state);
+  if (active(state).delayed) throw new Error("a delayed investigator cannot perform actions");
   if (taken.length >= 2) throw new Error("an investigator performs up to 2 actions per phase");
   if (taken.includes(action)) throw new Error("each action may be performed once per phase");
 }
@@ -40,10 +41,12 @@ function perform(state: GameState, action: ActionName, next: InvestigatorState):
   };
 }
 
-/** Passes to the next standing seat clockwise from the lead; once every seat has acted the Encounter phase begins. */
+/** Passes to the next standing seat clockwise from the lead; once every seat has acted the Encounter phase begins. A delayed investigator stands up instead (manual p.4). */
 export function endTurn(state: GameState): GameState {
-  const next = nextStanding(state, notAcquiring(state).active);
-  return next === undefined ? startEncounters(state) : { ...state, phase: { name: "action", active: next, taken: [] } };
+  const { active: me } = notAcquiring(state);
+  const stood: GameState = { ...state, investigators: state.investigators.map((i) => (i.id === me && i.delayed ? { ...i, delayed: undefined } : i)) };
+  const next = nextStanding(stood, me);
+  return next === undefined ? startEncounters(stood) : { ...stood, phase: { name: "action", active: next, taken: [] } };
 }
 
 /** Rest: 1 health and 1 sanity up to the sheet maximums; not on a space with a monster. */

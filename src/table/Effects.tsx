@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Board, Deck, GameSet } from "../content/types";
-import { changeHealth, changeSanity, closeGate, discardCard, gainCard, gainClue, spendClue } from "../engine/effects";
+import { changeHealth, changeSanity, closeGate, delay, discardCard, gainCard, gainClue, moveInvestigator, spendClue } from "../engine/effects";
 import type { GameState } from "../engine/types";
 import type { Act } from "./Turn";
 
@@ -20,6 +20,7 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
   const [id, setId] = useState(who);
   const [deck, setDeck] = useState<Deck>("asset");
   const [cardName, setCardName] = useState("");
+  const [space, setSpace] = useState(board.spaces[0]!.id);
   const content = { board, set };
   const me = state.investigators.find((i) => i.id === id) ?? state.investigators[0]!;
   const name = (x: string) => set.investigators.find((i) => i.id === x)?.name ?? x;
@@ -63,11 +64,29 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
         <button type="button" onClick={() => onAct((s) => spendClue(s, content, me.id))}>
           Spend clue
         </button>
+        <button type="button" onClick={() => onAct((s) => delay(s, content, me.id))}>
+          Delay
+        </button>
         {state.gates.includes(me.space) && (
           <button type="button" onClick={() => onAct((s) => closeGate(s, content, me.id))}>
             Close gate
           </button>
         )}
+      </p>
+      <p>
+        <label>
+          Move to{" "}
+          <select value={space} onChange={(e) => setSpace(e.target.value)}>
+            {board.spaces.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name.en}
+              </option>
+            ))}
+          </select>
+        </label>{" "}
+        <button type="button" onClick={() => onAct((s) => moveInvestigator(s, content, me.id, space))}>
+          Move
+        </button>
       </p>
       <p>
         <label>

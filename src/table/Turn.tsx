@@ -36,7 +36,14 @@ export function Turn({ board, set, state, phase, error, route, onAct, onRoute }:
       <p>
         {name(me.id)} is active, {2 - phase.taken.length} actions left, tickets: {me.tickets.join(", ") || "none"}
       </p>
-      {route ? (
+      {me.delayed ? (
+        <div>
+          <p>{name(me.id)} is delayed: ending the turn stands the token up.</p>
+          <button type="button" onClick={() => onAct(endTurn)}>
+            End turn
+          </button>
+        </div>
+      ) : route ? (
         <div>
           <p>Route: {route.length ? route.map(spaceName).join(" → ") : "pick spaces on the table"}</p>
           <button type="button" disabled={route.length === 0} onClick={() => onAct((s) => travel(s, board, route))}>

@@ -13,6 +13,11 @@ export function rng(seed: number): Random {
   };
 }
 
+/** Shuffles with the game seed and roll counter, like a test, so a replay reshuffles the same way. */
+export function reshuffle<T>(state: { seed: number; rolls: number }, items: readonly T[]): { items: T[]; rolls: number } {
+  return { items: shuffle(items, rng(state.seed * 31 + state.rolls)), rolls: state.rolls + 1 };
+}
+
 /** Fisher–Yates on a copy. */
 export function shuffle<T>(items: readonly T[], random: Random): T[] {
   const out = [...items];

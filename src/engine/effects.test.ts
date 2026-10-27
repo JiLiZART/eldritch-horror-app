@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn } from "./actions";
-import { changeHealth, changeSanity, closeGate, discardCard, gainCard, gainClue, spendClue } from "./effects";
+import { changeHealth, changeSanity, closeGate, delay, discardCard, gainCard, gainClue, moveInvestigator, spendClue } from "./effects";
 import { finishEncounter } from "./encounter";
 import { resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
@@ -52,6 +52,12 @@ describe("health and sanity change by card text", () => {
   it("gains up to the sheet maximum", () => {
     expect(who(changeHealth(patch(encounters(), leo, { health: 5 }), content, leo, 2), leo).health).toBe(6);
   });
+  it("defeats at 0 in the Mythos phase too", () => {
+    const mythos = resolveMythos(finishEncounter(finishEncounter(encounters(), content), content), content);
+    const s = changeHealth(patch(mythos, leo, { health: 1 }), content, leo, -1);
+    expect(who(s, leo).defeated).toBe("health");
+    expect(log(s)).toMatch(/Leo Anderson is defeated and lies on Buenos Aires/);
+  });
   it("defeats at 0", () => {
     const s = changeSanity(patch(encounters(), lily, { sanity: 2 }), content, lily, -2);
     expect(who(s, lily).defeated).toBe("sanity");
@@ -83,6 +89,28 @@ describe("clues are gained and spent", () => {
   it("spends one and refuses with none", () => {
     expect(who(spendClue(patch(encounters(), leo, { clues: 1 }), content, leo), leo).clues).toBe(0);
     expect(() => spendClue(encounters(), content, leo)).toThrow(/holds no clue/);
+  });
+});
+
+describe("card text delays an investigator", () => {
+  it("marks the investigator delayed and logs it", () => {
+    const s = delay(encounters(), content, leo);
+    expect(who(s, leo).delayed).toBe(true);
+    expect(log(s)).toMatch(/Leo Anderson is delayed/);
+  });
+  it("refuses an already delayed investigator", () => {
+    expect(() => delay(delay(encounters(), content, leo), content, leo)).toThrow(/already delayed/);
+  });
+});
+
+describe("an investigator is moved by card text", () => {
+  it("moves to the named space", () => {
+    const s = moveInvestigator(encounters(), content, leo, "arkham");
+    expect(who(s, leo).space).toBe("arkham");
+    expect(log(s)).toMatch(/Leo Anderson moves to Arkham/);
+  });
+  it("refuses an unknown space, naming it", () => {
+    expect(() => moveInvestigator(encounters(), content, leo, "nope")).toThrow(/nope/);
   });
 });
 

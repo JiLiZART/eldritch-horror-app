@@ -1,6 +1,6 @@
 import type { Deck } from "../content/types";
 import { defeat } from "./encounter";
-import { rng, shuffle } from "./rng";
+import { reshuffle } from "./rng";
 import type { Content } from "./setup";
 import { note, spaceName } from "./spawn";
 import type { GameState, InvestigatorState } from "./types";
@@ -21,18 +21,30 @@ function subject(state: GameState, id: string): InvestigatorState {
 
 const replace = (state: GameState, me: InvestigatorState): GameState => ({ ...state, investigators: state.investigators.map((i) => (i.id === me.id ? me : i)) });
 const name = ({ set }: Content, id: string) => set.investigators.find((i) => i.id === id)?.name ?? id;
-/** Seeded like a test, so a replay reshuffles the same way. */
-const reshuffle = <T>(state: GameState, items: T[]) => ({ items: shuffle(items, rng(state.seed * 31 + state.rolls)), rolls: state.rolls + 1 });
 
 /** Gains stop at the sheet maximum; a loss to 0 defeats (manual p.4). Deviation: effects that prevent a loss are left to the players. */
 function change(state: GameState, content: Content, id: string, stat: "health" | "sanity", delta: number): GameState {
   const me = subject(state, id);
   const value = Math.min(content.set.investigators.find((i) => i.id === id)![stat], me[stat] + delta);
   const s = note(replace(state, { ...me, [stat]: value }), `${name(content, id)} ${delta < 0 ? "loses" : "gains"} ${Math.abs(delta)} ${stat}`);
-  return value <= 0 ? defeat(s, id, stat) : s;
+  return value <= 0 ? defeat(s, content, id, stat) : s;
 }
 export const changeHealth = (state: GameState, content: Content, id: string, delta: number) => change(state, content, id, "health", delta);
 export const changeSanity = (state: GameState, content: Content, id: string, delta: number) => change(state, content, id, "sanity", delta);
+
+/** Card text moves the pawn anywhere, with no ticket or action (manual p.3–4); which space is "nearest" or "random" is the players' call. */
+export function moveInvestigator(state: GameState, content: Content, id: string, space: string): GameState {
+  const me = subject(state, id);
+  if (!content.board.spaces.some((s) => s.id === space)) throw new Error(`no space ${space} on the board`);
+  return note(replace(state, { ...me, space }), `${name(content, id)} moves to ${spaceName(content, space)}`);
+}
+
+/** Lays the token on its side (manual p.4 "Delayed"). Deviation: text that ends the delay early is left to the players. */
+export function delay(state: GameState, content: Content, id: string): GameState {
+  const me = subject(state, id);
+  if (me.delayed) throw new Error(`${name(content, id)} is already delayed`);
+  return note(replace(state, { ...me, delayed: true }), `${name(content, id)} is delayed`);
+}
 
 /** The clue token on the space, else the top of the pool with the discard reshuffled in first (manual p.4). */
 export function gainClue(state: GameState, content: Content, id: string): GameState {

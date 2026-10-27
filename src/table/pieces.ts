@@ -32,7 +32,7 @@ export function piecesOnSpace(state: GameState | undefined, set: GameSet): Map<s
   }
   for (const i of state.investigators) {
     const investigator = byId(set.investigators, i.id);
-    add(i.space, { kind: "pawn", id: i.id, image: investigator.pawn, label: investigator.name });
+    add(i.space, { kind: "pawn", id: i.id, image: investigator.pawn, label: i.defeated ? `${investigator.name} (defeated)` : i.delayed ? `${investigator.name} (delayed)` : investigator.name });
   }
   return out;
 }

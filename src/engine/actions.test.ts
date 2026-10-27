@@ -33,6 +33,17 @@ const patch = (s: GameState, id: string, fields: Partial<InvestigatorState>): Ga
   investigators: s.investigators.map((i) => (i.id === id ? { ...i, ...fields } : i)),
 });
 
+describe("a delayed investigator stands up instead of acting", () => {
+  it("refuses every action", () => {
+    expect(() => rest(patch(game(), leo, { delayed: true }), set)).toThrow(/delayed investigator cannot perform actions/);
+  });
+  it("stands up when the turn ends", () => {
+    const s = endTurn(patch(game(), leo, { delayed: true }));
+    expect(who(s, leo).delayed).toBeUndefined();
+    expect(s.phase).toEqual({ name: "action", active: lily, taken: [] });
+  });
+});
+
 describe("investigators act in seat order", () => {
   it("passes the turn to the next seat with 2 actions left", () => {
     const s = endTurn(rest(game(), set));

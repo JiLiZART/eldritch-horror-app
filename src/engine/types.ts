@@ -38,6 +38,8 @@ export interface InvestigatorState {
   tickets: Ticket[];
   /** Set at 0 health or sanity; the investigator's turns are skipped from then on. */
   defeated?: "health" | "sanity";
+  /** Token on its side: no actions until the next Action turn stands it up. */
+  delayed?: true;
 }
 
 export type ActionName = "travel" | "rest" | "prepare-for-travel" | "trade" | "acquire-assets";

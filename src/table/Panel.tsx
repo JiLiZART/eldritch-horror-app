@@ -180,6 +180,7 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
                 {i.id === state.leadInvestigator && <span title="Lead investigator">★ </span>}
                 {set.investigators.find((x) => x.id === i.id)?.name ?? i.id}
                 {i.defeated && ` (defeated by ${i.defeated})`}
+                {i.delayed && " (delayed)"}
               </td>
               <td>{spaceName(i.space)}</td>
               <td>{i.health}</td>

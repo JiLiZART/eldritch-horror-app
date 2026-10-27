@@ -1,7 +1,10 @@
+import { distance } from "../content/board";
 import type { MonsterCombat } from "../content/types";
 import { drawMythos } from "./mythos";
 import type { Content } from "./setup";
+import { reshuffle } from "./rng";
 import { expeditionSpace } from "./setup";
+import { note, spaceName } from "./spawn";
 import { test } from "./test";
 import type { EncounterPhase, GameState, InvestigatorState, MonsterInstance, MonsterOnBoard } from "./types";
 
@@ -85,7 +88,7 @@ export function fight(state: GameState, content: Content, monster: MonsterInstan
     hurt = { ...hurt, sanity: hurt.sanity - lost };
     s = log(s, `Will test${signed(combat.will.modifier)}: dice ${dice.join(" ")}, ${plural(successes)} against horror ${combat.will.horror}: loses ${lost} sanity`);
     s = replaceInvestigator(s, hurt);
-    if (hurt.sanity <= 0) return defeat(log(s, "the combat ends"), me.id, "sanity");
+    if (hurt.sanity <= 0) return defeat(log(s, "the combat ends"), content, me.id, "sanity");
   } else s = log(s, "the token prints no Will test");
   let wounded: MonsterOnBoard = target;
   if (combat.strength) {
@@ -101,7 +104,7 @@ export function fight(state: GameState, content: Content, monster: MonsterInstan
   } else {
     s = log({ ...s, monsters: s.monsters.map((m) => (m === target ? wounded : m)) }, `the ${name} stays with ${wounded.health} health lost${combat.toughness === undefined ? " (toughness printed as a formula: left to the players)" : ""}`);
   }
-  return hurt.health <= 0 ? defeat(s, me.id, "health") : s;
+  return hurt.health <= 0 ? defeat(s, content, me.id, "health") : s;
 }
 
 const signed = (n: number) => (n > 0 ? ` +${n}` : n < 0 ? ` ${n}` : "");
@@ -152,13 +155,18 @@ function advance(state: GameState, after: string): GameState {
 }
 
 /**
- * Defeat at 0 health or sanity (manual p.4): doom advances by 1, the seat is skipped from now on, the lead passes when needed;
- * with nobody standing the game is lost. Deviation: the pawn stays where it fell and nobody replaces the investigator.
+ * Defeat at 0 health or sanity (manual p.4): doom advances by 1, the pawn lies in the nearest city, conditions return to their deck,
+ * the seat is skipped from now on, the lead passes when needed; with nobody standing the game is lost.
+ * Deviation: the first of several nearest cities in board order is taken, and nobody replaces the investigator.
  */
-export function defeat(state: GameState, investigator: string, cause: "health" | "sanity"): GameState {
+export function defeat(state: GameState, content: Content, investigator: string, cause: "health" | "sanity"): GameState {
   const me = state.investigators.find((i) => i.id === investigator);
   if (!me) throw new Error(`no investigator ${investigator}`);
-  let s = replaceInvestigator({ ...state, doom: state.doom - 1 }, { ...me, defeated: cause });
+  const cities = content.board.spaces.filter((sp) => sp.kind === "city").map((sp) => sp.id);
+  const space = cities.reduce((best, id) => (distance(content.board, me.space, id) < distance(content.board, me.space, best) ? id : best));
+  const { items: condition, rolls } = reshuffle(state, [...state.decks.condition, ...me.conditions]);
+  const fallen = { ...me, defeated: cause, space, conditions: [] };
+  let s = note(replaceInvestigator({ ...state, doom: state.doom - 1, rolls, decks: { ...state.decks, condition } }, fallen), `${investigatorName(content, investigator)} is defeated and lies on ${spaceName(content, space)}`);
   if (s.leadInvestigator === investigator) s = { ...s, leadInvestigator: nextStanding(s, investigator) ?? investigator };
   if (!s.investigators.some((i) => !i.defeated)) return { ...s, phase: { name: "lost", reason: `every investigator is defeated (doom ${s.doom})` } };
   // shortcut: defeat is only reached from combat today; a defeat in the Action phase would leave the active seat on a fallen investigator, upgrade when encounter text is applied by hand.
