@@ -33,7 +33,7 @@ export interface TableProps {
   /** Changes each time the player asks for the whole table; the view glides out to it (fit-view D1). */
   fit?: number;
   /** A card named by its place on the table, brought up as a click on it would (panel-card-focus D1). */
-  focus?: { place: "reserve" | "mystery" | "mythos" | "sheet" | "held"; index: number; seat?: number; key: number };
+  focus?: { place: "reserve" | "mystery" | "mythos" | "sheet" | "held" | "encounter"; index: number; seat?: number; key: number };
   enabled: Set<string>;
   selected: string | undefined;
   /** Spaces of the travel route being picked, highlighted in order. */
@@ -83,6 +83,7 @@ function Scene({ board, labels, strings, pieces, tracks, tableau, sheets, fit, f
       mythos: () => [mythosRow(asked.index), TABLEAU_ROWS[2]!],
       sheet: () => [sheetPosition(board, asked.index), SHEET],
       held: () => [heldPosition(board, asked.seat ?? 0, asked.index), HELD],
+      encounter: () => [encounterPosition(board, asked.seat ?? 0), HELD],
     };
     const [position, size] = at[asked.place]();
     onFocus(position, size);

@@ -28,7 +28,7 @@ interface PanelProps {
   children?: ReactNode;
 }
 
-export type FocusCard = (place: "reserve" | "mystery" | "mythos" | "sheet" | "held", index: number, seat?: number) => void;
+export type FocusCard = (place: "reserve" | "mystery" | "mythos" | "sheet" | "held" | "encounter", index: number, seat?: number) => void;
 
 /** Board set names beyond the core set, as the content names them; the core set's name is a panel string (deck-names-language D1). */
 const SET_NAMES: Record<string, string> = Object.fromEntries(BOARD_SETS.map((s) => [s.id, s.name]));

@@ -6,6 +6,7 @@ import type { EncounterPhase, GameState } from "../engine/types";
 import { Dice } from "./Dice";
 import { Effects } from "./Effects";
 import { useSpaceName, useT } from "./lang";
+import type { FocusCard } from "./Panel";
 import type { Act } from "./Turn";
 
 interface EncounterProps {
@@ -15,10 +16,12 @@ interface EncounterProps {
   phase: EncounterPhase;
   error: string | undefined;
   onAct: Act;
+  /** Brings the drawn card beside the sheet up on the table (encounter-card-focus D2). */
+  onFocusCard: FocusCard;
 }
 
 /** The Encounter phase beside the board (design D5): the monsters to fight, the decks the space allows, the drawn card. Rules stay in the engine. */
-export function Encounter({ board, set, state, phase, error, onAct }: EncounterProps) {
+export function Encounter({ board, set, state, phase, error, onAct, onFocusCard }: EncounterProps) {
   const content = { board, set };
   const t = useT();
   const spaceName = useSpaceName();
@@ -110,7 +113,9 @@ export function Encounter({ board, set, state, phase, error, onAct }: EncounterP
       )}
       {card && (
         <p className="cards">
-          <img className="mythos-card" src={`/${card.images.front}`} alt={`${phase.card?.deck} encounter ${card.name}`} />
+          <button type="button" className="card-button" onClick={() => onFocusCard("encounter", 0, state.investigators.filter((x) => !x.removed).findIndex((x) => x.id === phase.active))}>
+            <img className="mythos-card" src={`/${card.images.front}`} alt={`${phase.card?.deck} encounter ${card.name}`} />
+          </button>
         </p>
       )}
       <ol>

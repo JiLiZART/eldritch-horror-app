@@ -8,7 +8,7 @@ import type { GameState, SetupOptions } from "../engine/types";
 import { Encounter } from "./Encounter";
 import { Mythos } from "./Mythos";
 import { NewGame } from "./NewGame";
-import { Panel } from "./Panel";
+import { type FocusCard, Panel } from "./Panel";
 import { LangProvider, translate, useT } from "./lang";
 import { piecesOnSpace } from "./pieces";
 import { fileName, gameKey, loadGame, loadSlots, newSlotId, parseGame, removeGame, renameGame, saveGame, slotName } from "./saved";
@@ -129,6 +129,7 @@ export function App() {
   const [fit, setFit] = useState(0);
   /** The card the panel asked to bring up on the table (panel-card-focus D1). */
   const [cardFocus, setCardFocus] = useState<TableProps["focus"]>();
+  const focusCard: FocusCard = (place, index, seat) => setCardFocus((prev) => ({ place, index, ...(seat === undefined ? {} : { seat }), key: (prev?.key ?? 0) + 1 }));
   const spaces = useMemo(() => activeGraph(board, enabled).spaces, [board, enabled]);
   const t = useMemo(() => (key: string, vars?: Record<string, string | number>) => translate(panel[lang], key, vars), [panel, lang]);
   const pieces = useMemo(() => piecesOnSpace(game.state, board, set, t), [game.state, board, set, t]);
@@ -217,7 +218,7 @@ export function App() {
       <main className="table">
         <Table board={board} labels={labels} strings={strings[lang]} pieces={pieces} tracks={game.state && { doom: game.state.doom, omen: game.state.omen, eldritch: [...game.state.eldritchOnOmen], reserve: game.state.reserve.map((id) => face(id, true)).filter(known) }} tableau={tableau} sheets={sheets} fit={fit} focus={cardFocus} enabled={enabled} selected={selectedSpace?.id} route={route} onSelect={select} reducedMotion={reducedMotion} />
       </main>
-      {!panelHidden && <Panel board={board} set={set} lang={lang} onLang={chooseLang} state={game.state} pieces={pieces} spaces={spaces} enabled={enabled} onToggle={toggle} selected={selectedSpace} onSelect={select} onHidePanel={() => showPanel(false)} onFocusCard={(place, index, seat) => setCardFocus((prev) => ({ place, index, ...(seat === undefined ? {} : { seat }), key: (prev?.key ?? 0) + 1 }))}>
+      {!panelHidden && <Panel board={board} set={set} lang={lang} onLang={chooseLang} state={game.state} pieces={pieces} spaces={spaces} enabled={enabled} onToggle={toggle} selected={selectedSpace} onSelect={select} onHidePanel={() => showPanel(false)} onFocusCard={focusCard}>
         <NewGame
           set={set}
           running={game.state !== undefined}
@@ -263,7 +264,7 @@ export function App() {
           }}
         />
         {game.state?.phase.name === "action" && <Turn board={board} set={set} state={game.state} phase={game.state.phase} error={game.error} route={route} onAct={act} onRoute={setRoute} />}
-        {game.state?.phase.name === "encounter" && <Encounter board={board} set={set} state={game.state} phase={game.state.phase} error={game.error} onAct={act} />}
+        {game.state?.phase.name === "encounter" && <Encounter board={board} set={set} state={game.state} phase={game.state.phase} error={game.error} onAct={act} onFocusCard={focusCard} />}
         {game.state?.phase.name === "mythos" && <Mythos board={board} set={set} state={game.state} phase={game.state.phase} error={game.error} onAct={act} />}
         {game.state?.phase.name === "won" && (
           <section className="turn">
