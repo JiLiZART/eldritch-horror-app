@@ -14,7 +14,7 @@ const state = setupGame(
   { board, set },
   { ancientOne: "eh01/ancient-one/cthulhu", investigators: [inv("akachi-onyele"), inv("charlie-kane"), inv("leo-anderson"), inv("lily-chen")], seed: 7 },
 );
-const ORDER = ["gate", "expedition", "clue", "monster", "pawn"];
+const ORDER = ["gate", "expedition", "clue", "rumor", "eldritch", "monster", "pawn", "lead"];
 
 describe("piecesOnSpace", () => {
   const pieces = piecesOnSpace(state, set);
@@ -27,7 +27,7 @@ describe("piecesOnSpace", () => {
     expect(ofKind("clue")).toHaveLength(2);
     expect(ofKind("expedition")).toHaveLength(1);
     expect(ofKind("pawn")).toHaveLength(4);
-    expect(all).toHaveLength(9);
+    expect(all).toHaveLength(10);
   });
   it("uses the gate token of the city and the clue back", () => {
     const [space] = state.gates;
@@ -49,6 +49,13 @@ describe("piecesOnSpace", () => {
     expect(pawn({ ...state, investigators: state.investigators.map((i) => (i.id === leo ? { ...i, delayed: true as const } : i)) }).lying).toBe(true);
     expect(pawn({ ...state, investigators: state.investigators.map((i) => (i.id === leo ? { ...i, defeated: "sanity" as const } : i)) }).lying).toBe(true);
   });
+  it("stands the lead token beside the lead's pawn and moves it with the lead", () => {
+    const lead = (s: typeof state) => [...piecesOnSpace(s, set).entries()].find(([, ps]) => ps.some((p) => p.kind === "lead"))?.[0];
+    expect(lead(state)).toBe(state.investigators[0]!.space);
+    expect(piecesOnSpace(state, set).get(state.investigators[0]!.space)?.at(-1)).toEqual({ kind: "lead", id: "lead", image: "cards/eh01/tokens/lead-investigator.webp", label: "Lead investigator" });
+    const lily = inv("lily-chen");
+    expect(lead({ ...state, leadInvestigator: lily })).toBe(state.investigators.find((i) => i.id === lily)!.space);
+  });
   it("draws no pawn for a devoured investigator", () => {
     const devoured = { ...state, investigators: state.investigators.map((i) => (i.id === inv("leo-anderson") ? { ...i, defeated: "devoured" as const } : i)) };
     const all = [...piecesOnSpace(devoured, set).values()].flat();
@@ -60,7 +67,8 @@ describe("piecesOnSpace", () => {
   });
   it("shows a rumor token and each eldritch token on the space", () => {
     const london = piecesOnSpace({ ...state, rumors: ["london"], eldritch: { london: 2 } }, set).get("london") ?? [];
-    expect(london.filter((p) => p.kind === "rumor")).toEqual([{ kind: "rumor", id: "rumor:london#0", image: "icons/rumor-token.png", label: "Rumor" }]);
+    expect(london.filter((p) => p.kind === "rumor")).toEqual([{ kind: "rumor", id: "rumor:london#0", image: "cards/eh01/tokens/rumor-token.webp", label: "Rumor" }]);
+    expect(london.filter((p) => p.kind === "eldritch").map((p) => p.image)).toEqual(["cards/eh01/tokens/eldritch-token.webp", "cards/eh01/tokens/eldritch-token.webp"]);
     expect(london.filter((p) => p.kind === "eldritch").map((p) => p.label)).toEqual(["Eldritch token", "Eldritch token"]);
   });
   it("orders each space gate, expedition, clue, monsters, pawns", () => {

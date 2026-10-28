@@ -146,6 +146,7 @@ const SIZE: Record<PieceKind, [width: number, height: number]> = {
   eldritch: [0.22, 0.22],
   monster: [0.3, 0.3],
   pawn: [0.26, 0.26 * (488 / 339)],
+  lead: [0.22, 0.22],
 };
 
 function Pieces({ pieces, at }: { pieces: Map<string, Piece[]>; at: Map<string, [number, number]> }) {
