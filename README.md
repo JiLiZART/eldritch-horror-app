@@ -116,6 +116,7 @@ manager). The content extraction scripts also need `pdfimages` from poppler
 pnpm dev                 # the table with hot reload
 pnpm typecheck           # tsc
 pnpm test                # vitest, including a seeded random-play test of whole games
+pnpm test:fuzz           # the random-play test over sixty seeds; FUZZ_SEEDS=<n> picks any count
 pnpm build               # tsc, then vite build
 pnpm content:validate    # validate every file under content/
 pnpm content:extract-icons

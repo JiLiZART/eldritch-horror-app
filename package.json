@@ -8,6 +8,7 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests",
+    "test:fuzz": "FUZZ_SEEDS=60 vitest run src/engine/fuzz.test.ts",
     "content:validate": "tsx scripts/validate-content.ts",
     "content:extract-icons": "tsx scripts/extract-icons.ts",
     "content:copy-core": "tsx scripts/copy-core-assets.ts",

@@ -176,8 +176,11 @@ function candidates(s: GameState, pick: <T>(items: T[]) => T | undefined): Weigh
   return [];
 }
 
+/** Seeds played: six by default, more with `FUZZ_SEEDS=<n>` (fuzz-seeds D1). */
+const SEEDS = Number(process.env.FUZZ_SEEDS) || 6;
+
 describe("random play keeps the engine's invariants", () => {
-  for (const seed of [1, 2, 3, 4, 5, 6]) {
+  for (const seed of Array.from({ length: SEEDS }, (_, i) => i + 1)) {
     it(`seed ${seed}`, () => {
       const random = rng(seed * 7919);
       const pick = <T>(items: T[]): T | undefined => items[Math.floor(random() * items.length)];
