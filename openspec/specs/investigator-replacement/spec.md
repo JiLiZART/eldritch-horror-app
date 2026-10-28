@@ -6,7 +6,7 @@ Model what the rules do with a defeated investigator's player: at the end of the
 ## Requirements
 
 ### Requirement: A defeated investigator is replaced at the end of the Mythos phase
-After the mythos card is resolved a defeated or devoured investigator not yet replaced SHALL be replaced by any investigator of the set not yet in the game: the newcomer starts on their printed space with full health and sanity, their starting clues from the pool and their starting cards from the decks, and takes the fallen seat in turn order; a defeated token stays where it lies with its possessions, a devoured one is gone. Replacing an investigator who is standing, already replaced or not in the game, or with an investigator already in the game, SHALL be refused naming the reason. After the awakening the replacement SHALL be refused because the defeated are eliminated. The log SHALL say who takes whose seat.
+After the mythos card is resolved a defeated or devoured investigator not yet replaced SHALL be replaced by any investigator of the set not yet in the game: the newcomer starts on their printed space with full health and sanity, their starting clues from the pool (only as many as the pool still holds, since clue tokens are a limited supply) and their starting cards from the decks, and takes the fallen seat in turn order; a defeated token stays where it lies with its possessions, a devoured one is gone. Replacing an investigator who is standing, already replaced or not in the game, or with an investigator already in the game, SHALL be refused naming the reason. After the awakening the replacement SHALL be refused because the defeated are eliminated. The log SHALL say who takes whose seat.
 
 #### Scenario: Replaced
 - **WHEN** Leo Anderson lies defeated and Charlie Kane replaces him after the mythos card is resolved
@@ -27,6 +27,10 @@ After the mythos card is resolved a defeated or devoured investigator not yet re
 #### Scenario: Devoured replaced
 - **WHEN** Leo Anderson was devoured and Charlie Kane replaces him after the mythos card is resolved
 - **THEN** Charlie Kane acts in Leo Anderson's seat next round
+
+#### Scenario: The clue pool runs short
+- **WHEN** the newcomer's sheet grants 1 starting clue and the clue pool is empty
+- **THEN** the newcomer holds 0 clues and the held clues stay equal to the investigators' clue counts
 
 ### Requirement: The next round waits for the replacements
 While a defeated investigator is not replaced, the Ancient One sleeps and an unused investigator remains, the next round SHALL be refused saying the defeated investigator is replaced first; with no unused investigator left the next round goes on.
