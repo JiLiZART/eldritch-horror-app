@@ -6,7 +6,7 @@ Keep the game in progress across reloads and let the players take back the last 
 ## Requirements
 
 ### Requirement: The game in progress survives a reload
-After every accepted step the game SHALL be saved in the browser in its own slot, named after the Ancient One, the seed and the round, or by a name the players give the slot, which SHALL outlast later steps and reloads until they clear it; opening the table again SHALL resume the slot last played in the same state; the players SHALL be able to switch to any other saved slot, start a new game in a new slot without losing the others, and remove a slot; an unreadable save, or one written by an older state shape, SHALL be set aside and the New game form shown with a note saying the saved game could not be resumed. **Deviation**: slots live in one browser; a save written before slots existed becomes the first slot.
+After every accepted step the game SHALL be saved in the browser in its own slot, named after the Ancient One, the seed and the round, or by a name the players give the slot, which SHALL outlast later steps and reloads until they clear it; opening the table again SHALL resume the slot last played in the same state; another window of the same browser showing the same slot SHALL follow each accepted step as it is saved, without a reload; the players SHALL be able to switch to any other saved slot, start a new game in a new slot without losing the others, and remove a slot; an unreadable save, or one written by an older state shape, SHALL be set aside and the New game form shown with a note saying the saved game could not be resumed. **Deviation**: slots live in one browser; a save written before slots existed becomes the first slot.
 
 #### Scenario: Resumed
 - **WHEN** Leo Anderson has rested in round 1 and the page is reloaded
@@ -31,6 +31,10 @@ After every accepted step the game SHALL be saved in the browser in its own slot
 #### Scenario: A named slot
 - **WHEN** the players name the current slot "Tuesday group" and then rest and reload
 - **THEN** the Saved games list shows "Tuesday group" for that slot, and clearing the name shows the Ancient One, seed and round again
+
+#### Scenario: A second window follows
+- **WHEN** the same slot is open in two windows of one browser and Leo Anderson rests in the first
+- **THEN** the second window shows the rest within a moment, without a reload
 
 ### Requirement: The last step can be undone
 A control beside the board SHALL revert the game to the state before the last accepted step, repeatedly, back to the freshly set-up game, after which it SHALL be disabled; a refused step SHALL NOT be undone since nothing changed; the last ten prior states SHALL be saved with the game in its slot, so a resumed game can undo those steps and no more.
