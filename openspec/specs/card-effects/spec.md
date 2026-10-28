@@ -175,7 +175,7 @@ In the Encounter and Mythos phases a standing investigator SHALL be moved to any
 - **THEN** the move waits for the players to name one of the two, takes the named city, and refuses any other space naming both nearest cities
 
 ### Requirement: A monster is moved by card text
-In the Encounter and Mythos phases a monster on the board SHALL be moved to any space the players name, or 1 space toward the nearest standing investigator along a shortest route; a monster already on a space with a standing investigator SHALL stay where it is. A monster not on the board or an unknown space SHALL be refused naming it. The log SHALL say where the monster moves. **Deviation**: a tie among nearest investigators is broken by seat order, a tie among routes by board order, instead of the active investigator's choice; moving an epic monster is the players' call.
+In the Encounter and Mythos phases a monster on the board SHALL be moved to any space the players name, or 1 space toward the nearest standing investigator along a shortest route; a monster already on a space with a standing investigator SHALL stay where it is. A monster not on the board or an unknown space SHALL be refused naming it. The log SHALL say where the monster moves. When several investigators are equally near, or several neighbouring spaces each start a shortest route, the players SHALL choose the step among those spaces, as the active investigator does at the table; a step that is not on a shortest route to a nearest investigator SHALL be refused naming the spaces that are; with one such space no choice is asked. **Deviation**: moving an epic monster is the players' call.
 
 #### Scenario: Moved to a named space
 - **WHEN** a Byakhee on London is moved to Arkham by card text
@@ -192,6 +192,10 @@ In the Encounter and Mythos phases a monster on the board SHALL be moved to any 
 #### Scenario: Not on the board
 - **WHEN** a monster that is not on the board is moved
 - **THEN** it is refused naming the monster
+
+#### Scenario: A tie among steps
+- **WHEN** a Byakhee on a space with two neighbours each one path from an investigator moves toward the nearest investigator
+- **THEN** the move waits for the players to name one of the two neighbours, steps there, and refuses any other space naming both
 
 ### Requirement: A monster is discarded by card text
 In the Encounter and Mythos phases a monster on the board SHALL be discarded by card text: a non-epic monster is shuffled back into the monster cup, a set-aside monster is set aside again, an epic monster leaves the game. The log SHALL say where the monster went.
