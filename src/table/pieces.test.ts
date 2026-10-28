@@ -42,6 +42,11 @@ describe("piecesOnSpace", () => {
     const akachi = set.investigators.find((i) => i.id === inv("akachi-onyele"))!;
     expect(pieces.get("space-15")).toContainEqual({ kind: "pawn", id: akachi.id, image: akachi.pawn, label: akachi.name });
   });
+  it("shows a rumor token and each eldritch token on the space", () => {
+    const london = piecesOnSpace({ ...state, rumors: ["london"], eldritch: { london: 2 } }, set).get("london") ?? [];
+    expect(london.filter((p) => p.kind === "rumor")).toEqual([{ kind: "rumor", id: "rumor:london#0", image: "icons/rumor-token.png", label: "Rumor" }]);
+    expect(london.filter((p) => p.kind === "eldritch").map((p) => p.label)).toEqual(["Eldritch token", "Eldritch token"]);
+  });
   it("orders each space gate, expedition, clue, monsters, pawns", () => {
     for (const list of pieces.values()) {
       const ranks = list.map((p) => ORDER.indexOf(p.kind));

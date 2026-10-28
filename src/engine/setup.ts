@@ -79,6 +79,8 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
     doom: ancientOne.doom,
     omen: 0,
     eldritchOnOmen,
+    rumors: [],
+    eldritch: {},
     referenceCard,
     round: 1,
     phase: { name: "action", active: investigators[0]!.id, taken: [] },

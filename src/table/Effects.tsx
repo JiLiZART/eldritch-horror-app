@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type { Board, Deck, GameSet, Skill } from "../content/types";
 import { changeDoom, solveFinalMystery, solveMystery } from "../engine/ancientOne";
-import { changeHealth, changeSanity, closeGate, delay, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveMonsterToward, spendClue } from "../engine/effects";
+import { changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveMonsterToward, placeToken, removeToken, spendClue } from "../engine/effects";
+import { OMEN_TRACK } from "../engine/omen";
 import { monsterKey } from "../engine/encounter";
 import { spaceName } from "../engine/spawn";
 import type { GameState } from "../engine/types";
@@ -28,6 +29,7 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
   const [space, setSpace] = useState(board.spaces[0]!.id);
   const [monster, setMonster] = useState("");
   const [skill, setSkill] = useState<Skill>("lore");
+  const [omenSlot, setOmenSlot] = useState(0);
   const content = { board, set };
   const me = state.investigators.find((i) => i.id === id) ?? state.investigators[0]!;
   const name = (x: string) => set.investigators.find((i) => i.id === x)?.name ?? x;
@@ -94,6 +96,36 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
         </label>{" "}
         <button type="button" onClick={() => onAct((s) => moveInvestigator(s, content, me.id, space))}>
           Move
+        </button>
+      </p>
+      <p>
+        <button type="button" onClick={() => onAct((s) => placeToken(s, content, "rumor", space))}>
+          Place rumor
+        </button>
+        <button type="button" onClick={() => onAct((s) => removeToken(s, content, "rumor", space))}>
+          Remove rumor
+        </button>
+        <button type="button" onClick={() => onAct((s) => placeToken(s, content, "eldritch", space))}>
+          Place eldritch
+        </button>
+        <button type="button" onClick={() => onAct((s) => removeToken(s, content, "eldritch", space))}>
+          Remove eldritch
+        </button>{" "}
+        <label>
+          Omen space{" "}
+          <select value={omenSlot} onChange={(e) => setOmenSlot(Number(e.target.value))}>
+            {OMEN_TRACK.map((c, n) => (
+              <option key={n} value={n}>
+                {c} {n + 1}
+              </option>
+            ))}
+          </select>
+        </label>{" "}
+        <button type="button" onClick={() => onAct((s) => changeEldritchOnOmen(s, omenSlot, 1))}>
+          Add eldritch
+        </button>
+        <button type="button" onClick={() => onAct((s) => changeEldritchOnOmen(s, omenSlot, -1))}>
+          Remove eldritch
         </button>
       </p>
       <p>

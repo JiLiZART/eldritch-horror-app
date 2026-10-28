@@ -139,6 +139,8 @@ const SIZE: Record<PieceKind, [width: number, height: number]> = {
   gate: [0.3, 0.3],
   expedition: [0.3, 0.3],
   clue: [0.22, 0.22],
+  rumor: [0.22, 0.22],
+  eldritch: [0.22, 0.22],
   monster: [0.3, 0.3],
   pawn: [0.26, 0.26 * (488 / 339)],
 };

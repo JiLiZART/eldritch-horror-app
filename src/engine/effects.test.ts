@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn } from "./actions";
-import { changeHealth, changeSanity, closeGate, delay, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveMonsterToward, spendClue } from "./effects";
+import { changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveMonsterToward, placeToken, removeToken, spendClue } from "./effects";
 import { finishEncounter } from "./encounter";
 import { resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
@@ -257,5 +257,38 @@ describe("a monster is discarded by card text", () => {
     expect(on(s, cthulhu.id)).toEqual([]);
     expect(s.monsterCup).not.toContainEqual(cthulhu);
     expect(log(s)).toMatch(/the Cthulhu is discarded and leaves the game/);
+  });
+});
+
+describe("rumor and eldritch tokens are placed and removed by card text", () => {
+  it("places a rumor token and logs it", () => {
+    const s = placeToken(encounters(), content, "rumor", "london");
+    expect(s.rumors).toEqual(["london"]);
+    expect(log(s)).toMatch(/a rumor token is placed on London/);
+  });
+  it("stacks eldritch tokens", () => {
+    const s = placeToken(placeToken(encounters(), content, "eldritch", "tunguska"), content, "eldritch", "tunguska");
+    expect(s.eldritch).toEqual({ tunguska: 2 });
+  });
+  it("removes a token", () => {
+    const s = removeToken(placeToken(encounters(), content, "rumor", "london"), content, "rumor", "london");
+    expect(s.rumors).toEqual([]);
+    expect(log(s)).toMatch(/the rumor token on London is removed/);
+    expect(removeToken(placeToken(encounters(), content, "eldritch", "arkham"), content, "eldritch", "arkham").eldritch).toEqual({});
+  });
+  it("refuses to remove what is not there and an unknown space", () => {
+    expect(() => removeToken(encounters(), content, "eldritch", "arkham")).toThrow(/Arkham holds no eldritch token/);
+    expect(() => placeToken(encounters(), content, "rumor", "atlantis")).toThrow(/no space atlantis/);
+  });
+});
+
+describe("eldritch tokens on the omen track change by card text", () => {
+  it("adds to the green space", () => {
+    const s = changeEldritchOnOmen(encounters(), 0, 1);
+    expect(s.eldritchOnOmen).toEqual([2, 0, 0, 0]);
+    expect(log(s)).toMatch(/an eldritch token is added to the green omen space/);
+  });
+  it("refuses to remove from an empty space", () => {
+    expect(() => changeEldritchOnOmen(encounters(), 1, -1)).toThrow(/blue omen space holds no eldritch token/);
   });
 });

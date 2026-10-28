@@ -125,6 +125,10 @@ export interface GameState {
   omen: number;
   /** Eldritch tokens per omen track space. */
   eldritchOnOmen: [number, number, number, number];
+  /** Space ids holding a rumor token, one entry per token (manual p.3). */
+  rumors: string[];
+  /** Eldritch tokens per space id; absent means none (manual p.4). */
+  eldritch: Record<string, number>;
   referenceCard: ReferenceCard;
   round: number;
   phase: Phase;

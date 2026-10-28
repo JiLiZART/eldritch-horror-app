@@ -1,6 +1,7 @@
 import { distance, neighbors } from "../content/board";
 import type { Deck, Skill } from "../content/types";
 import { defeat } from "./encounter";
+import { OMEN_TRACK } from "./omen";
 import { reshuffle } from "./rng";
 import type { Content } from "./setup";
 import { note, spaceName, textPhase } from "./spawn";
@@ -165,4 +166,46 @@ export function discardMonster(state: GameState, content: Content, monster: Mons
   return epic
     ? note(left, `${label} is discarded and leaves the game`)
     : note({ ...left, monsterCup: [...left.monsterCup, { id: token.id, instance: token.instance }] }, `${label} is discarded and returns to the cup`);
+}
+
+export type BoardToken = "rumor" | "eldritch";
+
+function knownSpace(content: Content, space: string): void {
+  if (!content.board.spaces.some((s) => s.id === space)) throw new Error(`no space ${space} on the board`);
+}
+
+/** Card text puts a rumor or eldritch token on a space (manual p.3); the space is the players' reading of the card. */
+export function placeToken(state: GameState, content: Content, kind: BoardToken, space: string): GameState {
+  textPhase(state);
+  knownSpace(content, space);
+  const placed = kind === "rumor" ? { ...state, rumors: [...state.rumors, space] } : { ...state, eldritch: { ...state.eldritch, [space]: (state.eldritch[space] ?? 0) + 1 } };
+  return note(placed, `${kind === "rumor" ? "a rumor" : "an eldritch"} token is placed on ${spaceName(content, space)}`);
+}
+
+/** Card text takes one token off a space. */
+export function removeToken(state: GameState, content: Content, kind: BoardToken, space: string): GameState {
+  textPhase(state);
+  knownSpace(content, space);
+  const held = kind === "rumor" ? state.rumors.filter((s) => s === space).length : (state.eldritch[space] ?? 0);
+  if (held === 0) throw new Error(`${spaceName(content, space)} holds no ${kind} token`);
+  let removed: GameState;
+  if (kind === "rumor") {
+    const at = state.rumors.indexOf(space);
+    removed = { ...state, rumors: state.rumors.filter((_, n) => n !== at) };
+  } else {
+    const { [space]: _, ...rest } = state.eldritch;
+    removed = { ...state, eldritch: held > 1 ? { ...rest, [space]: held - 1 } : rest };
+  }
+  return note(removed, `the ${kind} token on ${spaceName(content, space)} is removed`);
+}
+
+/** Card text adds or removes an eldritch token on an omen track space (manual p.4). */
+export function changeEldritchOnOmen(state: GameState, slot: number, delta: number): GameState {
+  textPhase(state);
+  const colour = OMEN_TRACK[slot];
+  if (colour === undefined) throw new Error(`no omen space ${slot}`);
+  const next = state.eldritchOnOmen[slot]! + delta;
+  if (next < 0) throw new Error(`the ${colour} omen space holds no eldritch token`);
+  const eldritchOnOmen = state.eldritchOnOmen.map((n, i) => (i === slot ? next : n)) as GameState["eldritchOnOmen"];
+  return note({ ...state, eldritchOnOmen }, `an eldritch token is ${delta > 0 ? "added to" : "removed from"} the ${colour} omen space`);
 }
