@@ -1,4 +1,4 @@
-import { nearest } from "../../content/board";
+import { nearestAll } from "../../content/board";
 import type { Skill, SpaceKind } from "../../content/types";
 import { defeat, fall } from "../encounter";
 import { reshuffle } from "../rng";
@@ -43,13 +43,22 @@ export function moveInvestigator(state: GameState, content: Content, id: string,
 export type NearestTarget = SpaceKind | "gate" | "clue";
 
 /** "Move to the nearest X" (EH_reference p.2): the fewest paths, the own space first when it matches. Deviation: ties go to board order. */
-export function moveInvestigatorToNearest(state: GameState, content: Content, id: string, target: NearestTarget): GameState {
+/** The nearest spaces of a kind from the investigator's space, every one on a tie (nearest-choice D1). */
+export function nearestSpaces(state: GameState, content: Content, id: string, target: NearestTarget): string[] {
   const me = subject(state, id);
   const ids = content.board.spaces.map((s) => s.id);
   const candidates = target === "gate" ? ids.filter((s) => state.gates.includes(s)) : target === "clue" ? ids.filter((s) => state.clues.includes(s)) : content.board.spaces.filter((s) => s.kind === target).map((s) => s.id);
+  return nearestAll(content.board, me.space, candidates);
+}
+
+/** Among several nearest spaces the players choose, as the active investigator does at the table (EH_reference p.2; nearest-choice D2). */
+export function moveInvestigatorToNearest(state: GameState, content: Content, id: string, target: NearestTarget, chosen?: string): GameState {
+  const me = subject(state, id);
   const what = target === "gate" || target === "clue" ? `space with a ${target}` : `${target} space`;
-  const space = nearest(content.board, me.space, candidates);
-  if (space === undefined) throw new Error(`no ${what} exists`);
+  const nearest = nearestSpaces(state, content, id, target);
+  if (nearest.length === 0) throw new Error(`no ${what} exists`);
+  const space = nearest.length === 1 ? nearest[0]! : chosen && nearest.includes(chosen) ? chosen : undefined;
+  if (space === undefined) throw new Error(`choose among the nearest ${what}s: ${nearest.map((s) => spaceName(content, s)).join(", ")}`);
   if (space === me.space) return note(state, `${name(content, id)} is already on the nearest ${target === "gate" || target === "clue" ? what : target}`);
   return moveInvestigator(state, content, id, space);
 }

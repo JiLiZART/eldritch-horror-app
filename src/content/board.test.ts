@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { activeGraph, distance, nearest, reachable } from "./board";
+import { activeGraph, distance, nearest, reachable, nearestAll } from "./board";
 import type { Board } from "./types";
 
 const board: Board = JSON.parse(readFileSync(new URL("../../content/board/board.json", import.meta.url), "utf8"));
@@ -46,6 +46,14 @@ describe("board graph", () => {
   it("counts adjacent spaces as distance 1", () => {
     expect(distance(board, "san-francisco", "space-5")).toBe(1);
     expect(distance(board, "san-francisco", "arkham")).toBe(2);
+  });
+});
+
+describe("nearestAll", () => {
+  it("returns every candidate at the smallest distance, in the order given", () => {
+    expect(nearestAll(board, "the-amazon", ["buenos-aires", "space-7", "london"])).toEqual(["buenos-aires", "space-7"]);
+    expect(nearestAll(board, "buenos-aires", ["london", "buenos-aires"])).toEqual(["buenos-aires"]);
+    expect(nearestAll(board, "london", [])).toEqual([]);
   });
 });
 

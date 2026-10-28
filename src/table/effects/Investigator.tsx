@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Board, Skill, GameSet } from "../../content/types";
-import { changeHealth, changeSanity, delay, devour, discardImprovement, gainClue, improveSkill, moveInvestigator, moveInvestigatorRandomly, moveInvestigatorToNearest, spendClue, spendHealth, spendSanity, standUp } from "../../engine/effects";
+import { changeHealth, changeSanity, delay, devour, discardImprovement, gainClue, improveSkill, moveInvestigator, moveInvestigatorRandomly, moveInvestigatorToNearest, nearestSpaces, spendClue, spendHealth, spendSanity, standUp } from "../../engine/effects";
 import type { NearestTarget } from "../../engine/effects";
 import type { GameState, InvestigatorState } from "../../engine/types";
 import { useSpaceName, useT } from "../lang";
@@ -20,10 +20,13 @@ interface Props {
 const SKILLS: Skill[] = ["lore", "influence", "observation", "strength", "will"];
 
 /** The Investigator group of card-text controls (design D2). */
-export function InvestigatorEffects({ board, set, me, space, onAct }: Props) {
+export function InvestigatorEffects({ board, set, state, me, space, onAct }: Props) {
   const [skill, setSkill] = useState<Skill>("lore");
   const [target, setTarget] = useState<NearestTarget>("city");
+  /** The players' pick among tied nearest spaces (nearest-choice D3). */
+  const [chosen, setChosen] = useState("");
   const content = { board, set };
+  const tied = nearestSpaces(state, content, me.id, target);
   const t = useT();
   const spaceName = useSpaceName();
 
@@ -79,7 +82,17 @@ export function InvestigatorEffects({ board, set, me, space, onAct }: Props) {
             ))}
           </select>
         </label>{" "}
-        <button type="button" onClick={() => onAct((s) => moveInvestigatorToNearest(s, content, me.id, target))}>
+        {tied.length > 1 && (
+          <select value={chosen} onChange={(e) => setChosen(e.target.value)}>
+            <option value="">{t("effects.choose")}</option>
+            {tied.map((id) => (
+              <option key={id} value={id}>
+                {spaceName(board, id)}
+              </option>
+            ))}
+          </select>
+        )}{" "}
+        <button type="button" onClick={() => onAct((s) => moveInvestigatorToNearest(s, content, me.id, target, chosen || undefined))}>
           {t("effects.moveNearest")}
         </button>
       </p>

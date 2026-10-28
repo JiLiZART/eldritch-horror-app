@@ -24,9 +24,15 @@ export function distance(board: Board, from: string, to: string): number {
   return Infinity;
 }
 
+/** Every candidate at the smallest distance from `from`, in the order given; `from` alone when it is a candidate (EH_reference p.2; nearest-choice D1). */
+export function nearestAll(board: Board, from: string, candidates: string[]): string[] {
+  const least = Math.min(...candidates.map((id) => distance(board, from, id)));
+  return candidates.filter((id) => distance(board, from, id) === least);
+}
+
 /** The candidate at the smallest distance from `from`, the first on a tie; `from` itself when it is a candidate (EH_reference p.2). */
 export function nearest(board: Board, from: string, candidates: string[]): string | undefined {
-  return candidates.reduce<string | undefined>((best, id) => (best === undefined || distance(board, from, id) < distance(board, from, best) ? id : best), undefined);
+  return nearestAll(board, from, candidates)[0];
 }
 
 /** Spaces of the enabled sets and the paths whose both ends are among them. */

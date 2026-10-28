@@ -3,7 +3,7 @@ import { finishEncounter } from "../encounter";
 import { resolveMythos } from "../mythos";
 import { note } from "../spawn";
 import type { GameState } from "../types";
-import { changeHealth, changeSanity, delay, devour, discardImprovement, gainClue, improveSkill, moveInvestigator, moveInvestigatorRandomly, moveInvestigatorToNearest, spawnMonsterRandomly, spendClue, spendHealth, spendSanity, standUp } from "../effects";
+import { changeHealth, changeSanity, delay, devour, discardImprovement, gainClue, improveSkill, moveInvestigator, moveInvestigatorRandomly, moveInvestigatorToNearest, nearestSpaces, spawnMonsterRandomly, spendClue, spendHealth, spendSanity, standUp } from "../effects";
 import { set, content, leo, lily, game, who, patch, encounters, log, cardName, encountersLog } from "./fixture";
 
 describe("card text is applied in the Encounter and Mythos phases", () => {
@@ -110,8 +110,8 @@ describe("spent clues join the clue discard", () => {
 });
 
 describe("an investigator is moved to the nearest space", () => {
-  it("moves to the nearest city", () => {
-    const s = moveInvestigatorToNearest(patch(encounters(), leo, { space: "space-2" }), content, leo, "city");
+  it("moves to the nearest city, the players choosing among the three that tie from Space 2", () => {
+    const s = moveInvestigatorToNearest(patch(encounters(), leo, { space: "space-2" }), content, leo, "city", "san-francisco");
     expect(who(s, leo).space).toBe("san-francisco");
     expect(log(s)).toMatch(/Leo Anderson moves to San Francisco/);
   });
@@ -119,6 +119,13 @@ describe("an investigator is moved to the nearest space", () => {
     const s = moveInvestigatorToNearest(encounters(), content, leo, "city");
     expect(who(s, leo).space).toBe("buenos-aires");
     expect(log(s)).toMatch(/Leo Anderson is already on the nearest city/);
+  });
+  it("asks the players to choose among tied nearest spaces and takes their pick", () => {
+    const tied = patch(encounters(), leo, { space: "the-amazon" });
+    expect(nearestSpaces(tied, content, leo, "city")).toEqual(["buenos-aires", "space-7"]);
+    expect(() => moveInvestigatorToNearest(tied, content, leo, "city")).toThrow(/choose among the nearest city spaces: Buenos Aires, Space 7/);
+    expect(() => moveInvestigatorToNearest(tied, content, leo, "city", "london")).toThrow(/choose among/);
+    expect(who(moveInvestigatorToNearest(tied, content, leo, "city", "space-7"), leo).space).toBe("space-7");
   });
   it("finds the nearest gate and refuses with nothing matching", () => {
     const s = moveInvestigatorToNearest({ ...encounters(), gates: ["london"] }, content, leo, "gate");
