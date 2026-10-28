@@ -34,6 +34,8 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
   const [target, setTarget] = useState<NearestTarget>("city");
   const [aside, setAside] = useState("");
   const [kind, setKind] = useState("");
+  /** The one held card whose image is open (design D1). */
+  const [shown, setShown] = useState<{ card: string; side: "front" | "back" }>();
   const cupKinds = [...new Set(state.monsterCup.map((m) => m.id))].map((k) => ({ id: k, label: `${set.monsters.find((m) => m.id === k)?.name ?? k} (${state.monsterCup.filter((m) => m.id === k).length})` })).sort((a, b) => a.label.localeCompare(b.label));
   const asideKinds = [...new Set(state.setAsideMonsters.map((m) => m.id))].map((k) => ({ id: k, label: `${set.monsters.find((m) => m.id === k)?.name ?? k} (${state.setAsideMonsters.filter((m) => m.id === k).length})` }));
   const content = { board, set };
@@ -169,15 +171,35 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
           </button>
         </p>
         <ul>
-          {[...me.possessions, ...me.conditions].map((c, n) => (
-            <li key={`${c}#${n}`}>
-              {cardTitle(c)}
-              {me.conditions.includes(c) && " (condition)"}{" "}
-              <button type="button" onClick={() => onAct((s) => discardCard(s, content, me.id, c))}>
-                Discard
-              </button>
-            </li>
-          ))}
+          {[...me.possessions, ...me.conditions].map((c, n) => {
+            const card = set.cards.find((x) => x.id === c);
+            const open = shown?.card === c ? shown.side : undefined;
+            return (
+              <li key={`${c}#${n}`}>
+                {cardTitle(c)}
+                {me.conditions.includes(c) && " (condition)"}{" "}
+                <button type="button" onClick={() => onAct((s) => discardCard(s, content, me.id, c))}>
+                  Discard
+                </button>{" "}
+                <button type="button" onClick={() => setShown(open ? undefined : { card: c, side: "front" })}>
+                  {open ? "Hide" : "Show"}
+                </button>
+                {card?.images.back && open !== "back" && (
+                  <>
+                    {" "}
+                    <button type="button" onClick={() => setShown({ card: c, side: "back" })}>
+                      Back (hidden until flipped)
+                    </button>
+                  </>
+                )}
+                {open && card && (
+                  <p className="cards">
+                    <img className="held-card" src={`/${open === "back" ? card.images.back : card.images.front}`} alt={`${card.name} ${open}`} />
+                  </p>
+                )}
+              </li>
+            );
+          })}
         </ul>
       </details>
       <details>

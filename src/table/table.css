@@ -101,6 +101,9 @@ body {
 .acquire label {
   display: block;
 }
+.cards img.held-card {
+  max-width: 14rem;
+}
 .cards img.mythos-card {
   width: 14rem;
 }
