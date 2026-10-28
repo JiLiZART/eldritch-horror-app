@@ -13,7 +13,7 @@ import { NewGame } from "./NewGame";
 import { type FocusCard, journalLine, Panel } from "./Panel";
 import { LangProvider, translate, useT } from "./lang";
 import { piecesOnSpace } from "./pieces";
-import { duplicateGame, fileName, gameKey, loadGame, loadSlots, newSlotId, parseGame, removeGame, renameGame, saveGame, slotName } from "./saved";
+import { duplicateGame, fileName, gameKey, INDEX_KEY, loadGame, loadSlots, newSlotId, parseGame, removeGame, renameGame, saveGame, slotName } from "./saved";
 import { type CardFace, Table, type TableProps } from "./Table";
 import { type Act, Turn } from "./Turn";
 import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
@@ -104,9 +104,15 @@ export function App() {
   }, [game.state, slot, set, history]);
   // Another window of this browser saving the same slot moves this one along with it (window-sync D1).
   useEffect(() => {
-    if (!slot) return;
     const follow = (e: StorageEvent) => {
-      if (e.key !== gameKey(slot)) return;
+      // The slot list follows slots made, named, duplicated or removed elsewhere (window-sync-slots D1).
+      if (e.key === INDEX_KEY) {
+        const index = loadSlots(localStorage);
+        setSlots(index);
+        if (slot && !index.slots.some((s) => s.id === slot)) leave();
+        return;
+      }
+      if (!slot || e.key !== gameKey(slot)) return;
       const { state, history } = loadGame(localStorage, slot);
       if (!state) return;
       followed.current = true;

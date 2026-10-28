@@ -17,7 +17,9 @@ export interface SlotIndex {
   slots: SlotInfo[];
 }
 
-const INDEX = "eldritch-horror.games";
+/** The storage key of the slot index; other windows watch it to follow the list (window-sync-slots D1). */
+export const INDEX_KEY = "eldritch-horror.games";
+const INDEX = INDEX_KEY;
 /** The single-slot key from before slots existed; migrated into a slot on first load. */
 const LEGACY = "eldritch-horror.game";
 /** The storage key of a slot's game; other windows watch it to follow the game (window-sync D1). */
