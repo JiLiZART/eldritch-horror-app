@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn } from "./actions";
-import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spendClue } from "./effects";
+import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spendClue } from "./effects";
 import { finishEncounter } from "./encounter";
 import { resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
@@ -344,5 +344,31 @@ describe("a devoured investigator leaves the game", () => {
   it("loses the game when the last standing investigator is devoured", () => {
     const s = devour(patch(encounters(), lily, { defeated: "health" }), content, leo);
     expect(s.phase).toEqual({ name: "lost", reason: expect.stringMatching(/Leo Anderson is devoured/) });
+  });
+});
+
+describe("a random space is drawn from the clue pool", () => {
+  const topLondon = (s: GameState): GameState => ({ ...s, cluePool: ["london", ...s.cluePool.filter((c) => c !== "london")] });
+  it("moves the investigator to the top clue token's space and discards the token", () => {
+    const s = moveInvestigatorRandomly(topLondon(encounters()), content, leo);
+    expect(who(s, leo).space).toBe("london");
+    expect(s.clueDiscard).toEqual(["london"]);
+    expect(s.cluePool).not.toContain("london");
+    expect(log(s)).toMatch(/a clue token names London as the random space/);
+  });
+  it("spawns a monster on the drawn space or where its back sends it", () => {
+    const before = topLondon(encounters());
+    const sheet = set.monsters.find((m) => m.id === before.monsterCup[0]!.id)!;
+    const s = spawnMonsterRandomly(before, content, leo);
+    expect(s.monsters.at(-1)?.space).toBe(sheet.spawnMoveTo ?? "london");
+    expect(s.clueDiscard).toEqual(["london"]);
+  });
+  it("rebuilds an empty pool from the discard first", () => {
+    const s = moveInvestigatorRandomly({ ...encounters(), cluePool: [], clueDiscard: ["arkham"] }, content, leo);
+    expect(who(s, leo).space).toBe("arkham");
+    expect(s.clueDiscard).toEqual(["arkham"]);
+  });
+  it("refuses with no token anywhere", () => {
+    expect(() => moveInvestigatorRandomly({ ...encounters(), cluePool: [], clueDiscard: [] }, content, leo)).toThrow(/lead investigator chooses the space/);
   });
 });

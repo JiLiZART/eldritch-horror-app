@@ -257,3 +257,28 @@ export function devour(state: GameState, content: Content, id: string): GameStat
   const gone: InvestigatorState = { ...me, defeated: "devoured", possessions: [], conditions: [], clues: 0, tickets: [], improvements: {}, delayed: undefined };
   return fall(s, content, gone, `${name(content, id)} is devoured`);
 }
+
+/** A random space (manual p.4): the top clue token of the pool, discarded, names it; an empty pool takes back its discard first. */
+function randomSpace(state: GameState): { state: GameState; space: string } {
+  const rebuilt = state.cluePool.length === 0 && state.clueDiscard.length > 0;
+  const pool = rebuilt ? reshuffle(state, state.clueDiscard) : { items: state.cluePool, rolls: state.rolls };
+  const [space, ...rest] = pool.items;
+  if (space === undefined) throw new Error("no clue token is left: the lead investigator chooses the space");
+  return { state: { ...state, cluePool: rest, clueDiscard: [space, ...(rebuilt ? [] : state.clueDiscard)], rolls: pool.rolls }, space };
+}
+
+const named = (state: GameState, content: Content, space: string) => note(state, `a clue token names ${spaceName(content, space)} as the random space`);
+
+/** "Move to a random space" by card text. */
+export function moveInvestigatorRandomly(state: GameState, content: Content, id: string): GameState {
+  subject(state, id);
+  const drawn = randomSpace(state);
+  return moveInvestigator(named(drawn.state, content, drawn.space), content, id, drawn.space);
+}
+
+/** "Spawn 1 Monster on a random space" by card text. */
+export function spawnMonsterRandomly(state: GameState, content: Content, id: string): GameState {
+  subject(state, id);
+  const drawn = randomSpace(state);
+  return spawnMonsterByText(named(drawn.state, content, drawn.space), content, id, drawn.space);
+}

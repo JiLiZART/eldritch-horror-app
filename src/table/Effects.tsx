@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Board, Deck, GameSet, Skill } from "../content/types";
 import { changeDoom, changeMysteryTokens, solveFinalMystery, solveMystery } from "../engine/ancientOne";
-import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spendClue } from "../engine/effects";
+import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spendClue } from "../engine/effects";
 import { OMEN_TRACK } from "../engine/omen";
 import { monsterKey } from "../engine/encounter";
 import { spaceName } from "../engine/spawn";
@@ -95,6 +95,9 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
           <button type="button" onClick={() => onAct((s) => moveInvestigator(s, content, me.id, space))}>
             Move to {spaceName(content, space)}
           </button>
+          <button type="button" onClick={() => onAct((s) => moveInvestigatorRandomly(s, content, me.id))}>
+            Move to a random space
+          </button>
         </p>
         <p>
           <label>
@@ -171,6 +174,9 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
           </button>
           <button type="button" onClick={() => onAct((s) => spawnMonsterByText(s, content, me.id, space))}>
             Spawn monster on {spaceName(content, space)}
+          </button>
+          <button type="button" onClick={() => onAct((s) => spawnMonsterRandomly(s, content, me.id))}>
+            Spawn monster on a random space
           </button>
           {state.phase.name === "encounter" && (
             <button type="button" onClick={() => onAct((s) => ambush(s, content))}>
