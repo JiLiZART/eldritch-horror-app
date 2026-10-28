@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { setupGame } from "../engine/setup";
-import { fileName, loadGame, loadSlots, parseGame, removeGame, renameGame, saveGame, type Slot } from "./saved";
+import { duplicateGame, fileName, loadGame, loadSlots, parseGame, removeGame, renameGame, saveGame, type Slot } from "./saved";
 
 const root = join(import.meta.dirname, "../..");
 const board: Board = JSON.parse(readFileSync(join(root, "content/board/board.json"), "utf8"));
@@ -55,6 +55,21 @@ describe("the game in progress survives a reload", () => {
     storage.setItem("eldritch-horror.game.x", JSON.stringify({ ...game(), version: 1 }));
     expect(loadGame(storage, "x")).toEqual({ note: "the saved game was written by an older version and was set aside" });
     expect(loadGame(storage, "nope")).toEqual({});
+  });
+});
+
+describe("a slot can be duplicated", () => {
+  it("copies the state, history and name into a new slot and leaves the original", () => {
+    const storage = fake();
+    const steps = [{ ...game(), round: 1 }];
+    saveGame(storage, "a", { ...game(), round: 3 }, "Azathoth · seed 3 · round 3", steps);
+    renameGame(storage, "a", "Tuesday group");
+    const copy = duplicateGame(storage, "a");
+    expect(copy).not.toBe("a");
+    expect(loadGame(storage, copy)).toEqual({ state: { ...game(), round: 3 }, history: steps });
+    expect(loadSlots(storage).slots.find((s) => s.id === copy)).toMatchObject({ name: "Azathoth · seed 3 · round 3", title: "Tuesday group (copy)" });
+    expect(loadGame(storage, "a")).toEqual({ state: { ...game(), round: 3 }, history: steps });
+    expect(loadSlots(storage).current).toBe(copy);
   });
 });
 

@@ -268,5 +268,6 @@
   "panel.filterJournal": "Поиск в журнале",
   "panel.copyJournal": "Скопировать журнал",
   "panel.copied": "Скопировано",
-  "table.roll": "{name} бросает {dice}"
+  "table.roll": "{name} бросает {dice}",
+  "game.duplicate": "Дублировать"
 }

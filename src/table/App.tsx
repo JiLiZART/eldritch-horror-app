@@ -13,7 +13,7 @@ import { NewGame } from "./NewGame";
 import { type FocusCard, journalLine, Panel } from "./Panel";
 import { LangProvider, translate, useT } from "./lang";
 import { piecesOnSpace } from "./pieces";
-import { fileName, gameKey, loadGame, loadSlots, newSlotId, parseGame, removeGame, renameGame, saveGame, slotName } from "./saved";
+import { duplicateGame, fileName, gameKey, loadGame, loadSlots, newSlotId, parseGame, removeGame, renameGame, saveGame, slotName } from "./saved";
 import { type CardFace, Table, type TableProps } from "./Table";
 import { type Act, Turn } from "./Turn";
 import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
@@ -116,6 +116,15 @@ export function App() {
     window.addEventListener("storage", follow);
     return () => window.removeEventListener("storage", follow);
   }, [slot]);
+  /** Makes a saved slot the game in progress. */
+  const switchTo = (id: string) => {
+    const { state, history, note } = loadGame(localStorage, id);
+    if (!state) return setGame({ ...game, error: note });
+    setSlot(id);
+    setGame({ state });
+    setHistory(history ?? []);
+    setRoute(undefined);
+  };
   /** Opens a game in a fresh slot (a start or a loaded file). */
   const openNew = (state: GameState) => {
     setSlot(newSlotId());
@@ -300,15 +309,9 @@ export function App() {
           onNew={leave}
           slots={slots.slots}
           current={slot}
-          onSwitch={(id) => {
-            const { state, history, note } = loadGame(localStorage, id);
-            if (!state) return setGame({ ...game, error: note });
-            setSlot(id);
-            setGame({ state });
-            setHistory(history ?? []);
-            setRoute(undefined);
-          }}
+          onSwitch={switchTo}
           onRename={(id, title) => setSlots(renameGame(localStorage, id, title))}
+          onDuplicate={(id) => switchTo(duplicateGame(localStorage, id))}
           onRemove={(id) => {
             setSlots(removeGame(localStorage, id));
             if (id === slot) leave();

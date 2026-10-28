@@ -119,6 +119,16 @@ export function renameGame(storage: Slot, id: string, title: string): SlotIndex 
   return next;
 }
 
+/** Copies a slot's game, history and name into a new current slot, for branching a line of play; returns the new id (slot-duplicate D1). */
+export function duplicateGame(storage: Slot, id: string): string {
+  const { state, history } = loadGame(storage, id);
+  const info = loadSlots(storage).slots.find((s) => s.id === id);
+  const copy = newSlotId();
+  if (state) saveGame(storage, copy, state, info?.name ?? "", history ?? []);
+  if (info?.title) renameGame(storage, copy, `${info.title} (copy)`);
+  return copy;
+}
+
 /** Removes a slot; a removed current slot leaves none current. */
 export function removeGame(storage: Slot, id: string): SlotIndex {
   remove(storage, key(id));

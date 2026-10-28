@@ -268,5 +268,6 @@
   "panel.filterJournal": "Filter journal",
   "panel.copyJournal": "Copy journal",
   "panel.copied": "Copied",
-  "table.roll": "{name} rolls {dice}"
+  "table.roll": "{name} rolls {dice}",
+  "game.duplicate": "Duplicate"
 }

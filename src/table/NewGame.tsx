@@ -27,12 +27,14 @@ interface NewGameProps {
   onRemove: (id: string) => void;
   /** Names a slot; empty clears the name (slot-rename D2). */
   onRename: (id: string, title: string) => void;
+  /** Copies a slot into a new current one (slot-duplicate D2). */
+  onDuplicate: (id: string) => void;
 }
 
 const DIFFICULTIES: Difficulty[] = ["normal", "easy", "hard"];
 
 /** Setup choices; checkbox check order is seat order. Inputs outlive a running game so abandoning offers them again. */
-export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUndo, onFit, onSave, onLoad, onNew, slots, current, onSwitch, onRemove, onRename }: NewGameProps) {
+export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUndo, onFit, onSave, onLoad, onNew, slots, current, onSwitch, onRemove, onRename, onDuplicate }: NewGameProps) {
   const [ancientOne, setAncientOne] = useState(set.ancientOnes[0]?.id ?? "");
   /** A removal or abandonment waiting for its second click (remove-confirm D1). */
   const [pending, setPending] = useState<{ kind: "abandon" } | { kind: "remove"; id: string }>();
@@ -150,6 +152,9 @@ export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUn
                 <input type="text" aria-label={t("game.rename")} placeholder={t("game.rename")} value={s.title ?? ""} onChange={(e) => onRename(s.id, e.target.value)} />{" "}
                 <button type="button" disabled={s.id === current} onClick={() => onSwitch(s.id)}>
                   {t("game.switch")}
+                </button>{" "}
+                <button type="button" onClick={() => onDuplicate(s.id)}>
+                  {t("game.duplicate")}
                 </button>{" "}
                 {guarded(t("game.remove"), { kind: "remove", id: s.id }, () => onRemove(s.id))}
               </li>
