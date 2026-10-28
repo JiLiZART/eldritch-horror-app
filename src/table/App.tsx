@@ -214,7 +214,7 @@ export function App() {
   /** A card's face for the table, named for its hover badge (card-hover D1); undefined for an unknown id. */
   const face = (id: string, value?: true) => {
     const card = set.cards.find((c) => c.id === id);
-    return card && { image: card.images.front, label: value ? `${card.name} · ${t("status.value", { value: card.value ?? 0 })}` : card.name };
+    return card && { image: card.images.front, label: value ? `${card.name} · ${t("status.value", { value: card.value ?? 0 })}` : card.name, ...(card.images.back ? { back: card.images.back } : {}) };
   };
   const known = (c: CardFace | undefined): c is CardFace => !!c;
   /** The encounter card being resolved, as a face for the active investigator's sheet (encounter-card-on-table D1). */

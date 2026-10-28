@@ -1,6 +1,6 @@
 import { Billboard, Html, Line, MapControls, useTexture } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { type ComponentRef, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { type ComponentRef, createContext, Suspense, useContext, useEffect, useMemo, useRef, useState } from "react";
 import type { ThreeEvent } from "@react-three/fiber";
 import { SRGBColorSpace, type Texture, Vector3 } from "three";
 import { activeGraph } from "../content/board";
@@ -16,7 +16,12 @@ import { PATH_COLORS } from "./sets";
 export interface CardFace {
   image: string;
   label: string;
+  /** The printed back, when the card has one; a further click on the card brought up turns it over (card-flip D1). */
+  back?: string;
 }
+
+/** The position of the card brought up to read, so that card alone answers a further click (card-flip D2). */
+const FocusedAt = createContext<[number, number] | undefined>(undefined);
 
 export interface TableProps {
   board: Board;
@@ -156,9 +161,11 @@ function Scene({ board, labels, strings, pieces, tracks, tableau, sheets, fit, f
       ))}
       {pieces.size > 0 && <Pieces pieces={pieces} at={at} onSelect={onSelect} />}
       {tracks && <Tracks board={board} tracks={tracks} />}
+      <FocusedAt.Provider value={fitting ? undefined : focused?.position}>
       {tracks && tracks.reserve.length > 0 && <Reserve board={board} cards={tracks.reserve} onFocus={onFocus} />}
       {tableau && <Tableau board={board} tableau={tableau} onFocus={onFocus} />}
       {sheets && sheets.length > 0 && <Sheets board={board} sheets={sheets} onFocus={onFocus} />}
+      </FocusedAt.Provider>
     </>
   );
 }
@@ -416,12 +423,15 @@ const CARD_ASPECT = 745 / 478;
 
 /** The reserve cards' faces in the printed slots, in reserve order (reserve-slots D3). */
 function Reserve({ board, cards, onFocus }: { board: Board; cards: CardFace[]; onFocus: FaceProps["onFocus"] }) {
-  const textures = useTexture(cards.map((c) => `/${c.image}`), srgb);
+  const images = [...new Set(cards.flatMap((c) => (c.back ? [c.image, c.back] : [c.image])))];
+  const loaded = useTexture(images.map((i) => `/${i}`), srgb);
+  const textureOf = new Map(images.map((img, i) => [img, loaded[i]!]));
+  const textures = cards.map((c) => textureOf.get(c.image)!);
   const w = board.tracks.reserve.width * BOARD_WIDTH;
   return (
     <>
       {textures.map((map, i) => (
-        <Face key={cards[i]!.image} map={map} label={cards[i]!.label} position={reservePosition(board, i)} size={[w, w * CARD_ASPECT]} onFocus={onFocus} />
+        <Face key={cards[i]!.image} map={map} backMap={cards[i]!.back ? textureOf.get(cards[i]!.back!) : undefined} label={cards[i]!.label} position={reservePosition(board, i)} size={[w, w * CARD_ASPECT]} onFocus={onFocus} />
       ))}
     </>
   );
@@ -429,6 +439,8 @@ function Reserve({ board, cards, onFocus }: { board: Board; cards: CardFace[]; o
 
 interface FaceProps {
   map: Texture;
+  /** The back's texture when the card has one (card-flip D1). */
+  backMap?: Texture;
   /** The name shown beside the card while the pointer rests on it (card-hover D2). */
   label: string;
   position: [number, number];
@@ -438,19 +450,29 @@ interface FaceProps {
 }
 
 /** One card face lying flat on the table. */
-function Face({ map, label, position, size, onFocus }: FaceProps) {
+function Face({ map, backMap, label, position, size, onFocus }: FaceProps) {
   const [hovered, setHovered] = useState(false);
   const badge = useMemo(() => badgeEvents(setHovered), []);
+  const at = useContext(FocusedAt);
+  const focused = at !== undefined && at[0] === position[0] && at[1] === position[1];
+  const [turned, setTurned] = useState(false);
   const click = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
     // A drag that starts on the card ends with a click event too; only a still pointer brings the card up.
-    if (e.delta <= 4) onFocus(position, size);
+    if (e.delta > 4) return;
+    // A further click on the card brought up turns it over when it has a back, and does nothing else (card-flip D2).
+    if (focused) {
+      if (backMap) setTurned((v) => !v);
+      return;
+    }
+    onFocus(position, size);
   };
+  const shown = focused && turned && backMap ? backMap : map;
   return (
     <Billboard position={[...position, 0.06]}>
       <mesh onClick={click} onPointerOver={(e) => badge.over(e.pointerType)} onPointerOut={(e) => badge.out(e.pointerType)} onPointerDown={(e) => badge.down(e.pointerType)}>
         <planeGeometry args={size} />
-        <meshBasicMaterial map={map} transparent alphaTest={0.5} />
+        <meshBasicMaterial map={shown} transparent alphaTest={0.5} />
       </mesh>
       {hovered && (
         <Html position={[0, size[1] / 2 + 0.05, 0]} center style={{ pointerEvents: "none" }}>
@@ -495,7 +517,7 @@ function Sheets({ board, sheets, onFocus }: { board: Board; sheets: NonNullable<
   const sanityToken = (n: number) => `${TOKENS}/sanity/sanity-0${Math.min(9, Math.max(0, n))}.webp`;
   const skillToken = (skill: Skill) => `${TOKENS}/improvements/${skill}.webp`;
   const ticketToken = (ticket: Ticket) => `${TOKENS}/travel/${ticket}.webp`;
-  const images = [...new Set(sheets.flatMap((s) => [s.sheet.image, ...s.held.map((c) => c.image), ...(s.encounter ? [s.encounter.image] : []), healthToken(s.health), sanityToken(s.sanity), ...Object.keys(s.improvements).map((k) => skillToken(k as Skill)), ...s.tickets.map(ticketToken)]))];
+  const images = [...new Set(sheets.flatMap((s) => [s.sheet.image, ...s.held.flatMap((c) => (c.back ? [c.image, c.back] : [c.image])), ...(s.encounter ? [s.encounter.image] : []), healthToken(s.health), sanityToken(s.sanity), ...Object.keys(s.improvements).map((k) => skillToken(k as Skill)), ...s.tickets.map(ticketToken)]))];
   const textures = useTexture(images.map((i) => `/${i}`), srgb);
   const textureOf = new Map(images.map((img, i) => [img, textures[i]!]));
   /** A token on the sheet at `(fx, fy)` of the sheet from its top-left, `size` wide and high, `lift` above the sheet (sheet-tokens D1, skill-and-ticket-tokens D1). */
@@ -521,7 +543,7 @@ function Sheets({ board, sheets, onFocus }: { board: Board; sheets: NonNullable<
           {s.tickets.map((t, n) => token(seat, ticketToken(t), 0.93, 0.07 + n * 0.1, [0.26, (0.26 * 221) / 450], n * 0.001))}
           {s.encounter && <Face map={textureOf.get(s.encounter.image)!} label={s.encounter.label} position={encounterPosition(board, seat)} size={HELD} onFocus={onFocus} />}
           {s.held.map((card, i) => (
-            <Face key={`${card.image}#${i}`} map={textureOf.get(card.image)!} label={card.label} position={heldPosition(board, seat, i)} size={HELD} onFocus={onFocus} />
+            <Face key={`${card.image}#${i}`} map={textureOf.get(card.image)!} backMap={card.back ? textureOf.get(card.back) : undefined} label={card.label} position={heldPosition(board, seat, i)} size={HELD} onFocus={onFocus} />
           ))}
         </group>
       ))}
