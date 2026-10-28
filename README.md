@@ -58,15 +58,25 @@ once awakened), the current mystery with the tokens it has collected and the
 ongoing mythos cards; below the board lie the investigators' sheets in seat
 order, each with its held cards under it and numbered health and sanity
 tokens, improvement tokens and tickets on it. A wounded monster carries a
-health token. Pointing at a piece shows its name; clicking any card brings it
-up to read, and Fit table takes the view back to the whole table. The wheel
-zooms under the pointer, dragging pans, and the view stays within the table.
+health token. Pointing at a piece, a card or a track token shows what it is:
+a monster's combat numbers, a gate's colour and whether it matches the omen,
+an investigator's health, sanity and clues, a card's name. Clicking any card
+brings it up to read, and so does its name or thumbnail in the panel: the
+Status table, the Acquire Assets and Trade forms, the Encounter and Mythos
+panels. Fit table takes the view back to the whole table; Hide panel gives
+the table the whole window, and the panel's edge drags to resize it. The
+wheel zooms under the pointer, dragging pans, the arrow keys pan and the plus
+and minus keys zoom, Escape clears the selection, and the view stays within
+the table. A second window of the same browser follows the game as it is
+played, so one screen can show the table while another runs the panel.
 
 **Keeping the game.** Every accepted step is saved in the browser and resumes
 on reload; Undo takes back the last steps, ten of them even across a reload;
-Save to file and Load
-from file move a game between browsers as plain JSON. A save from an older
-state shape is set aside with a note rather than resumed.
+Save to file and Load from file move a game between browsers as plain JSON,
+the file named after the slot's name when you gave it one. Saved games list
+the last played first with its time; each can be named; Remove and Abandon
+game ask for a confirming click. A save from an older state shape is set
+aside with a note rather than resumed.
 
 ## What the engine models
 
@@ -110,10 +120,11 @@ The specs declare these deviations:
   material) are not applied; effects that prevent a loss are applied by hand.
 - A toughness printed as a formula is not evaluated; an epic monster is never
   in the cup and never ambushes.
-- Ties among nearest spaces, cities or investigators go to board or seat
-  order instead of a choice; the space a card names is your reading of it.
-- One saved game per browser; files are plain JSON without a signature; the
-  tokens a discarded rumor placed are removed with the token controls.
+- The space a card names is your reading of it; a tie among nearest spaces,
+  or among a monster's steps, is offered for you to choose, and with no clue
+  token left you name the "random" space, as the lead does at the table.
+- Files are plain JSON without a signature; the tokens a discarded rumor
+  placed are removed with the token controls.
 
 ## Developing
 
