@@ -2,6 +2,7 @@
   "game.title": "Game",
   "game.abandon": "Abandon game",
   "game.undo": "Undo",
+  "game.fitTable": "Fit table",
   "game.save": "Save to file",
   "game.load": "Load from file",
   "game.ancientOne": "Ancient One",

@@ -24,6 +24,8 @@ export interface TableProps {
   tableau?: { sheet: string; mystery?: string; mythos: string[] };
   /** The investigators' sheet faces in seat order, below the board, each with the cards held under it (held-cards D2). */
   sheets?: { image: string; held: string[]; health: number; sanity: number; improvements: Partial<Record<Skill, 1 | 2>>; tickets: Ticket[] }[];
+  /** Changes each time the player asks for the whole table; the view glides out to it (fit-view D1). */
+  fit?: number;
   enabled: Set<string>;
   selected: string | undefined;
   /** Spaces of the travel route being picked, highlighted in order. */
@@ -50,7 +52,7 @@ export function Table(props: TableProps) {
   );
 }
 
-function Scene({ board, labels, strings, pieces, tracks, tableau, sheets, enabled, selected, route, onSelect, reducedMotion }: TableProps) {
+function Scene({ board, labels, strings, pieces, tracks, tableau, sheets, fit, enabled, selected, route, onSelect, reducedMotion }: TableProps) {
   const graph = useMemo(() => activeGraph(board, enabled), [board, enabled]);
   const at = useMemo(() => new Map(board.spaces.map((s) => [s.id, boardToWorld(s, board)])), [board]);
   const active = useMemo(() => new Set(graph.spaces.map((s) => s.id)), [graph]);
@@ -58,10 +60,25 @@ function Scene({ board, labels, strings, pieces, tracks, tableau, sheets, enable
   const [focus, setFocus] = useState<{ position: [number, number]; size: [number, number]; key: number; forSelected: string | undefined }>();
   const onFocus: FaceProps["onFocus"] = (position, size) => setFocus((prev) => ({ position, size, key: (prev?.key ?? 0) + 1, forSelected: selected }));
   const focused = focus?.forSelected === selected ? focus : undefined;
-  const target = useMemo<CameraTarget | undefined>(() => (focused ? { position: focused.position, size: focused.size, key: focused.key } : selected && at.has(selected) ? { position: at.get(selected)! } : undefined), [focused, selected, at]);
+  const extent = useMemo(() => tableExtent(board, { tableau: tableau !== undefined, sheets: sheets?.length ?? 0, heldRows: Math.max(0, ...(sheets ?? []).map((s) => Math.ceil(s.held.length / 3))) }), [board, tableau, sheets]);
+  // A fit request outranks the focus and the selection until either changes (fit-view D1).
+  const fitSeen = useRef<{ key: number; selected: string | undefined; focusKey: number | undefined }>(undefined);
+  if (fit && fitSeen.current?.key !== fit) fitSeen.current = { key: fit, selected, focusKey: focus?.key };
+  const fitting = !!fit && fitSeen.current?.selected === selected && fitSeen.current?.focusKey === focus?.key;
+  const target = useMemo<CameraTarget | undefined>(
+    () =>
+      fitting
+        ? { position: [(extent.minX + extent.maxX) / 2, (extent.minY + extent.maxY) / 2], fit: true, key: fit }
+        : focused
+          ? { position: focused.position, size: focused.size, key: focused.key }
+          : selected && at.has(selected)
+            ? { position: at.get(selected)! }
+            : undefined,
+    [fitting, fit, extent, focused, selected, at],
+  );
   return (
     <>
-      <CameraRig board={board} withTableau={tableau !== undefined} sheets={sheets?.length ?? 0} heldRows={Math.max(0, ...(sheets ?? []).map((s) => Math.ceil(s.held.length / 3)))} target={target} reducedMotion={reducedMotion} />
+      <CameraRig extent={extent} target={target} reducedMotion={reducedMotion} />
       <BoardPlane board={board} />
       <BoardText labels={labels} strings={strings} active={active} selected={selected} onSelect={onSelect} reducedMotion={reducedMotion} />
       {graph.paths.map((p) => (
@@ -84,14 +101,15 @@ interface CameraTarget {
   position: [number, number];
   /** A card's `[width, height]`; the view zooms until it fills most of the view. */
   size?: [number, number];
+  /** The whole table: the view zooms out to the limit (fit-view D1). */
+  fit?: true;
   key?: number;
 }
 
 /** Top-down orthographic view: zoom bounded so the whole table fits, pan kept within it, no rotation (pan-clamp D2). */
-function CameraRig({ board, withTableau, sheets, heldRows, target, reducedMotion }: { board: Board; withTableau: boolean; sheets: number; heldRows: number; target: CameraTarget | undefined; reducedMotion: boolean }) {
+function CameraRig({ extent, target, reducedMotion }: { extent: ReturnType<typeof tableExtent>; target: CameraTarget | undefined; reducedMotion: boolean }) {
   const { size, camera } = useThree();
   const controls = useRef<ComponentRef<typeof MapControls>>(null);
-  const extent = useMemo(() => tableExtent(board, { tableau: withTableau, sheets, heldRows }), [board, withTableau, sheets, heldRows]);
   const minZoom = Math.min(size.width / (extent.maxX - extent.minX), size.height / (extent.maxY - extent.minY)) * 0.95;
   /** Keeps the view inside the table: the half view stays within the extent, or sits at its centre when wider. */
   const clamp = () => {
@@ -111,7 +129,7 @@ function CameraRig({ board, withTableau, sheets, heldRows, target, reducedMotion
     camera.updateProjectionMatrix();
   }, [camera, minZoom]);
   const goal = useMemo(() => (target ? new Vector3(target.position[0], target.position[1], 0) : undefined), [target]);
-  const zoomGoal = target?.size ? Math.min(Math.max(Math.min(size.width / (target.size[0] * 1.2), size.height / (target.size[1] * 1.2)), minZoom), minZoom * 10) : undefined;
+  const zoomGoal = target?.fit ? minZoom : target?.size ? Math.min(Math.max(Math.min(size.width / (target.size[0] * 1.2), size.height / (target.size[1] * 1.2)), minZoom), minZoom * 10) : undefined;
   // One glide per new target; a drag ends it, so the player's panning holds afterwards (camera-release D1).
   const gliding = useRef(false);
   useEffect(() => {

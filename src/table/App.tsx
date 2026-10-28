@@ -77,6 +77,8 @@ export function App() {
     if (space) setSelected(space);
   }, [activeId, picking]);
   const reducedMotion = usePrefersReducedMotion();
+  /** Bumped by Fit table; the rig glides to the whole table on each change (fit-view D1). */
+  const [fit, setFit] = useState(0);
   const spaces = useMemo(() => activeGraph(board, enabled).spaces, [board, enabled]);
   const pieces = useMemo(() => piecesOnSpace(game.state, set), [game.state, set]);
   const ancientOne = set.ancientOnes.find((a) => a.id === game.state?.ancientOne);
@@ -130,7 +132,7 @@ export function App() {
     <LangProvider lang={lang} strings={panel}>
     <div className="layout">
       <main className="table">
-        <Table board={board} labels={labels} strings={strings[lang]} pieces={pieces} tracks={game.state && { doom: game.state.doom, omen: game.state.omen, eldritch: [...game.state.eldritchOnOmen], reserve: game.state.reserve.map((id) => set.cards.find((c) => c.id === id)?.images.front).filter((i): i is string => !!i) }} tableau={tableau} sheets={sheets} enabled={enabled} selected={selectedSpace?.id} route={route} onSelect={select} reducedMotion={reducedMotion} />
+        <Table board={board} labels={labels} strings={strings[lang]} pieces={pieces} tracks={game.state && { doom: game.state.doom, omen: game.state.omen, eldritch: [...game.state.eldritchOnOmen], reserve: game.state.reserve.map((id) => set.cards.find((c) => c.id === id)?.images.front).filter((i): i is string => !!i) }} tableau={tableau} sheets={sheets} fit={fit} enabled={enabled} selected={selectedSpace?.id} route={route} onSelect={select} reducedMotion={reducedMotion} />
       </main>
       <Panel board={board} set={set} lang={lang} onLang={chooseLang} state={game.state} pieces={pieces} spaces={spaces} enabled={enabled} onToggle={toggle} selected={selectedSpace} onSelect={select}>
         <NewGame
@@ -168,6 +170,7 @@ export function App() {
             if (state) openNew(state);
             else setGame({ ...game, error: note });
           }}
+          onFit={() => setFit((n) => n + 1)}
           canUndo={history.length > 0}
           onUndo={() => {
             setGame({ state: history.at(-1) });

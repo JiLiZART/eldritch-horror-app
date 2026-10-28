@@ -2,6 +2,7 @@
   "game.title": "Игра",
   "game.abandon": "Прервать партию",
   "game.undo": "Отменить",
+  "game.fitTable": "Весь стол",
   "game.save": "Сохранить в файл",
   "game.load": "Загрузить из файла",
   "game.ancientOne": "Древний",

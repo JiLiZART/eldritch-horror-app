@@ -12,6 +12,8 @@ interface NewGameProps {
   onAbandon: () => void;
   canUndo: boolean;
   onUndo: () => void;
+  /** Glides the view back to the whole table (fit-view D2). */
+  onFit: () => void;
   /** Downloads the game in progress as a file (design D2). */
   onSave: () => void;
   /** Loads a saved game's text into a new slot (design D3). */
@@ -28,7 +30,7 @@ interface NewGameProps {
 const DIFFICULTIES: Difficulty[] = ["normal", "easy", "hard"];
 
 /** Setup choices; checkbox check order is seat order. Inputs outlive a running game so abandoning offers them again. */
-export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUndo, onSave, onLoad, onNew, slots, current, onSwitch, onRemove }: NewGameProps) {
+export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUndo, onFit, onSave, onLoad, onNew, slots, current, onSwitch, onRemove }: NewGameProps) {
   const [ancientOne, setAncientOne] = useState(set.ancientOnes[0]?.id ?? "");
   const [seats, setSeats] = useState<string[]>([]);
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
@@ -46,6 +48,9 @@ export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUn
           </button>{" "}
           <button type="button" disabled={!canUndo} onClick={onUndo}>
             {t("game.undo")}
+          </button>{" "}
+          <button type="button" onClick={onFit}>
+            {t("game.fitTable")}
           </button>{" "}
           <button type="button" onClick={onSave}>
             {t("game.save")}
