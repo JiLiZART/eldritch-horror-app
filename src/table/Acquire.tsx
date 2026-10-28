@@ -4,6 +4,7 @@ import { takeAssets, takeBankLoan } from "../engine/actions";
 import type { GameState, Roll } from "../engine/types";
 import { Dice } from "./Dice";
 import { useT } from "./lang";
+import type { FocusCard } from "./Panel";
 import type { Act } from "./Turn";
 
 interface AcquireProps {
@@ -12,10 +13,12 @@ interface AcquireProps {
   /** The Influence roll waiting for rerolls and its choice. */
   roll: Roll & { loan?: true };
   onAct: Act;
+  /** Brings a reserve card up on the table (acquire-card-focus D1). */
+  onFocusCard: FocusCard;
 }
 
 /** Acquire Assets choice (design D5): the roll, reserve cards to gain within it, or one card to discard instead. */
-export function Acquire({ set, state, roll, onAct }: AcquireProps) {
+export function Acquire({ set, state, roll, onAct, onFocusCard }: AcquireProps) {
   const [chosen, setChosen] = useState<string[]>([]);
   const [discard, setDiscard] = useState("");
   const t = useT();
@@ -40,10 +43,15 @@ export function Acquire({ set, state, roll, onAct }: AcquireProps) {
           {t("acquire.takeLoan")}
         </button>
       </p>
-      {state.reserve.map((id) => (
-        <label key={id}>
-          <input type="checkbox" checked={chosen.includes(id)} onChange={(e) => toggle(id, e.target.checked)} /> {card(id)?.name ?? id} ({card(id)?.value})
-        </label>
+      {state.reserve.map((id, n) => (
+        <span key={id}>
+          <label>
+            <input type="checkbox" checked={chosen.includes(id)} onChange={(e) => toggle(id, e.target.checked)} /> ({card(id)?.value})
+          </label>{" "}
+          <button type="button" className="card-button" onClick={() => onFocusCard("reserve", n)}>
+            {card(id)?.name ?? id}
+          </button>{" "}
+        </span>
       ))}
       {chosen.length === 0 && (
         <label>

@@ -4,6 +4,7 @@ import { acquireAssets, componentAction, endTurn, prepareForTravel, rest, travel
 import type { ActionPhase, GameState, Ticket } from "../engine/types";
 import { Acquire } from "./Acquire";
 import { useSpaceName, useT } from "./lang";
+import type { FocusCard } from "./Panel";
 import { Trade } from "./Trade";
 
 export type Act = (fn: (state: GameState) => GameState) => void;
@@ -19,12 +20,14 @@ interface TurnProps {
   route: string[] | undefined;
   onAct: Act;
   onRoute: (route: string[] | undefined) => void;
+  /** Brings a card up on the table, for the Acquire Assets form (acquire-card-focus D1). */
+  onFocusCard: FocusCard;
 }
 
 const TICKETS: Ticket[] = ["train", "ship"];
 
 /** The turn in progress and its action controls (design D6). Rules stay in the engine; this only drafts and dispatches. */
-export function Turn({ board, set, state, phase, error, route, onAct, onRoute }: TurnProps) {
+export function Turn({ board, set, state, phase, error, route, onAct, onRoute, onFocusCard }: TurnProps) {
   const [discard, setDiscard] = useState<Ticket>("train");
   const [trading, setTrading] = useState(false);
   const [component, setComponent] = useState("");
@@ -113,7 +116,7 @@ export function Turn({ board, set, state, phase, error, route, onAct, onRoute }:
         </div>
       )}
       {/* Keyed on the roll so a new roll starts with nothing chosen. */}
-      {phase.acquiring && <Acquire key={state.rolls} set={set} state={state} roll={phase.acquiring} onAct={onAct} />}
+      {phase.acquiring && <Acquire key={state.rolls} set={set} state={state} roll={phase.acquiring} onAct={onAct} onFocusCard={onFocusCard} />}
       {trading && !route && <Trade set={set} state={state} active={me.id} onAct={onAct} onClose={() => setTrading(false)} />}
       <p aria-live="assertive" className="error">
         {error}
