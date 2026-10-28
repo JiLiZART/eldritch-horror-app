@@ -271,3 +271,14 @@ During a game each improved skill SHALL carry an improvement token on that skill
 #### Scenario: Tickets held
 - **WHEN** Leo Anderson holds a train ticket and a ship ticket
 - **THEN** a train token and a ship token lie in the top-right corner of his sheet
+
+### Requirement: The view can be fitted to the table again
+A Fit table control beside the board SHALL glide the view back to the whole table at the zoom-out limit, in the panel's language; it SHALL be reachable by keyboard; reduced motion makes the move instant.
+
+#### Scenario: Fit after reading a card
+- **WHEN** the player has zoomed onto a card and chooses Fit table
+- **THEN** the view glides out until the whole table is in view, with the selection unchanged
+
+#### Scenario: In Russian
+- **WHEN** the panel language is Russian
+- **THEN** the control is labelled in Russian
