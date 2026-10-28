@@ -422,7 +422,7 @@ Pointing at a card face on the table (a reserve card, the Ancient One sheet, the
 - **THEN** the badge reads Lily Chen
 
 ### Requirement: The round and phase are shown on the table
-During a game a line in a corner of the table SHALL show the round, the phase and, in the Action and Encounter phases, the investigator whose turn it is, in the panel's language, so a screen showing the table without the panel still tells where the game stands; before a game and after one ends the line SHALL show nothing or the outcome.
+During a game a line in a corner of the table SHALL show the round, the phase and, in the Action and Encounter phases, the investigator whose turn it is, in the panel's language, so a screen showing the table without the panel still tells where the game stands; before a game and after one ends the line SHALL show nothing or the outcome. The same line SHALL state the doom value and the omen's colour with its eldritch count, so a far screen reads them without the track tokens.
 
 #### Scenario: On the table-only screen
 - **WHEN** the panel is hidden in round 2 during Lily Chen's Action-phase turn
@@ -431,6 +431,10 @@ During a game a line in a corner of the table SHALL show the round, the phase an
 #### Scenario: After the game ends
 - **WHEN** the investigators have won
 - **THEN** the table's corner says the game is won
+
+#### Scenario: Doom and omen in the corner
+- **WHEN** doom is at 12 and the omen is on green with 1 eldritch token
+- **THEN** the table's corner line states doom 12 and the green omen with its count, in the panel's language
 
 ### Requirement: The last journal line is shown on the table
 During a game the table's corner SHALL show the latest journal entry under the status line, with its phase word in the panel's language and the entry's text as logged, so a screen showing the table without the panel tells what just happened; with an empty journal nothing is shown.
