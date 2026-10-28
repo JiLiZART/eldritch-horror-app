@@ -52,6 +52,9 @@ export interface InvestigatorState {
   delayed?: true;
 }
 
+/** Holds a Detained condition (manual p.4): ids follow `<set>/condition/detained-<n>` as content-schema fixes. */
+export const isDetained = (me: InvestigatorState): boolean => me.conditions.some((c) => /\/condition\/detained-\d+$/.test(c));
+
 export type ActionName = "travel" | "rest" | "prepare-for-travel" | "trade" | "acquire-assets";
 
 export interface ActionPhase {

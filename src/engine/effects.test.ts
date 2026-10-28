@@ -113,6 +113,9 @@ describe("card text delays an investigator", () => {
 });
 
 describe("an investigator is moved by card text", () => {
+  it("refuses a Detained investigator", () => {
+    expect(() => moveInvestigator(patch(encounters(), leo, { conditions: ["eh01/condition/detained-1"] }), content, leo, "arkham")).toThrow(/Detained investigator cannot move/);
+  });
   it("moves to the named space", () => {
     const s = moveInvestigator(encounters(), content, leo, "arkham");
     expect(who(s, leo).space).toBe("arkham");

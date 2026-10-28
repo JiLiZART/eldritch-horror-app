@@ -7,6 +7,7 @@ import { reshuffle } from "./rng";
 import { expeditionSpace } from "./setup";
 import { note, spaceName } from "./spawn";
 import { test } from "./test";
+import { isDetained } from "./types";
 import type { EncounterPhase, GameState, InvestigatorState, MonsterInstance } from "./types";
 
 /** Encounter phase (manual_eng.pdf p.3–4, p.8; EH_reference.pdf p.2, p.5, p.8): fight the monsters on the space, or draw one encounter card. */
@@ -70,6 +71,7 @@ function combatOf(state: GameState, { set }: Content, id: string): { name: strin
  */
 export function fight(state: GameState, content: Content, monster: MonsterInstance): GameState {
   const me = active(state);
+  if (isDetained(me)) throw new Error("a Detained investigator resolves the back of Detained instead of an encounter");
   const target = state.monsters.find((m) => m.id === monster.id && m.instance === monster.instance);
   if (!target || target.space !== me.space) throw new Error("combat is against monsters on the investigator's space");
   const phase = encounterPhase(state);
@@ -168,6 +170,7 @@ export function drawEncounter(state: GameState, content: Content, deck: string):
   const phase = encounterPhase(state);
   const me = active(state);
   if (phase.combat) throw new Error("the fight is not over");
+  if (isDetained(me)) throw new Error("a Detained investigator resolves the back of Detained instead of an encounter");
   if (monstersOn(state, me.space).length > 0) throw new Error("the monsters on the space must be fought first");
   if (phase.card) throw new Error("an investigator resolves one encounter");
   const refusal = allowed(state, content, me.space, deck);
@@ -184,7 +187,7 @@ export function finishEncounter(state: GameState, content: Content): GameState {
   const phase = encounterPhase(state);
   const me = active(state);
   if (phase.combat) throw new Error("the fight is not over");
-  if (unfought(state, me.space).length > 0) throw new Error("the monsters on the space must be fought first");
+  if (!isDetained(me) && unfought(state, me.space).length > 0) throw new Error("the monsters on the space must be fought first");
   let s = state;
   if (phase.card) {
     const { deck, id } = phase.card;

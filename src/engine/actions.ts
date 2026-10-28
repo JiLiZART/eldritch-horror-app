@@ -2,6 +2,7 @@ import type { Board, GameSet } from "../content/types";
 import { nextStanding, startEncounters } from "./encounter";
 import { type Random, rng, shuffle } from "./rng";
 import { test } from "./test";
+import { isDetained } from "./types";
 import type { ActionName, ActionPhase, GameState, InvestigatorState, Ticket } from "./types";
 
 /** Action phase rules (manual_eng.pdf p.3; EH_reference.pdf p.6–10). Each function returns the next state or throws the rule it breaks. */
@@ -67,6 +68,7 @@ function pathTypes(board: Board, a: string, b: string) {
 export function travel(state: GameState, board: Board, route: string[]): GameState {
   mayAct(state, "travel");
   const me = active(state);
+  if (isDetained(me)) throw new Error("a Detained investigator cannot move");
   if (route.length === 0) throw new Error("travel needs at least one space");
   const tickets = [...me.tickets];
   let at = me.space;

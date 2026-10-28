@@ -147,6 +147,20 @@ describe("two tests decide the fight", () => {
   });
 });
 
+describe("the back of Detained replaces the encounter", () => {
+  const jailed = () => place(patch(encounters(), leo, { conditions: ["eh01/condition/detained-1"] }), ghoul, "buenos-aires");
+  it("refuses a fight and a draw", () => {
+    const s = jailed();
+    expect(() => fight(s, content, s.monsters.find((m) => m.id === ghoul)!)).toThrow(/back of Detained/);
+    expect(() => drawEncounter(s, content, "america")).toThrow(/back of Detained/);
+  });
+  it("finishes with the monster unfought", () => {
+    const s = finishEncounter(jailed(), content);
+    expect(s.phase).toMatchObject({ name: "encounter", active: lily });
+    expect(onBoard(s, ghoul)).toHaveLength(1);
+  });
+});
+
 describe("one encounter of the investigator's choice", () => {
   it("draws from the region's location deck", () => {
     const s = encounters();

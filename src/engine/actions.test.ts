@@ -71,6 +71,17 @@ describe("investigators act in seat order", () => {
   });
 });
 
+describe("a Detained investigator cannot move", () => {
+  const jailed = () => patch(west(), charlie, { conditions: ["eh01/condition/detained-1"] });
+  it("refuses travel", () => {
+    expect(() => travel(jailed(), board, ["space-5"])).toThrow(/Detained investigator cannot move/);
+  });
+  it("still rests", () => {
+    const s = rest(patch(jailed(), charlie, { health: 1 }), set);
+    expect(who(s, charlie).health).toBe(2);
+  });
+});
+
 describe("travel moves along paths", () => {
   it("moves to an adjacent space and spends Travel for the phase", () => {
     const s = travel(west(), board, ["space-5"]);

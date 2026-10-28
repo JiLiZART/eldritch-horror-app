@@ -1,5 +1,6 @@
 import type { Board, GameSet } from "../content/types";
 import { continueFight, drawEncounter, fight, finishEncounter, monsterKey } from "../engine/encounter";
+import { isDetained } from "../engine/types";
 import type { EncounterPhase, GameState } from "../engine/types";
 import { Dice } from "./Dice";
 import { Effects } from "./Effects";
@@ -31,13 +32,19 @@ export function Encounter({ board, set, state, phase, error, onAct }: EncounterP
   ].filter((d): d is string => typeof d === "string");
   const cards = phase.card?.deck === "research" ? set.ancientOnes.find((a) => a.id === state.ancientOne)?.research : set.encounterDecks.find((d) => d.id === phase.card?.deck)?.cards;
   const card = cards?.find((c) => c.id === phase.card?.id);
+  const detained = isDetained(me) ? set.cards.find((c) => me.conditions.includes(c.id) && /\/condition\/detained-\d+$/.test(c.id)) : undefined;
   return (
     <section className="turn">
       <h2>Round {state.round}, Encounter phase</h2>
       <p>
         {name} encounters on {space?.name.en ?? me.space}
       </p>
-      {monsters.length > 0 && (
+      {detained && (
+        <p className="cards">
+          {detained.images.back && <img className="mythos-card" src={`/${detained.images.back}`} alt="Detained back" />} {name} resolves the back of Detained instead of an encounter.
+        </p>
+      )}
+      {!detained && monsters.length > 0 && (
         <ul className="cards">
           {monsters.map((m) => {
             const sheet = set.monsters.find((x) => x.id === m.id);
@@ -64,7 +71,7 @@ export function Encounter({ board, set, state, phase, error, onAct }: EncounterP
           </button>
         </p>
       )}
-      {monsters.length === 0 && !phase.card && (
+      {!detained && monsters.length === 0 && !phase.card && (
         <p>
           {decks.map((d) => (
             <button key={d} type="button" onClick={() => onAct((s) => drawEncounter(s, content, d))}>
@@ -83,7 +90,7 @@ export function Encounter({ board, set, state, phase, error, onAct }: EncounterP
           <li key={n}>{line}</li>
         ))}
       </ol>
-      <button type="button" disabled={unfought.length > 0} onClick={() => onAct((s) => finishEncounter(s, content))}>
+      <button type="button" disabled={!detained && unfought.length > 0} onClick={() => onAct((s) => finishEncounter(s, content))}>
         Finish
       </button>
       <Effects key={phase.active} board={board} set={set} state={state} who={phase.active} onAct={onAct} />
@@ -91,7 +98,7 @@ export function Encounter({ board, set, state, phase, error, onAct }: EncounterP
         {error}
       </p>
       <p>
-        <small>Card text and token text are left to the players; defeated investigators are not replaced; Detained is applied by the players.</small>
+        <small>Card text and token text are left to the players; defeated investigators are not replaced.</small>
       </p>
     </section>
   );

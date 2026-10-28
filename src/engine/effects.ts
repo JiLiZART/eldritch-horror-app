@@ -4,6 +4,7 @@ import { defeat } from "./encounter";
 import { reshuffle } from "./rng";
 import type { Content } from "./setup";
 import { note, spaceName, textPhase } from "./spawn";
+import { isDetained } from "./types";
 import type { GameState, InvestigatorState, MonsterInstance, MonsterOnBoard } from "./types";
 
 /** Card text applied by the players (manual_eng.pdf p.3–4): health, sanity, clues, gates and cards. The text itself stays with the players. */
@@ -35,6 +36,7 @@ export const changeSanity = (state: GameState, content: Content, id: string, del
 /** Card text moves the pawn anywhere, with no ticket or action (manual p.3–4); which space is "nearest" or "random" is the players' call. */
 export function moveInvestigator(state: GameState, content: Content, id: string, space: string): GameState {
   const me = subject(state, id);
+  if (isDetained(me)) throw new Error("a Detained investigator cannot move");
   if (!content.board.spaces.some((s) => s.id === space)) throw new Error(`no space ${space} on the board`);
   return note(replace(state, { ...me, space }), `${name(content, id)} moves to ${spaceName(content, space)}`);
 }
