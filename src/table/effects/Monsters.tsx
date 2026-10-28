@@ -2,9 +2,8 @@ import { useState } from "react";
 import type { Board, GameSet } from "../../content/types";
 import { discardMonster, moveMonster, moveMonsterToward } from "../../engine/effects";
 import { monsterKey } from "../../engine/encounter";
-import { spaceName } from "../../engine/spawn";
 import type { GameState, InvestigatorState } from "../../engine/types";
-import { useT } from "../lang";
+import { useSpaceName, useT } from "../lang";
 import type { Act } from "../Turn";
 
 interface Props {
@@ -24,6 +23,7 @@ export function MonstersEffects({ board, set, state, space, onAct }: Props) {
   const [monster, setMonster] = useState("");
   const content = { board, set };
   const t = useT();
+  const spaceName = useSpaceName();
   const chosen = state.monsters.find((m) => monsterKey(m) === monster) ?? state.monsters[0];
   return (
     <>
@@ -35,13 +35,13 @@ export function MonstersEffects({ board, set, state, space, onAct }: Props) {
             <select value={monsterKey(chosen)} onChange={(e) => setMonster(e.target.value)}>
               {state.monsters.map((m) => (
                 <option key={monsterKey(m)} value={monsterKey(m)}>
-                  {t("effects.monsterOn", { name: set.monsters.find((x) => x.id === m.id)?.name ?? m.id, space: spaceName(content, m.space) })}
+                  {t("effects.monsterOn", { name: set.monsters.find((x) => x.id === m.id)?.name ?? m.id, space: spaceName(board, m.space) })}
                 </option>
               ))}
             </select>
           </label>{" "}
           <button type="button" onClick={() => onAct((s) => moveMonster(s, content, chosen, space))}>
-            {t("effects.moveToSpace", { space: spaceName(content, space) })}
+            {t("effects.moveToSpace", { space: spaceName(board, space) })}
           </button>
           <button type="button" onClick={() => onAct((s) => moveMonsterToward(s, content, chosen))}>
             {t("effects.towardNearest")}

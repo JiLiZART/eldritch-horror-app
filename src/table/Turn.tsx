@@ -3,7 +3,7 @@ import type { Board, GameSet } from "../content/types";
 import { acquireAssets, componentAction, endTurn, prepareForTravel, rest, travel } from "../engine/actions";
 import type { ActionPhase, GameState, Ticket } from "../engine/types";
 import { Acquire } from "./Acquire";
-import { useT } from "./lang";
+import { useSpaceName, useT } from "./lang";
 import { Trade } from "./Trade";
 
 export type Act = (fn: (state: GameState) => GameState) => void;
@@ -31,7 +31,8 @@ export function Turn({ board, set, state, phase, error, route, onAct, onRoute }:
   const t = useT();
   const me = state.investigators.find((i) => i.id === phase.active)!;
   const name = (id: string) => set.investigators.find((i) => i.id === id)?.name ?? id;
-  const spaceName = (id: string) => board.spaces.find((s) => s.id === id)?.name.en ?? id;
+  const nameOf = useSpaceName();
+  const spaceName = (id: string) => nameOf(board, id);
   const full = me.tickets.length >= 2;
   const cardTitle = (id: string) => set.cards.find((c) => c.id === id)?.name ?? id;
   /** The own sheet and possessions, then same-space investigators' possessions for a local action. */

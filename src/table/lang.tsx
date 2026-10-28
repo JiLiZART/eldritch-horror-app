@@ -1,5 +1,5 @@
 import { createContext, useContext, type ReactNode } from "react";
-import type { Lang } from "../content/types";
+import type { Board, Lang } from "../content/types";
 
 /** The panel's own words in the chosen language (design D2). */
 
@@ -21,4 +21,15 @@ export function LangProvider({ lang, strings, children }: { lang: Lang; strings:
 export function useT(): (key: string, vars?: Record<string, string | number>) => string {
   const { strings } = useContext(LangContext);
   return (key, vars) => translate(strings, key, vars);
+}
+
+/** A space's printed name in the chosen language, as the board shows it (space-names-language D1). */
+export function spaceNameIn(board: Board, lang: Lang, id: string): string {
+  return board.spaces.find((s) => s.id === id)?.name[lang] ?? id;
+}
+
+/** The space-name lookup for the current language. */
+export function useSpaceName(): (board: Board, id: string) => string {
+  const { lang } = useContext(LangContext);
+  return (board, id) => spaceNameIn(board, lang, id);
 }

@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { translate } from "./lang";
+import { translate, spaceNameIn } from "./lang";
 
 const root = join(import.meta.dirname, "../..");
 const en: Record<string, string> = JSON.parse(readFileSync(join(root, "content/panel/i18n/en.json"), "utf8"));
@@ -30,5 +30,14 @@ describe("the panel's strings", () => {
   it("fill placeholders", () => {
     expect(translate({ "a.b": "{name} has {n}" }, "a.b", { name: "Leo", n: 2 })).toBe("Leo has 2");
     expect(translate({}, "missing")).toBe("missing");
+  });
+});
+
+describe("space names", () => {
+  const board = { spaces: [{ id: "london", name: { en: "London", ru: "Лондон" } }] } as never;
+  it("follow the language and fall back to the id", () => {
+    expect(spaceNameIn(board, "en", "london")).toBe("London");
+    expect(spaceNameIn(board, "ru", "london")).toBe("Лондон");
+    expect(spaceNameIn(board, "ru", "nowhere")).toBe("nowhere");
   });
 });

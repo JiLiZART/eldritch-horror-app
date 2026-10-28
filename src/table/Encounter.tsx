@@ -5,7 +5,7 @@ import { isDetained } from "../engine/types";
 import type { EncounterPhase, GameState } from "../engine/types";
 import { Dice } from "./Dice";
 import { Effects } from "./Effects";
-import { useT } from "./lang";
+import { useSpaceName, useT } from "./lang";
 import type { Act } from "./Turn";
 
 interface EncounterProps {
@@ -21,6 +21,7 @@ interface EncounterProps {
 export function Encounter({ board, set, state, phase, error, onAct }: EncounterProps) {
   const content = { board, set };
   const t = useT();
+  const spaceName = useSpaceName();
   const me = state.investigators.find((i) => i.id === phase.active)!;
   const space = board.spaces.find((s) => s.id === me.space);
   const name = set.investigators.find((i) => i.id === me.id)?.name ?? me.id;
@@ -43,7 +44,7 @@ export function Encounter({ board, set, state, phase, error, onAct }: EncounterP
   return (
     <section className="turn">
       <h2>{t("encounter.heading", { round: state.round })}</h2>
-      <p>{t("encounter.on", { name, space: space?.name.en ?? me.space })}</p>
+      <p>{t("encounter.on", { name, space: spaceName(board, me.space) })}</p>
       {detained && (
         <p className="cards">
           {detained.images.back && <img className="mythos-card" src={`/${detained.images.back}`} alt="Detained back" />} {t("encounter.detained", { name })}

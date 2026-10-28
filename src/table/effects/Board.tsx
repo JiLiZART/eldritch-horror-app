@@ -2,9 +2,8 @@ import { useState } from "react";
 import type { Board, GameSet } from "../../content/types";
 import { ambush, changeEldritchOnOmen, closeGate, discardOngoing, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spawnNamed, spawnSetAside } from "../../engine/effects";
 import { OMEN_TRACK } from "../../engine/omen";
-import { spaceName } from "../../engine/spawn";
 import type { GameState, InvestigatorState } from "../../engine/types";
-import { useT } from "../lang";
+import { useSpaceName, useT } from "../lang";
 import type { Act } from "../Turn";
 
 interface Props {
@@ -27,6 +26,7 @@ export function BoardEffects({ board, set, state, me, space, onAct }: Props) {
   const [ongoing, setOngoing] = useState("");
   const content = { board, set };
   const t = useT();
+  const spaceName = useSpaceName();
   const cupKinds = [...new Set(state.monsterCup.map((m) => m.id))].map((k) => ({ id: k, label: t("effects.kindCount", { name: set.monsters.find((m) => m.id === k)?.name ?? k, count: state.monsterCup.filter((m) => m.id === k).length }) })).sort((a, b) => a.label.localeCompare(b.label));
   const asideKinds = [...new Set(state.setAsideMonsters.map((m) => m.id))].map((k) => ({ id: k, label: t("effects.kindCount", { name: set.monsters.find((m) => m.id === k)?.name ?? k, count: state.setAsideMonsters.filter((m) => m.id === k).length }) }));
   return (
@@ -44,7 +44,7 @@ export function BoardEffects({ board, set, state, me, space, onAct }: Props) {
           {t("effects.spawnClue")}
         </button>
         <button type="button" onClick={() => onAct((s) => spawnMonsterByText(s, content, me.id, space))}>
-          {t("effects.spawnMonsterOn", { space: spaceName(content, space) })}
+          {t("effects.spawnMonsterOn", { space: spaceName(board, space) })}
         </button>
         <button type="button" onClick={() => onAct((s) => spawnMonsterRandomly(s, content, me.id))}>
           {t("effects.spawnMonsterRandom")}
@@ -62,7 +62,7 @@ export function BoardEffects({ board, set, state, me, space, onAct }: Props) {
           </select>
         </label>{" "}
         <button type="button" disabled={!kind} onClick={() => onAct((s) => spawnNamed(s, content, me.id, kind, space))}>
-          {t("effects.spawnNamedOn", { space: spaceName(content, space) })}
+          {t("effects.spawnNamedOn", { space: spaceName(board, space) })}
         </button>
         {state.ongoingMythos.length > 0 && (
           <>
@@ -98,7 +98,7 @@ export function BoardEffects({ board, set, state, me, space, onAct }: Props) {
               </select>
             </label>{" "}
             <button type="button" disabled={!aside} onClick={() => onAct((s) => spawnSetAside(s, content, me.id, aside, space))}>
-              {t("effects.spawnSetAsideOn", { space: spaceName(content, space) })}
+              {t("effects.spawnSetAsideOn", { space: spaceName(board, space) })}
             </button>
           </>
         )}

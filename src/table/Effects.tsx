@@ -6,7 +6,7 @@ import { BoardEffects } from "./effects/Board";
 import { CardsEffects } from "./effects/Cards";
 import { InvestigatorEffects } from "./effects/Investigator";
 import { MonstersEffects } from "./effects/Monsters";
-import { useT } from "./lang";
+import { useSpaceName, useT } from "./lang";
 import type { Act } from "./Turn";
 
 interface EffectsProps {
@@ -23,6 +23,7 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
   const [id, setId] = useState(who);
   const [space, setSpace] = useState(board.spaces[0]!.id);
   const t = useT();
+  const spaceName = useSpaceName();
   const me = state.investigators.find((i) => i.id === id) ?? state.investigators[0]!;
   const name = (x: string) => set.investigators.find((i) => i.id === x)?.name ?? x;
   const groups = [
@@ -52,7 +53,7 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
         <select value={space} onChange={(e) => setSpace(e.target.value)}>
           {board.spaces.map((s) => (
             <option key={s.id} value={s.id}>
-              {s.name.en}
+              {spaceName(board, s.id)}
             </option>
           ))}
         </select>

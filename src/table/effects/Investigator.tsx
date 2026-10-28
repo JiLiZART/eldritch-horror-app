@@ -2,9 +2,8 @@ import { useState } from "react";
 import type { Board, Skill, GameSet } from "../../content/types";
 import { changeHealth, changeSanity, delay, devour, discardImprovement, gainClue, improveSkill, moveInvestigator, moveInvestigatorRandomly, moveInvestigatorToNearest, spendClue, spendHealth, spendSanity, standUp } from "../../engine/effects";
 import type { NearestTarget } from "../../engine/effects";
-import { spaceName } from "../../engine/spawn";
 import type { GameState, InvestigatorState } from "../../engine/types";
-import { useT } from "../lang";
+import { useSpaceName, useT } from "../lang";
 import type { Act } from "../Turn";
 
 interface Props {
@@ -26,6 +25,7 @@ export function InvestigatorEffects({ board, set, me, space, onAct }: Props) {
   const [target, setTarget] = useState<NearestTarget>("city");
   const content = { board, set };
   const t = useT();
+  const spaceName = useSpaceName();
 
   return (
     <>
@@ -64,7 +64,7 @@ export function InvestigatorEffects({ board, set, me, space, onAct }: Props) {
           {t("effects.devour")}
         </button>
         <button type="button" onClick={() => onAct((s) => moveInvestigator(s, content, me.id, space))}>
-          {t("effects.moveToSpace", { space: spaceName(content, space) })}
+          {t("effects.moveToSpace", { space: spaceName(board, space) })}
         </button>
         <button type="button" onClick={() => onAct((s) => moveInvestigatorRandomly(s, content, me.id))}>
           {t("effects.moveRandom")}

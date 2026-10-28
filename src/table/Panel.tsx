@@ -4,7 +4,7 @@ import type { Board, GameSet, Lang, Space } from "../content/types";
 import { OMEN_TRACK } from "../engine/omen";
 import type { GameState } from "../engine/types";
 import { Glossary } from "./Glossary";
-import { useT } from "./lang";
+import { useSpaceName, useT } from "./lang";
 import type { Piece } from "./pieces";
 import { BOARD_SETS, PATH_COLORS } from "./sets";
 
@@ -29,6 +29,7 @@ const SET_NAMES: Record<string, string> = Object.fromEntries(BOARD_SETS.map((s) 
 
 export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled, onToggle, selected, onSelect, children }: PanelProps) {
   const t = useT();
+  const spaceName = useSpaceName();
   const pathType = (a: string, b: string) => board.paths.find((p) => (p.from === a && p.to === b) || (p.from === b && p.to === a))?.type;
   return (
     <aside className="panel">
@@ -88,7 +89,7 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
                 {neighbors(board, selected.id).map((n) => (
                   <li key={n}>
                     <button type="button" onClick={() => onSelect(n)}>
-                      {board.spaces.find((s) => s.id === n)?.name.en ?? n}
+                      {spaceName(board, n)}
                     </button>{" "}
                     <small>{pathType(selected.id, n)}</small>
                   </li>
@@ -106,7 +107,7 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
           {spaces.map((s) => (
             <li key={s.id}>
               <button type="button" aria-pressed={s.id === selected?.id} onClick={() => onSelect(s.id)}>
-                {s.name.en}
+                {spaceName(board, s.id)}
               </button>
             </li>
           ))}
@@ -152,7 +153,7 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
   const ancientOne = set.ancientOnes.find((a) => a.id === state.ancientOne);
   const mystery = ancientOne?.mysteries.find((m) => m.id === state.currentMystery);
   const cardName = (id: string) => set.cards.find((c) => c.id === id)?.name ?? id;
-  const spaceName = (id: string) => board.spaces.find((s) => s.id === id)?.name.en ?? id;
+  const spaceName = useSpaceName();
   const { encounters, ...decks } = state.decks;
   const sizes = Object.entries({ ...decks, ...encounters, monsterCup: state.monsterCup, setAside: state.setAsideMonsters, gateStack: state.gateStack, cluePool: state.cluePool });
   const ongoing = state.ongoingMythos.map((id) => set.mythos.find((m) => m.id === id)).filter((m) => m !== undefined);
@@ -234,7 +235,7 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
                   </p>
                 )}
               </td>
-              <td>{spaceName(i.space)}</td>
+              <td>{spaceName(board, i.space)}</td>
               <td>{i.health}</td>
               <td>{i.sanity}</td>
               <td>{i.clues}</td>
