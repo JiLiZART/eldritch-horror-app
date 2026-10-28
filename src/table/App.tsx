@@ -70,6 +70,15 @@ export function App() {
   };
   /** Travel route being picked on the table; undefined outside route mode (design D3). */
   const [route, setRoute] = useState<string[]>();
+  // The camera follows the turn (follow-active D1): keyed on the active investigator, not their space, and never mid-route.
+  const phase = game.state?.phase;
+  const activeId = phase?.name === "action" || phase?.name === "encounter" ? phase.active : undefined;
+  const picking = route !== undefined;
+  useEffect(() => {
+    if (!activeId || picking) return;
+    const space = game.state?.investigators.find((i) => i.id === activeId)?.space;
+    if (space) setSelected(space);
+  }, [activeId, picking]);
   const reducedMotion = usePrefersReducedMotion();
   const spaces = useMemo(() => activeGraph(board, enabled).spaces, [board, enabled]);
   const pieces = useMemo(() => piecesOnSpace(game.state, set), [game.state, set]);
