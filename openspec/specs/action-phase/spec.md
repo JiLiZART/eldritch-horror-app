@@ -112,7 +112,7 @@ While a game is in progress the players SHALL see the round, the phase, the acti
 - **THEN** both spaces are highlighted on the table and the move happens only on confirmation
 
 ### Requirement: Acquire Assets buys from the reserve
-Acquire Assets SHALL be allowed only on a city space without a monster. It SHALL test Influence, show the roll and let it wait for rerolls, then let the active investigator gain reserve cards whose printed values add up to at most the result; when no card is gained, 1 reserve card MAY be discarded. The reserve SHALL be refilled to 4 from the asset deck, the asset discard reshuffled in when the deck is empty. Until the cards are chosen no other action and no end of turn SHALL be accepted. A choice that breaks these rules SHALL be refused with the rule named and the reserve left as it was. Source: `inspired/manual_eng.pdf` p.3 "Acquire Assets"; `inspired/EH_reference.pdf` p.9 (Приобретение активов), p.10 (Резерв). **Deviation**: the Bank Loan and Debt are not modelled.
+Acquire Assets SHALL be allowed only on a city space without a monster. It SHALL test Influence, show the roll and let it wait for rerolls, then let the active investigator gain reserve cards whose printed values add up to at most the result; while the roll waits the investigator MAY take the Bank Loan printed on the board once: the result counts 2 more successes and they gain a Debt condition at once, refused when they already hold Debt or already took the loan on this roll, and the 2 successes survive later rerolls; when no card is gained, 1 reserve card MAY be discarded. The reserve SHALL be refilled to 4 from the asset deck, the asset discard reshuffled in when the deck is empty. Until the cards are chosen no other action and no end of turn SHALL be accepted. A choice that breaks these rules SHALL be refused with the rule named and the reserve left as it was. Source: `inspired/manual_eng.pdf` p.3 "Acquire Assets"; `inspired/EH_reference.pdf` p.9 (Приобретение активов), p.10 (Резерв).
 
 #### Scenario: Influence tested
 - **WHEN** Charlie Kane on San Francisco with no monster present acquires assets
@@ -153,3 +153,15 @@ Acquire Assets SHALL be allowed only on a city space without a monster. It SHALL
 #### Scenario: Rerolled before choosing
 - **WHEN** Charlie Kane with a clue rerolls one Influence die and then takes cards
 - **THEN** the cards are measured against the recounted result
+
+#### Scenario: Bank Loan taken
+- **WHEN** Charlie Kane rolls 1 success, takes the Bank Loan and gains cards worth 3
+- **THEN** he holds a Debt condition and the cards are his
+
+#### Scenario: Debt already held
+- **WHEN** Charlie Kane holding Debt takes the Bank Loan
+- **THEN** it is refused because he already has Debt
+
+#### Scenario: Loan survives a reroll
+- **WHEN** Charlie Kane takes the Bank Loan and then rerolls a die
+- **THEN** the result still counts the 2 extra successes
