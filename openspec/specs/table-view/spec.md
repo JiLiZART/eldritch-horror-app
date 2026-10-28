@@ -54,7 +54,7 @@ Clicking a marker SHALL select that space and show its id, English and Russian n
 - **THEN** the panel names the gate, the monster and the investigator on that space
 
 ### Requirement: Pieces stand where the game state puts them
-The table SHALL show the pieces of the game in progress at their spaces: each chosen investigator's pawn with its pawn image, a devoured investigator's pawn gone, each open gate with its city's gate token, each facedown clue token, each monster with its token image, and the active expedition token. Several pieces on one space SHALL remain distinguishable. Before a game starts, and after one is abandoned, no piece SHALL stand on the board.
+The table SHALL show the pieces of the game in progress at their spaces: each chosen investigator's pawn with its pawn image, a devoured or removed investigator's pawn gone, each open gate with its city's gate token, each facedown clue token, each monster with its token image, and the active expedition token. Several pieces on one space SHALL remain distinguishable. Before a game starts, and after one is abandoned, no piece SHALL stand on the board.
 
 #### Scenario: Pawn placement
 - **WHEN** a game starts with Charlie Kane and Akachi Onyele
