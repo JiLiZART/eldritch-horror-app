@@ -148,3 +148,10 @@ body {
   font-size: 11px;
   opacity: 0.85;
 }
+/* A panel thumbnail that brings its card up on the table (panel-card-focus D2). */
+.card-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}

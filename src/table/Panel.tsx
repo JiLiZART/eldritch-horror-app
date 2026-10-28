@@ -23,13 +23,17 @@ interface PanelProps {
   onSelect: (id: string) => void;
   /** Hides the panel for a table-only screen (panel-toggle D1). */
   onHidePanel: () => void;
+  /** Brings a card up on the table by its place (panel-card-focus D2). */
+  onFocusCard: FocusCard;
   children?: ReactNode;
 }
+
+export type FocusCard = (place: "reserve" | "mystery" | "mythos" | "sheet", index: number) => void;
 
 /** Board set names beyond the core set, as the content names them; the core set's name is a panel string (deck-names-language D1). */
 const SET_NAMES: Record<string, string> = Object.fromEntries(BOARD_SETS.map((s) => [s.id, s.name]));
 
-export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled, onToggle, selected, onSelect, onHidePanel, children }: PanelProps) {
+export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled, onToggle, selected, onSelect, onHidePanel, onFocusCard, children }: PanelProps) {
   const t = useT();
   const spaceName = useSpaceName();
   /** Text narrowing the space list by name in the chosen language (space-filter D1). */
@@ -45,7 +49,7 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
         </button>
       </h1>
       {children}
-      {state && <Status board={board} set={set} state={state} onSelect={onSelect} />}
+      {state && <Status board={board} set={set} state={state} onSelect={onSelect} onFocusCard={onFocusCard} />}
       {state && <Journal set={set} state={state} />}
       <Glossary />
       <fieldset>
@@ -156,7 +160,7 @@ function Journal({ set, state }: { set: GameSet; state: GameState }) {
   );
 }
 
-function Status({ board, set, state, onSelect }: { board: Board; set: GameSet; state: GameState; onSelect: (id: string) => void }) {
+function Status({ board, set, state, onSelect, onFocusCard }: { board: Board; set: GameSet; state: GameState; onSelect: (id: string) => void; onFocusCard: FocusCard }) {
   const t = useT();
   /** The one investigator whose sheet image is open (design D2). */
   const [sheet, setSheet] = useState<string>();
@@ -185,19 +189,25 @@ function Status({ board, set, state, onSelect }: { board: Board; set: GameSet; s
         <dd>{t("status.referenceLine", { gates: state.referenceCard.gates, clues: state.referenceCard.clues, surge: state.referenceCard.surge })}</dd>
         <dt>{t("status.mystery")}</dt>
         <dd className="cards">
-          {mystery && <img src={`/${mystery.images.front}`} alt={mystery.name} />}
+          {mystery && (
+            <button type="button" className="card-button" onClick={() => onFocusCard("mystery", 0)}>
+              <img src={`/${mystery.images.front}`} alt={mystery.name} />
+            </button>
+          )}
           {state.awakened && ancientOne?.images.back && <img src={`/${ancientOne.images.back}`} alt={`${ancientOne.name} awakened`} />}
           {t("status.mysteryLine", { solved: state.solvedMysteries.length, tokens: state.mysteryTokens })}
           {state.finalMysterySolved && t("status.finalSolved")}
         </dd>
         <dt>{t("status.reserve")}</dt>
         <dd className="cards">
-          {state.reserve.map((id) => {
+          {state.reserve.map((id, n) => {
             const card = set.cards.find((c) => c.id === id);
             return (
               card && (
                 <figure key={id}>
-                  <img src={`/${card.images.front}`} alt={card.name} />
+                  <button type="button" className="card-button" onClick={() => onFocusCard("reserve", n)}>
+                    <img src={`/${card.images.front}`} alt={card.name} />
+                  </button>
                   <figcaption>{t("status.value", { value: card.value ?? 0 })}</figcaption>
                 </figure>
               )
@@ -206,8 +216,10 @@ function Status({ board, set, state, onSelect }: { board: Board; set: GameSet; s
         </dd>
         <dt>{t("status.ongoing")}</dt>
         <dd className="cards">
-          {ongoing.map((m) => (
-            <img key={m.id} src={`/${m.images.front}`} alt={m.name} />
+          {ongoing.map((m, n) => (
+            <button key={m.id} type="button" className="card-button" onClick={() => onFocusCard("mythos", state.phase.name === "mythos" ? n + 1 : n)}>
+              <img src={`/${m.images.front}`} alt={m.name} />
+            </button>
           ))}
         </dd>
         <dt>{t("status.decks")}</dt>
@@ -237,7 +249,13 @@ function Status({ board, set, state, onSelect }: { board: Board; set: GameSet; s
                 {printed?.name ?? i.id}
                 {i.defeated && ` (${i.defeated === "devoured" ? t("status.devoured") : t("status.defeatedBy", { cause: t(`cause.${i.defeated}`) })}${i.removed ? t("status.removed") : ""}${i.replacedBy ? t("status.replacedBy", { name: set.investigators.find((x) => x.id === i.replacedBy)?.name ?? i.replacedBy }) : ""})`}
                 {i.delayed && t("status.delayed")}{" "}
-                <button type="button" onClick={() => setSheet(sheet === i.id ? undefined : i.id)}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSheet(sheet === i.id ? undefined : i.id);
+                    onFocusCard("sheet", state.investigators.filter((x) => !x.removed).findIndex((x) => x.id === i.id));
+                  }}
+                >
                   {sheet === i.id ? t("status.hideSheet") : t("status.showSheet")}
                 </button>
                 {sheet === i.id && printed && (

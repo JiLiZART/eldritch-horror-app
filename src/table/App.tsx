@@ -127,6 +127,8 @@ export function App() {
   }, [picking, activeId, game.state]);
   /** Bumped by Fit table; the rig glides to the whole table on each change (fit-view D1). */
   const [fit, setFit] = useState(0);
+  /** The card the panel asked to bring up on the table (panel-card-focus D1). */
+  const [cardFocus, setCardFocus] = useState<TableProps["focus"]>();
   const spaces = useMemo(() => activeGraph(board, enabled).spaces, [board, enabled]);
   const t = useMemo(() => (key: string, vars?: Record<string, string | number>) => translate(panel[lang], key, vars), [panel, lang]);
   const pieces = useMemo(() => piecesOnSpace(game.state, board, set, t), [game.state, board, set, t]);
@@ -213,9 +215,9 @@ export function App() {
         </button>
       )}
       <main className="table">
-        <Table board={board} labels={labels} strings={strings[lang]} pieces={pieces} tracks={game.state && { doom: game.state.doom, omen: game.state.omen, eldritch: [...game.state.eldritchOnOmen], reserve: game.state.reserve.map((id) => face(id, true)).filter(known) }} tableau={tableau} sheets={sheets} fit={fit} enabled={enabled} selected={selectedSpace?.id} route={route} onSelect={select} reducedMotion={reducedMotion} />
+        <Table board={board} labels={labels} strings={strings[lang]} pieces={pieces} tracks={game.state && { doom: game.state.doom, omen: game.state.omen, eldritch: [...game.state.eldritchOnOmen], reserve: game.state.reserve.map((id) => face(id, true)).filter(known) }} tableau={tableau} sheets={sheets} fit={fit} focus={cardFocus} enabled={enabled} selected={selectedSpace?.id} route={route} onSelect={select} reducedMotion={reducedMotion} />
       </main>
-      {!panelHidden && <Panel board={board} set={set} lang={lang} onLang={chooseLang} state={game.state} pieces={pieces} spaces={spaces} enabled={enabled} onToggle={toggle} selected={selectedSpace} onSelect={select} onHidePanel={() => showPanel(false)}>
+      {!panelHidden && <Panel board={board} set={set} lang={lang} onLang={chooseLang} state={game.state} pieces={pieces} spaces={spaces} enabled={enabled} onToggle={toggle} selected={selectedSpace} onSelect={select} onHidePanel={() => showPanel(false)} onFocusCard={(place, index) => setCardFocus((prev) => ({ place, index, key: (prev?.key ?? 0) + 1 }))}>
         <NewGame
           set={set}
           running={game.state !== undefined}

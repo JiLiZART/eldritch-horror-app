@@ -32,6 +32,8 @@ export interface TableProps {
   sheets?: { sheet: CardFace; held: CardFace[]; health: number; sanity: number; improvements: Partial<Record<Skill, 1 | 2>>; tickets: Ticket[]; encounter?: CardFace }[];
   /** Changes each time the player asks for the whole table; the view glides out to it (fit-view D1). */
   fit?: number;
+  /** A card named by its place on the table, brought up as a click on it would (panel-card-focus D1). */
+  focus?: { place: "reserve" | "mystery" | "mythos" | "sheet"; index: number; key: number };
   enabled: Set<string>;
   selected: string | undefined;
   /** Spaces of the travel route being picked, highlighted in order. */
@@ -58,7 +60,7 @@ export function Table(props: TableProps) {
   );
 }
 
-function Scene({ board, labels, strings, pieces, tracks, tableau, sheets, fit, enabled, selected, route, onSelect, reducedMotion }: TableProps) {
+function Scene({ board, labels, strings, pieces, tracks, tableau, sheets, fit, focus: asked, enabled, selected, route, onSelect, reducedMotion }: TableProps) {
   const graph = useMemo(() => activeGraph(board, enabled), [board, enabled]);
   const at = useMemo(() => new Map(board.spaces.map((s) => [s.id, boardToWorld(s, board)])), [board]);
   const active = useMemo(() => new Set(graph.spaces.map((s) => s.id)), [graph]);
@@ -66,6 +68,24 @@ function Scene({ board, labels, strings, pieces, tracks, tableau, sheets, fit, e
   const [focus, setFocus] = useState<{ position: [number, number]; size: [number, number]; key: number; forSelected: string | undefined }>();
   const onFocus: FaceProps["onFocus"] = (position, size) => setFocus((prev) => ({ position, size, key: (prev?.key ?? 0) + 1, forSelected: selected }));
   const focused = focus?.forSelected === selected ? focus : undefined;
+  // A card asked for from the panel resolves to the same focus a click on it makes (panel-card-focus D1).
+  useEffect(() => {
+    if (!asked) return;
+    const mythosRow = (i: number): [number, number] => {
+      const [mx, my] = tableauPosition(board, 2);
+      const mw = TABLEAU_ROWS[2]![0];
+      return [mx - TABLEAU_ROWS[0]![0] / 2 + mw / 2 + i * (mw + 0.1), my];
+    };
+    const reserveW = board.tracks.reserve.width * BOARD_WIDTH;
+    const at: Record<typeof asked.place, () => [[number, number], [number, number]]> = {
+      reserve: () => [reservePosition(board, asked.index), [reserveW, reserveW * CARD_ASPECT]],
+      mystery: () => [tableauPosition(board, 1), TABLEAU_ROWS[1]!],
+      mythos: () => [mythosRow(asked.index), TABLEAU_ROWS[2]!],
+      sheet: () => [sheetPosition(board, asked.index), SHEET],
+    };
+    const [position, size] = at[asked.place]();
+    onFocus(position, size);
+  }, [asked?.key]);
   const extent = useMemo(() => tableExtent(board, { tableau: tableau !== undefined, sheets: sheets?.length ?? 0, heldRows: Math.max(0, ...(sheets ?? []).map((s) => Math.ceil(s.held.length / 3))) }), [board, tableau, sheets]);
   // A fit request outranks the focus and the selection until either changes (fit-view D1).
   const fitSeen = useRef<{ key: number; selected: string | undefined; focusKey: number | undefined }>(undefined);
