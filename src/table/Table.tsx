@@ -6,7 +6,7 @@ import { SRGBColorSpace, type Texture, Vector3 } from "three";
 import { activeGraph } from "../content/board";
 import type { Board, BoardLabels, Space } from "../content/types";
 import { BoardText } from "./BoardText";
-import { BOARD_WIDTH, TABLEAU_ROWS, boardSize, boardToWorld, doomPosition, omenPosition, reservePosition, spreadOnCircle, tableExtent, tableauPosition } from "./geometry";
+import { BOARD_WIDTH, SHEET, TABLEAU_ROWS, boardSize, boardToWorld, doomPosition, omenPosition, reservePosition, sheetPosition, spreadOnCircle, tableExtent, tableauPosition } from "./geometry";
 import type { Piece, PieceKind } from "./pieces";
 import { PATH_COLORS } from "./sets";
 
@@ -21,6 +21,8 @@ export interface TableProps {
   tracks?: { doom: number; omen: number; eldritch: number[]; reserve: string[] };
   /** The Ancient One's card faces beside the board: the sheet, the current mystery and the ongoing mythos cards (tableau D2). */
   tableau?: { sheet: string; mystery?: string; mythos: string[] };
+  /** The investigators' sheet faces in seat order, below the board (investigator-sheets D2). */
+  sheets?: string[];
   enabled: Set<string>;
   selected: string | undefined;
   /** Spaces of the travel route being picked, highlighted in order. */
@@ -47,7 +49,7 @@ export function Table(props: TableProps) {
   );
 }
 
-function Scene({ board, labels, strings, pieces, tracks, tableau, enabled, selected, route, onSelect, reducedMotion }: TableProps) {
+function Scene({ board, labels, strings, pieces, tracks, tableau, sheets, enabled, selected, route, onSelect, reducedMotion }: TableProps) {
   const graph = useMemo(() => activeGraph(board, enabled), [board, enabled]);
   const at = useMemo(() => new Map(board.spaces.map((s) => [s.id, boardToWorld(s, board)])), [board]);
   const active = useMemo(() => new Set(graph.spaces.map((s) => s.id)), [graph]);
@@ -58,7 +60,7 @@ function Scene({ board, labels, strings, pieces, tracks, tableau, enabled, selec
   const target = useMemo<CameraTarget | undefined>(() => (focused ? { position: focused.position, size: focused.size, key: focused.key } : selected && at.has(selected) ? { position: at.get(selected)! } : undefined), [focused, selected, at]);
   return (
     <>
-      <CameraRig board={board} withTableau={tableau !== undefined} target={target} reducedMotion={reducedMotion} />
+      <CameraRig board={board} withTableau={tableau !== undefined} sheets={sheets?.length ?? 0} target={target} reducedMotion={reducedMotion} />
       <BoardPlane board={board} />
       <BoardText labels={labels} strings={strings} active={active} selected={selected} onSelect={onSelect} reducedMotion={reducedMotion} />
       {graph.paths.map((p) => (
@@ -71,6 +73,7 @@ function Scene({ board, labels, strings, pieces, tracks, tableau, enabled, selec
       {tracks && <Tracks board={board} tracks={tracks} />}
       {tracks && tracks.reserve.length > 0 && <Reserve board={board} images={tracks.reserve} onFocus={onFocus} />}
       {tableau && <Tableau board={board} tableau={tableau} onFocus={onFocus} />}
+      {sheets && sheets.length > 0 && <Sheets board={board} images={sheets} onFocus={onFocus} />}
     </>
   );
 }
@@ -84,10 +87,10 @@ interface CameraTarget {
 }
 
 /** Top-down orthographic view: zoom bounded so the whole table fits, pan kept within it, no rotation (pan-clamp D2). */
-function CameraRig({ board, withTableau, target, reducedMotion }: { board: Board; withTableau: boolean; target: CameraTarget | undefined; reducedMotion: boolean }) {
+function CameraRig({ board, withTableau, sheets, target, reducedMotion }: { board: Board; withTableau: boolean; sheets: number; target: CameraTarget | undefined; reducedMotion: boolean }) {
   const { size, camera } = useThree();
   const controls = useRef<ComponentRef<typeof MapControls>>(null);
-  const extent = useMemo(() => tableExtent(board, withTableau), [board, withTableau]);
+  const extent = useMemo(() => tableExtent(board, { tableau: withTableau, sheets }), [board, withTableau, sheets]);
   const minZoom = Math.min(size.width / (extent.maxX - extent.minX), size.height / (extent.maxY - extent.minY)) * 0.95;
   /** Keeps the view inside the table: the half view stays within the extent, or sits at its centre when wider. */
   const clamp = () => {
@@ -314,6 +317,18 @@ function Tableau({ board, tableau, onFocus }: { board: Board; tableau: NonNullab
       {tableau.mystery && <Face map={textureOf.get(tableau.mystery)!} position={tableauPosition(board, 1)} size={TABLEAU_ROWS[1]!} onFocus={onFocus} />}
       {tableau.mythos.map((img, i) => (
         <Face key={`${img}#${i}`} map={textureOf.get(img)!} position={[mx - TABLEAU_ROWS[0]![0] / 2 + mw / 2 + i * (mw + 0.1), my]} size={TABLEAU_ROWS[2]!} onFocus={onFocus} />
+      ))}
+    </>
+  );
+}
+
+/** The investigators' sheets in a row below the board, in seat order (investigator-sheets D2). */
+function Sheets({ board, images, onFocus }: { board: Board; images: string[]; onFocus: FaceProps["onFocus"] }) {
+  const textures = useTexture(images.map((i) => `/${i}`), srgb);
+  return (
+    <>
+      {textures.map((map, i) => (
+        <Face key={`${images[i]}#${i}`} map={map} position={sheetPosition(board, i)} size={SHEET} onFocus={onFocus} />
       ))}
     </>
   );

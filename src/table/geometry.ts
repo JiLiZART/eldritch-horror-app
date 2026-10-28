@@ -63,9 +63,21 @@ export function tableauPosition(board: Board, row: number): [x: number, y: numbe
   return [x, top - TABLEAU_ROWS[row]![1] / 2];
 }
 
-/** The table the view stays within: the board's rectangle, reaching the tableau column's far edge during a game (pan-clamp D1). */
-export function tableExtent(board: Board, withTableau: boolean): { minX: number; maxX: number; minY: number; maxY: number } {
+/** An investigator sheet's face, `[width, height]`: landscape, 1600 by 1268 (investigator-sheets D1). */
+export const SHEET: [width: number, height: number] = [2.4, (2.4 * 1268) / 1600];
+const SHEET_GAP = 0.2;
+
+/** The centre of sheet `index` in the row below the board, from its left edge, in seat order (investigator-sheets D1). */
+export function sheetPosition(board: Board, index: number): [x: number, y: number] {
   const [w, h] = boardSize(board);
-  const maxX = withTableau ? tableauPosition(board, 0)[0] + TABLEAU_ROWS[0]![0] / 2 : w / 2;
-  return { minX: -w / 2, maxX, minY: -h / 2, maxY: h / 2 };
+  return [-w / 2 + SHEET[0] / 2 + index * (SHEET[0] + SHEET_GAP), -h / 2 - TABLEAU_GAP - SHEET[1] / 2];
+}
+
+/** The table the view stays within: the board's rectangle, reaching the tableau column and the sheet row during a game (pan-clamp D1). */
+export function tableExtent(board: Board, { tableau, sheets }: { tableau: boolean; sheets: number }): { minX: number; maxX: number; minY: number; maxY: number } {
+  const [w, h] = boardSize(board);
+  const tableauX = tableau ? tableauPosition(board, 0)[0] + TABLEAU_ROWS[0]![0] / 2 : w / 2;
+  const sheetsX = sheets > 0 ? sheetPosition(board, sheets - 1)[0] + SHEET[0] / 2 : w / 2;
+  const minY = sheets > 0 ? sheetPosition(board, 0)[1] - SHEET[1] / 2 : -h / 2;
+  return { minX: -w / 2, maxX: Math.max(tableauX, sheetsX), minY, maxY: h / 2 };
 }
