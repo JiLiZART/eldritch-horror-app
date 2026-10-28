@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Board, Deck, GameSet, Skill } from "../content/types";
 import { changeDoom, changeMysteryTokens, solveFinalMystery, solveMystery } from "../engine/ancientOne";
-import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spawnNamed, spawnSetAside, spendClue, standUp } from "../engine/effects";
+import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spawnNamed, spawnSetAside, spendClue, spendHealth, spendSanity, standUp } from "../engine/effects";
 import { OMEN_TRACK } from "../engine/omen";
 import { monsterKey } from "../engine/encounter";
 import { spaceName } from "../engine/spawn";
@@ -87,6 +87,12 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
           </button>
           <button type="button" onClick={() => onAct((s) => changeSanity(s, content, me.id, 1))}>
             +1 sanity
+          </button>
+          <button type="button" onClick={() => onAct((s) => spendHealth(s, content, me.id, 1))}>
+            Spend 1 health
+          </button>
+          <button type="button" onClick={() => onAct((s) => spendSanity(s, content, me.id, 1))}>
+            Spend 1 sanity
           </button>
           <button type="button" onClick={() => onAct((s) => gainClue(s, content, me.id))}>
             Gain clue

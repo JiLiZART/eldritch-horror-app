@@ -32,6 +32,15 @@ function change(state: GameState, content: Content, id: string, stat: "health" |
   return value <= 0 ? defeat(s, content, id, stat) : s;
 }
 export const changeHealth = (state: GameState, content: Content, id: string, delta: number) => change(state, content, id, "health", delta);
+
+/** A card's cost in health or sanity (manual p.4; EH_reference p.12 "Тратить"): never the last point. */
+function spend(state: GameState, content: Content, id: string, stat: "health" | "sanity", amount: number): GameState {
+  const me = subject(state, id);
+  if (me[stat] - amount <= 0) throw new Error(`${name(content, id)} cannot spend their last ${stat}`);
+  return note(replace(state, { ...me, [stat]: me[stat] - amount }), `${name(content, id)} spends ${amount} ${stat}`);
+}
+export const spendHealth = (state: GameState, content: Content, id: string, amount: number) => spend(state, content, id, "health", amount);
+export const spendSanity = (state: GameState, content: Content, id: string, amount: number) => spend(state, content, id, "sanity", amount);
 export const changeSanity = (state: GameState, content: Content, id: string, delta: number) => change(state, content, id, "sanity", delta);
 
 /** Card text moves the pawn anywhere, with no ticket or action (manual p.3–4); which space is "nearest" or "random" is the players' call. */

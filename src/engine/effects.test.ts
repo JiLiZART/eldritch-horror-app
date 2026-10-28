@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn } from "./actions";
-import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spawnNamed, spawnSetAside, spendClue, standUp, takePossessions } from "./effects";
+import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spawnNamed, spawnSetAside, spendClue, spendHealth, spendSanity, standUp, takePossessions } from "./effects";
 import { defeat, fight, finishEncounter } from "./encounter";
 import { resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
@@ -72,6 +72,18 @@ describe("health and sanity change by card text", () => {
     const s = changeSanity(patch(encounters(), lily, { sanity: 2 }), content, lily, -2);
     expect(who(s, lily).defeated).toBe("sanity");
     expect(s.doom).toBe(14);
+  });
+});
+
+describe("spending health or sanity never defeats", () => {
+  it("takes the cost like a loss and logs it", () => {
+    const s = spendHealth(patch(encounters(), leo, { health: 3 }), content, leo, 1);
+    expect(who(s, leo).health).toBe(2);
+    expect(log(s)).toMatch(/Leo Anderson spends 1 health/);
+    expect(who(spendSanity(patch(encounters(), leo, { sanity: 2 }), content, leo, 1), leo).sanity).toBe(1);
+  });
+  it("refuses the last point", () => {
+    expect(() => spendSanity(patch(encounters(), leo, { sanity: 1 }), content, leo, 1)).toThrow(/cannot spend their last sanity/);
   });
 });
 
