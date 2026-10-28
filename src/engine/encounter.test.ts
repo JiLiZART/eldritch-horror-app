@@ -5,7 +5,7 @@ import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn, rest } from "./actions";
 import { ambush } from "./effects";
-import { continueFight, defeat, drawEncounter, encounterFallen, fight, finishEncounter } from "./encounter";
+import { continueFight, defeat, drawEncounter, encounterFallen, encounterRumor, fight, finishEncounter } from "./encounter";
 import { nextRound, replaceInvestigator, resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
 import { rerollDie, test } from "./test";
@@ -260,6 +260,23 @@ describe("special and defeated investigator encounters", () => {
   });
   it("refuses without a fallen token on the space", () => {
     expect(() => encounterFallen(defeat(encounters(), content, leo, "health"), content, leo)).toThrow(/no defeated investigator's token lies on Shanghai/);
+  });
+});
+
+describe("the rumor encounter", () => {
+  it("is the one encounter on a space with a rumor token and discards nothing", () => {
+    const before = { ...encounters(), rumors: ["buenos-aires"] };
+    const s = encounterRumor(before, content);
+    expect(s.phase).toMatchObject({ card: { deck: "rumor", id: "buenos-aires" } });
+    expect(s.phase.name === "encounter" ? s.phase.log.join("\n") : "").toMatch(/rumor card's text is left to the players/);
+    expect(() => drawEncounter(s, content, "general")).toThrow(/one encounter/);
+    const done = finishEncounter(s, content);
+    expect(done.encounterDiscards).toEqual(before.encounterDiscards);
+    expect(done.decks).toEqual(before.decks);
+    expect(done.phase).toMatchObject({ name: "encounter", active: lily });
+  });
+  it("refuses without a rumor token on the space", () => {
+    expect(() => encounterRumor(encounters(), content)).toThrow(/no rumor token lies on Buenos Aires/);
   });
 });
 

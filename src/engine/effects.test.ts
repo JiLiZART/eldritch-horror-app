@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn } from "./actions";
-import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spawnNamed, spawnSetAside, spendClue, spendHealth, spendSanity, standUp, takePossessions } from "./effects";
+import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spawnNamed, spawnSetAside, discardOngoing, spendClue, spendHealth, spendSanity, standUp, takePossessions } from "./effects";
 import { defeat, fight, finishEncounter } from "./encounter";
 import { resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
@@ -84,6 +84,17 @@ describe("spending health or sanity never defeats", () => {
   });
   it("refuses the last point", () => {
     expect(() => spendSanity(patch(encounters(), leo, { sanity: 1 }), content, leo, 1)).toThrow(/cannot spend their last sanity/);
+  });
+});
+
+describe("an ongoing mythos card is discarded by card text", () => {
+  it("moves the card to the mythos discard", () => {
+    const rumor = set.mythos.find((m) => m.trait === "ongoing")!;
+    const s = discardOngoing({ ...encounters(), ongoingMythos: [rumor.id] }, content, rumor.id);
+    expect(s.ongoingMythos).toEqual([]);
+    expect(s.mythosDiscard[0]).toBe(rumor.id);
+    expect(log(s)).toMatch(new RegExp(`${rumor.name} is discarded from play`));
+    expect(() => discardOngoing(s, content, rumor.id)).toThrow(/is not in play/);
   });
 });
 

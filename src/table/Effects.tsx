@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Board, Deck, GameSet, Skill } from "../content/types";
 import { changeDoom, changeMysteryTokens, solveFinalMystery, solveMystery } from "../engine/ancientOne";
-import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spawnNamed, spawnSetAside, spendClue, spendHealth, spendSanity, standUp } from "../engine/effects";
+import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, discardOngoing, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spawnNamed, spawnSetAside, spendClue, spendHealth, spendSanity, standUp } from "../engine/effects";
 import { OMEN_TRACK } from "../engine/omen";
 import { monsterKey } from "../engine/encounter";
 import { spaceName } from "../engine/spawn";
@@ -34,6 +34,7 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
   const [target, setTarget] = useState<NearestTarget>("city");
   const [aside, setAside] = useState("");
   const [kind, setKind] = useState("");
+  const [ongoing, setOngoing] = useState("");
   /** The one held card whose image is open (design D1). */
   const [shown, setShown] = useState<{ card: string; side: "front" | "back" }>();
   const cupKinds = [...new Set(state.monsterCup.map((m) => m.id))].map((k) => ({ id: k, label: `${set.monsters.find((m) => m.id === k)?.name ?? k} (${state.monsterCup.filter((m) => m.id === k).length})` })).sort((a, b) => a.label.localeCompare(b.label));
@@ -243,6 +244,25 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
           <button type="button" disabled={!kind} onClick={() => onAct((s) => spawnNamed(s, content, me.id, kind, space))}>
             Spawn named on {spaceName(content, space)}
           </button>
+          {state.ongoingMythos.length > 0 && (
+            <>
+              {" "}
+              <label>
+                Ongoing card{" "}
+                <select value={ongoing} onChange={(e) => setOngoing(e.target.value)}>
+                  <option value="">choose</option>
+                  {state.ongoingMythos.map((c) => (
+                    <option key={c} value={c}>
+                      {set.mythos.find((m) => m.id === c)?.name ?? c}
+                    </option>
+                  ))}
+                </select>
+              </label>{" "}
+              <button type="button" disabled={!ongoing} onClick={() => onAct((s) => discardOngoing(s, content, ongoing))}>
+                Discard ongoing card
+              </button>
+            </>
+          )}
           {asideKinds.length > 0 && (
             <>
               {" "}

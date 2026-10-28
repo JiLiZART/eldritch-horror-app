@@ -1,6 +1,6 @@
 import type { Board, GameSet } from "../content/types";
 import { takePossessions } from "../engine/effects";
-import { continueFight, drawEncounter, encounterFallen, fight, finishEncounter, monsterKey } from "../engine/encounter";
+import { continueFight, drawEncounter, encounterFallen, encounterRumor, fight, finishEncounter, monsterKey } from "../engine/encounter";
 import { isDetained } from "../engine/types";
 import type { EncounterPhase, GameState } from "../engine/types";
 import { Dice } from "./Dice";
@@ -83,6 +83,11 @@ export function Encounter({ board, set, state, phase, error, onAct }: EncounterP
               Draw {d}
             </button>
           ))}
+          {state.rumors.includes(me.space) && (
+            <button type="button" onClick={() => onAct((s) => encounterRumor(s, content))}>
+              Resolve rumor
+            </button>
+          )}
         </p>
       )}
       {!detained && monsters.length === 0 && !phase.card && fallenHere.length > 0 && (

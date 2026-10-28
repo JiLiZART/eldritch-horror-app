@@ -201,6 +201,18 @@ function replenish(state: GameState, deck: string): GameState {
   return { ...withCards(state, deck, items), rolls, encounterDiscards: { ...state.encounterDiscards, [deck]: [] } };
 }
 
+/** The rumor encounter on a space with a rumor token (manual p.3); the text is on the rumor card in play, and finishing discards nothing. */
+export function encounterRumor(state: GameState, content: Content): GameState {
+  const phase = encounterPhase(state);
+  const me = active(state);
+  if (phase.combat) throw new Error("the fight is not over");
+  if (isDetained(me)) throw new Error("a Detained investigator resolves the back of Detained instead of an encounter");
+  if (monstersOn(state, me.space).length > 0) throw new Error("the monsters on the space must be fought first");
+  if (phase.card) throw new Error("an investigator resolves one encounter");
+  if (!state.rumors.includes(me.space)) throw new Error(`no rumor token lies on ${spaceName(content, me.space)}`);
+  return log({ ...state, phase: { ...phase, card: { deck: "rumor", id: me.space } } }, `${investigatorName(content, me.id)} resolves the rumor encounter on ${spaceName(content, me.space)}: the rumor card's text is left to the players`);
+}
+
 /** Draws the top card of an allowed deck once the space holds no monster (manual p.3), rebuilding the deck when it runs out. */
 export function drawEncounter(state: GameState, content: Content, deck: string): GameState {
   const phase = encounterPhase(state);
@@ -230,7 +242,7 @@ export function finishEncounter(state: GameState, content: Content): GameState {
 /** The drawn card leaves play: to its discard, a fallen one's token and sheet out of the game; nothing when none is drawn. */
 function discardDrawn(state: GameState, content: Content): GameState {
   const phase = encounterPhase(state);
-  if (!phase.card) return state;
+  if (!phase.card || phase.card.deck === "rumor") return state;
   const { deck, id } = phase.card;
   if (deck === "fallen") return log(replaceInvestigator(state, { ...state.investigators.find((i) => i.id === id)!, removed: true }), `${investigatorName(content, id)}'s token and sheet leave the game`);
   const s: GameState = { ...state, encounterDiscards: { ...state.encounterDiscards, [deck]: [id, ...(state.encounterDiscards[deck] ?? [])] } };

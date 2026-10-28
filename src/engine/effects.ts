@@ -33,6 +33,14 @@ function change(state: GameState, content: Content, id: string, stat: "health" |
 }
 export const changeHealth = (state: GameState, content: Content, id: string, delta: number) => change(state, content, id, "health", delta);
 
+/** Card text discards an ongoing mythos card, a solved or failed rumor among them (manual p.4); its tokens are the players' to remove. */
+export function discardOngoing(state: GameState, content: Content, cardId: string): GameState {
+  textPhase(state);
+  const card = content.set.mythos.find((m) => m.id === cardId);
+  if (!state.ongoingMythos.includes(cardId)) throw new Error(`${card?.name ?? cardId} is not in play`);
+  return note({ ...state, ongoingMythos: state.ongoingMythos.filter((c) => c !== cardId), mythosDiscard: [cardId, ...state.mythosDiscard] }, `${card?.name ?? cardId} is discarded from play`);
+}
+
 /** A card's cost in health or sanity (manual p.4; EH_reference p.12 "Тратить"): never the last point. */
 function spend(state: GameState, content: Content, id: string, stat: "health" | "sanity", amount: number): GameState {
   const me = subject(state, id);
