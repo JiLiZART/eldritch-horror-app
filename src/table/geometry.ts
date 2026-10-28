@@ -73,11 +73,24 @@ export function sheetPosition(board: Board, index: number): [x: number, y: numbe
   return [-w / 2 + SHEET[0] / 2 + index * (SHEET[0] + SHEET_GAP), -h / 2 - TABLEAU_GAP - SHEET[1] / 2];
 }
 
-/** The table the view stays within: the board's rectangle, reaching the tableau column and the sheet row during a game (pan-clamp D1). */
-export function tableExtent(board: Board, { tableau, sheets }: { tableau: boolean; sheets: number }): { minX: number; maxX: number; minY: number; maxY: number } {
+/** A held card's face, `[width, height]`: portrait, 478 by 745, three to a row under a sheet (held-cards D1). */
+export const HELD: [width: number, height: number] = [0.7, (0.7 * 745) / 478];
+const HELD_GAP = 0.15;
+const HELD_PER_ROW = 3;
+
+/** The centre of held card `index` under sheet `seat`: rows of three from the sheet's left edge (held-cards D1). */
+export function heldPosition(board: Board, seat: number, index: number): [x: number, y: number] {
+  const [sx, sy] = sheetPosition(board, seat);
+  const col = index % HELD_PER_ROW;
+  const row = Math.floor(index / HELD_PER_ROW);
+  return [sx - SHEET[0] / 2 + HELD[0] / 2 + col * (HELD[0] + HELD_GAP), sy - SHEET[1] / 2 - SHEET_GAP - HELD[1] / 2 - row * (HELD[1] + HELD_GAP)];
+}
+
+/** The table the view stays within: the board's rectangle, reaching the tableau column, the sheet row and the deepest held row during a game (pan-clamp D1). */
+export function tableExtent(board: Board, { tableau, sheets, heldRows }: { tableau: boolean; sheets: number; heldRows: number }): { minX: number; maxX: number; minY: number; maxY: number } {
   const [w, h] = boardSize(board);
   const tableauX = tableau ? tableauPosition(board, 0)[0] + TABLEAU_ROWS[0]![0] / 2 : w / 2;
   const sheetsX = sheets > 0 ? sheetPosition(board, sheets - 1)[0] + SHEET[0] / 2 : w / 2;
-  const minY = sheets > 0 ? sheetPosition(board, 0)[1] - SHEET[1] / 2 : -h / 2;
+  const minY = heldRows > 0 ? heldPosition(board, 0, (heldRows - 1) * HELD_PER_ROW)[1] - HELD[1] / 2 : sheets > 0 ? sheetPosition(board, 0)[1] - SHEET[1] / 2 : -h / 2;
   return { minX: -w / 2, maxX: Math.max(tableauX, sheetsX), minY, maxY: h / 2 };
 }

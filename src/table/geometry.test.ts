@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Board } from "../content/types";
-import { BOARD_WIDTH, SHEET, TABLEAU_ROWS, boardSize, boardToWorld, doomPosition, omenPosition, reservePosition, sheetPosition, spreadOnCircle, tableExtent, tableauPosition } from "./geometry";
+import { BOARD_WIDTH, HELD, SHEET, TABLEAU_ROWS, boardSize, boardToWorld, doomPosition, heldPosition, omenPosition, reservePosition, sheetPosition, spreadOnCircle, tableExtent, tableauPosition } from "./geometry";
 
 const board = { source: { file: "x", width: 2000, height: 1000 }, texture: "t", spaces: [], paths: [], tracks: { doom: { from: { x: 0.1, y: 0.1 }, to: { x: 0.9, y: 0.1 }, spaces: 21 }, omen: { center: { x: 0.9, y: 0.3 }, radius: 0.05 }, reserve: { from: { x: 0.1, y: 0.9 }, to: { x: 0.4, y: 0.9 }, slots: 4, width: 0.05 }, }, } as Board;
 
@@ -74,11 +74,11 @@ describe("tableau", () => {
 
 describe("table extent", () => {
   it("is the board's rectangle without the tableau", () => {
-    expect(tableExtent(board, { tableau: false, sheets: 0 })).toEqual({ minX: -BOARD_WIDTH / 2, maxX: BOARD_WIDTH / 2, minY: -BOARD_WIDTH / 4, maxY: BOARD_WIDTH / 4 });
+    expect(tableExtent(board, { tableau: false, sheets: 0, heldRows: 0 })).toEqual({ minX: -BOARD_WIDTH / 2, maxX: BOARD_WIDTH / 2, minY: -BOARD_WIDTH / 4, maxY: BOARD_WIDTH / 4 });
   });
   it("reaches the tableau column's right edge with it", () => {
     const [x] = tableauPosition(board, 0);
-    expect(tableExtent(board, { tableau: true, sheets: 0 })).toEqual({ minX: -BOARD_WIDTH / 2, maxX: x + TABLEAU_ROWS[0]![0] / 2, minY: -BOARD_WIDTH / 4, maxY: BOARD_WIDTH / 4 });
+    expect(tableExtent(board, { tableau: true, sheets: 0, heldRows: 0 })).toEqual({ minX: -BOARD_WIDTH / 2, maxX: x + TABLEAU_ROWS[0]![0] / 2, minY: -BOARD_WIDTH / 4, maxY: BOARD_WIDTH / 4 });
   });
 });
 
@@ -92,10 +92,29 @@ describe("investigator sheets", () => {
     expect(x1 - SHEET[0] / 2).toBeGreaterThan(x0 + SHEET[0] / 2);
   });
   it("drops the extent to the row's bottom and widens it for a large group", () => {
-    const two = tableExtent(board, { tableau: true, sheets: 2 });
+    const two = tableExtent(board, { tableau: true, sheets: 2, heldRows: 0 });
     expect(two.minY).toBeCloseTo(sheetPosition(board, 0)[1] - SHEET[1] / 2);
-    expect(two.maxX).toBe(tableExtent(board, { tableau: true, sheets: 0 }).maxX);
-    const eight = tableExtent(board, { tableau: true, sheets: 8 });
+    expect(two.maxX).toBe(tableExtent(board, { tableau: true, sheets: 0, heldRows: 0 }).maxX);
+    const eight = tableExtent(board, { tableau: true, sheets: 8, heldRows: 0 });
     expect(eight.maxX).toBeCloseTo(sheetPosition(board, 7)[0] + SHEET[0] / 2);
+  });
+});
+
+describe("held cards", () => {
+  it("lays three cards in a row under the sheet from its left edge and wraps the fourth", () => {
+    const [sx, sy] = sheetPosition(board, 1);
+    const [x0, y0] = heldPosition(board, 1, 0);
+    const [x2, y2] = heldPosition(board, 1, 2);
+    const [x3, y3] = heldPosition(board, 1, 3);
+    expect(x0 - HELD[0] / 2).toBeCloseTo(sx - SHEET[0] / 2);
+    expect(y0 + HELD[1] / 2).toBeLessThan(sy - SHEET[1] / 2);
+    expect(y2).toBe(y0);
+    expect(x2 + HELD[0] / 2).toBeLessThanOrEqual(sx + SHEET[0] / 2 + 0.01);
+    expect(x3).toBe(x0);
+    expect(y3 + HELD[1] / 2).toBeLessThan(y0 - HELD[1] / 2);
+  });
+  it("drops the extent below the deepest held row", () => {
+    const two = tableExtent(board, { tableau: true, sheets: 1, heldRows: 2 });
+    expect(two.minY).toBeCloseTo(heldPosition(board, 0, 3)[1] - HELD[1] / 2);
   });
 });

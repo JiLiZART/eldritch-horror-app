@@ -80,7 +80,11 @@ export function App() {
   const spaces = useMemo(() => activeGraph(board, enabled).spaces, [board, enabled]);
   const pieces = useMemo(() => piecesOnSpace(game.state, set), [game.state, set]);
   const ancientOne = set.ancientOnes.find((a) => a.id === game.state?.ancientOne);
-  const sheets = game.state?.investigators.filter((i) => !i.removed).map((i) => set.investigators.find((x) => x.id === i.id)?.images.front).filter((i): i is string => !!i);
+  const front = (id: string) => set.cards.find((c) => c.id === id)?.images.front;
+  const sheets = game.state?.investigators
+    .filter((i) => !i.removed)
+    .map((i) => ({ image: set.investigators.find((x) => x.id === i.id)?.images.front, held: [...i.possessions, ...i.conditions].map(front).filter((c): c is string => !!c) }))
+    .filter((s): s is { image: string; held: string[] } => !!s.image);
   const tableau = game.state && ancientOne && { sheet: game.state.awakened && ancientOne.images.back ? ancientOne.images.back : ancientOne.images.front, mystery: ancientOne.mysteries.find((m) => m.id === game.state!.currentMystery)?.images.front, mythos: game.state.ongoingMythos.map((id) => set.mythos.find((m) => m.id === id)?.images.front).filter((i): i is string => !!i) };
   const selectedSpace = spaces.find((s) => s.id === selected);
   const toggle = (id: string, on: boolean) =>
