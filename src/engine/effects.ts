@@ -1,10 +1,10 @@
 import { distance, neighbors } from "../content/board";
 import type { Deck, Skill } from "../content/types";
-import { defeat } from "./encounter";
+import { defeat, fight } from "./encounter";
 import { OMEN_TRACK } from "./omen";
-import { reshuffle } from "./rng";
+import { reshuffle, rng } from "./rng";
 import type { Content } from "./setup";
-import { note, spaceName, textPhase } from "./spawn";
+import { note, spaceName, spawnClue, spawnGate, spawnMonster, textPhase } from "./spawn";
 import { isDetained } from "./types";
 import type { GameState, InvestigatorState, MonsterInstance, MonsterOnBoard } from "./types";
 
@@ -208,4 +208,37 @@ export function changeEldritchOnOmen(state: GameState, slot: number, delta: numb
   if (next < 0) throw new Error(`the ${colour} omen space holds no eldritch token`);
   const eldritchOnOmen = state.eldritchOnOmen.map((n, i) => (i === slot ? next : n)) as GameState["eldritchOnOmen"];
   return note({ ...state, eldritchOnOmen }, `an eldritch token is ${delta > 0 ? "added to" : "removed from"} the ${colour} omen space`);
+}
+
+/** The roll stream for a card-text reshuffle, bumped so the next one differs. */
+const withStream = (state: GameState, run: (s: GameState, random: () => number) => GameState): GameState => run({ ...state, rolls: state.rolls + 1 }, rng(state.seed * 31 + state.rolls));
+
+/** "Spawn 1 Gate" by card text: the Mythos rule with the roll stream (manual p.3). */
+export function spawnGateByText(state: GameState, content: Content, id: string): GameState {
+  subject(state, id);
+  return withStream(state, (s, random) => spawnGate(s, content, random));
+}
+
+/** "Spawn 1 Clue" by card text (manual p.3). */
+export function spawnClueByText(state: GameState, content: Content, id: string): GameState {
+  subject(state, id);
+  return withStream(state, (s, random) => spawnClue(s, content, random));
+}
+
+/** "Spawn 1 Monster on X" by card text; the space is the players' reading of the card. */
+export function spawnMonsterByText(state: GameState, content: Content, id: string, space: string): GameState {
+  subject(state, id);
+  knownSpace(content, space);
+  return spawnMonster(state, content, space);
+}
+
+/** "A monster ambushes you" (manual p.3): the top cup token fights at once on the investigator's space, not spawned, back to the cup afterwards. */
+export function ambush(state: GameState, content: Content): GameState {
+  if (state.phase.name !== "encounter") throw new Error("an ambush happens in the Encounter phase");
+  const me = state.investigators.find((i) => i.id === (state.phase as { active: string }).active)!;
+  const [token, ...cup] = state.monsterCup;
+  if (token === undefined) throw new Error("the monster cup is empty: nothing ambushes");
+  const sheet = content.set.monsters.find((m) => m.id === token.id);
+  const drawn = note({ ...state, monsterCup: cup, monsters: [...state.monsters, { ...token, space: me.space, health: 0, ambush: true as const }] }, `${sheet?.name ?? token.id} ambushes ${name(content, me.id)}`);
+  return fight(drawn, content, token);
 }

@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn, rest } from "./actions";
+import { ambush } from "./effects";
 import { continueFight, defeat, drawEncounter, fight, finishEncounter } from "./encounter";
 import { nextRound, replaceInvestigator, resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
@@ -158,6 +159,39 @@ describe("the back of Detained replaces the encounter", () => {
     const s = finishEncounter(jailed(), content);
     expect(s.phase).toMatchObject({ name: "encounter", active: lily });
     expect(onBoard(s, ghoul)).toHaveLength(1);
+  });
+});
+
+describe("a monster ambushes the investigator", () => {
+  const color = "eh01/monster/color-out-of-space";
+  /** Leo Anderson's encounter with the Color Out of Space (back: move to Tunguska) on top of the cup. */
+  const trap = (s = encounters()): GameState => {
+    const token = s.monsterCup.find((m) => m.id === color)!;
+    return { ...s, monsterCup: [token, ...s.monsterCup.filter((m) => m !== token)] };
+  };
+  it("fights the top token on the investigator's space with the Will dice waiting", () => {
+    const s = ambush(trap(), content);
+    expect(onBoard(s, color)).toMatchObject([{ space: "buenos-aires", ambush: true }]);
+    expect(s.phase).toMatchObject({ combat: { step: "will", monster: { id: color } } });
+    expect(s.phase.name === "encounter" ? s.phase.log.join("\n") : "").toMatch(/Color Out of Space ambushes Leo Anderson/);
+  });
+  it("returns a surviving monster to the cup after the fight", () => {
+    let s = ambush(trap(seedFor(encounters(), 0, undefined)), content);
+    while (s.phase.name === "encounter" && s.phase.combat) s = continueFight(s, content);
+    expect(onBoard(s, color)).toHaveLength(0);
+    expect(s.monsterCup.some((m) => m.id === color)).toBe(true);
+    expect(s.phase.name === "encounter" ? s.phase.log.join("\n") : "").toMatch(/returns to the cup after the ambush/);
+  });
+  it("returns the monster when the investigator falls", () => {
+    let s = ambush(trap(seedFor(patch(encounters(), leo, { sanity: 1 }), 0, undefined)), content);
+    s = continueFight(s, content);
+    expect(who(s, leo).defeated).toBe("sanity");
+    expect(onBoard(s, color)).toHaveLength(0);
+    expect(s.monsterCup.some((m) => m.id === color)).toBe(true);
+  });
+  it("refuses an empty cup and the Action phase", () => {
+    expect(() => ambush({ ...encounters(), monsterCup: [] }, content)).toThrow(/monster cup is empty/);
+    expect(() => ambush(game(), content)).toThrow(/Encounter phase/);
   });
 });
 

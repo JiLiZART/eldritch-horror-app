@@ -134,7 +134,15 @@ function settle(state: GameState, content: Content, monster: MonsterInstance): G
   if (combat.toughness !== undefined && target.health >= combat.toughness) {
     return log({ ...state, monsters: state.monsters.filter((m) => m !== target), monsterCup: epic ? state.monsterCup : [...state.monsterCup, { id: target.id, instance: target.instance }] }, `the ${name} is defeated${epic ? "" : " and returns to the cup"}`);
   }
-  return log(state, `the ${name} stays with ${target.health} health lost${combat.toughness === undefined ? " (toughness printed as a formula: left to the players)" : ""}`);
+  const stays = log(state, `the ${name} stays with ${target.health} health lost${combat.toughness === undefined ? " (toughness printed as a formula: left to the players)" : ""}`);
+  return target.ambush ? log(returnAmbushers(stays), `the ${name} returns to the cup after the ambush`) : stays;
+}
+
+/** Ambushing tokens were never spawned: back to the cup (manual p.3 "Ambush"). */
+export function returnAmbushers(state: GameState): GameState {
+  const ambushers = state.monsters.filter((m) => m.ambush);
+  if (ambushers.length === 0) return state;
+  return { ...state, monsters: state.monsters.filter((m) => !m.ambush), monsterCup: [...state.monsterCup, ...ambushers.map(({ id, instance }) => ({ id, instance }))] };
 }
 
 const signed = (n: number) => (n > 0 ? ` +${n}` : n < 0 ? ` ${n}` : "");
@@ -214,6 +222,7 @@ export function defeat(state: GameState, content: Content, investigator: string,
   const space = cities.reduce((best, id) => (distance(content.board, me.space, id) < distance(content.board, me.space, best) ? id : best));
   const { items: condition, rolls } = reshuffle(state, [...state.decks.condition, ...me.conditions]);
   const fallen = { ...me, defeated: cause, space, conditions: [], improvements: {} };
+  state = returnAmbushers(state);
   let s = awakenAt0(note(replaceInvestigator({ ...state, doom: state.doom - 1, rolls, decks: { ...state.decks, condition } }, fallen), `${investigatorName(content, investigator)} is defeated and lies on ${spaceName(content, space)}`), content);
   if (s.leadInvestigator === investigator) s = { ...s, leadInvestigator: nextStanding(s, investigator) ?? investigator };
   if (!s.investigators.some((i) => !i.defeated)) return { ...s, phase: { name: "lost", reason: `every investigator is defeated (doom ${s.doom})` } };

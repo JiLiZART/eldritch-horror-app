@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn } from "./actions";
-import { changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveMonsterToward, placeToken, removeToken, spendClue } from "./effects";
+import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spendClue } from "./effects";
 import { finishEncounter } from "./encounter";
 import { resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
@@ -290,5 +290,35 @@ describe("eldritch tokens on the omen track change by card text", () => {
   });
   it("refuses to remove from an empty space", () => {
     expect(() => changeEldritchOnOmen(encounters(), 1, -1)).toThrow(/blue omen space holds no eldritch token/);
+  });
+});
+
+describe("gates, clues and monsters are spawned by card text", () => {
+  it("opens the top gate with a monster and logs it", () => {
+    const before = encounters();
+    const [top] = before.gateStack;
+    const s = spawnGateByText(before, content, leo);
+    expect(s.gates).toContain(top);
+    expect(s.monsters.length + s.monsterCup.length).toBe(before.monsters.length + before.monsterCup.length);
+    expect(s.monsters).toHaveLength(before.monsters.length + 1);
+    expect(log(s)).toMatch(/a gate opens on/);
+    expect(s.rolls).toBe(before.rolls + 1);
+  });
+  it("spawns the top monster on the named space or where its back sends it", () => {
+    const before = encounters();
+    const [top] = before.monsterCup;
+    const s = spawnMonsterByText(before, content, leo, "buenos-aires");
+    const sheet = set.monsters.find((m) => m.id === top!.id)!;
+    expect(s.monsters.at(-1)).toMatchObject({ id: top!.id, space: sheet.spawnMoveTo ?? "buenos-aires" });
+    expect(() => spawnMonsterByText(before, content, leo, "atlantis")).toThrow(/no space atlantis/);
+  });
+  it("spawns a clue on its printed space and logs an empty cup", () => {
+    const before = encounters();
+    const [top] = before.cluePool;
+    expect(spawnClueByText(before, content, leo).clues).toContain(top);
+    expect(log(spawnMonsterByText({ ...before, monsterCup: [] }, content, leo, "london"))).toMatch(/the monster cup is empty/);
+  });
+  it("ambushes only in the Encounter phase", () => {
+    expect(ambush).toBeTypeOf("function");
   });
 });

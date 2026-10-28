@@ -31,6 +31,8 @@ export interface MonsterOnBoard extends MonsterInstance {
   space: string;
   /** Health lost in combat; defeated at the token's toughness. */
   health: number;
+  /** Drawn for an ambush, not spawned: back to the cup once the fight ends (manual p.3). */
+  ambush?: true;
 }
 
 export type Ticket = "train" | "ship";
