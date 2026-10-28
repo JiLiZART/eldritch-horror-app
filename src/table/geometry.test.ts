@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { Board } from "../content/types";
-import { BOARD_WIDTH, boardSize, boardToWorld, spreadOnCircle } from "./geometry";
+import { BOARD_WIDTH, boardSize, boardToWorld, doomPosition, omenPosition, spreadOnCircle } from "./geometry";
 
-const board = { source: { file: "x", width: 2000, height: 1000 }, texture: "t", spaces: [], paths: [] } as Board;
+const board = { source: { file: "x", width: 2000, height: 1000 }, texture: "t", spaces: [], paths: [], tracks: { doom: { from: { x: 0.1, y: 0.1 }, to: { x: 0.9, y: 0.1 }, spaces: 21 }, omen: { center: { x: 0.9, y: 0.3 }, radius: 0.05 } }, } as Board;
 
 describe("boardToWorld", () => {
   it("keeps the source aspect", () => {
@@ -28,5 +28,21 @@ describe("spreadOnCircle", () => {
     expect(pts).toHaveLength(3);
     for (const [x, y] of pts) expect(Math.hypot(x, y)).toBeCloseTo(0.3);
     expect(new Set(pts.map((p) => p.join())).size).toBe(3);
+  });
+});
+
+describe("track positions", () => {
+  it("puts doom 20 at the track's start, 0 at its end and 10 halfway", () => {
+    expect(doomPosition(board, 20)).toEqual(boardToWorld({ x: 0.1, y: 0.1 }, board));
+    expect(doomPosition(board, 0)).toEqual(boardToWorld({ x: 0.9, y: 0.1 }, board));
+    expect(doomPosition(board, 10)[0]).toBeCloseTo(boardToWorld({ x: 0.5, y: 0.1 }, board)[0]);
+  });
+  it("puts omen 0 above the centre and 1 to its right, at the radius scaled by the width", () => {
+    const [cx, cy] = boardToWorld({ x: 0.9, y: 0.3 }, board);
+    const r = 0.05 * BOARD_WIDTH;
+    expect(omenPosition(board, 0)[0]).toBeCloseTo(cx);
+    expect(omenPosition(board, 0)[1]).toBeCloseTo(cy + r);
+    expect(omenPosition(board, 1)[0]).toBeCloseTo(cx + r);
+    expect(omenPosition(board, 1)[1]).toBeCloseTo(cy);
   });
 });

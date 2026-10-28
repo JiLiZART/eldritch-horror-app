@@ -36,10 +36,23 @@ export interface Path {
   type: PathType;
 }
 
+/** A point in normalized texture coordinates, origin top-left. */
+export interface Point {
+  x: number;
+  y: number;
+}
+
+/** The printed doom and omen tracks (table-view): doom from its first to its last space, the omen circle with the comet on top. */
+export interface Tracks {
+  doom: { from: Point; to: Point; spaces: number };
+  omen: { center: Point; radius: number };
+}
+
 export interface Board {
   source: { file: string; width: number; height: number };
   /** Path under public/. */
   texture: string;
+  tracks: Tracks;
   spaces: Space[];
   paths: Path[];
 }

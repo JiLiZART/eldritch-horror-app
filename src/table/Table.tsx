@@ -5,7 +5,7 @@ import { SRGBColorSpace, type Texture, Vector3 } from "three";
 import { activeGraph } from "../content/board";
 import type { Board, BoardLabels, Space } from "../content/types";
 import { BoardText } from "./BoardText";
-import { boardSize, boardToWorld, spreadOnCircle } from "./geometry";
+import { boardSize, boardToWorld, doomPosition, omenPosition, spreadOnCircle } from "./geometry";
 import type { Piece, PieceKind } from "./pieces";
 import { PATH_COLORS } from "./sets";
 
@@ -16,6 +16,8 @@ export interface TableProps {
   strings: Record<string, string>;
   /** Pieces grouped by space id; empty when no game is in progress. */
   pieces: Map<string, Piece[]>;
+  /** The doom value, the omen index and the eldritch tokens per omen space; undefined without a game (track-tokens D3). */
+  tracks?: { doom: number; omen: number; eldritch: number[] };
   enabled: Set<string>;
   selected: string | undefined;
   /** Spaces of the travel route being picked, highlighted in order. */
@@ -42,7 +44,7 @@ export function Table(props: TableProps) {
   );
 }
 
-function Scene({ board, labels, strings, pieces, enabled, selected, route, onSelect, reducedMotion }: TableProps) {
+function Scene({ board, labels, strings, pieces, tracks, enabled, selected, route, onSelect, reducedMotion }: TableProps) {
   const graph = useMemo(() => activeGraph(board, enabled), [board, enabled]);
   const at = useMemo(() => new Map(board.spaces.map((s) => [s.id, boardToWorld(s, board)])), [board]);
   const active = useMemo(() => new Set(graph.spaces.map((s) => s.id)), [graph]);
@@ -58,6 +60,7 @@ function Scene({ board, labels, strings, pieces, enabled, selected, route, onSel
         <Marker key={s.id} space={s} position={at.get(s.id)!} selected={s.id === selected} onRoute={route?.includes(s.id) ?? false} onSelect={onSelect} />
       ))}
       {pieces.size > 0 && <Pieces pieces={pieces} at={at} />}
+      {tracks && <Tracks board={board} tracks={tracks} />}
     </>
   );
 }
@@ -168,6 +171,31 @@ function Pieces({ pieces, at }: { pieces: Map<string, Piece[]>; at: Map<string, 
             </Billboard>
           );
         });
+      })}
+    </>
+  );
+}
+
+const TOKENS = "cards/eh01/tokens";
+
+/** The doom and omen tokens on their printed tracks, with the eldritch tokens fanned beside their omen space (design D3). */
+function Tracks({ board, tracks }: { board: Board; tracks: NonNullable<TableProps["tracks"]> }) {
+  const [doom, omen, eldritch] = useTexture([`/${TOKENS}/doom-token.webp`, `/${TOKENS}/omen-token.webp`, `/${TOKENS}/eldritch-token.webp`], srgb);
+  const token = (map: Texture, [x, y]: [number, number], size: number, key: string, z = 0.06) => (
+    <Billboard key={key} position={[x, y, z]}>
+      <mesh>
+        <planeGeometry args={[size, size]} />
+        <meshBasicMaterial map={map} transparent alphaTest={0.5} />
+      </mesh>
+    </Billboard>
+  );
+  return (
+    <>
+      {token(doom!, doomPosition(board, tracks.doom), 0.3, "doom")}
+      {token(omen!, omenPosition(board, tracks.omen), 0.3, "omen", 0.07)}
+      {tracks.eldritch.flatMap((count, i) => {
+        const [x, y] = omenPosition(board, i);
+        return spreadOnCircle(count, 0.14).map(([dx, dy], k) => token(eldritch!, [x + dx, y + dy], 0.16, `eldritch-${i}-${k}`, 0.08 + k * 0.001));
       })}
     </>
   );

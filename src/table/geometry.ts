@@ -21,3 +21,20 @@ export function spreadOnCircle(n: number, radius: number): [x: number, y: number
     return [radius * Math.cos(a), radius * Math.sin(a)];
   });
 }
+
+/** Where doom `value` lies on the printed track: the first space holds the highest number, the last holds 0 (design D2). */
+export function doomPosition(board: Board, value: number): [x: number, y: number] {
+  const { from, to, spaces } = board.tracks.doom;
+  const n = Math.min(Math.max(value, 0), spaces - 1);
+  const f = (spaces - 1 - n) / (spaces - 1);
+  return boardToWorld({ x: from.x + (to.x - from.x) * f, y: from.y + (to.y - from.y) * f }, board);
+}
+
+/** Where omen space `index` lies on the printed circle: 0 on top, then clockwise (design D2). */
+export function omenPosition(board: Board, index: number): [x: number, y: number] {
+  const { center, radius } = board.tracks.omen;
+  const [cx, cy] = boardToWorld(center, board);
+  const r = radius * BOARD_WIDTH;
+  const a = Math.PI / 2 - (index * Math.PI) / 2;
+  return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+}

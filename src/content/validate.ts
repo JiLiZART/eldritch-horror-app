@@ -11,6 +11,10 @@ export function validateBoard(board: Board): string[] {
     ids.add(s.id);
     if (s.x < 0 || s.x > 1 || s.y < 0 || s.y > 1) errors.push(`space ${s.id} has coordinates outside 0..1`);
   }
+  const inside = ({ x, y }: { x: number; y: number }) => x >= 0 && x <= 1 && y >= 0 && y <= 1;
+  if (!inside(board.tracks.doom.from) || !inside(board.tracks.doom.to)) errors.push("doom track has coordinates outside 0..1");
+  if (board.tracks.doom.spaces < 2) errors.push("doom track needs at least 2 spaces");
+  if (!inside(board.tracks.omen.center) || board.tracks.omen.radius <= 0 || board.tracks.omen.radius > 0.5) errors.push("omen track has coordinates outside 0..1");
   for (const p of board.paths) {
     for (const end of [p.from, p.to]) {
       if (!ids.has(end)) errors.push(`path ${p.from}-${p.to} references unknown space ${end}`);

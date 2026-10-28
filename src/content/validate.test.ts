@@ -16,6 +16,7 @@ const space = (id: string, extra: Partial<Board["spaces"][number]> = {}) => ({
 const board: Board = {
   source: { file: "inspired/All_boards.jpg", width: 100, height: 50 },
   texture: "board/all-boards.jpg",
+  tracks: { doom: { from: { x: 0.1, y: 0.1 }, to: { x: 0.9, y: 0.1 }, spaces: 21 }, omen: { center: { x: 0.9, y: 0.3 }, radius: 0.05 } },
   spaces: [space("a"), space("b"), space("c", { set: "eh07" })],
   paths: [
     { from: "a", to: "b", type: "train" },
@@ -36,6 +37,11 @@ const emptySet: GameSet = {
 };
 
 describe("validateBoard", () => {
+  it("requires tracks inside the board", () => {
+    expect(validateBoard({ ...board, tracks: { ...board.tracks, doom: { ...board.tracks.doom, to: { x: 1.2, y: 0.1 } } } })).toEqual(["doom track has coordinates outside 0..1"]);
+    expect(validateBoard({ ...board, tracks: { ...board.tracks, doom: { ...board.tracks.doom, spaces: 1 } } })).toEqual(["doom track needs at least 2 spaces"]);
+    expect(validateBoard({ ...board, tracks: { ...board.tracks, omen: { center: { x: 0.9, y: -0.1 }, radius: 0.05 } } })).toEqual(["omen track has coordinates outside 0..1"]);
+  });
   it("accepts a connected board", () => {
     expect(validateBoard(board)).toEqual([]);
   });

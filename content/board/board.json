@@ -5,6 +5,26 @@
     "height": 6198
   },
   "texture": "board/board-textless.webp",
+  "tracks": {
+    "doom": {
+      "from": {
+        "x": 0.028,
+        "y": 0.035
+      },
+      "to": {
+        "x": 0.865,
+        "y": 0.035
+      },
+      "spaces": 21
+    },
+    "omen": {
+      "center": {
+        "x": 0.9418,
+        "y": 0.0886
+      },
+      "radius": 0.027
+    }
+  },
   "spaces": [
     {
       "id": "san-francisco",
