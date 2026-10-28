@@ -5,7 +5,7 @@ import { loadSet } from "../content/load";
 import type { Board, MythosCard } from "../content/types";
 import { endTurn } from "./actions";
 import { finishEncounter } from "./encounter";
-import { nextRound, resolveMythos } from "./mythos";
+import { nextRound, replaceInvestigator, resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
 import type { GameState } from "./types";
 
@@ -139,27 +139,68 @@ describe("cards leave play by trait", () => {
 describe("the lead may pass the token", () => {
   it("refuses the next round before the card is resolved", () => {
     const m = mythos({ effects: ["advance-omen"] });
-    expect(() => nextRound(m.state)).toThrow(/resolve/);
-    expect(() => nextRound(game())).toThrow(/Mythos phase/);
+    expect(() => nextRound(m.state, set)).toThrow(/resolve/);
+    expect(() => nextRound(game(), set)).toThrow(/Mythos phase/);
   });
   it("passes the lead to Lily Chen for round 2", () => {
-    const next = nextRound(resolve({ effects: ["advance-omen"] }), lily);
+    const next = nextRound(resolve({ effects: ["advance-omen"] }), set, lily);
     expect(next.leadInvestigator).toBe(lily);
     expect(next.round).toBe(2);
     expect(next.phase).toEqual({ name: "action", active: lily, taken: [] });
   });
   it("lets every seat act after the lead moved, then opens the Encounter phase with the lead", () => {
-    const round2 = nextRound(resolve({ effects: ["advance-omen"] }), lily);
+    const round2 = nextRound(resolve({ effects: ["advance-omen"] }), set, lily);
     const leoTurn = endTurn(round2);
     expect(leoTurn.phase).toEqual({ name: "action", active: leo, taken: [] });
     expect(endTurn(leoTurn).phase).toEqual({ name: "encounter", active: lily, log: [], fought: [] });
   });
   it("keeps Leo Anderson as lead by default", () => {
-    const next = nextRound(resolve({ effects: ["advance-omen"] }));
+    const next = nextRound(resolve({ effects: ["advance-omen"] }), set);
     expect(next.leadInvestigator).toBe(leo);
     expect(next.phase).toEqual({ name: "action", active: leo, taken: [] });
   });
   it("refuses an unknown investigator as the new lead", () => {
-    expect(() => nextRound(resolve({ effects: ["advance-omen"] }), "eh01/investigator/nope")).toThrow(/nope/);
+    expect(() => nextRound(resolve({ effects: ["advance-omen"] }), set, "eh01/investigator/nope")).toThrow(/nope/);
+  });
+});
+
+describe("a defeated investigator is replaced at the end of the Mythos phase", () => {
+  const charlie = "eh01/investigator/charlie-kane";
+  /** The resolved Mythos phase with Leo Anderson lying defeated and Lily Chen leading. */
+  const fallen = (): GameState => {
+    const s = resolve({ effects: ["advance-omen"] });
+    return { ...s, leadInvestigator: lily, investigators: s.investigators.map((i) => (i.id === leo ? { ...i, defeated: "health" as const } : i)) };
+  };
+  const who = (s: GameState, id: string) => s.investigators.find((i) => i.id === id)!;
+  it("seats the newcomer with the starting kit", () => {
+    const before = fallen();
+    const s = replaceInvestigator(before, content, leo, charlie);
+    expect(s.investigators.map((i) => i.id)).toEqual([leo, charlie, lily]);
+    expect(who(s, charlie)).toMatchObject({ space: "san-francisco", health: 4, sanity: 8 });
+    expect(who(s, charlie).defeated).toBeUndefined();
+    expect(who(s, charlie).possessions.some((c) => c.startsWith("eh01/asset/personal-assistant"))).toBe(true);
+    expect(s.decks.asset).toHaveLength(before.decks.asset.length - 1);
+    expect(who(s, leo)).toMatchObject({ defeated: "health", replacedBy: charlie });
+    expect(s.phase.name === "mythos" ? s.phase.log?.at(-1) : "").toBe("Charlie Kane takes Leo Anderson's seat");
+    expect(endTurn(nextRound(s, set, lily)).phase).toMatchObject({ name: "action", active: charlie });
+  });
+  it("refuses an investigator already in the game", () => {
+    expect(() => replaceInvestigator(fallen(), content, leo, lily)).toThrow(/already in the game/);
+  });
+  it("refuses a second replacement and a standing investigator", () => {
+    const once = replaceInvestigator(fallen(), content, leo, charlie);
+    expect(() => replaceInvestigator(once, content, leo, "eh01/investigator/norman-withers")).toThrow(/already replaced/);
+    expect(() => replaceInvestigator(fallen(), content, lily, charlie)).toThrow(/is standing/);
+  });
+  it("refuses after the awakening", () => {
+    expect(() => replaceInvestigator({ ...fallen(), awakened: true }, content, leo, charlie)).toThrow(/eliminated after the awakening/);
+  });
+  it("holds the next round until the seat is filled", () => {
+    expect(() => nextRound(fallen(), set, lily)).toThrow(/replaced first/);
+  });
+  it("goes on when no sheet is unused", () => {
+    const s = fallen();
+    const extras = set.investigators.filter((i) => i.id !== leo && i.id !== lily).map((i) => ({ ...who(s, lily), id: i.id }));
+    expect(nextRound({ ...s, investigators: [...s.investigators, ...extras] }, set, lily).round).toBe(2);
   });
 });

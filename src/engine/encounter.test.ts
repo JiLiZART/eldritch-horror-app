@@ -5,7 +5,7 @@ import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn, rest } from "./actions";
 import { continueFight, defeat, drawEncounter, fight, finishEncounter } from "./encounter";
-import { nextRound, resolveMythos } from "./mythos";
+import { nextRound, replaceInvestigator, resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
 import { rerollDie, test } from "./test";
 import type { GameState, InvestigatorState } from "./types";
@@ -275,15 +275,18 @@ describe("an investigator at 0 health or sanity is defeated", () => {
   it("passes the lead to the next seat", () => {
     expect(defeat(encounters(), content, leo, "health").leadInvestigator).toBe(lily);
   });
+  const charlie = "eh01/investigator/charlie-kane";
+  /** The resolved Mythos phase after Leo Anderson's defeat, his seat taken by Charlie Kane. */
+  const replaced = () => replaceInvestigator(resolveMythos(finishEncounter(defeat(encounters(), content, leo, "health"), content), content), content, leo, charlie);
   it("is skipped in the Action phase and the Encounter phase", () => {
-    const beaten = defeat(encounters(), content, leo, "health");
-    const round2 = nextRound(resolveMythos(finishEncounter(beaten, content), content));
+    const round2 = nextRound(replaced(), set);
     expect(round2.phase).toEqual({ name: "action", active: lily, taken: [] });
-    expect(endTurn(rest(round2, set)).phase).toEqual({ name: "encounter", active: lily, log: [], fought: [] });
+    const charlieTurn = endTurn(rest(round2, set));
+    expect(charlieTurn.phase).toEqual({ name: "action", active: charlie, taken: [] });
+    expect(endTurn(charlieTurn).phase).toEqual({ name: "encounter", active: lily, log: [], fought: [] });
   });
   it("refuses a defeated investigator as the lead", () => {
-    const beaten = defeat(encounters(), content, leo, "health");
-    expect(() => nextRound(resolveMythos(finishEncounter(beaten, content), content), leo)).toThrow(/defeated/);
+    expect(() => nextRound(replaced(), set, leo)).toThrow(/defeated/);
   });
   it("loses the game when every investigator is defeated", () => {
     const s = endTurn(game([leo]));

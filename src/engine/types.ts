@@ -51,6 +51,8 @@ export interface InvestigatorState {
   improvements: Partial<Record<Skill, 1 | 2>>;
   /** Set at 0 health or sanity; the investigator's turns are skipped from then on. */
   defeated?: "health" | "sanity";
+  /** The investigator who took this fallen seat at the end of a Mythos phase (manual p.4). */
+  replacedBy?: string;
   /** Token on its side: no actions until the next Action turn stands it up. */
   delayed?: true;
 }

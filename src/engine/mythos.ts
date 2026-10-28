@@ -1,8 +1,8 @@
-import type { MythosCard, MythosEffect } from "../content/types";
+import type { GameSet, MythosCard, MythosEffect } from "../content/types";
 import { awakenAt0 } from "./ancientOne";
 import { OMEN_TRACK } from "./omen";
 import { rng, type Random } from "./rng";
-import type { Content } from "./setup";
+import { placeInvestigator, type Content } from "./setup";
 import { note, spawnClue, spawnGate, spawnMonster, spaceName } from "./spawn";
 import type { GameState, MythosPhase } from "./types";
 
@@ -80,9 +80,34 @@ function leavePlay(state: GameState, card: MythosCard): GameState {
     : note({ ...state, ongoingMythos: [...state.ongoingMythos, card.id] }, `${card.name} stays in play`);
 }
 
-/** Ends the Mythos phase: the lead may pass the token, then the next round's Action phase starts with the lead (manual p.3). */
-export function nextRound(state: GameState, lead = state.leadInvestigator): GameState {
+const investigatorName = ({ set }: Content, id: string) => set.investigators.find((i) => i.id === id)?.name ?? id;
+
+/** A defeated investigator's player takes an unused sheet, prepared as at setup, in the fallen seat (manual p.4 "Defeated"); not after the awakening. */
+export function replaceInvestigator(state: GameState, content: Content, fallen: string, newcomer: string): GameState {
+  if (!mythosPhase(state).log) throw new Error("resolve the mythos card before replacing an investigator");
+  const old = state.investigators.find((i) => i.id === fallen);
+  if (!old) throw new Error(`no investigator ${fallen}`);
+  if (!old.defeated) throw new Error(`${investigatorName(content, fallen)} is standing`);
+  if (old.replacedBy) throw new Error(`${investigatorName(content, fallen)} is already replaced`);
+  if (state.awakened) throw new Error("defeated investigators are eliminated after the awakening");
+  const sheet = content.set.investigators.find((i) => i.id === newcomer);
+  if (!sheet) throw new Error(`no investigator ${newcomer} in the set`);
+  if (state.investigators.some((i) => i.id === newcomer)) throw new Error(`${sheet.name} is already in the game`);
+  const { encounters, ...rest } = state.decks;
+  const decks: GameState["decks"] = { ...Object.fromEntries(Object.entries(rest).map(([k, v]) => [k, [...v]])), encounters } as GameState["decks"];
+  const cluePool = [...state.cluePool];
+  const entry = placeInvestigator(sheet, content.set.cards, decks, cluePool);
+  const at = state.investigators.indexOf(old);
+  const investigators = [...state.investigators.slice(0, at), { ...old, replacedBy: newcomer }, entry, ...state.investigators.slice(at + 1)];
+  return note({ ...state, decks, cluePool, investigators }, `${sheet.name} takes ${investigatorName(content, fallen)}'s seat`);
+}
+
+/** Ends the Mythos phase: the fallen are replaced first while a sheet is unused, the lead may pass the token, then the next round's Action phase starts with the lead (manual p.3, p.4). */
+export function nextRound(state: GameState, set: GameSet, lead = state.leadInvestigator): GameState {
   if (!mythosPhase(state).log) throw new Error("resolve the mythos card before the next round");
+  const unreplaced = state.investigators.find((i) => i.defeated && !i.replacedBy);
+  const unused = set.investigators.some((i) => !state.investigators.some((x) => x.id === i.id));
+  if (unreplaced && !state.awakened && unused) throw new Error("a defeated investigator is replaced first");
   const chosen = state.investigators.find((i) => i.id === lead);
   if (!chosen) throw new Error(`no investigator ${lead} to take the lead`);
   if (chosen.defeated) throw new Error(`${lead} is defeated and cannot take the lead`);

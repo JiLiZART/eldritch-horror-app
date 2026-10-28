@@ -52,7 +52,7 @@ describe("investigators act in seat order", () => {
     expect(s.round).toBe(1);
   });
   it("starts the next round with the lead active after the last seat", () => {
-    const s = nextRound(resolveMythos(finishEncounter(finishEncounter(endTurn(endTurn(game())), { board, set }), { board, set }), { board, set }));
+    const s = nextRound(resolveMythos(finishEncounter(finishEncounter(endTurn(endTurn(game())), { board, set }), { board, set }), { board, set }), set);
     expect(s.round).toBe(2);
     expect(s.phase).toEqual({ name: "action", active: leo, taken: [] });
   });

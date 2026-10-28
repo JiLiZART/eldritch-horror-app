@@ -111,7 +111,7 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
 }
 
 /** Takes the printed starting cards out of their decks and starting clues out of the pool. */
-function placeInvestigator(i: Investigator, cards: Card[], decks: GameState["decks"], cluePool: string[]): InvestigatorState {
+export function placeInvestigator(i: Investigator, cards: Card[], decks: GameState["decks"], cluePool: string[]): InvestigatorState {
   const possessions: string[] = [];
   const conditions: string[] = [];
   const refs = [...(i.starting.assets ?? []), ...(i.starting.spells ?? []), ...(i.starting.uniqueAssets ?? []), ...(i.starting.conditions ?? [])];

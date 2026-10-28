@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Board, GameSet } from "../content/types";
-import { nextRound, resolveMythos } from "../engine/mythos";
+import { nextRound, replaceInvestigator, resolveMythos } from "../engine/mythos";
 import type { GameState, MythosPhase } from "../engine/types";
 import { Effects } from "./Effects";
 import type { Act } from "./Turn";
@@ -17,6 +17,9 @@ interface MythosProps {
 /** The Mythos phase beside the board (design D6): the drawn card, its resolution log, the lead choice. Rules stay in the engine. */
 export function Mythos({ board, set, state, phase, error, onAct }: MythosProps) {
   const [lead, setLead] = useState(state.leadInvestigator);
+  const [newcomer, setNewcomer] = useState("");
+  const unused = set.investigators.filter((i) => !state.investigators.some((x) => x.id === i.id));
+  const fallen = state.awakened ? [] : state.investigators.filter((i) => i.defeated && !i.replacedBy);
   const card = set.mythos.find((m) => m.id === phase.card);
   const name = (id: string) => set.investigators.find((i) => i.id === id)?.name ?? id;
   return (
@@ -30,6 +33,24 @@ export function Mythos({ board, set, state, phase, error, onAct }: MythosProps) 
               <li key={n}>{line}</li>
             ))}
           </ol>
+          {fallen.map((f) => (
+            <p key={f.id}>
+              <label>
+                {name(f.id)} is defeated: replaced by{" "}
+                <select value={newcomer} onChange={(e) => setNewcomer(e.target.value)}>
+                  <option value="">choose an investigator</option>
+                  {unused.map((i) => (
+                    <option key={i.id} value={i.id}>
+                      {i.name}
+                    </option>
+                  ))}
+                </select>
+              </label>{" "}
+              <button type="button" disabled={!newcomer} onClick={() => onAct((s) => replaceInvestigator(s, { board, set }, f.id, newcomer))}>
+                Replace
+              </button>
+            </p>
+          ))}
           <label>
             Lead investigator for the next round{" "}
             <select value={lead} onChange={(e) => setLead(e.target.value)}>
@@ -40,7 +61,7 @@ export function Mythos({ board, set, state, phase, error, onAct }: MythosProps) 
               ))}
             </select>
           </label>
-          <button type="button" onClick={() => onAct((s) => nextRound(s, lead))}>
+          <button type="button" onClick={() => onAct((s) => nextRound(s, set, lead))}>
             Next round
           </button>
           <Effects board={board} set={set} state={state} who={state.leadInvestigator} onAct={onAct} />
