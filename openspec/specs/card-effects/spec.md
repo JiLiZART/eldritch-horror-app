@@ -116,7 +116,7 @@ During the Encounter phase and after the mythos card is resolved the players SHA
 - **THEN** the spawn and token controls are shown and the other groups stay as they were
 
 ### Requirement: An investigator is moved by card text
-In the Encounter and Mythos phases a standing investigator SHALL be moved to any space the players name, without spending a ticket or an action; an unknown space SHALL be refused naming it. **Deviation**: which space is "nearest" or "random" is the players' call.
+In the Encounter and Mythos phases a standing investigator SHALL be moved to any space the players name, without spending a ticket or an action; an unknown space SHALL be refused naming it. A move to a random space SHALL take the space printed on the top clue token of the pool, that token going to the clue discard, the discard being shuffled into an empty pool first; with no clue token anywhere the move SHALL be refused saying the lead investigator chooses the space instead. **Deviation**: which space is "nearest" is the players' call.
 
 #### Scenario: Moved
 - **WHEN** Leo Anderson on Buenos Aires is moved to Arkham by card text
@@ -125,6 +125,14 @@ In the Encounter and Mythos phases a standing investigator SHALL be moved to any
 #### Scenario: Unknown space
 - **WHEN** an investigator is moved to a space not on the board
 - **THEN** it is refused naming the space
+
+#### Scenario: Random space
+- **WHEN** Leo Anderson is moved to a random space by card text with London printed on the top clue token
+- **THEN** he stands on London and that clue token lies on the clue discard
+
+#### Scenario: No token for a random space
+- **WHEN** a random move is called with an empty clue pool and discard
+- **THEN** it is refused because the lead investigator chooses the space
 
 ### Requirement: A monster is moved by card text
 In the Encounter and Mythos phases a monster on the board SHALL be moved to any space the players name, or 1 space toward the nearest standing investigator along a shortest route; a monster already on a space with a standing investigator SHALL stay where it is. A monster not on the board or an unknown space SHALL be refused naming it. The log SHALL say where the monster moves. **Deviation**: a tie among nearest investigators is broken by seat order, a tie among routes by board order, instead of the active investigator's choice; moving an epic monster is the players' call.
@@ -157,7 +165,7 @@ In the Encounter and Mythos phases a monster on the board SHALL be discarded by 
 - **THEN** it is neither on the board nor in the cup, and the log says it leaves the game
 
 ### Requirement: Gates, clues and monsters are spawned by card text
-In the Encounter and Mythos phases the players SHALL spawn a gate, a clue, or a monster on any space they name, by the same rules the Mythos icons follow: the gate opens from the top of the gate stack with 1 monster from the cup, the gate discard reshuffled in first and doom advancing by 1 instead when no token is left; the clue comes from the top of the pool, the clue discard reshuffled in first, none when both are empty; the monster is the top of the cup, moved where its token back says, none when the cup is empty. Each spawn SHALL be logged, and the reshuffles SHALL follow the game seed. **Deviation**: the space a card names is the players' reading; named and set-aside monsters are not offered.
+In the Encounter and Mythos phases the players SHALL spawn a gate, a clue, or a monster on any space they name, by the same rules the Mythos icons follow: the gate opens from the top of the gate stack with 1 monster from the cup, the gate discard reshuffled in first and doom advancing by 1 instead when no token is left; the clue comes from the top of the pool, the clue discard reshuffled in first, none when both are empty; the monster is the top of the cup, moved where its token back says, none when the cup is empty; a monster spawned on a random space takes the space of the top clue token of the pool, that token going to the clue discard, and is refused with no clue token anywhere. Each spawn SHALL be logged, and the reshuffles SHALL follow the game seed. **Deviation**: the space a card names is the players' reading; named and set-aside monsters are not offered.
 
 #### Scenario: Gate spawned
 - **WHEN** card text spawns a gate with London on top of the stack
@@ -174,6 +182,10 @@ In the Encounter and Mythos phases the players SHALL spawn a gate, a clue, or a 
 #### Scenario: Cup empty
 - **WHEN** card text spawns a monster with an empty cup
 - **THEN** no monster appears and the log says the cup is empty
+
+#### Scenario: Monster on a random space
+- **WHEN** card text spawns a monster on a random space with London printed on the top clue token
+- **THEN** the monster spawns on London, or where its back sends it, and the token lies on the clue discard
 
 ### Requirement: A monster ambushes the investigator
 In the Encounter phase the encountering investigator SHALL fight the top monster of the cup at once when card text says a monster ambushes them: the monster is not spawned, so its token back does not move it and no spawn effect applies; the fight follows the combat rules; when the fight settles, defeated or not, the monster is shuffled back into the cup, and so it is when the investigator is defeated during the fight. With an empty cup the ambush SHALL be refused saying so. **Deviation**: an epic monster is never in the cup and never ambushes.
