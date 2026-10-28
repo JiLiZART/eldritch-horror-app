@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
-import { acquireAssets, endTurn, prepareForTravel, rest, takeAssets, takeBankLoan, trade, travel } from "./actions";
+import { acquireAssets, componentAction, endTurn, prepareForTravel, rest, takeAssets, takeBankLoan, trade, travel } from "./actions";
 import { rerollDie } from "./test";
 import { finishEncounter } from "./encounter";
 import { nextRound, resolveMythos } from "./mythos";
@@ -79,6 +79,33 @@ describe("a Detained investigator cannot move", () => {
   it("still rests", () => {
     const s = rest(patch(jailed(), charlie, { health: 1 }), set);
     expect(who(s, charlie).health).toBe(2);
+  });
+});
+
+describe("a component action is performed once per component per round", () => {
+  const muscle = () => who(game(), leo).possessions.find((c) => c.startsWith("eh01/asset/hired-muscle"))!;
+  it("spends one action and marks the component used", () => {
+    const s = componentAction(game(), set, muscle());
+    expect(s.phase).toMatchObject({ taken: [`component:${muscle()}`] });
+    expect(s.usedComponents).toEqual([muscle()]);
+    expect(s.journal.at(-1)).toEqual({ round: 1, phase: "action", who: leo, text: `component:${muscle()}` });
+  });
+  it("refuses a second use this round, even by another seat", () => {
+    const once = componentAction(game(), set, muscle());
+    expect(() => componentAction(once, set, muscle())).toThrow(/was used this round/);
+    const lilyTurn = endTurn(once);
+    expect(() => componentAction(patch(lilyTurn, lily, { space: "buenos-aires" }), set, muscle())).toThrow(/was used this round/);
+  });
+  it("allows a local action on a same-space possession and the own sheet, refuses out of reach", () => {
+    const lilyTurn = endTurn(game());
+    expect(componentAction(patch(lilyTurn, lily, { space: "buenos-aires" }), set, muscle()).usedComponents).toEqual([muscle()]);
+    expect(() => componentAction(lilyTurn, set, muscle())).toThrow(/not within reach/);
+    expect(componentAction(game(), set, leo).usedComponents).toEqual([leo]);
+  });
+  it("clears the used components at the next round", () => {
+    const s = componentAction(game(), set, muscle());
+    expect(s.usedComponents).toHaveLength(1);
+    expect(game().usedComponents).toEqual([]);
   });
 });
 

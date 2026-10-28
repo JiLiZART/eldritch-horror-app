@@ -2,7 +2,7 @@ import type { Skill } from "../content/types";
 /** Game state: plain JSON data, index 0 of every deck is the top card. View state lives elsewhere. */
 
 /** Shape of `GameState` as saved; bump it whenever a field is added, removed or renamed, so an older save is set aside instead of breaking later. */
-export const STATE_VERSION = 2;
+export const STATE_VERSION = 3;
 
 export type Difficulty = "normal" | "easy" | "hard";
 
@@ -65,7 +65,8 @@ export interface InvestigatorState {
 /** Holds a Detained condition (manual p.4): ids follow `<set>/condition/detained-<n>` as content-schema fixes. */
 export const isDetained = (me: InvestigatorState): boolean => me.conditions.some((c) => /\/condition\/detained-\d+$/.test(c));
 
-export type ActionName = "travel" | "rest" | "prepare-for-travel" | "trade" | "acquire-assets";
+/** `component:<id>` is the action printed on that sheet or card (manual p.3). */
+export type ActionName = "travel" | "rest" | "prepare-for-travel" | "trade" | "acquire-assets" | `component:${string}`;
 
 export interface ActionPhase {
   name: "action";
@@ -150,6 +151,8 @@ export interface GameState {
   phase: Phase;
   /** Every phase's log lines once the phase or seat passed, and every action performed, oldest first. */
   journal: JournalEntry[];
+  /** Sheets and cards whose printed action was used this round, by anyone (manual p.3). */
+  usedComponents: string[];
   leadInvestigator: string;
   investigators: InvestigatorState[];
   /** Space ids with an open gate. */

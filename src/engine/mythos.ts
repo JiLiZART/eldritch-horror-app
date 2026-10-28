@@ -114,5 +114,5 @@ export function nextRound(state: GameState, set: GameSet, lead = state.leadInves
   const chosen = state.investigators.find((i) => i.id === lead);
   if (!chosen) throw new Error(`no investigator ${lead} to take the lead`);
   if (chosen.defeated) throw new Error(`${lead} is defeated and cannot take the lead`);
-  return { ...keepLog(state), round: state.round + 1, leadInvestigator: lead, phase: { name: "action", active: lead, taken: [] } };
+  return { ...keepLog(state), round: state.round + 1, leadInvestigator: lead, usedComponents: [], phase: { name: "action", active: lead, taken: [] } };
 }

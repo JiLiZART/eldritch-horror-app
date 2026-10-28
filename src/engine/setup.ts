@@ -87,6 +87,7 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
     version: STATE_VERSION,
     round: 1,
     journal: [],
+    usedComponents: [],
     phase: { name: "action", active: investigators[0]!.id, taken: [] },
     leadInvestigator: investigators[0]!.id,
     investigators,

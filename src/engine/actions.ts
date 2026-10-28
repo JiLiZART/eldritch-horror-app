@@ -168,6 +168,20 @@ export function refillReserve(state: GameState, random: Random): GameState {
   return { ...state, reserve, assetDiscard: discard, decks: { ...state.decks, asset: deck } };
 }
 
+/**
+ * A component action (manual p.3; EH_reference p.6–7): the own sheet, an own possession, or a possession of a standing investigator on the
+ * space; each component once per round by anyone. The printed text is the players'.
+ */
+export function componentAction(state: GameState, set: GameSet, component: string): GameState {
+  const me = active(state);
+  const label = set.cards.find((c) => c.id === component)?.name ?? set.investigators.find((i) => i.id === component)?.name ?? component;
+  const reach = state.investigators.filter((i) => !i.defeated && i.space === me.space).flatMap((i) => (i.id === me.id ? [i.id, ...i.possessions] : i.possessions));
+  if (!reach.includes(component)) throw new Error(`${label} is not within reach`);
+  if (state.usedComponents.includes(component)) throw new Error(`${label} was used this round`);
+  mayAct(state, `component:${component}`);
+  return perform({ ...state, usedComponents: [...state.usedComponents, component] }, `component:${component}`, me);
+}
+
 /** Acquire Assets, step 1: on a city without a monster, test Influence and wait for the choice (`takeAssets`). */
 export function acquireAssets(state: GameState, board: Board, set: GameSet): GameState {
   mayAct(state, "acquire-assets");
