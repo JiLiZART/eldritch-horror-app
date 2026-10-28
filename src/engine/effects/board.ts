@@ -1,3 +1,4 @@
+import { clueTokensLeft } from "./investigator";
 import { OMEN_TRACK } from "../omen";
 import { rng } from "../rng";
 import type { Content } from "../setup";
@@ -108,8 +109,10 @@ export function spawnSetAside(state: GameState, content: Content, id: string, mo
 
 
 /** "Spawn 1 Monster on a random space" by card text. */
-export function spawnMonsterRandomly(state: GameState, content: Content, id: string): GameState {
+/** With no clue token left the lead investigator names the space (EH_reference p.11; random-spawn-choice D1). */
+export function spawnMonsterRandomly(state: GameState, content: Content, id: string, chosen?: string): GameState {
   subject(state, id);
+  if (!clueTokensLeft(state) && chosen) return spawnMonsterByText(note(state, `no clue token is left, so the lead investigator names ${spaceName(content, chosen)}`), content, id, chosen);
   const drawn = randomSpace(state);
   return spawnMonsterByText(named(drawn.state, content, drawn.space), content, id, drawn.space);
 }

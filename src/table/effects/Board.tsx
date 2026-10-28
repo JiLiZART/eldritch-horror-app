@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Board, GameSet } from "../../content/types";
-import { ambush, changeEldritchOnOmen, closeGate, discardOngoing, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spawnNamed, spawnSetAside } from "../../engine/effects";
+import { ambush, changeEldritchOnOmen, closeGate, clueTokensLeft, discardOngoing, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spawnNamed, spawnSetAside } from "../../engine/effects";
 import { OMEN_TRACK } from "../../engine/omen";
 import type { GameState, InvestigatorState } from "../../engine/types";
 import { useSpaceName, useT } from "../lang";
@@ -24,6 +24,8 @@ export function BoardEffects({ board, set, state, me, space, onAct }: Props) {
   const [aside, setAside] = useState("");
   const [kind, setKind] = useState("");
   const [ongoing, setOngoing] = useState("");
+  /** The lead's named space when no clue token is left to draw a random one (random-spawn-choice D2). */
+  const [named, setNamed] = useState("");
   const content = { board, set };
   const t = useT();
   const spaceName = useSpaceName();
@@ -46,7 +48,17 @@ export function BoardEffects({ board, set, state, me, space, onAct }: Props) {
         <button type="button" onClick={() => onAct((s) => spawnMonsterByText(s, content, me.id, space))}>
           {t("effects.spawnMonsterOn", { space: spaceName(board, space) })}
         </button>
-        <button type="button" onClick={() => onAct((s) => spawnMonsterRandomly(s, content, me.id))}>
+        {!clueTokensLeft(state) && (
+          <select value={named} onChange={(e) => setNamed(e.target.value)}>
+            <option value="">{t("effects.choose")}</option>
+            {board.spaces.map((s) => (
+              <option key={s.id} value={s.id}>
+                {spaceName(board, s.id)}
+              </option>
+            ))}
+          </select>
+        )}{" "}
+        <button type="button" onClick={() => onAct((s) => spawnMonsterRandomly(s, content, me.id, named || undefined))}>
           {t("effects.spawnMonsterRandom")}
         </button>
         {" "}

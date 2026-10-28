@@ -215,6 +215,14 @@ describe("a devoured investigator leaves the game", () => {
 
 describe("a random space is drawn from the clue pool", () => {
   const topLondon = (s: GameState): GameState => ({ ...s, cluePool: ["london", ...s.cluePool.filter((c) => c !== "london")] });
+  it("lets the lead name the random spawn space once no clue token is left", () => {
+    const bare = { ...encounters(), cluePool: [], clueDiscard: [] };
+    expect(() => spawnMonsterRandomly(bare, content, leo)).toThrow(/the lead investigator chooses the space/);
+    const s = spawnMonsterRandomly(bare, content, leo, "tokyo");
+    expect(s.monsters.some((m) => m.space === "tokyo")).toBe(true);
+    expect(log(s)).toMatch(/no clue token is left, so the lead investigator names Tokyo/);
+    expect(spawnMonsterRandomly(topLondon(encounters()), content, leo, "tokyo").monsters.some((m) => m.space === "london")).toBe(true);
+  });
   it("lets the lead name the space once no clue token is left, and ignores the name while one is", () => {
     const bare = { ...encounters(), cluePool: [], clueDiscard: [] };
     expect(clueTokensLeft(bare)).toBe(false);
