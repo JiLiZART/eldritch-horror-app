@@ -184,7 +184,7 @@ When the browser asks for reduced motion, camera moves triggered by the app SHAL
 - **THEN** any view change happens without animation
 
 ### Requirement: The game status is shown beside the board
-While a game is in progress the panel SHALL show doom, the omen space with any eldritch tokens on it, the reference card values, the current mystery card, the reserve cards, the size of each deck, each discard pile's cards by name under a fold, and for each investigator in seat order the lead marker, space (as a control that selects that space, so the view glides to the investigator), health, sanity, clues and possessions by card name, their five skills as the printed value plus any improvement, and their sheet image on request.
+While a game is in progress the panel SHALL show doom, the omen space with any eldritch tokens on it, the reference card values, the current mystery card, the reserve cards, the size of each deck, each discard pile's cards by name under a fold, the monster cup's kinds with their counts and the set-aside monsters under another, and for each investigator in seat order the lead marker, space (as a control that selects that space, so the view glides to the investigator), health, sanity, clues and possessions by card name, their five skills as the printed value plus any improvement, and their sheet image on request.
 
 #### Scenario: Status after setup
 - **WHEN** a game starts with Azathoth and Akachi Onyele
@@ -205,6 +205,10 @@ While a game is in progress the panel SHALL show doom, the omen space with any e
 #### Scenario: The discard piles
 - **WHEN** an asset has been discarded
 - **THEN** the Status section's discards fold names it under the asset discard
+
+#### Scenario: The cup's contents
+- **WHEN** the cup holds four Cultists and two Byakhee
+- **THEN** the Status section's monster cup fold names each kind with its count, and the set-aside monsters apart
 
 ### Requirement: Location art responds to the pointer
 Each of the 34 illustrated locations SHALL lie exactly over its art on the board. While the pointer is over it, or while its space is selected, it SHALL grow from its centre together with its printed text. Clicking it SHALL select its space exactly as clicking the space's marker does. The art of a location whose set is disabled SHALL not grow or select anything. With reduced motion the growth SHALL be instant.
