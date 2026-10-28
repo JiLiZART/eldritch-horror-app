@@ -198,5 +198,8 @@
   "status.devoured": "devoured",
   "status.removed": ", removed",
   "status.replacedBy": ", replaced by {name}",
-  "status.delayed": " (delayed)"
+  "status.delayed": " (delayed)",
+  "status.skills": "Skills",
+  "status.showSheet": "Show sheet",
+  "status.hideSheet": "Hide sheet"
 }

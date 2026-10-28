@@ -198,5 +198,8 @@
   "status.devoured": "сожран",
   "status.removed": ", убран",
   "status.replacedBy": ", заменён: {name}",
-  "status.delayed": " (задержан)"
+  "status.delayed": " (задержан)",
+  "status.skills": "Навыки",
+  "status.showSheet": "Показать лист",
+  "status.hideSheet": "Скрыть лист"
 }

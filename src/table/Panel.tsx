@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { neighbors } from "../content/board";
 import type { Board, GameSet, Lang, Space } from "../content/types";
 import { OMEN_TRACK } from "../engine/omen";
@@ -145,6 +145,9 @@ function Journal({ set, state }: { set: GameSet; state: GameState }) {
 
 function Status({ board, set, state }: { board: Board; set: GameSet; state: GameState }) {
   const t = useT();
+  /** The one investigator whose sheet image is open (design D2). */
+  const [sheet, setSheet] = useState<string>();
+  const SKILLS = ["lore", "influence", "observation", "strength", "will"] as const;
   const ancientOne = set.ancientOnes.find((a) => a.id === state.ancientOne);
   const mystery = ancientOne?.mysteries.find((m) => m.id === state.currentMystery);
   const cardName = (id: string) => set.cards.find((c) => c.id === id)?.name ?? id;
@@ -208,17 +211,27 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
             <th>{t("status.tickets")}</th>
             <th>{t("status.possessions")}</th>
             <th>{t("status.conditions")}</th>
-            <th>{t("status.improvements")}</th>
+            <th>{t("status.skills")}</th>
           </tr>
         </thead>
         <tbody>
-          {state.investigators.map((i) => (
+          {state.investigators.map((i) => {
+            const printed = set.investigators.find((x) => x.id === i.id);
+            return (
             <tr key={i.id}>
               <td>
                 {i.id === state.leadInvestigator && <span title={t("status.lead")}>★ </span>}
-                {set.investigators.find((x) => x.id === i.id)?.name ?? i.id}
+                {printed?.name ?? i.id}
                 {i.defeated && ` (${i.defeated === "devoured" ? t("status.devoured") : t("status.defeatedBy", { cause: t(`cause.${i.defeated}`) })}${i.removed ? t("status.removed") : ""}${i.replacedBy ? t("status.replacedBy", { name: set.investigators.find((x) => x.id === i.replacedBy)?.name ?? i.replacedBy }) : ""})`}
-                {i.delayed && t("status.delayed")}
+                {i.delayed && t("status.delayed")}{" "}
+                <button type="button" onClick={() => setSheet(sheet === i.id ? undefined : i.id)}>
+                  {sheet === i.id ? t("status.hideSheet") : t("status.showSheet")}
+                </button>
+                {sheet === i.id && printed && (
+                  <p className="cards">
+                    <img className="held-card" src={`/${printed.images.front}`} alt={`${printed.name} sheet`} />
+                  </p>
+                )}
               </td>
               <td>{spaceName(i.space)}</td>
               <td>{i.health}</td>
@@ -227,13 +240,10 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
               <td>{i.tickets.map((x) => t(`ticket.${x}`)).join(", ")}</td>
               <td>{i.possessions.map(cardName).join(", ")}</td>
               <td>{i.conditions.map(cardName).join(", ")}</td>
-              <td>
-                {Object.entries(i.improvements)
-                  .map(([k, v]) => `${t(`skill.${k}`)} +${v}`)
-                  .join(", ")}
-              </td>
+              <td>{printed && SKILLS.map((k) => `${t(`skill.${k}`)} ${printed.skills[k] + (i.improvements[k] ?? 0)}`).join(", ")}</td>
             </tr>
-          ))}
+            );
+          })}
         </tbody>
       </table>
     </section>
