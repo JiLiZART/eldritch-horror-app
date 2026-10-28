@@ -275,5 +275,6 @@
   "game.backup": "Save backup",
   "game.restore": "Load backup",
   "game.restored": "{added} saved games added, {skipped} set aside",
-  "status.cup": "Monster cup"
+  "status.cup": "Monster cup",
+  "panel.previewNote": "These spaces are a preview; the game plays on the core set."
 }

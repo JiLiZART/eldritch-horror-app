@@ -72,6 +72,7 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
             <input type="checkbox" checked={enabled.has(s.id)} onChange={(e) => onToggle(s.id, e.target.checked)} /> {s.name}
           </label>
         ))}
+        {enabled.size > 1 && <small>{t("panel.previewNote")}</small>}
       </fieldset>
       <fieldset>
         <legend>{t("panel.paths")}</legend>
