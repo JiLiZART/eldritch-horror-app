@@ -4,7 +4,8 @@ import { type ComponentRef, Suspense, useEffect, useMemo, useRef, useState } fro
 import type { ThreeEvent } from "@react-three/fiber";
 import { SRGBColorSpace, type Texture, Vector3 } from "three";
 import { activeGraph } from "../content/board";
-import type { Board, BoardLabels, Space } from "../content/types";
+import type { Board, BoardLabels, Skill, Space } from "../content/types";
+import type { Ticket } from "../engine/types";
 import { BoardText } from "./BoardText";
 import { BOARD_WIDTH, HELD, SHEET, TABLEAU_ROWS, boardSize, boardToWorld, doomPosition, heldPosition, omenPosition, reservePosition, sheetPosition, spreadOnCircle, tableExtent, tableauPosition } from "./geometry";
 import type { Piece, PieceKind } from "./pieces";
@@ -22,7 +23,7 @@ export interface TableProps {
   /** The Ancient One's card faces beside the board: the sheet, the current mystery and the ongoing mythos cards (tableau D2). */
   tableau?: { sheet: string; mystery?: string; mythos: string[] };
   /** The investigators' sheet faces in seat order, below the board, each with the cards held under it (held-cards D2). */
-  sheets?: { image: string; held: string[]; health: number; sanity: number }[];
+  sheets?: { image: string; held: string[]; health: number; sanity: number; improvements: Partial<Record<Skill, 1 | 2>>; tickets: Ticket[] }[];
   enabled: Set<string>;
   selected: string | undefined;
   /** Spaces of the travel route being picked, highlighted in order. */
@@ -326,26 +327,32 @@ function Tableau({ board, tableau, onFocus }: { board: Board; tableau: NonNullab
 function Sheets({ board, sheets, onFocus }: { board: Board; sheets: NonNullable<TableProps["sheets"]>; onFocus: FaceProps["onFocus"] }) {
   const healthToken = (n: number) => `${TOKENS}/health/health-0${Math.min(9, Math.max(0, n))}.webp`;
   const sanityToken = (n: number) => `${TOKENS}/sanity/sanity-0${Math.min(9, Math.max(0, n))}.webp`;
-  const images = [...new Set(sheets.flatMap((s) => [s.image, ...s.held, healthToken(s.health), sanityToken(s.sanity)]))];
+  const skillToken = (skill: Skill) => `${TOKENS}/improvements/${skill}.webp`;
+  const ticketToken = (ticket: Ticket) => `${TOKENS}/travel/${ticket}.webp`;
+  const images = [...new Set(sheets.flatMap((s) => [s.image, ...s.held, healthToken(s.health), sanityToken(s.sanity), ...Object.keys(s.improvements).map((k) => skillToken(k as Skill)), ...s.tickets.map(ticketToken)]))];
   const textures = useTexture(images.map((i) => `/${i}`), srgb);
   const textureOf = new Map(images.map((img, i) => [img, textures[i]!]));
-  /** A numbered token on the sheet's printed stamp at `(fx, fy)` of the sheet from its top-left (sheet-tokens D1). */
-  const token = (seat: number, image: string, fx: number, fy: number) => {
+  /** A token on the sheet at `(fx, fy)` of the sheet from its top-left, `size` wide and high, `lift` above the sheet (sheet-tokens D1, skill-and-ticket-tokens D1). */
+  const token = (seat: number, image: string, fx: number, fy: number, size: [number, number], lift = 0) => {
     const [x, y] = sheetPosition(board, seat);
     return (
-      <mesh position={[x - SHEET[0] / 2 + fx * SHEET[0], y + SHEET[1] / 2 - fy * SHEET[1], 0.07]}>
-        <planeGeometry args={[0.38, (0.38 * 386) / 365]} />
+      <mesh key={`${image}@${fx},${fy},${lift}`} position={[x - SHEET[0] / 2 + fx * SHEET[0] + lift, y + SHEET[1] / 2 - fy * SHEET[1] + lift, 0.07 + lift]}>
+        <planeGeometry args={size} />
         <meshBasicMaterial map={textureOf.get(image)} transparent alphaTest={0.5} />
       </mesh>
     );
   };
+  const STAMP: [number, number] = [0.38, (0.38 * 386) / 365];
+  const SKILL_X: Record<Skill, number> = { lore: 0.123, influence: 0.29, observation: 0.458, strength: 0.626, will: 0.793 };
   return (
     <>
       {sheets.map((s, seat) => (
         <group key={`${s.image}#${seat}`}>
           <Face map={textureOf.get(s.image)!} position={sheetPosition(board, seat)} size={SHEET} onFocus={onFocus} />
-          {token(seat, healthToken(s.health), 0.635, 0.575)}
-          {token(seat, sanityToken(s.sanity), 0.848, 0.575)}
+          {token(seat, healthToken(s.health), 0.635, 0.575, STAMP)}
+          {token(seat, sanityToken(s.sanity), 0.848, 0.575, STAMP)}
+          {(Object.entries(s.improvements) as [Skill, 1 | 2][]).flatMap(([skill, level]) => Array.from({ length: level }, (_, n) => token(seat, skillToken(skill), SKILL_X[skill], 0.888, [0.3, 0.3], n * 0.1)))}
+          {s.tickets.map((t, n) => token(seat, ticketToken(t), 0.93, 0.07 + n * 0.1, [0.26, (0.26 * 221) / 450], n * 0.001))}
           {s.held.map((img, i) => (
             <Face key={`${img}#${i}`} map={textureOf.get(img)!} position={heldPosition(board, seat, i)} size={HELD} onFocus={onFocus} />
           ))}
