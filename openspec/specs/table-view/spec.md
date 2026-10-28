@@ -148,7 +148,7 @@ When the browser asks for reduced motion, camera moves triggered by the app SHAL
 - **THEN** any view change happens without animation
 
 ### Requirement: The game status is shown beside the board
-While a game is in progress the panel SHALL show doom, the omen space with any eldritch tokens on it, the reference card values, the current mystery card, the reserve cards, the size of each deck, and for each investigator in seat order the lead marker, space, health, sanity, clues and possessions by card name, their five skills as the printed value plus any improvement, and their sheet image on request.
+While a game is in progress the panel SHALL show doom, the omen space with any eldritch tokens on it, the reference card values, the current mystery card, the reserve cards, the size of each deck, and for each investigator in seat order the lead marker, space (as a control that selects that space, so the view glides to the investigator), health, sanity, clues and possessions by card name, their five skills as the printed value plus any improvement, and their sheet image on request.
 
 #### Scenario: Status after setup
 - **WHEN** a game starts with Azathoth and Akachi Onyele
@@ -161,6 +161,10 @@ While a game is in progress the panel SHALL show doom, the omen space with any e
 #### Scenario: Sheet on request
 - **WHEN** the players ask for Leo Anderson's sheet
 - **THEN** its image is shown beside his row until hidden
+
+#### Scenario: Find an investigator from the status
+- **WHEN** the player activates Lily Chen's space in the Status table
+- **THEN** Shanghai becomes the selected space and the view glides there
 
 ### Requirement: Location art responds to the pointer
 Each of the 34 illustrated locations SHALL lie exactly over its art on the board. While the pointer is over it, or while its space is selected, it SHALL grow from its centre together with its printed text. Clicking it SHALL select its space exactly as clicking the space's marker does. The art of a location whose set is disabled SHALL not grow or select anything. With reduced motion the growth SHALL be instant.
