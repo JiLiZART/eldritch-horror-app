@@ -11,6 +11,12 @@ import { BOARD_WIDTH, HELD, SHEET, TABLEAU_ROWS, boardSize, boardToWorld, doomPo
 import type { Piece, PieceKind } from "./pieces";
 import { PATH_COLORS } from "./sets";
 
+/** A card face on the table: its image under public/ and the name its hover badge shows (card-hover D1). */
+export interface CardFace {
+  image: string;
+  label: string;
+}
+
 export interface TableProps {
   board: Board;
   labels: BoardLabels;
@@ -19,11 +25,11 @@ export interface TableProps {
   /** Pieces grouped by space id; empty when no game is in progress. */
   pieces: Map<string, Piece[]>;
   /** The doom value, the omen index and the eldritch tokens per omen space; undefined without a game (track-tokens D3). */
-  tracks?: { doom: number; omen: number; eldritch: number[]; reserve: string[] };
+  tracks?: { doom: number; omen: number; eldritch: number[]; reserve: CardFace[] };
   /** The Ancient One's card faces beside the board: the sheet, the current mystery and the ongoing mythos cards (tableau D2). */
-  tableau?: { sheet: string; mystery?: string; mythos: string[]; tokens: number };
+  tableau?: { sheet: CardFace; mystery?: CardFace; mythos: CardFace[]; tokens: number };
   /** The investigators' sheet faces in seat order, below the board, each with the cards held under it (held-cards D2). */
-  sheets?: { image: string; held: string[]; health: number; sanity: number; improvements: Partial<Record<Skill, 1 | 2>>; tickets: Ticket[] }[];
+  sheets?: { sheet: CardFace; held: CardFace[]; health: number; sanity: number; improvements: Partial<Record<Skill, 1 | 2>>; tickets: Ticket[] }[];
   /** Changes each time the player asks for the whole table; the view glides out to it (fit-view D1). */
   fit?: number;
   enabled: Set<string>;
@@ -89,7 +95,7 @@ function Scene({ board, labels, strings, pieces, tracks, tableau, sheets, fit, e
       ))}
       {pieces.size > 0 && <Pieces pieces={pieces} at={at} />}
       {tracks && <Tracks board={board} tracks={tracks} />}
-      {tracks && tracks.reserve.length > 0 && <Reserve board={board} images={tracks.reserve} onFocus={onFocus} />}
+      {tracks && tracks.reserve.length > 0 && <Reserve board={board} cards={tracks.reserve} onFocus={onFocus} />}
       {tableau && <Tableau board={board} tableau={tableau} onFocus={onFocus} />}
       {sheets && sheets.length > 0 && <Sheets board={board} sheets={sheets} onFocus={onFocus} />}
     </>
@@ -306,13 +312,13 @@ function Tracks({ board, tracks }: { board: Board; tracks: NonNullable<TableProp
 const CARD_ASPECT = 745 / 478;
 
 /** The reserve cards' faces in the printed slots, in reserve order (reserve-slots D3). */
-function Reserve({ board, images, onFocus }: { board: Board; images: string[]; onFocus: FaceProps["onFocus"] }) {
-  const textures = useTexture(images.map((i) => `/${i}`), srgb);
+function Reserve({ board, cards, onFocus }: { board: Board; cards: CardFace[]; onFocus: FaceProps["onFocus"] }) {
+  const textures = useTexture(cards.map((c) => `/${c.image}`), srgb);
   const w = board.tracks.reserve.width * BOARD_WIDTH;
   return (
     <>
       {textures.map((map, i) => (
-        <Face key={images[i]} map={map} position={reservePosition(board, i)} size={[w, w * CARD_ASPECT]} onFocus={onFocus} />
+        <Face key={cards[i]!.image} map={map} label={cards[i]!.label} position={reservePosition(board, i)} size={[w, w * CARD_ASPECT]} onFocus={onFocus} />
       ))}
     </>
   );
@@ -320,6 +326,8 @@ function Reserve({ board, images, onFocus }: { board: Board; images: string[]; o
 
 interface FaceProps {
   map: Texture;
+  /** The name shown beside the card while the pointer rests on it (card-hover D2). */
+  label: string;
   position: [number, number];
   size: [number, number];
   /** A click brings the card up to read: its centre and size (card-focus D1). */
@@ -327,7 +335,8 @@ interface FaceProps {
 }
 
 /** One card face lying flat on the table. */
-function Face({ map, position, size, onFocus }: FaceProps) {
+function Face({ map, label, position, size, onFocus }: FaceProps) {
+  const [hovered, setHovered] = useState(false);
   const click = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
     // A drag that starts on the card ends with a click event too; only a still pointer brings the card up.
@@ -335,10 +344,15 @@ function Face({ map, position, size, onFocus }: FaceProps) {
   };
   return (
     <Billboard position={[...position, 0.06]}>
-      <mesh onClick={click}>
+      <mesh onClick={click} onPointerOver={() => setHovered(true)} onPointerOut={() => setHovered(false)}>
         <planeGeometry args={size} />
         <meshBasicMaterial map={map} transparent alphaTest={0.5} />
       </mesh>
+      {hovered && (
+        <Html position={[0, size[1] / 2 + 0.05, 0]} center style={{ pointerEvents: "none" }}>
+          <span className="piece-label">{label}</span>
+        </Html>
+      )}
     </Billboard>
   );
 }
@@ -346,7 +360,7 @@ function Face({ map, position, size, onFocus }: FaceProps) {
 /** The Ancient One sheet, the current mystery and the ongoing mythos cards in a column right of the board (tableau D2). */
 function Tableau({ board, tableau, onFocus }: { board: Board; tableau: NonNullable<TableProps["tableau"]>; onFocus: FaceProps["onFocus"] }) {
   const mysteryToken = `${TOKENS}/mystery-token.webp`;
-  const images = [tableau.sheet, ...(tableau.mystery ? [tableau.mystery] : []), ...tableau.mythos, mysteryToken];
+  const images = [tableau.sheet.image, ...(tableau.mystery ? [tableau.mystery.image] : []), ...tableau.mythos.map((c) => c.image), mysteryToken];
   const textures = useTexture(images.map((i) => `/${i}`), srgb);
   const textureOf = new Map(images.map((img, i) => [img, textures[i]!]));
   const [mx, my] = tableauPosition(board, 2);
@@ -354,8 +368,8 @@ function Tableau({ board, tableau, onFocus }: { board: Board; tableau: NonNullab
   const [cx, cy] = tableauPosition(board, 1);
   return (
     <>
-      <Face map={textureOf.get(tableau.sheet)!} position={tableauPosition(board, 0)} size={TABLEAU_ROWS[0]!} onFocus={onFocus} />
-      {tableau.mystery && <Face map={textureOf.get(tableau.mystery)!} position={tableauPosition(board, 1)} size={TABLEAU_ROWS[1]!} onFocus={onFocus} />}
+      <Face map={textureOf.get(tableau.sheet.image)!} label={tableau.sheet.label} position={tableauPosition(board, 0)} size={TABLEAU_ROWS[0]!} onFocus={onFocus} />
+      {tableau.mystery && <Face map={textureOf.get(tableau.mystery.image)!} label={tableau.mystery.label} position={tableauPosition(board, 1)} size={TABLEAU_ROWS[1]!} onFocus={onFocus} />}
       {tableau.mystery &&
         spreadOnCircle(tableau.tokens, 0.17).map(([dx, dy], n) => (
           // The tokens the mystery has collected, fanned on the art corner of its card so the text stays readable (mystery-card-tokens D1).
@@ -364,8 +378,8 @@ function Tableau({ board, tableau, onFocus }: { board: Board; tableau: NonNullab
             <meshBasicMaterial map={textureOf.get(mysteryToken)} transparent alphaTest={0.5} />
           </mesh>
         ))}
-      {tableau.mythos.map((img, i) => (
-        <Face key={`${img}#${i}`} map={textureOf.get(img)!} position={[mx - TABLEAU_ROWS[0]![0] / 2 + mw / 2 + i * (mw + 0.1), my]} size={TABLEAU_ROWS[2]!} onFocus={onFocus} />
+      {tableau.mythos.map((card, i) => (
+        <Face key={`${card.image}#${i}`} map={textureOf.get(card.image)!} label={card.label} position={[mx - TABLEAU_ROWS[0]![0] / 2 + mw / 2 + i * (mw + 0.1), my]} size={TABLEAU_ROWS[2]!} onFocus={onFocus} />
       ))}
     </>
   );
@@ -377,7 +391,7 @@ function Sheets({ board, sheets, onFocus }: { board: Board; sheets: NonNullable<
   const sanityToken = (n: number) => `${TOKENS}/sanity/sanity-0${Math.min(9, Math.max(0, n))}.webp`;
   const skillToken = (skill: Skill) => `${TOKENS}/improvements/${skill}.webp`;
   const ticketToken = (ticket: Ticket) => `${TOKENS}/travel/${ticket}.webp`;
-  const images = [...new Set(sheets.flatMap((s) => [s.image, ...s.held, healthToken(s.health), sanityToken(s.sanity), ...Object.keys(s.improvements).map((k) => skillToken(k as Skill)), ...s.tickets.map(ticketToken)]))];
+  const images = [...new Set(sheets.flatMap((s) => [s.sheet.image, ...s.held.map((c) => c.image), healthToken(s.health), sanityToken(s.sanity), ...Object.keys(s.improvements).map((k) => skillToken(k as Skill)), ...s.tickets.map(ticketToken)]))];
   const textures = useTexture(images.map((i) => `/${i}`), srgb);
   const textureOf = new Map(images.map((img, i) => [img, textures[i]!]));
   /** A token on the sheet at `(fx, fy)` of the sheet from its top-left, `size` wide and high, `lift` above the sheet (sheet-tokens D1, skill-and-ticket-tokens D1). */
@@ -395,14 +409,14 @@ function Sheets({ board, sheets, onFocus }: { board: Board; sheets: NonNullable<
   return (
     <>
       {sheets.map((s, seat) => (
-        <group key={`${s.image}#${seat}`}>
-          <Face map={textureOf.get(s.image)!} position={sheetPosition(board, seat)} size={SHEET} onFocus={onFocus} />
+        <group key={`${s.sheet.image}#${seat}`}>
+          <Face map={textureOf.get(s.sheet.image)!} label={s.sheet.label} position={sheetPosition(board, seat)} size={SHEET} onFocus={onFocus} />
           {token(seat, healthToken(s.health), 0.635, 0.575, STAMP)}
           {token(seat, sanityToken(s.sanity), 0.848, 0.575, STAMP)}
           {(Object.entries(s.improvements) as [Skill, 1 | 2][]).flatMap(([skill, level]) => Array.from({ length: level }, (_, n) => token(seat, skillToken(skill), SKILL_X[skill], 0.888, [0.3, 0.3], n * 0.1)))}
           {s.tickets.map((t, n) => token(seat, ticketToken(t), 0.93, 0.07 + n * 0.1, [0.26, (0.26 * 221) / 450], n * 0.001))}
-          {s.held.map((img, i) => (
-            <Face key={`${img}#${i}`} map={textureOf.get(img)!} position={heldPosition(board, seat, i)} size={HELD} onFocus={onFocus} />
+          {s.held.map((card, i) => (
+            <Face key={`${card.image}#${i}`} map={textureOf.get(card.image)!} label={card.label} position={heldPosition(board, seat, i)} size={HELD} onFocus={onFocus} />
           ))}
         </group>
       ))}

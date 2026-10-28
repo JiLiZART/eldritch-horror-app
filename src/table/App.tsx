@@ -12,7 +12,7 @@ import { Panel } from "./Panel";
 import { LangProvider, translate, useT } from "./lang";
 import { piecesOnSpace } from "./pieces";
 import { fileName, loadGame, loadSlots, newSlotId, parseGame, removeGame, saveGame, slotName } from "./saved";
-import { Table, type TableProps } from "./Table";
+import { type CardFace, Table, type TableProps } from "./Table";
 import { type Act, Turn } from "./Turn";
 import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
 
@@ -96,12 +96,27 @@ export function App() {
   const t = useMemo(() => (key: string, vars?: Record<string, string | number>) => translate(panel[lang], key, vars), [panel, lang]);
   const pieces = useMemo(() => piecesOnSpace(game.state, board, set, t), [game.state, board, set, t]);
   const ancientOne = set.ancientOnes.find((a) => a.id === game.state?.ancientOne);
-  const front = (id: string) => set.cards.find((c) => c.id === id)?.images.front;
+  /** A card's face for the table, named for its hover badge (card-hover D1); undefined for an unknown id. */
+  const face = (id: string, value?: true) => {
+    const card = set.cards.find((c) => c.id === id);
+    return card && { image: card.images.front, label: value ? `${card.name} · ${t("status.value", { value: card.value ?? 0 })}` : card.name };
+  };
+  const known = (c: CardFace | undefined): c is CardFace => !!c;
   const sheets = game.state?.investigators
     .filter((i) => !i.removed)
-    .map((i) => ({ image: set.investigators.find((x) => x.id === i.id)?.images.front, held: [...i.possessions, ...i.conditions].map(front).filter((c): c is string => !!c), health: i.health, sanity: i.sanity, improvements: i.improvements, tickets: i.tickets }))
-    .filter((s): s is NonNullable<TableProps["sheets"]>[number] => !!s.image);
-  const tableau = game.state && ancientOne && { sheet: game.state.awakened && ancientOne.images.back ? ancientOne.images.back : ancientOne.images.front, mystery: ancientOne.mysteries.find((m) => m.id === game.state!.currentMystery)?.images.front, mythos: game.state.ongoingMythos.map((id) => set.mythos.find((m) => m.id === id)?.images.front).filter((i): i is string => !!i), tokens: game.state.mysteryTokens };
+    .map((i) => {
+      const printed = set.investigators.find((x) => x.id === i.id);
+      return { sheet: printed && { image: printed.images.front, label: printed.name }, held: [...i.possessions, ...i.conditions].map((id) => face(id)).filter(known), health: i.health, sanity: i.sanity, improvements: i.improvements, tickets: i.tickets };
+    })
+    .filter((s): s is NonNullable<TableProps["sheets"]>[number] => !!s.sheet);
+  const mystery = ancientOne?.mysteries.find((m) => m.id === game.state?.currentMystery);
+  const tableau = game.state &&
+    ancientOne && {
+      sheet: { image: game.state.awakened && ancientOne.images.back ? ancientOne.images.back : ancientOne.images.front, label: ancientOne.name },
+      mystery: mystery && { image: mystery.images.front, label: mystery.name },
+      mythos: game.state.ongoingMythos.map((id) => set.mythos.find((m) => m.id === id)).filter((m) => m !== undefined).map((m) => ({ image: m.images.front, label: m.name })),
+      tokens: game.state.mysteryTokens,
+    };
   const selectedSpace = spaces.find((s) => s.id === selected);
   const toggle = (id: string, on: boolean) =>
     setEnabled((prev) => {
@@ -146,7 +161,7 @@ export function App() {
     <LangProvider lang={lang} strings={panel}>
     <div className="layout">
       <main className="table">
-        <Table board={board} labels={labels} strings={strings[lang]} pieces={pieces} tracks={game.state && { doom: game.state.doom, omen: game.state.omen, eldritch: [...game.state.eldritchOnOmen], reserve: game.state.reserve.map((id) => set.cards.find((c) => c.id === id)?.images.front).filter((i): i is string => !!i) }} tableau={tableau} sheets={sheets} fit={fit} enabled={enabled} selected={selectedSpace?.id} route={route} onSelect={select} reducedMotion={reducedMotion} />
+        <Table board={board} labels={labels} strings={strings[lang]} pieces={pieces} tracks={game.state && { doom: game.state.doom, omen: game.state.omen, eldritch: [...game.state.eldritchOnOmen], reserve: game.state.reserve.map((id) => face(id, true)).filter(known) }} tableau={tableau} sheets={sheets} fit={fit} enabled={enabled} selected={selectedSpace?.id} route={route} onSelect={select} reducedMotion={reducedMotion} />
       </main>
       <Panel board={board} set={set} lang={lang} onLang={chooseLang} state={game.state} pieces={pieces} spaces={spaces} enabled={enabled} onToggle={toggle} selected={selectedSpace} onSelect={select}>
         <NewGame
