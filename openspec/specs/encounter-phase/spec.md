@@ -17,7 +17,7 @@ When the last seat ends its Action turn the Encounter phase SHALL begin with the
 - **THEN** the phase is Mythos with the top mythos card showing
 
 ### Requirement: One encounter of the investigator's choice
-With no monster on the space the investigator SHALL draw exactly one card from a deck the space allows: the location deck of the space's region or the general deck on any space; the research deck when a clue token lies on the space; the other world deck when a gate stands on the space; the expedition deck when the active expedition token lies on the space. The drawn card SHALL be shown until the player finishes, then discarded to its deck's discard; a finished expedition encounter SHALL move the expedition token to the space named by the new top expedition card. A deck the space does not allow, a second draw, a draw while a monster still stands on the space, or finishing while a monster on the space has not been fought SHALL be refused with the rule named; a survivor already fought ends the encounter without a draw. **Deviation**: the card text is left to the players; rumor, defeated-investigator and special encounters are not offered; a Detained investigator is not modelled.
+With no monster on the space the investigator SHALL draw exactly one card from a deck the space allows: the location deck of the space's region or the general deck on any space; the research deck when a clue token lies on the space; the other world deck when a gate stands on the space; the expedition deck when the active expedition token lies on the space. A deck that is empty when a draw is due, or that the draw leaves empty, SHALL at once be rebuilt by shuffling its discard; a deck whose discard is empty too SHALL refuse the draw naming the deck. The drawn card SHALL be shown until the player finishes, then discarded to its deck's discard; a finished expedition encounter SHALL move the expedition token to the space named by the new top expedition card. A deck the space does not allow, a second draw, a draw while a monster still stands on the space, or finishing while a monster on the space has not been fought SHALL be refused with the rule named; a survivor already fought ends the encounter without a draw. **Deviation**: the card text is left to the players; rumor, defeated-investigator and special encounters are not offered; a Detained investigator is not modelled.
 
 #### Scenario: Location encounter
 - **WHEN** Leo Anderson on Buenos Aires, with no monster there, draws from the America deck
@@ -50,6 +50,22 @@ With no monster on the space the investigator SHALL draw exactly one card from a
 #### Scenario: Expedition token moves
 - **WHEN** an investigator on the active expedition space finishes an expedition encounter
 - **THEN** the expedition token lies on the space named by the new top expedition card
+
+#### Scenario: Deck rebuilt from the discard
+- **WHEN** Leo Anderson draws from the America deck while it is empty and three America cards lie on its discard
+- **THEN** one of those three is shown, two remain in the deck and the discard is empty
+
+#### Scenario: Rebuilt as the last card is drawn
+- **WHEN** the last America card is drawn with two on the discard
+- **THEN** the deck holds those two again before the encounter is finished
+
+#### Scenario: Deck and discard empty
+- **WHEN** Leo Anderson draws from the America deck while the deck and its discard are empty
+- **THEN** the draw is refused naming the America deck
+
+#### Scenario: Expedition token after the last card
+- **WHEN** the last expedition card is drawn with cards on the expedition discard and the encounter is finished
+- **THEN** the expedition token lies on the space named by the top card of the rebuilt deck
 
 ### Requirement: An investigator at 0 health or sanity is defeated
 When an investigator's health or sanity reaches 0 they SHALL be defeated at once: doom advances by 1, their pawn moves to the nearest city space and lies there, their conditions are shuffled back into the condition deck, their turns are skipped for the rest of the game, and the lead token passes to the next seat when the defeated investigator held it. When every investigator is defeated the game SHALL be lost with the reason shown. The defeated investigator SHALL be shown as such beside the board and on the table. **Deviation**: among several nearest cities the first in board order is taken; no replacement investigator is chosen, and the players are told so.

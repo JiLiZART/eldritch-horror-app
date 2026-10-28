@@ -62,7 +62,7 @@ Closing a gate SHALL discard the gate token on the investigator's space to the g
 - **THEN** it is refused because no gate stands on the space
 
 ### Requirement: Cards are gained and discarded
-Gaining a card from a deck SHALL take the top card of the asset or artifact deck, the bottom card of the spell or condition deck, or the first card of that deck matching a given name; a spell or condition whose name the investigator already holds SHALL be refused, and an empty deck or an absent name SHALL be refused naming the deck. Assets, artifacts and spells join the investigator's possessions; conditions are held apart and SHALL NOT be traded. Discarding a held card SHALL put an asset on the asset discard, an artifact on the artifact discard, and shuffle a spell or condition back into its deck. **Deviation**: card text, including "flip this card", is left to the players.
+Gaining a card from a deck SHALL take the top card of the asset or artifact deck, the bottom card of the spell or condition deck, or the first card of that deck matching a given name; an empty asset or artifact deck SHALL first be rebuilt by shuffling its discard; a spell or condition whose name the investigator already holds SHALL be refused, and a deck with nothing to draw or an absent name SHALL be refused naming the deck. Assets, artifacts and spells join the investigator's possessions; conditions are held apart and SHALL NOT be traded. Discarding a held card SHALL put an asset on the asset discard, an artifact on the artifact discard, and shuffle a spell or condition back into its deck. **Deviation**: card text, including "flip this card", is left to the players.
 
 #### Scenario: Random spell
 - **WHEN** Leo Anderson gains a spell with no name given
@@ -87,6 +87,10 @@ Gaining a card from a deck SHALL take the top card of the asset or artifact deck
 #### Scenario: Asset discarded
 - **WHEN** Leo Anderson discards a held asset
 - **THEN** it is on top of the asset discard
+
+#### Scenario: Artifact deck rebuilt
+- **WHEN** Leo Anderson gains an artifact while the artifact deck is empty and one artifact lies on its discard
+- **THEN** he gains that artifact and the discard is empty
 
 ### Requirement: The effects are offered beside the board
 During the Encounter phase and after the mythos card is resolved the players SHALL see, for a chosen standing investigator, controls to change health and sanity, gain and spend a clue, close the gate on their space, gain a card from a deck or by name, and discard a held card; and, for a chosen monster on the board, controls to move it to a named space, move it toward the nearest investigator and discard it; a refusal SHALL be explained in the rule's words, and each investigator's conditions SHALL be listed.
