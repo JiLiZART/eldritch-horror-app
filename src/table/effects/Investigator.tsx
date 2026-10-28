@@ -4,6 +4,7 @@ import { changeHealth, changeSanity, delay, devour, discardImprovement, gainClue
 import type { NearestTarget } from "../../engine/effects";
 import { spaceName } from "../../engine/spawn";
 import type { GameState, InvestigatorState } from "../../engine/types";
+import { useT } from "../lang";
 import type { Act } from "../Turn";
 
 interface Props {
@@ -18,86 +19,86 @@ interface Props {
 }
 
 const SKILLS: Skill[] = ["lore", "influence", "observation", "strength", "will"];
-const capital = (s: string) => s[0]!.toUpperCase() + s.slice(1);
 
 /** The Investigator group of card-text controls (design D2). */
 export function InvestigatorEffects({ board, set, me, space, onAct }: Props) {
   const [skill, setSkill] = useState<Skill>("lore");
   const [target, setTarget] = useState<NearestTarget>("city");
   const content = { board, set };
+  const t = useT();
 
   return (
     <>
       <p>
         <button type="button" onClick={() => onAct((s) => changeHealth(s, content, me.id, -1))}>
-          −1 health
+          {t("effects.healthMinus")}
         </button>
         <button type="button" onClick={() => onAct((s) => changeHealth(s, content, me.id, 1))}>
-          +1 health
+          {t("effects.healthPlus")}
         </button>
         <button type="button" onClick={() => onAct((s) => changeSanity(s, content, me.id, -1))}>
-          −1 sanity
+          {t("effects.sanityMinus")}
         </button>
         <button type="button" onClick={() => onAct((s) => changeSanity(s, content, me.id, 1))}>
-          +1 sanity
+          {t("effects.sanityPlus")}
         </button>
         <button type="button" onClick={() => onAct((s) => spendHealth(s, content, me.id, 1))}>
-          Spend 1 health
+          {t("effects.spendHealth")}
         </button>
         <button type="button" onClick={() => onAct((s) => spendSanity(s, content, me.id, 1))}>
-          Spend 1 sanity
+          {t("effects.spendSanity")}
         </button>
         <button type="button" onClick={() => onAct((s) => gainClue(s, content, me.id))}>
-          Gain clue
+          {t("effects.gainClue")}
         </button>
         <button type="button" onClick={() => onAct((s) => spendClue(s, content, me.id))}>
-          Spend clue
+          {t("effects.spendClue")}
         </button>
         <button type="button" onClick={() => onAct((s) => delay(s, content, me.id))}>
-          Delay
+          {t("effects.delay")}
         </button>
         <button type="button" onClick={() => onAct((s) => standUp(s, content, me.id))}>
-          Stand up
+          {t("effects.standUp")}
         </button>
         <button type="button" onClick={() => onAct((s) => devour(s, content, me.id))}>
-          Devour
+          {t("effects.devour")}
         </button>
         <button type="button" onClick={() => onAct((s) => moveInvestigator(s, content, me.id, space))}>
-          Move to {spaceName(content, space)}
+          {t("effects.moveToSpace", { space: spaceName(content, space) })}
         </button>
         <button type="button" onClick={() => onAct((s) => moveInvestigatorRandomly(s, content, me.id))}>
-          Move to a random space
+          {t("effects.moveRandom")}
         </button>{" "}
         <label>
-          Nearest{" "}
+          {t("effects.nearest")}{" "}
           <select value={target} onChange={(e) => setTarget(e.target.value as NearestTarget)}>
-            {(["city", "wilderness", "sea", "gate", "clue"] as const).map((t) => (
-              <option key={t} value={t}>
-                {t}
+            {(["city", "wilderness", "sea", "gate", "clue"] as const).map((k) => (
+              <option key={k} value={k}>
+                {t(`nearest.${k}`)}
               </option>
             ))}
           </select>
         </label>{" "}
         <button type="button" onClick={() => onAct((s) => moveInvestigatorToNearest(s, content, me.id, target))}>
-          Move to nearest
+          {t("effects.moveNearest")}
         </button>
       </p>
       <p>
         <label>
-          Skill{" "}
+          {t("effects.skill")}{" "}
           <select value={skill} onChange={(e) => setSkill(e.target.value as Skill)}>
             {SKILLS.map((k) => (
               <option key={k} value={k}>
-                {capital(k)}
+                {t(`skill.${k}`)}
               </option>
             ))}
           </select>
         </label>{" "}
         <button type="button" onClick={() => onAct((s) => improveSkill(s, content, me.id, skill))}>
-          Improve
+          {t("effects.improve")}
         </button>
         <button type="button" onClick={() => onAct((s) => discardImprovement(s, content, me.id, skill))}>
-          Discard improvement
+          {t("effects.discardImprovement")}
         </button>
       </p>
     </>

@@ -4,6 +4,7 @@ import { discardMonster, moveMonster, moveMonsterToward } from "../../engine/eff
 import { monsterKey } from "../../engine/encounter";
 import { spaceName } from "../../engine/spawn";
 import type { GameState, InvestigatorState } from "../../engine/types";
+import { useT } from "../lang";
 import type { Act } from "../Turn";
 
 interface Props {
@@ -22,30 +23,31 @@ interface Props {
 export function MonstersEffects({ board, set, state, space, onAct }: Props) {
   const [monster, setMonster] = useState("");
   const content = { board, set };
+  const t = useT();
   const chosen = state.monsters.find((m) => monsterKey(m) === monster) ?? state.monsters[0];
   return (
     <>
-      {!chosen && <p>no monster on the board</p>}
+      {!chosen && <p>{t("effects.noMonster")}</p>}
       {chosen && (
         <p>
           <label>
-            Monster{" "}
+            {t("effects.monster")}{" "}
             <select value={monsterKey(chosen)} onChange={(e) => setMonster(e.target.value)}>
               {state.monsters.map((m) => (
                 <option key={monsterKey(m)} value={monsterKey(m)}>
-                  {set.monsters.find((x) => x.id === m.id)?.name ?? m.id} on {spaceName(content, m.space)}
+                  {t("effects.monsterOn", { name: set.monsters.find((x) => x.id === m.id)?.name ?? m.id, space: spaceName(content, m.space) })}
                 </option>
               ))}
             </select>
           </label>{" "}
           <button type="button" onClick={() => onAct((s) => moveMonster(s, content, chosen, space))}>
-            Move to {spaceName(content, space)}
+            {t("effects.moveToSpace", { space: spaceName(content, space) })}
           </button>
           <button type="button" onClick={() => onAct((s) => moveMonsterToward(s, content, chosen))}>
-            Toward nearest investigator
+            {t("effects.towardNearest")}
           </button>
           <button type="button" onClick={() => onAct((s) => discardMonster(s, content, chosen))}>
-            Discard
+            {t("effects.discard")}
           </button>
         </p>
       )}

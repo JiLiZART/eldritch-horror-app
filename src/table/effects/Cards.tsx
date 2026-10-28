@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Board, Deck, GameSet } from "../../content/types";
 import { discardCard, gainCard } from "../../engine/effects";
 import type { GameState, InvestigatorState } from "../../engine/types";
+import { useT } from "../lang";
 import type { Act } from "../Turn";
 
 interface Props {
@@ -24,6 +25,7 @@ export function CardsEffects({ board, set, me, onAct }: Props) {
   /** The one held card whose image is open. */
   const [shown, setShown] = useState<{ card: string; side: "front" | "back" }>();
   const content = { board, set };
+  const t = useT();
   const cardTitle = (x: string) => set.cards.find((c) => c.id === x)?.name ?? x;
   const names = [...new Set(set.cards.filter((c) => c.deck === deck).map((c) => c.name))].sort();
   const pickDeck = (next: Deck) => {
@@ -34,19 +36,19 @@ export function CardsEffects({ board, set, me, onAct }: Props) {
     <>
       <p>
         <label>
-          Deck{" "}
+          {t("effects.deck")}{" "}
           <select value={deck} onChange={(e) => pickDeck(e.target.value as Deck)}>
             {DECKS.map((d) => (
               <option key={d} value={d}>
-                {d}
+                {t(`deck.${d}`)}
               </option>
             ))}
           </select>
         </label>{" "}
         <label>
-          Card{" "}
+          {t("effects.card")}{" "}
           <select value={cardName} onChange={(e) => setCardName(e.target.value)}>
-            <option value="">random</option>
+            <option value="">{t("effects.random")}</option>
             {names.map((n) => (
               <option key={n} value={n}>
                 {n}
@@ -55,7 +57,7 @@ export function CardsEffects({ board, set, me, onAct }: Props) {
           </select>
         </label>{" "}
         <button type="button" onClick={() => onAct((s) => gainCard(s, content, me.id, deck, cardName || undefined))}>
-          Gain card
+          {t("effects.gainCard")}
         </button>
       </p>
       <ul>
@@ -65,18 +67,18 @@ export function CardsEffects({ board, set, me, onAct }: Props) {
           return (
             <li key={`${c}#${n}`}>
               {cardTitle(c)}
-              {me.conditions.includes(c) && " (condition)"}{" "}
+              {me.conditions.includes(c) && t("effects.condition")}{" "}
               <button type="button" onClick={() => onAct((s) => discardCard(s, content, me.id, c))}>
-                Discard
+                {t("effects.discard")}
               </button>{" "}
               <button type="button" onClick={() => setShown(open ? undefined : { card: c, side: "front" })}>
-                {open ? "Hide" : "Show"}
+                {open ? t("effects.hide") : t("effects.show")}
               </button>
               {card?.images.back && open !== "back" && (
                 <>
                   {" "}
                   <button type="button" onClick={() => setShown({ card: c, side: "back" })}>
-                    Back (hidden until flipped)
+                    {t("effects.back")}
                   </button>
                 </>
               )}

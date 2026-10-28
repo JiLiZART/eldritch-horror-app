@@ -4,6 +4,7 @@ import { ambush, changeEldritchOnOmen, closeGate, discardOngoing, placeToken, re
 import { OMEN_TRACK } from "../../engine/omen";
 import { spaceName } from "../../engine/spawn";
 import type { GameState, InvestigatorState } from "../../engine/types";
+import { useT } from "../lang";
 import type { Act } from "../Turn";
 
 interface Props {
@@ -25,33 +26,34 @@ export function BoardEffects({ board, set, state, me, space, onAct }: Props) {
   const [kind, setKind] = useState("");
   const [ongoing, setOngoing] = useState("");
   const content = { board, set };
-  const cupKinds = [...new Set(state.monsterCup.map((m) => m.id))].map((k) => ({ id: k, label: `${set.monsters.find((m) => m.id === k)?.name ?? k} (${state.monsterCup.filter((m) => m.id === k).length})` })).sort((a, b) => a.label.localeCompare(b.label));
-  const asideKinds = [...new Set(state.setAsideMonsters.map((m) => m.id))].map((k) => ({ id: k, label: `${set.monsters.find((m) => m.id === k)?.name ?? k} (${state.setAsideMonsters.filter((m) => m.id === k).length})` }));
+  const t = useT();
+  const cupKinds = [...new Set(state.monsterCup.map((m) => m.id))].map((k) => ({ id: k, label: t("effects.kindCount", { name: set.monsters.find((m) => m.id === k)?.name ?? k, count: state.monsterCup.filter((m) => m.id === k).length }) })).sort((a, b) => a.label.localeCompare(b.label));
+  const asideKinds = [...new Set(state.setAsideMonsters.map((m) => m.id))].map((k) => ({ id: k, label: t("effects.kindCount", { name: set.monsters.find((m) => m.id === k)?.name ?? k, count: state.setAsideMonsters.filter((m) => m.id === k).length }) }));
   return (
     <>
       <p>
         {state.gates.includes(me.space) && (
           <button type="button" onClick={() => onAct((s) => closeGate(s, content, me.id))}>
-            Close gate
+            {t("effects.closeGate")}
           </button>
         )}
         <button type="button" onClick={() => onAct((s) => spawnGateByText(s, content, me.id))}>
-          Spawn gate
+          {t("effects.spawnGate")}
         </button>
         <button type="button" onClick={() => onAct((s) => spawnClueByText(s, content, me.id))}>
-          Spawn clue
+          {t("effects.spawnClue")}
         </button>
         <button type="button" onClick={() => onAct((s) => spawnMonsterByText(s, content, me.id, space))}>
-          Spawn monster on {spaceName(content, space)}
+          {t("effects.spawnMonsterOn", { space: spaceName(content, space) })}
         </button>
         <button type="button" onClick={() => onAct((s) => spawnMonsterRandomly(s, content, me.id))}>
-          Spawn monster on a random space
+          {t("effects.spawnMonsterRandom")}
         </button>
         {" "}
         <label>
-          Kind in the cup{" "}
+          {t("effects.kindInCup")}{" "}
           <select value={kind} onChange={(e) => setKind(e.target.value)}>
-            <option value="">choose</option>
+            <option value="">{t("effects.choose")}</option>
             {cupKinds.map((k) => (
               <option key={k.id} value={k.id}>
                 {k.label}
@@ -60,15 +62,15 @@ export function BoardEffects({ board, set, state, me, space, onAct }: Props) {
           </select>
         </label>{" "}
         <button type="button" disabled={!kind} onClick={() => onAct((s) => spawnNamed(s, content, me.id, kind, space))}>
-          Spawn named on {spaceName(content, space)}
+          {t("effects.spawnNamedOn", { space: spaceName(content, space) })}
         </button>
         {state.ongoingMythos.length > 0 && (
           <>
             {" "}
             <label>
-              Ongoing card{" "}
+              {t("effects.ongoingCard")}{" "}
               <select value={ongoing} onChange={(e) => setOngoing(e.target.value)}>
-                <option value="">choose</option>
+                <option value="">{t("effects.choose")}</option>
                 {state.ongoingMythos.map((c) => (
                   <option key={c} value={c}>
                     {set.mythos.find((m) => m.id === c)?.name ?? c}
@@ -77,7 +79,7 @@ export function BoardEffects({ board, set, state, me, space, onAct }: Props) {
               </select>
             </label>{" "}
             <button type="button" disabled={!ongoing} onClick={() => onAct((s) => discardOngoing(s, content, ongoing))}>
-              Discard ongoing card
+              {t("effects.discardOngoing")}
             </button>
           </>
         )}
@@ -85,9 +87,9 @@ export function BoardEffects({ board, set, state, me, space, onAct }: Props) {
           <>
             {" "}
             <label>
-              Set aside{" "}
+              {t("effects.setAside")}{" "}
               <select value={aside} onChange={(e) => setAside(e.target.value)}>
-                <option value="">choose</option>
+                <option value="">{t("effects.choose")}</option>
                 {asideKinds.map((k) => (
                   <option key={k.id} value={k.id}>
                     {k.label}
@@ -96,44 +98,44 @@ export function BoardEffects({ board, set, state, me, space, onAct }: Props) {
               </select>
             </label>{" "}
             <button type="button" disabled={!aside} onClick={() => onAct((s) => spawnSetAside(s, content, me.id, aside, space))}>
-              Spawn set-aside on {spaceName(content, space)}
+              {t("effects.spawnSetAsideOn", { space: spaceName(content, space) })}
             </button>
           </>
         )}
         {state.phase.name === "encounter" && (
           <button type="button" onClick={() => onAct((s) => ambush(s, content))}>
-            Ambush
+            {t("effects.ambush")}
           </button>
         )}
       </p>
       <p>
         <button type="button" onClick={() => onAct((s) => placeToken(s, content, "rumor", space))}>
-          Place rumor
+          {t("effects.placeRumor")}
         </button>
         <button type="button" onClick={() => onAct((s) => removeToken(s, content, "rumor", space))}>
-          Remove rumor
+          {t("effects.removeRumor")}
         </button>
         <button type="button" onClick={() => onAct((s) => placeToken(s, content, "eldritch", space))}>
-          Place eldritch
+          {t("effects.placeEldritch")}
         </button>
         <button type="button" onClick={() => onAct((s) => removeToken(s, content, "eldritch", space))}>
-          Remove eldritch
+          {t("effects.removeEldritch")}
         </button>{" "}
         <label>
-          Omen space{" "}
+          {t("effects.omenSpace")}{" "}
           <select value={omenSlot} onChange={(e) => setOmenSlot(Number(e.target.value))}>
             {OMEN_TRACK.map((c, n) => (
               <option key={n} value={n}>
-                {c} {n + 1}
+                {t(`omen.${c}`)} {n + 1}
               </option>
             ))}
           </select>
         </label>{" "}
         <button type="button" onClick={() => onAct((s) => changeEldritchOnOmen(s, omenSlot, 1))}>
-          Add eldritch
+          {t("effects.addEldritch")}
         </button>
         <button type="button" onClick={() => onAct((s) => changeEldritchOnOmen(s, omenSlot, -1))}>
-          Remove eldritch
+          {t("effects.removeEldritchOmen")}
         </button>
       </p>
     </>

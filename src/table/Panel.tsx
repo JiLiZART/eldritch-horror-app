@@ -144,6 +144,7 @@ function Journal({ set, state }: { set: GameSet; state: GameState }) {
 }
 
 function Status({ board, set, state }: { board: Board; set: GameSet; state: GameState }) {
+  const t = useT();
   const ancientOne = set.ancientOnes.find((a) => a.id === state.ancientOne);
   const mystery = ancientOne?.mysteries.find((m) => m.id === state.currentMystery);
   const cardName = (id: string) => set.cards.find((c) => c.id === id)?.name ?? id;
@@ -155,28 +156,25 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
     <section className="status">
       <h2>
         {ancientOne?.name ?? state.ancientOne}
-        {state.awakened && " (awakened)"}
+        {state.awakened && t("status.awakened")}
       </h2>
       <dl>
-        <dt>Doom</dt>
+        <dt>{t("status.doom")}</dt>
         <dd>
           {state.doom}
         </dd>
-        <dt>Omen</dt>
-        <dd>
-          {OMEN_TRACK[state.omen]}, {state.eldritchOnOmen[state.omen]} eldritch
-        </dd>
-        <dt>Reference card</dt>
-        <dd>
-          gates {state.referenceCard.gates}, clues {state.referenceCard.clues}, surge {state.referenceCard.surge}
-        </dd>
-        <dt>Mystery</dt>
+        <dt>{t("status.omen")}</dt>
+        <dd>{t("status.omenLine", { omen: t(`omen.${OMEN_TRACK[state.omen]}`), count: state.eldritchOnOmen[state.omen] ?? 0 })}</dd>
+        <dt>{t("status.referenceCard")}</dt>
+        <dd>{t("status.referenceLine", { gates: state.referenceCard.gates, clues: state.referenceCard.clues, surge: state.referenceCard.surge })}</dd>
+        <dt>{t("status.mystery")}</dt>
         <dd className="cards">
           {mystery && <img src={`/${mystery.images.front}`} alt={mystery.name} />}
           {state.awakened && ancientOne?.images.back && <img src={`/${ancientOne.images.back}`} alt={`${ancientOne.name} awakened`} />}
-          {state.solvedMysteries.length} solved, {state.mysteryTokens} tokens{state.finalMysterySolved && ", final mystery solved"}
+          {t("status.mysteryLine", { solved: state.solvedMysteries.length, tokens: state.mysteryTokens })}
+          {state.finalMysterySolved && t("status.finalSolved")}
         </dd>
-        <dt>Reserve</dt>
+        <dt>{t("status.reserve")}</dt>
         <dd className="cards">
           {state.reserve.map((id) => {
             const card = set.cards.find((c) => c.id === id);
@@ -184,54 +182,54 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
               card && (
                 <figure key={id}>
                   <img src={`/${card.images.front}`} alt={card.name} />
-                  <figcaption>value {card.value}</figcaption>
+                  <figcaption>{t("status.value", { value: card.value ?? 0 })}</figcaption>
                 </figure>
               )
             );
           })}
         </dd>
-        <dt>Ongoing mythos</dt>
+        <dt>{t("status.ongoing")}</dt>
         <dd className="cards">
           {ongoing.map((m) => (
             <img key={m.id} src={`/${m.images.front}`} alt={m.name} />
           ))}
         </dd>
-        <dt>Decks</dt>
+        <dt>{t("status.decks")}</dt>
         <dd>{sizes.map(([name, cards]) => `${name} ${cards.length}`).join(", ")}</dd>
       </dl>
       <table>
         <thead>
           <tr>
-            <th>Investigator</th>
-            <th>Space</th>
-            <th>H</th>
-            <th>S</th>
-            <th>Clues</th>
-            <th>Tickets</th>
-            <th>Possessions</th>
-            <th>Conditions</th>
-            <th>Improvements</th>
+            <th>{t("status.investigator")}</th>
+            <th>{t("status.space")}</th>
+            <th>{t("status.health")}</th>
+            <th>{t("status.sanity")}</th>
+            <th>{t("status.clues")}</th>
+            <th>{t("status.tickets")}</th>
+            <th>{t("status.possessions")}</th>
+            <th>{t("status.conditions")}</th>
+            <th>{t("status.improvements")}</th>
           </tr>
         </thead>
         <tbody>
           {state.investigators.map((i) => (
             <tr key={i.id}>
               <td>
-                {i.id === state.leadInvestigator && <span title="Lead investigator">★ </span>}
+                {i.id === state.leadInvestigator && <span title={t("status.lead")}>★ </span>}
                 {set.investigators.find((x) => x.id === i.id)?.name ?? i.id}
-                {i.defeated && ` (${i.defeated === "devoured" ? "devoured" : `defeated by ${i.defeated}`}${i.removed ? ", removed" : ""}${i.replacedBy ? `, replaced by ${set.investigators.find((x) => x.id === i.replacedBy)?.name ?? i.replacedBy}` : ""})`}
-                {i.delayed && " (delayed)"}
+                {i.defeated && ` (${i.defeated === "devoured" ? t("status.devoured") : t("status.defeatedBy", { cause: t(`cause.${i.defeated}`) })}${i.removed ? t("status.removed") : ""}${i.replacedBy ? t("status.replacedBy", { name: set.investigators.find((x) => x.id === i.replacedBy)?.name ?? i.replacedBy }) : ""})`}
+                {i.delayed && t("status.delayed")}
               </td>
               <td>{spaceName(i.space)}</td>
               <td>{i.health}</td>
               <td>{i.sanity}</td>
               <td>{i.clues}</td>
-              <td>{i.tickets.join(", ")}</td>
+              <td>{i.tickets.map((x) => t(`ticket.${x}`)).join(", ")}</td>
               <td>{i.possessions.map(cardName).join(", ")}</td>
               <td>{i.conditions.map(cardName).join(", ")}</td>
               <td>
                 {Object.entries(i.improvements)
-                  .map(([k, v]) => `${k[0]!.toUpperCase()}${k.slice(1)} +${v}`)
+                  .map(([k, v]) => `${t(`skill.${k}`)} +${v}`)
                   .join(", ")}
               </td>
             </tr>

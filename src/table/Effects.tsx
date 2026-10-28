@@ -6,6 +6,7 @@ import { BoardEffects } from "./effects/Board";
 import { CardsEffects } from "./effects/Cards";
 import { InvestigatorEffects } from "./effects/Investigator";
 import { MonstersEffects } from "./effects/Monsters";
+import { useT } from "./lang";
 import type { Act } from "./Turn";
 
 interface EffectsProps {
@@ -21,20 +22,21 @@ interface EffectsProps {
 export function Effects({ board, set, state, who, onAct }: EffectsProps) {
   const [id, setId] = useState(who);
   const [space, setSpace] = useState(board.spaces[0]!.id);
+  const t = useT();
   const me = state.investigators.find((i) => i.id === id) ?? state.investigators[0]!;
   const name = (x: string) => set.investigators.find((i) => i.id === x)?.name ?? x;
   const groups = [
-    ["Investigator", true, InvestigatorEffects],
-    ["Cards", false, CardsEffects],
-    ["Board", false, BoardEffects],
-    ["Monsters", false, MonstersEffects],
-    ["Ancient One", false, AncientOneEffects],
+    ["group.investigator", true, InvestigatorEffects],
+    ["group.cards", false, CardsEffects],
+    ["group.board", false, BoardEffects],
+    ["group.monsters", false, MonstersEffects],
+    ["group.ancientOne", false, AncientOneEffects],
   ] as const;
   return (
     <fieldset className="effects">
-      <legend>Apply card text</legend>
+      <legend>{t("effects.title")}</legend>
       <label>
-        Investigator{" "}
+        {t("effects.investigator")}{" "}
         <select value={me.id} onChange={(e) => setId(e.target.value)}>
           {state.investigators
             .filter((i) => !i.defeated)
@@ -46,7 +48,7 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
         </select>
       </label>
       <label>
-        Move to{" "}
+        {t("effects.moveTo")}{" "}
         <select value={space} onChange={(e) => setSpace(e.target.value)}>
           {board.spaces.map((s) => (
             <option key={s.id} value={s.id}>
@@ -57,7 +59,7 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
       </label>
       {groups.map(([title, open, Group]) => (
         <details key={title} open={open}>
-          <summary>{title}</summary>
+          <summary>{t(title)}</summary>
           <Group board={board} set={set} state={state} me={me} space={space} onAct={onAct} />
         </details>
       ))}

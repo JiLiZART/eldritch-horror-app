@@ -1,6 +1,7 @@
 import type { Board, GameSet } from "../../content/types";
 import { changeDoom, changeMysteryTokens, solveFinalMystery, solveMystery } from "../../engine/ancientOne";
 import type { GameState, InvestigatorState } from "../../engine/types";
+import { useT } from "../lang";
 import type { Act } from "../Turn";
 
 interface Props {
@@ -19,28 +20,29 @@ interface Props {
 export function AncientOneEffects({ board, set, state, onAct }: Props) {
 
   const content = { board, set };
+  const t = useT();
 
   return (
     <>
       <p>
         <button type="button" onClick={() => onAct((s) => changeDoom(s, content, -1))}>
-          Advance doom
+          {t("effects.advanceDoom")}
         </button>
         <button type="button" onClick={() => onAct((s) => changeDoom(s, content, 1))}>
-          Retreat doom
+          {t("effects.retreatDoom")}
         </button>
         <button type="button" onClick={() => onAct((s) => solveMystery(s, content))}>
-          Solve mystery
+          {t("effects.solveMystery")}
         </button>
         <button type="button" onClick={() => onAct((s) => changeMysteryTokens(s, 1))}>
-          Place token on mystery
+          {t("effects.placeMysteryToken")}
         </button>
         <button type="button" onClick={() => onAct((s) => changeMysteryTokens(s, -1))}>
-          Remove token
+          {t("effects.removeMysteryToken")}
         </button>
         {state.awakened && (
           <button type="button" onClick={() => onAct((s) => solveFinalMystery(s, content))}>
-            Solve final mystery
+            {t("effects.solveFinal")}
           </button>
         )}
       </p>
