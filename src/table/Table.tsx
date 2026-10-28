@@ -93,7 +93,7 @@ function Scene({ board, labels, strings, pieces, tracks, tableau, sheets, fit, e
       {graph.spaces.map((s) => (
         <Marker key={s.id} space={s} position={at.get(s.id)!} selected={s.id === selected} onRoute={route?.includes(s.id) ?? false} onSelect={onSelect} />
       ))}
-      {pieces.size > 0 && <Pieces pieces={pieces} at={at} />}
+      {pieces.size > 0 && <Pieces pieces={pieces} at={at} onSelect={onSelect} />}
       {tracks && <Tracks board={board} tracks={tracks} />}
       {tracks && tracks.reserve.length > 0 && <Reserve board={board} cards={tracks.reserve} onFocus={onFocus} />}
       {tableau && <Tableau board={board} tableau={tableau} onFocus={onFocus} />}
@@ -227,7 +227,7 @@ const SIZE: Record<PieceKind, [width: number, height: number]> = {
   lead: [0.22, 0.22],
 };
 
-function Pieces({ pieces, at }: { pieces: Map<string, Piece[]>; at: Map<string, [number, number]> }) {
+function Pieces({ pieces, at, onSelect }: { pieces: Map<string, Piece[]>; at: Map<string, [number, number]>; onSelect: (id: string) => void }) {
   const damageToken = (n: number) => `${TOKENS}/health/health-0${Math.min(9, n)}.webp`;
   const images = useMemo(() => [...new Set([...pieces.values()].flat().flatMap((p) => (p.damage ? [p.image, damageToken(p.damage)] : [p.image])))], [pieces]);
   const textures = useTexture(images.map((i) => `/${i}`), srgb);
@@ -256,7 +256,16 @@ function Pieces({ pieces, at }: { pieces: Map<string, Piece[]>; at: Map<string, 
               )}
               <Billboard position={[x + dx, y + dy + (p.kind === "pawn" ? half : 0), 0.05 + k * 0.001]}>
               {/* A lying pawn turns a quarter turn in the billboard's plane, so the standee rests sideways on the board (design D2). */}
-              <mesh rotation={[0, 0, p.lying ? Math.PI / 2 : 0]} onPointerOver={() => setHovered(p.id)} onPointerOut={() => setHovered((h) => (h === p.id ? undefined : h))}>
+              <mesh
+                rotation={[0, 0, p.lying ? Math.PI / 2 : 0]}
+                onPointerOver={() => setHovered(p.id)}
+                onPointerOut={() => setHovered((h) => (h === p.id ? undefined : h))}
+                // A still click selects the space the piece stands on; a drag that started here only pans (piece-click-selects D1).
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (e.delta <= 4) onSelect(space);
+                }}
+              >
                 <planeGeometry args={[w, h]} />
                 <meshBasicMaterial map={textureOf.get(p.image)} transparent alphaTest={0.5} />
               </mesh>
