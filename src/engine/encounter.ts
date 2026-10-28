@@ -1,6 +1,6 @@
 import { nearest } from "../content/board";
 import type { MonsterCombat } from "../content/types";
-import { awakenAt0 } from "./ancientOne";
+import { advanceDoom } from "./ancientOne";
 import { keepLog } from "./journal";
 import { drawMythos } from "./mythos";
 import type { Content } from "./setup";
@@ -263,7 +263,7 @@ export function fall(state: GameState, content: Content, fallen: InvestigatorSta
   // The fighter fell: the ambusher goes back and the drawn card leaves play; another seat's fall leaves the encounter as it is.
   const mine = state.phase.name === "encounter" && state.phase.active === fallen.id;
   const cleared = mine ? discardDrawn(returnAmbushers(state), content) : state;
-  let s = awakenAt0(note(replaceInvestigator({ ...cleared, doom: state.doom - 1 }, fallen), line), content);
+  let s = advanceDoom(note(replaceInvestigator(cleared, fallen), line), content, 1);
   if (s.leadInvestigator === fallen.id) s = { ...s, leadInvestigator: nextStanding(s, fallen.id) ?? fallen.id };
   if (!s.investigators.some((i) => !i.defeated)) return { ...s, phase: { name: "lost", reason: `${line}: every investigator is defeated (doom ${s.doom})` } };
   // shortcut: a fall in the Action phase would leave the active seat on a fallen investigator; card text is applied in the other phases only.

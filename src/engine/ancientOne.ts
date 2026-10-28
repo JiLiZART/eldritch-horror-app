@@ -12,6 +12,11 @@ export function awakenAt0(state: GameState, content: Content): GameState {
   return note({ ...state, awakened: true }, `${sheet(content, state).name} awakens: the Awakens effects, the reckoning and the losing condition on the sheet back are left to the players`);
 }
 
+/** Doom advances by `by` but never past the 0 space (manual p.4); the awakening follows. */
+export function advanceDoom(state: GameState, content: Content, by: number): GameState {
+  return awakenAt0({ ...state, doom: Math.max(0, state.doom - by) }, content);
+}
+
 /** Card text advances (negative) or retreats doom within the track. */
 export function changeDoom(state: GameState, content: Content, delta: number): GameState {
   textPhase(state);

@@ -1,4 +1,4 @@
-import { awakenAt0 } from "./ancientOne";
+import { advanceDoom } from "./ancientOne";
 import type { Random } from "./rng";
 import { shuffle } from "./rng";
 import type { Content } from "./setup";
@@ -35,7 +35,7 @@ export function spawnGate(state: GameState, content: Content, random: Random): G
     gateDiscard = [];
   }
   const [space, ...rest] = gateStack;
-  if (space === undefined) return awakenAt0(note({ ...state, doom: state.doom - 1 }, `no gate token is left: doom advances to ${state.doom - 1}`), content);
+  if (space === undefined) return advanceDoom(note(state, `no gate token is left: doom advances to ${Math.max(0, state.doom - 1)}`), content, 1);
   const opened = note({ ...state, gates: [...state.gates, space], gateStack: rest, gateDiscard }, `a gate opens on ${spaceName(content, space)}`);
   return spawnMonster(opened, content, space);
 }

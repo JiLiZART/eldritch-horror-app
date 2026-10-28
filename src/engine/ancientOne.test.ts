@@ -5,7 +5,7 @@ import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn } from "./actions";
 import { changeDoom, changeMysteryTokens, solveFinalMystery, solveMystery } from "./ancientOne";
-import { finishEncounter } from "./encounter";
+import { defeat, finishEncounter } from "./encounter";
 import { OMEN_TRACK } from "./omen";
 import { resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
@@ -56,6 +56,17 @@ describe("the Ancient One awakens at doom 0", () => {
     const s = changeDoom(changeDoom({ ...encounters(), doom: 0, awakened: true }, content, 1), content, -1);
     expect(s.awakened).toBe(true);
     expect(log(s)).not.toMatch(/awakens/);
+  });
+});
+
+describe("doom never leaves the track", () => {
+  it("stops at 0 on the omen, on a missing gate token and on a fall", () => {
+    const fake = { id: "eh01/mythos/test/omen0", name: "Omen", color: "green" as const, difficulty: "easy" as const, trait: "event" as const, effects: ["advance-omen" as const, "spawn-gates" as const], images: { front: "x.webp" } };
+    let s: GameState = { ...game(), doom: 0, awakened: true, omen: OMEN_TRACK.indexOf("blue"), gates: ["arkham"], gateStack: [], gateDiscard: [], monsters: [] };
+    s = { ...s, decks: { ...s.decks, mythos: [fake.id, ...s.decks.mythos] } };
+    while (s.phase.name === "action" || s.phase.name === "encounter") s = s.phase.name === "action" ? endTurn(s) : finishEncounter(s, content);
+    expect(resolveMythos(s, { board, set: { ...set, mythos: [...set.mythos, fake] } }).doom).toBe(0);
+    expect(defeat({ ...encounters(), doom: 0, awakened: true }, content, leo, "health").doom).toBe(0);
   });
 });
 

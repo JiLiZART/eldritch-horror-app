@@ -1,5 +1,5 @@
 import type { GameSet, MythosCard, MythosEffect } from "../content/types";
-import { awakenAt0 } from "./ancientOne";
+import { advanceDoom } from "./ancientOne";
 import { keepLog } from "./journal";
 import { OMEN_TRACK } from "./omen";
 import { rng, type Random } from "./rng";
@@ -54,8 +54,8 @@ export function resolveMythos(state: GameState, content: Content): GameState {
 function advanceOmen(state: GameState, content: Content): GameState {
   const omen = (state.omen + 1) % OMEN_TRACK.length;
   const matching = gatesMatching({ ...state, omen }, content);
-  const doom = state.doom - matching.length;
-  return awakenAt0(note({ ...state, omen, doom }, `the omen moves to ${OMEN_TRACK[omen]}; ${matching.length} matching gate${matching.length === 1 ? "" : "s"}, doom ${doom}`), content);
+  const doom = Math.max(0, state.doom - matching.length);
+  return advanceDoom(note({ ...state, omen }, `the omen moves to ${OMEN_TRACK[omen]}; ${matching.length} matching gate${matching.length === 1 ? "" : "s"}, doom ${doom}`), content, matching.length);
 }
 
 function gatesMatching(state: GameState, { board }: Content): string[] {

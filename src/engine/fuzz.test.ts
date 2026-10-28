@@ -23,6 +23,8 @@ const content = { board, set };
 const SKILLS: Skill[] = ["lore", "influence", "observation", "strength", "will"];
 const NEAREST = ["city", "wilderness", "sea", "gate", "clue"] as const;
 type Step = (s: GameState) => GameState;
+/** A candidate with its weight (design D1): advancing steps 8, ordinary effects 1, game-ending ones rare. */
+type Weighted = [weight: number, step: Step];
 
 /** Totals the game must keep (design D3). */
 function reference(s: GameState) {
@@ -48,7 +50,8 @@ function countCards(s: GameState, deck: "asset" | "spell" | "condition" | "artif
   return s.decks[deck].length + held + pile;
 }
 
-function check(s: GameState, ref: ReturnType<typeof reference>, where: string, journalBefore: number): void {
+function check(s: GameState, ref: ReturnType<typeof reference>, where: string, prev: GameState): void {
+  const journalBefore = prev.journal.length;
   const keys = [...s.monsterCup, ...s.monsters, ...s.setAsideMonsters].map((t) => `${t.id}#${t.instance}`);
   expect(new Set(keys).size, `${where}: duplicate monster token`).toBe(keys.length);
   expect([...s.monsterCup, ...s.monsters, ...s.setAsideMonsters].filter((t) => !ref.epic.has(t.id)).length, `${where}: non-epic tokens`).toBe(ref.nonEpic);
@@ -68,10 +71,25 @@ function check(s: GameState, ref: ReturnType<typeof reference>, where: string, j
   expect(s.omen, `${where}: omen`).toBeLessThanOrEqual(3);
   expect(s.journal.length, `${where}: journal`).toBeGreaterThanOrEqual(journalBefore);
   expect(JSON.parse(JSON.stringify(s)), `${where}: JSON round trip`).toEqual(s);
+  // Phase invariants (design D2).
+  const seated = (id: string) => s.investigators.find((i) => i.id === id);
+  const activeId = s.phase.name === "action" || s.phase.name === "encounter" ? s.phase.active : undefined;
+  const standing = (id: string, role: string) => {
+    const i = seated(id);
+    expect(i, `${where}: ${role} ${id} seated`).toBeDefined();
+    expect(i?.defeated ?? i?.removed, `${where}: ${role} ${id} standing`).toBeUndefined();
+  };
+  if (activeId) standing(activeId, "active");
+  standing(s.leadInvestigator, "lead");
+  if (s.phase.name === "action") expect("card" in s.phase, `${where}: card in the Action phase`).toBe(false);
+  if (s.phase.name !== "encounter") expect("combat" in s.phase, `${where}: fight outside the Encounter phase`).toBe(false);
+  expect(s.round, `${where}: round`).toBe(prev.phase.name === "mythos" && s.phase.name === "action" ? prev.round + 1 : prev.round);
+  if (prev.phase.name === "mythos" && s.phase.name === "action") expect(s.usedComponents, `${where}: used components at the round start`).toEqual([]);
+  for (const i of s.investigators) if (i.replacedBy) expect(seated(i.replacedBy), `${where}: replacement ${i.replacedBy}`).toBeDefined();
 }
 
 /** Candidate steps for the state, each closing over random picks. */
-function candidates(s: GameState, pick: <T>(items: T[]) => T | undefined): Step[] {
+function candidates(s: GameState, pick: <T>(items: T[]) => T | undefined): Weighted[] {
   const standing = s.investigators.filter((i) => !i.defeated);
   const who = pick(standing)?.id ?? standing[0]!.id;
   const me = s.investigators.find((i) => i.id === who)!;
@@ -82,57 +100,59 @@ function candidates(s: GameState, pick: <T>(items: T[]) => T | undefined): Step[
   const asideKind = pick(s.setAsideMonsters)?.id ?? "none";
   const fallen = pick(s.investigators.filter((i) => i.defeated))?.id ?? "none";
   const unused = pick(set.investigators.filter((i) => !s.investigators.some((x) => x.id === i.id)))?.id ?? "none";
-  const text: Step[] = [
-    (t) => fx.changeHealth(t, content, who, pick([-1, 1])!),
-    (t) => fx.changeSanity(t, content, who, pick([-1, 1])!),
-    (t) => fx.gainClue(t, content, who),
-    (t) => fx.spendClue(t, content, who),
-    (t) => fx.delay(t, content, who),
-    (t) => fx.standUp(t, content, who),
-    (t) => fx.improveSkill(t, content, who, pick(SKILLS)!),
-    (t) => fx.discardImprovement(t, content, who, pick(SKILLS)!),
-    (t) => fx.moveInvestigator(t, content, who, space),
-    (t) => fx.moveInvestigatorToNearest(t, content, who, pick([...NEAREST])!),
-    (t) => fx.moveInvestigatorRandomly(t, content, who),
-    (t) => fx.closeGate(t, content, who),
-    (t) => fx.gainCard(t, content, who, pick(["asset", "spell", "condition", "artifact"] as const)!),
-    (t) => fx.discardCard(t, content, who, held),
-    (t) => fx.moveMonster(t, content, monster, space),
-    (t) => fx.moveMonsterToward(t, content, monster),
-    (t) => fx.discardMonster(t, content, monster),
-    (t) => fx.placeToken(t, content, pick(["rumor", "eldritch"] as const)!, space),
-    (t) => fx.removeToken(t, content, pick(["rumor", "eldritch"] as const)!, space),
-    (t) => fx.changeEldritchOnOmen(t, pick([0, 1, 2, 3])!, pick([-1, 1])!),
-    (t) => fx.spawnGateByText(t, content, who),
-    (t) => fx.spawnClueByText(t, content, who),
-    (t) => fx.spawnMonsterByText(t, content, who, space),
-    (t) => fx.spawnMonsterRandomly(t, content, who),
-    (t) => fx.spawnNamed(t, content, who, cupKind, space),
-    (t) => fx.spawnSetAside(t, content, who, asideKind, space),
-    (t) => fx.takePossessions(t, content, who, fallen),
-    (t) => changeDoom(t, content, pick([-1, 1])!),
-    (t) => changeMysteryTokens(t, pick([-1, 1])!),
-    (t) => solveMystery(t, content),
-    (t) => solveFinalMystery(t, content),
-    (t) => rerollDie(t, set, pick([0, 1, 2])!),
+  const text: Weighted[] = [
+    [1, (t) => fx.changeHealth(t, content, who, 1)],
+    [1, (t) => fx.changeSanity(t, content, who, 1)],
+    [0.2, (t) => fx.changeHealth(t, content, who, -1)],
+    [0.2, (t) => fx.changeSanity(t, content, who, -1)],
+    [1, (t) => fx.gainClue(t, content, who)],
+    [1, (t) => fx.spendClue(t, content, who)],
+    [1, (t) => fx.delay(t, content, who)],
+    [1, (t) => fx.standUp(t, content, who)],
+    [1, (t) => fx.improveSkill(t, content, who, pick(SKILLS)!)],
+    [1, (t) => fx.discardImprovement(t, content, who, pick(SKILLS)!)],
+    [1, (t) => fx.moveInvestigator(t, content, who, space)],
+    [1, (t) => fx.moveInvestigatorToNearest(t, content, who, pick([...NEAREST])!)],
+    [1, (t) => fx.moveInvestigatorRandomly(t, content, who)],
+    [1, (t) => fx.closeGate(t, content, who)],
+    [1, (t) => fx.gainCard(t, content, who, pick(["asset", "spell", "condition", "artifact"] as const)!)],
+    [1, (t) => fx.discardCard(t, content, who, held)],
+    [1, (t) => fx.moveMonster(t, content, monster, space)],
+    [1, (t) => fx.moveMonsterToward(t, content, monster)],
+    [1, (t) => fx.discardMonster(t, content, monster)],
+    [1, (t) => fx.placeToken(t, content, pick(["rumor", "eldritch"] as const)!, space)],
+    [1, (t) => fx.removeToken(t, content, pick(["rumor", "eldritch"] as const)!, space)],
+    [1, (t) => fx.changeEldritchOnOmen(t, pick([0, 1, 2, 3])!, pick([-1, 1])!)],
+    [1, (t) => fx.spawnGateByText(t, content, who)],
+    [1, (t) => fx.spawnClueByText(t, content, who)],
+    [1, (t) => fx.spawnMonsterByText(t, content, who, space)],
+    [1, (t) => fx.spawnMonsterRandomly(t, content, who)],
+    [1, (t) => fx.spawnNamed(t, content, who, cupKind, space)],
+    [1, (t) => fx.spawnSetAside(t, content, who, asideKind, space)],
+    [1, (t) => fx.takePossessions(t, content, who, fallen)],
+    [1, (t) => changeDoom(t, content, 1)],
+    [0.1, (t) => changeDoom(t, content, -1)],
+    [1, (t) => changeMysteryTokens(t, pick([-1, 1])!)],
+    [0.1, (t) => solveMystery(t, content)],
+    [0.1, (t) => solveFinalMystery(t, content)],
+    [1, (t) => rerollDie(t, set, pick([0, 1, 2])!)],
   ];
   if (s.phase.name === "action") {
     const phase = s.phase;
     const active = s.investigators.find((i) => i.id === phase.active)!;
     const partner = pick(standing.filter((i) => i.id !== active.id && i.space === active.space))?.id ?? "none";
     return [
-      endTurn,
-      endTurn,
-      (t) => rest(t, set),
-      (t) => travel(t, board, [pick(neighbors(board, active.space)) ?? active.space]),
-      (t) => prepareForTravel(t, board, pick(["train", "ship"] as const)!, pick(["train", "ship", undefined] as const)),
-      (t) => acquireAssets(t, board, set),
-      (t) => takeAssets(t, set, [], undefined),
-      (t) => takeAssets(t, set, [pick(t.reserve) ?? "none"]),
-      (t) => takeBankLoan(t, set),
-      (t) => rerollDie(t, set, pick([0, 1, 2])!),
-      (t) => componentAction(t, set, pick([active.id, ...active.possessions]) ?? active.id),
-      (t) => trade(t, { partner, give: { possessions: active.possessions.slice(0, 1) }, receive: {} }),
+      [8, endTurn],
+      [1, (t) => rest(t, set)],
+      [1, (t) => travel(t, board, [pick(neighbors(board, active.space)) ?? active.space])],
+      [1, (t) => prepareForTravel(t, board, pick(["train", "ship"] as const)!, pick(["train", "ship", undefined] as const))],
+      [1, (t) => acquireAssets(t, board, set)],
+      [2, (t) => takeAssets(t, set, [], undefined)],
+      [2, (t) => takeAssets(t, set, [pick(t.reserve) ?? "none"])],
+      [1, (t) => takeBankLoan(t, set)],
+      [1, (t) => rerollDie(t, set, pick([0, 1, 2])!)],
+      [1, (t) => componentAction(t, set, pick([active.id, ...active.possessions]) ?? active.id)],
+      [1, (t) => trade(t, { partner, give: { possessions: active.possessions.slice(0, 1) }, receive: {} })],
     ];
   }
   if (s.phase.name === "encounter") {
@@ -140,20 +160,18 @@ function candidates(s: GameState, pick: <T>(items: T[]) => T | undefined): Step[
     const active = s.investigators.find((i) => i.id === phase.active)!;
     const decks = [...new Set([board.spaces.find((sp) => sp.id === active.space)?.region, "general", "research", "other-world", "expedition", "special"])].filter((d): d is string => !!d);
     return [
-      (t) => finishEncounter(t, content),
-      (t) => finishEncounter(t, content),
-      (t) => fight(t, content, pick(t.monsters.filter((m) => m.space === active.space)) ?? monster),
-      continueFight.length ? (t) => continueFight(t, content) : (t) => t,
-      (t) => continueFight(t, content),
-      (t) => drawEncounter(t, content, pick(decks)!),
-      (t) => encounterFallen(t, content, fallen),
-      (t) => fx.ambush(t, content),
-      (t) => fx.devour(t, content, who),
+      [8, (t) => finishEncounter(t, content)],
+      [4, (t) => fight(t, content, pick(t.monsters.filter((m) => m.space === active.space)) ?? monster)],
+      [8, (t) => continueFight(t, content)],
+      [4, (t) => drawEncounter(t, content, pick(decks)!)],
+      [1, (t) => encounterFallen(t, content, fallen)],
+      [0.3, (t) => fx.ambush(t, content)],
+      [0.05, (t) => fx.devour(t, content, who)],
       ...text,
     ];
   }
   if (s.phase.name === "mythos") {
-    return [(t) => resolveMythos(t, content), (t) => nextRound(t, set, pick(standing)?.id), (t) => replaceInvestigator(t, content, fallen, unused), ...text];
+    return [[8, (t) => resolveMythos(t, content)], [8, (t) => nextRound(t, set, pick(standing)?.id)], [8, (t) => replaceInvestigator(t, content, fallen, unused)], ...text];
   }
   return [];
 }
@@ -168,10 +186,11 @@ describe("random play keeps the engine's invariants", () => {
       let s = setupGame(content, { ancientOne, investigators: set.investigators.slice(0, seats).map((i) => i.id), seed });
       const ref = reference(s);
       let refusals = 0;
-      for (let step = 0; step < 400 && s.round <= 20 && s.phase.name !== "won" && s.phase.name !== "lost"; step++) {
+      for (let step = 0; step < 1500 && s.round <= 20 && s.phase.name !== "won" && s.phase.name !== "lost"; step++) {
         const options = candidates(s, pick);
-        const chosen = pick(options)!;
-        const journalBefore = s.journal.length;
+        const total = options.reduce((n, [w]) => n + w, 0);
+        let roll = random() * total;
+        const chosen = (options.find(([w]) => (roll -= w) < 0) ?? options.at(-1))![1];
         const label = chosen.toString().replace(/\s+/g, " ").slice(0, 90);
         let next: GameState;
         try {
@@ -183,10 +202,11 @@ describe("random play keeps the engine's invariants", () => {
           }
           throw new Error(`seed ${seed}, round ${s.round}, ${s.phase.name} step ${step} [${label}]: ${String(e)}`);
         }
-        check(next, ref, `seed ${seed}, round ${s.round}, ${s.phase.name} step ${step} [${label}]`, journalBefore);
+        check(next, ref, `seed ${seed}, round ${s.round}, ${s.phase.name} step ${step} [${label}]`, s);
         s = next;
       }
       expect(refusals).toBeGreaterThan(0);
+      if (s.phase.name !== "won" && s.phase.name !== "lost") expect(s.round, `seed ${seed}: depth`).toBeGreaterThanOrEqual(5);
     });
   }
 });
