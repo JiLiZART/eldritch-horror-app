@@ -31,8 +31,6 @@ interface PanelProps {
 export type FocusCard = (place: "reserve" | "mystery" | "mythos" | "sheet" | "held" | "encounter", index: number, seat?: number) => void;
 
 /** Board set names beyond the core set, as the content names them; the core set's name is a panel string (deck-names-language D1). */
-const SET_NAMES: Record<string, string> = Object.fromEntries(BOARD_SETS.map((s) => [s.id, s.name]));
-
 export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled, onToggle, selected, onSelect, onHidePanel, onFocusCard, children }: PanelProps) {
   const t = useT();
   const spaceName = useSpaceName();
@@ -67,9 +65,9 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
         <label>
           <input type="checkbox" checked disabled /> {t("set.eh01")}
         </label>
-        {BOARD_SETS.map((s) => (
-          <label key={s.id}>
-            <input type="checkbox" checked={enabled.has(s.id)} onChange={(e) => onToggle(s.id, e.target.checked)} /> {s.name}
+        {BOARD_SETS.map((id) => (
+          <label key={id}>
+            <input type="checkbox" checked={enabled.has(id)} onChange={(e) => onToggle(id, e.target.checked)} /> {t(`set.${id}`)}
           </label>
         ))}
         {enabled.size > 1 && <small>{t("panel.previewNote")}</small>}
@@ -78,7 +76,7 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
         <legend>{t("panel.paths")}</legend>
         {Object.entries(PATH_COLORS).map(([type, color]) => (
           <span key={type} className="swatch">
-            <i style={{ background: color }} /> {type}
+            <i style={{ background: color }} /> {t(`path.${type}`)}
           </span>
         ))}
       </fieldset>
@@ -93,11 +91,11 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
               {selected.name.en} / {selected.name.ru}
             </dd>
             <dt>{t("space.kind")}</dt>
-            <dd>{selected.kind}</dd>
+            <dd>{t(`kind.${selected.kind}`)}</dd>
             <dt>{t("space.region")}</dt>
-            <dd>{selected.region ?? t("space.none")}</dd>
+            <dd>{selected.region ? t(`region.${selected.region}`) : t("space.none")}</dd>
             <dt>{t("space.set")}</dt>
-            <dd>{selected.set === "eh01" ? t("set.eh01") : SET_NAMES[selected.set]}</dd>
+            <dd>{t(`set.${selected.set}`)}</dd>
             <dt>{t("space.pieces")}</dt>
             <dd>{pieces.get(selected.id)?.map((p) => p.label).join(", ") ?? t("space.none")}</dd>
             <dt>{t("space.neighbours")}</dt>

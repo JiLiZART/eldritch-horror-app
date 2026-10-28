@@ -41,4 +41,4 @@ When the board language is Russian, the New game form, the Action, Encounter and
 
 #### Scenario: Legend values in Russian
 - **WHEN** the board language is Russian and London is selected
-- **THEN** the kind reads Город, the region Европа and the set Базовая игра, the path legend reads поезд, корабль, тропа and местный, and the set controls read Хребты Безумия, Под пирамидами and Страна снов
+- **THEN** the kind reads город, the region Европа and the set Базовая игра, the path legend reads поезд, корабль, тропа and местный, and the set controls read Хребты Безумия, Под пирамидами and Страна снов

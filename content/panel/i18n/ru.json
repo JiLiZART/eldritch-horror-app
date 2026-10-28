@@ -276,5 +276,18 @@
   "game.restore": "Загрузить резервную копию",
   "game.restored": "Добавлено игр: {added}, отложено: {skipped}",
   "status.cup": "Пул монстров",
-  "panel.previewNote": "Эти локации показаны для просмотра; игра идёт на базовом поле."
+  "panel.previewNote": "Эти локации показаны для просмотра; игра идёт на базовом поле.",
+  "set.eh03": "Хребты Безумия",
+  "set.eh05": "Под пирамидами",
+  "set.eh07": "Страна снов",
+  "path.train": "поезд",
+  "path.ship": "корабль",
+  "path.uncharted": "тропа",
+  "path.local": "местный",
+  "kind.city": "город",
+  "kind.wilderness": "глушь",
+  "kind.sea": "море",
+  "region.america": "Америка",
+  "region.europe": "Европа",
+  "region.asia": "Азия"
 }

@@ -2,6 +2,7 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { translate, spaceNameIn } from "./lang";
+import { BOARD_SETS, PATH_COLORS } from "./sets";
 
 const root = join(import.meta.dirname, "../..");
 const en: Record<string, string> = JSON.parse(readFileSync(join(root, "content/panel/i18n/en.json"), "utf8"));
@@ -23,6 +24,13 @@ describe("the panel's strings", () => {
     const used = new Set(sources(join(root, "src/table")).flatMap((p) => [...readFileSync(p, "utf8").matchAll(/\bt\("([\w.]+)"/g)].map((m) => m[1]!)));
     expect(used.size).toBeGreaterThan(40);
     for (const key of used) {
+      expect(en[key], `en ${key}`).toBeDefined();
+      expect(ru[key], `ru ${key}`).toBeDefined();
+    }
+  });
+  it("name every set, path type, space kind and region", () => {
+    const keys = [...BOARD_SETS.map((id) => `set.${id}`), ...Object.keys(PATH_COLORS).map((p) => `path.${p}`), ...["city", "wilderness", "sea"].map((k) => `kind.${k}`), ...["america", "europe", "asia"].map((r) => `region.${r}`)];
+    for (const key of keys) {
       expect(en[key], `en ${key}`).toBeDefined();
       expect(ru[key], `ru ${key}`).toBeDefined();
     }

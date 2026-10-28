@@ -276,5 +276,18 @@
   "game.restore": "Load backup",
   "game.restored": "{added} saved games added, {skipped} set aside",
   "status.cup": "Monster cup",
-  "panel.previewNote": "These spaces are a preview; the game plays on the core set."
+  "panel.previewNote": "These spaces are a preview; the game plays on the core set.",
+  "set.eh03": "Mountains of Madness",
+  "set.eh05": "Under the Pyramids",
+  "set.eh07": "The Dreamlands",
+  "path.train": "train",
+  "path.ship": "ship",
+  "path.uncharted": "uncharted",
+  "path.local": "local",
+  "kind.city": "city",
+  "kind.wilderness": "wilderness",
+  "kind.sea": "sea",
+  "region.america": "America",
+  "region.europe": "Europe",
+  "region.asia": "Asia"
 }
