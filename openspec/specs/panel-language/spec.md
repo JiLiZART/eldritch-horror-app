@@ -6,7 +6,7 @@ Show the panel's own words, the game form, the three phase panels and their cont
 ## Requirements
 
 ### Requirement: The game and phase controls follow the chosen language
-When the board language is Russian, the New game form, the Action, Encounter and Mythos panels, the Acquire Assets form, the dice, the Trade form, the Game section, the panel's section headings, the five card-text groups with their shell, the Status table, the piece labels (on hover and in the selected space's piece list), and the Selected space section's field names, its prompt and its empty markers SHALL show their labels, headings and notes in Russian, using the glossary's Russian names for rules terms; in English they SHALL read as today. Card names, investigator names, space names and the engine's log lines stay as the content and the engine give them.
+When the board language is Russian, the New game form, the Action, Encounter and Mythos panels, the Acquire Assets form, the dice, the Trade form, the Game section, the panel's section headings, the five card-text groups with their shell, the Status table, the piece labels (on hover and in the selected space's piece list), the Selected space section's field names, its prompt and its empty markers, and the Journal's phase words and its component-action prefix SHALL show their labels, headings and notes in Russian, using the glossary's Russian names for rules terms; in English they SHALL read as today. Card names, investigator names, space names and the engine's log lines stay as the content and the engine give them.
 
 #### Scenario: Russian turn panel
 - **WHEN** the board language is Russian and Leo Anderson's Action turn begins
@@ -31,6 +31,10 @@ When the board language is Russian, the New game form, the Action, Encounter and
 #### Scenario: Selected space in Russian
 - **WHEN** the board language is Russian and London is selected
 - **THEN** the field names for the id, name, kind, region, set, pieces and neighbours read in Russian, and with nothing selected the prompt to click a marker reads in Russian
+
+#### Scenario: Journal in Russian
+- **WHEN** the board language is Russian and the journal holds an Action-phase line and a component-action line
+- **THEN** the phase word reads the glossary's Russian for the Action phase and the prefix before the component's name reads in Russian, while the engine's text after the colon stays as logged
 
 ### Requirement: Both languages hold the same strings
 The two string files SHALL hold the same keys, and every key the panel asks for SHALL exist in both; a missing key SHALL fail the content validation and the tests rather than show at the table.
