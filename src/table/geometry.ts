@@ -45,3 +45,20 @@ export function reservePosition(board: Board, index: number): [x: number, y: num
   const f = slots > 1 ? Math.min(Math.max(index, 0), slots - 1) / (slots - 1) : 0;
   return boardToWorld({ x: from.x + (to.x - from.x) * f, y: from.y + (to.y - from.y) * f }, board);
 }
+
+/** The tableau's rows right of the board, top down: the Ancient One sheet, the mystery card, the ongoing mythos cards; `[width, height]` of one face (tableau D1). */
+export const TABLEAU_ROWS: [width: number, height: number][] = [
+  [2.4, 3.0],
+  [2.4, 1.5],
+  [1.1, 1.7],
+];
+const TABLEAU_GAP = 0.3;
+
+/** The centre of tableau row `row`: a column 2.4 wide beside the board's right edge, rows stacked down from its top edge (tableau D1). */
+export function tableauPosition(board: Board, row: number): [x: number, y: number] {
+  const [w, h] = boardSize(board);
+  const x = w / 2 + TABLEAU_GAP + TABLEAU_ROWS[0]![0] / 2;
+  let top = h / 2;
+  for (let r = 0; r < row; r++) top -= TABLEAU_ROWS[r]![1] + TABLEAU_GAP;
+  return [x, top - TABLEAU_ROWS[row]![1] / 2];
+}

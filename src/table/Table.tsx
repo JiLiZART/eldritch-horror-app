@@ -5,7 +5,7 @@ import { SRGBColorSpace, type Texture, Vector3 } from "three";
 import { activeGraph } from "../content/board";
 import type { Board, BoardLabels, Space } from "../content/types";
 import { BoardText } from "./BoardText";
-import { BOARD_WIDTH, boardSize, boardToWorld, doomPosition, omenPosition, reservePosition, spreadOnCircle } from "./geometry";
+import { BOARD_WIDTH, TABLEAU_ROWS, boardSize, boardToWorld, doomPosition, omenPosition, reservePosition, spreadOnCircle, tableauPosition } from "./geometry";
 import type { Piece, PieceKind } from "./pieces";
 import { PATH_COLORS } from "./sets";
 
@@ -18,6 +18,8 @@ export interface TableProps {
   pieces: Map<string, Piece[]>;
   /** The doom value, the omen index and the eldritch tokens per omen space; undefined without a game (track-tokens D3). */
   tracks?: { doom: number; omen: number; eldritch: number[]; reserve: string[] };
+  /** The Ancient One's card faces beside the board: the sheet, the current mystery and the ongoing mythos cards (tableau D2). */
+  tableau?: { sheet: string; mystery?: string; mythos: string[] };
   enabled: Set<string>;
   selected: string | undefined;
   /** Spaces of the travel route being picked, highlighted in order. */
@@ -44,7 +46,7 @@ export function Table(props: TableProps) {
   );
 }
 
-function Scene({ board, labels, strings, pieces, tracks, enabled, selected, route, onSelect, reducedMotion }: TableProps) {
+function Scene({ board, labels, strings, pieces, tracks, tableau, enabled, selected, route, onSelect, reducedMotion }: TableProps) {
   const graph = useMemo(() => activeGraph(board, enabled), [board, enabled]);
   const at = useMemo(() => new Map(board.spaces.map((s) => [s.id, boardToWorld(s, board)])), [board]);
   const active = useMemo(() => new Set(graph.spaces.map((s) => s.id)), [graph]);
@@ -62,6 +64,7 @@ function Scene({ board, labels, strings, pieces, tracks, enabled, selected, rout
       {pieces.size > 0 && <Pieces pieces={pieces} at={at} />}
       {tracks && <Tracks board={board} tracks={tracks} />}
       {tracks && tracks.reserve.length > 0 && <Reserve board={board} images={tracks.reserve} />}
+      {tableau && <Tableau board={board} tableau={tableau} />}
     </>
   );
 }
@@ -221,17 +224,39 @@ function Reserve({ board, images }: { board: Board; images: string[] }) {
   const w = board.tracks.reserve.width * BOARD_WIDTH;
   return (
     <>
-      {textures.map((map, i) => {
-        const [x, y] = reservePosition(board, i);
-        return (
-          <Billboard key={images[i]} position={[x, y, 0.06]}>
-            <mesh>
-              <planeGeometry args={[w, w * CARD_ASPECT]} />
-              <meshBasicMaterial map={map} transparent alphaTest={0.5} />
-            </mesh>
-          </Billboard>
-        );
-      })}
+      {textures.map((map, i) => (
+        <Face key={images[i]} map={map} position={reservePosition(board, i)} size={[w, w * CARD_ASPECT]} />
+      ))}
+    </>
+  );
+}
+
+/** One card face lying flat on the table. */
+function Face({ map, position, size }: { map: Texture; position: [number, number]; size: [number, number] }) {
+  return (
+    <Billboard position={[...position, 0.06]}>
+      <mesh>
+        <planeGeometry args={size} />
+        <meshBasicMaterial map={map} transparent alphaTest={0.5} />
+      </mesh>
+    </Billboard>
+  );
+}
+
+/** The Ancient One sheet, the current mystery and the ongoing mythos cards in a column right of the board (tableau D2). */
+function Tableau({ board, tableau }: { board: Board; tableau: NonNullable<TableProps["tableau"]> }) {
+  const images = [tableau.sheet, ...(tableau.mystery ? [tableau.mystery] : []), ...tableau.mythos];
+  const textures = useTexture(images.map((i) => `/${i}`), srgb);
+  const textureOf = new Map(images.map((img, i) => [img, textures[i]!]));
+  const [mx, my] = tableauPosition(board, 2);
+  const [mw] = TABLEAU_ROWS[2]!;
+  return (
+    <>
+      <Face map={textureOf.get(tableau.sheet)!} position={tableauPosition(board, 0)} size={TABLEAU_ROWS[0]!} />
+      {tableau.mystery && <Face map={textureOf.get(tableau.mystery)!} position={tableauPosition(board, 1)} size={TABLEAU_ROWS[1]!} />}
+      {tableau.mythos.map((img, i) => (
+        <Face key={`${img}#${i}`} map={textureOf.get(img)!} position={[mx - TABLEAU_ROWS[0]![0] / 2 + mw / 2 + i * (mw + 0.1), my]} size={TABLEAU_ROWS[2]!} />
+      ))}
     </>
   );
 }

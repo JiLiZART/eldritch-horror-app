@@ -79,6 +79,8 @@ export function App() {
   const reducedMotion = usePrefersReducedMotion();
   const spaces = useMemo(() => activeGraph(board, enabled).spaces, [board, enabled]);
   const pieces = useMemo(() => piecesOnSpace(game.state, set), [game.state, set]);
+  const ancientOne = set.ancientOnes.find((a) => a.id === game.state?.ancientOne);
+  const tableau = game.state && ancientOne && { sheet: game.state.awakened && ancientOne.images.back ? ancientOne.images.back : ancientOne.images.front, mystery: ancientOne.mysteries.find((m) => m.id === game.state!.currentMystery)?.images.front, mythos: game.state.ongoingMythos.map((id) => set.mythos.find((m) => m.id === id)?.images.front).filter((i): i is string => !!i) };
   const selectedSpace = spaces.find((s) => s.id === selected);
   const toggle = (id: string, on: boolean) =>
     setEnabled((prev) => {
@@ -123,7 +125,7 @@ export function App() {
     <LangProvider lang={lang} strings={panel}>
     <div className="layout">
       <main className="table">
-        <Table board={board} labels={labels} strings={strings[lang]} pieces={pieces} tracks={game.state && { doom: game.state.doom, omen: game.state.omen, eldritch: [...game.state.eldritchOnOmen], reserve: game.state.reserve.map((id) => set.cards.find((c) => c.id === id)?.images.front).filter((i): i is string => !!i) }} enabled={enabled} selected={selectedSpace?.id} route={route} onSelect={select} reducedMotion={reducedMotion} />
+        <Table board={board} labels={labels} strings={strings[lang]} pieces={pieces} tracks={game.state && { doom: game.state.doom, omen: game.state.omen, eldritch: [...game.state.eldritchOnOmen], reserve: game.state.reserve.map((id) => set.cards.find((c) => c.id === id)?.images.front).filter((i): i is string => !!i) }} tableau={tableau} enabled={enabled} selected={selectedSpace?.id} route={route} onSelect={select} reducedMotion={reducedMotion} />
       </main>
       <Panel board={board} set={set} lang={lang} onLang={chooseLang} state={game.state} pieces={pieces} spaces={spaces} enabled={enabled} onToggle={toggle} selected={selectedSpace} onSelect={select}>
         <NewGame

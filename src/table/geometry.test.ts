@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Board } from "../content/types";
-import { BOARD_WIDTH, boardSize, boardToWorld, doomPosition, omenPosition, reservePosition, spreadOnCircle } from "./geometry";
+import { BOARD_WIDTH, TABLEAU_ROWS, boardSize, boardToWorld, doomPosition, omenPosition, reservePosition, spreadOnCircle, tableauPosition } from "./geometry";
 
 const board = { source: { file: "x", width: 2000, height: 1000 }, texture: "t", spaces: [], paths: [], tracks: { doom: { from: { x: 0.1, y: 0.1 }, to: { x: 0.9, y: 0.1 }, spaces: 21 }, omen: { center: { x: 0.9, y: 0.3 }, radius: 0.05 }, reserve: { from: { x: 0.1, y: 0.9 }, to: { x: 0.4, y: 0.9 }, slots: 4, width: 0.05 }, }, } as Board;
 
@@ -52,5 +52,22 @@ describe("track positions", () => {
     expect(omenPosition(board, 0)[1]).toBeCloseTo(cy + r);
     expect(omenPosition(board, 1)[0]).toBeCloseTo(cx + r);
     expect(omenPosition(board, 1)[1]).toBeCloseTo(cy);
+  });
+});
+
+describe("tableau", () => {
+  it("puts the sheet wholly right of the board's edge, its top at the board's top", () => {
+    const [x, y] = tableauPosition(board, 0);
+    const [w, h] = TABLEAU_ROWS[0]!;
+    expect(x - w / 2).toBeGreaterThan(BOARD_WIDTH / 2);
+    expect(y + h / 2).toBeCloseTo(boardSize(board)[1] / 2);
+  });
+  it("stacks the rows downward without overlap", () => {
+    for (let row = 1; row < TABLEAU_ROWS.length; row++) {
+      const above = tableauPosition(board, row - 1)[1] - TABLEAU_ROWS[row - 1]![1] / 2;
+      const top = tableauPosition(board, row)[1] + TABLEAU_ROWS[row]![1] / 2;
+      expect(top).toBeLessThan(above);
+      expect(tableauPosition(board, row)[0]).toBe(tableauPosition(board, 0)[0]);
+    }
   });
 });
