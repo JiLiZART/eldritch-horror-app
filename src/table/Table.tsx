@@ -1,6 +1,6 @@
-import { Billboard, Line, MapControls, useTexture } from "@react-three/drei";
+import { Billboard, Html, Line, MapControls, useTexture } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { type ComponentRef, Suspense, useEffect, useMemo, useRef } from "react";
+import { type ComponentRef, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { SRGBColorSpace, type Texture, Vector3 } from "three";
 import { activeGraph } from "../content/board";
 import type { Board, BoardLabels, Space } from "../content/types";
@@ -154,6 +154,8 @@ function Pieces({ pieces, at }: { pieces: Map<string, Piece[]>; at: Map<string, 
   const images = useMemo(() => [...new Set([...pieces.values()].flat().map((p) => p.image))], [pieces]);
   const textures = useTexture(images.map((i) => `/${i}`), srgb);
   const textureOf = new Map(images.map((img, i) => [img, textures[i]]));
+  /** The piece under the pointer, whose label floats beside it (piece-hover D1). */
+  const [hovered, setHovered] = useState<string>();
   return (
     <>
       {[...pieces].flatMap(([space, list]) => {
@@ -163,13 +165,20 @@ function Pieces({ pieces, at }: { pieces: Map<string, Piece[]>; at: Map<string, 
         return list.map((p, k) => {
           const [w, h] = SIZE[p.kind];
           const [dx, dy] = offsets[k]!;
+          /** Half the piece's standing height: a pawn's foot rests on the space, the label floats above the top. */
+          const half = (p.lying ? w : h) / 2;
           return (
-            <Billboard key={p.id} position={[x + dx, y + dy + (p.kind === "pawn" ? (p.lying ? w : h) / 2 : 0), 0.05 + k * 0.001]}>
+            <Billboard key={p.id} position={[x + dx, y + dy + (p.kind === "pawn" ? half : 0), 0.05 + k * 0.001]}>
               {/* A lying pawn turns a quarter turn in the billboard's plane, so the standee rests sideways on the board (design D2). */}
-              <mesh rotation={[0, 0, p.lying ? Math.PI / 2 : 0]}>
+              <mesh rotation={[0, 0, p.lying ? Math.PI / 2 : 0]} onPointerOver={() => setHovered(p.id)} onPointerOut={() => setHovered((h) => (h === p.id ? undefined : h))}>
                 <planeGeometry args={[w, h]} />
                 <meshBasicMaterial map={textureOf.get(p.image)} transparent alphaTest={0.5} />
               </mesh>
+              {hovered === p.id && (
+                <Html position={[0, half + 0.05, 0]} center style={{ pointerEvents: "none" }}>
+                  <span className="piece-label">{p.label}</span>
+                </Html>
+              )}
             </Billboard>
           );
         });
