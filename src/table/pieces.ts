@@ -1,4 +1,4 @@
-import type { GameSet } from "../content/types";
+import type { GameSet, MonsterCombat } from "../content/types";
 import type { GameState } from "../engine/types";
 
 export type PieceKind = "gate" | "expedition" | "clue" | "rumor" | "eldritch" | "monster" | "pawn" | "lead";
@@ -13,6 +13,8 @@ export interface Piece {
   lying?: true;
   /** A monster's health lost, marked with a health token on it (manual p.3; monster-damage D1). */
   damage?: number;
+  /** A monster's combat numbers for the hover badge (monster-hover-stats D1). */
+  hint?: string;
 }
 
 const byId = <T extends { id: string }>(list: T[], id: string): T => {
@@ -37,9 +39,21 @@ export function piecesOnSpace(state: GameState | undefined, set: GameSet, t: Tra
   for (const [space, count] of Object.entries(state.eldritch)) {
     for (let n = 0; n < count; n++) add(space, { kind: "eldritch", id: `eldritch:${space}#${n}`, image: `${tokens}/eldritch-token.webp`, label: t("piece.eldritch") });
   }
+  const sheet = set.ancientOnes.find((a) => a.id === state.ancientOne);
+  const signed = (n: number) => (n >= 0 ? `+${n}` : `${n}`);
+  /** The token's printed numbers, the cultist's from the Ancient One sheet (monster-hover-stats D1). */
+  const hint = (combat: MonsterCombat): string =>
+    [
+      combat.will && t("piece.will", { modifier: signed(combat.will.modifier), horror: combat.will.horror }),
+      combat.strength && t("piece.strength", { modifier: signed(combat.strength.modifier), damage: combat.strength.damage }),
+      combat.toughness !== undefined && t("piece.toughness", { toughness: combat.toughness }),
+    ]
+      .filter((x): x is string => !!x)
+      .join(" · ");
   for (const m of state.monsters) {
     const monster = byId(set.monsters, m.id);
-    add(m.space, { kind: "monster", id: `${m.id}#${m.instance}`, image: monster.images.front, label: m.health > 0 ? t("piece.monsterHurt", { name: monster.name, count: m.health }) : monster.name, ...(m.health > 0 ? { damage: m.health } : {}) });
+    const combat = monster.combat.onAncientOneSheet && sheet ? sheet.cultists : monster.combat;
+    add(m.space, { kind: "monster", id: `${m.id}#${m.instance}`, image: monster.images.front, label: m.health > 0 ? t("piece.monsterHurt", { name: monster.name, count: m.health }) : monster.name, ...(m.health > 0 ? { damage: m.health } : {}), hint: hint(combat) });
   }
   for (const i of state.investigators) {
     if (i.defeated === "devoured" || i.removed) continue;

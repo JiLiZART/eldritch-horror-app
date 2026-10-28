@@ -46,6 +46,16 @@ describe("piecesOnSpace", () => {
     expect(labels).toContain("Врата");
     expect(labels).toContain("Ведущий сыщик");
   });
+  it("hints a monster's combat numbers, the cultist's from the Ancient One sheet", () => {
+    const [m] = state.monsters;
+    const byakhee = { id: "eh01/monster/byakhee", instance: 0, space: "london", health: 0 };
+    const cultist = { id: "eh01/monster/cultist", instance: 0, space: "rome", health: 0 };
+    const hinted = piecesOnSpace({ ...state, monsters: [byakhee, cultist] }, set, t);
+    const hint = (space: string) => hinted.get(space)?.find((p) => p.kind === "monster")?.hint;
+    expect(hint("london")).toBe("Will +0, horror 1 · Strength +0, damage 2 · toughness 2");
+    expect(hint("rome")).toBe("Strength +0, damage 1 · toughness 1");
+    expect(m).toBeDefined();
+  });
   it("marks a wounded monster's health lost and leaves an unhurt one unmarked", () => {
     const [m] = state.monsters;
     const wounded = piecesOnSpace({ ...state, monsters: [{ ...m!, health: 2 }] }, set, t);
@@ -56,7 +66,7 @@ describe("piecesOnSpace", () => {
   it("names monsters and investigators after their content entries", () => {
     const [m] = state.monsters;
     const monster = set.monsters.find((x) => x.id === m!.id)!;
-    expect(pieces.get(m!.space)).toContainEqual({ kind: "monster", id: `${m!.id}#${m!.instance}`, image: monster.images.front, label: monster.name });
+    expect(pieces.get(m!.space)).toContainEqual(expect.objectContaining({ kind: "monster", id: `${m!.id}#${m!.instance}`, image: monster.images.front, label: monster.name }));
     const akachi = set.investigators.find((i) => i.id === inv("akachi-onyele"))!;
     expect(pieces.get("space-15")).toContainEqual({ kind: "pawn", id: akachi.id, image: akachi.pawn, label: akachi.name });
   });

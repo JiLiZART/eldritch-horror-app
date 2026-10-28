@@ -245,5 +245,8 @@
   "deck.setAside": "отложенные монстры",
   "deck.gateStack": "стопка врат",
   "deck.cluePool": "банк улик",
-  "set.eh01": "Базовая игра"
+  "set.eh01": "Базовая игра",
+  "piece.will": "Воля {modifier}, ужас {horror}",
+  "piece.strength": "Сила {modifier}, урон {damage}",
+  "piece.toughness": "стойкость {toughness}"
 }

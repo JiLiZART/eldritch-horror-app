@@ -254,7 +254,10 @@ function Pieces({ pieces, at }: { pieces: Map<string, Piece[]>; at: Map<string, 
               )}
               {hovered === p.id && (
                 <Html position={[0, half + 0.05, 0]} center style={{ pointerEvents: "none" }}>
-                  <span className="piece-label">{p.label}</span>
+                  <span className="piece-label">
+                    {p.label}
+                    {p.hint && <small>{p.hint}</small>}
+                  </span>
                 </Html>
               )}
             </Billboard>

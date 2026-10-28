@@ -245,5 +245,8 @@
   "deck.setAside": "set aside",
   "deck.gateStack": "gate stack",
   "deck.cluePool": "clue pool",
-  "set.eh01": "Core"
+  "set.eh01": "Core",
+  "piece.will": "Will {modifier}, horror {horror}",
+  "piece.strength": "Strength {modifier}, damage {damage}",
+  "piece.toughness": "toughness {toughness}"
 }
