@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { Board } from "../content/types";
-import { BOARD_WIDTH, boardSize, boardToWorld, doomPosition, omenPosition, spreadOnCircle } from "./geometry";
+import { BOARD_WIDTH, boardSize, boardToWorld, doomPosition, omenPosition, reservePosition, spreadOnCircle } from "./geometry";
 
-const board = { source: { file: "x", width: 2000, height: 1000 }, texture: "t", spaces: [], paths: [], tracks: { doom: { from: { x: 0.1, y: 0.1 }, to: { x: 0.9, y: 0.1 }, spaces: 21 }, omen: { center: { x: 0.9, y: 0.3 }, radius: 0.05 } }, } as Board;
+const board = { source: { file: "x", width: 2000, height: 1000 }, texture: "t", spaces: [], paths: [], tracks: { doom: { from: { x: 0.1, y: 0.1 }, to: { x: 0.9, y: 0.1 }, spaces: 21 }, omen: { center: { x: 0.9, y: 0.3 }, radius: 0.05 }, reserve: { from: { x: 0.1, y: 0.9 }, to: { x: 0.4, y: 0.9 }, slots: 4, width: 0.05 }, }, } as Board;
 
 describe("boardToWorld", () => {
   it("keeps the source aspect", () => {
@@ -28,6 +28,14 @@ describe("spreadOnCircle", () => {
     expect(pts).toHaveLength(3);
     for (const [x, y] of pts) expect(Math.hypot(x, y)).toBeCloseTo(0.3);
     expect(new Set(pts.map((p) => p.join())).size).toBe(3);
+  });
+});
+
+describe("reserve slots", () => {
+  it("puts the first slot at the strip's start and the last at its end", () => {
+    expect(reservePosition(board, 0)).toEqual(boardToWorld({ x: 0.1, y: 0.9 }, board));
+    expect(reservePosition(board, 3)).toEqual(boardToWorld({ x: 0.4, y: 0.9 }, board));
+    expect(reservePosition(board, 1)[0]).toBeCloseTo(boardToWorld({ x: 0.2, y: 0.9 }, board)[0]);
   });
 });
 

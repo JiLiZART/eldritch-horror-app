@@ -15,6 +15,9 @@ export function validateBoard(board: Board): string[] {
   if (!inside(board.tracks.doom.from) || !inside(board.tracks.doom.to)) errors.push("doom track has coordinates outside 0..1");
   if (board.tracks.doom.spaces < 2) errors.push("doom track needs at least 2 spaces");
   if (!inside(board.tracks.omen.center) || board.tracks.omen.radius <= 0 || board.tracks.omen.radius > 0.5) errors.push("omen track has coordinates outside 0..1");
+  const { reserve } = board.tracks;
+  if (!inside(reserve.from) || !inside(reserve.to) || reserve.width <= 0 || reserve.width > 1) errors.push("reserve slots have coordinates outside 0..1");
+  if (reserve.slots < 1) errors.push("reserve slots need at least 1 slot");
   for (const p of board.paths) {
     for (const end of [p.from, p.to]) {
       if (!ids.has(end)) errors.push(`path ${p.from}-${p.to} references unknown space ${end}`);

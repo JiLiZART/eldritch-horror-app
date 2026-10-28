@@ -38,3 +38,10 @@ export function omenPosition(board: Board, index: number): [x: number, y: number
   const a = Math.PI / 2 - (index * Math.PI) / 2;
   return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
 }
+
+/** Where reserve slot `index` lies on the printed strip, the first at `from` and the last at `to` (reserve-slots D2). */
+export function reservePosition(board: Board, index: number): [x: number, y: number] {
+  const { from, to, slots } = board.tracks.reserve;
+  const f = slots > 1 ? Math.min(Math.max(index, 0), slots - 1) / (slots - 1) : 0;
+  return boardToWorld({ x: from.x + (to.x - from.x) * f, y: from.y + (to.y - from.y) * f }, board);
+}

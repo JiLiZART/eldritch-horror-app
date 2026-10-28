@@ -5,7 +5,7 @@ import { SRGBColorSpace, type Texture, Vector3 } from "three";
 import { activeGraph } from "../content/board";
 import type { Board, BoardLabels, Space } from "../content/types";
 import { BoardText } from "./BoardText";
-import { boardSize, boardToWorld, doomPosition, omenPosition, spreadOnCircle } from "./geometry";
+import { BOARD_WIDTH, boardSize, boardToWorld, doomPosition, omenPosition, reservePosition, spreadOnCircle } from "./geometry";
 import type { Piece, PieceKind } from "./pieces";
 import { PATH_COLORS } from "./sets";
 
@@ -17,7 +17,7 @@ export interface TableProps {
   /** Pieces grouped by space id; empty when no game is in progress. */
   pieces: Map<string, Piece[]>;
   /** The doom value, the omen index and the eldritch tokens per omen space; undefined without a game (track-tokens D3). */
-  tracks?: { doom: number; omen: number; eldritch: number[] };
+  tracks?: { doom: number; omen: number; eldritch: number[]; reserve: string[] };
   enabled: Set<string>;
   selected: string | undefined;
   /** Spaces of the travel route being picked, highlighted in order. */
@@ -61,6 +61,7 @@ function Scene({ board, labels, strings, pieces, tracks, enabled, selected, rout
       ))}
       {pieces.size > 0 && <Pieces pieces={pieces} at={at} />}
       {tracks && <Tracks board={board} tracks={tracks} />}
+      {tracks && tracks.reserve.length > 0 && <Reserve board={board} images={tracks.reserve} />}
     </>
   );
 }
@@ -197,6 +198,30 @@ function Tracks({ board, tracks }: { board: Board; tracks: NonNullable<TableProp
       {tracks.eldritch.flatMap((count, i) => {
         const [x, y] = omenPosition(board, i);
         return spreadOnCircle(count, 0.14).map(([dx, dy], k) => token(eldritch!, [x + dx, y + dy], 0.16, `eldritch-${i}-${k}`, 0.08 + k * 0.001));
+      })}
+    </>
+  );
+}
+
+/** Asset cards are portrait, 478 by 745. */
+const CARD_ASPECT = 745 / 478;
+
+/** The reserve cards' faces in the printed slots, in reserve order (reserve-slots D3). */
+function Reserve({ board, images }: { board: Board; images: string[] }) {
+  const textures = useTexture(images.map((i) => `/${i}`), srgb);
+  const w = board.tracks.reserve.width * BOARD_WIDTH;
+  return (
+    <>
+      {textures.map((map, i) => {
+        const [x, y] = reservePosition(board, i);
+        return (
+          <Billboard key={images[i]} position={[x, y, 0.06]}>
+            <mesh>
+              <planeGeometry args={[w, w * CARD_ASPECT]} />
+              <meshBasicMaterial map={map} transparent alphaTest={0.5} />
+            </mesh>
+          </Billboard>
+        );
       })}
     </>
   );

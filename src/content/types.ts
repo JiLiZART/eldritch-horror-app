@@ -46,6 +46,8 @@ export interface Point {
 export interface Tracks {
   doom: { from: Point; to: Point; spaces: number };
   omen: { center: Point; radius: number };
+  /** The printed reserve slots from the first to the last centre; `width` as a fraction of the board width. */
+  reserve: { from: Point; to: Point; slots: number; width: number };
 }
 
 export interface Board {
