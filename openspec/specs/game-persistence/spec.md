@@ -53,7 +53,7 @@ After every accepted step the game SHALL be saved in the browser in its own slot
 - **THEN** the other window's Saved games list shows it within a moment, without a reload
 
 ### Requirement: The last step can be undone
-A control beside the board SHALL revert the game to the state before the last accepted step, repeatedly, back to the freshly set-up game, after which it SHALL be disabled; a refused step SHALL NOT be undone since nothing changed; the last ten prior states SHALL be saved with the game in its slot, so a resumed game can undo those steps and no more.
+A control beside the board SHALL revert the game to the state before the last accepted step, repeatedly, back to the freshly set-up game, after which it SHALL be disabled; a refused step SHALL NOT be undone since nothing changed; the last ten prior states SHALL be saved with the game in its slot, so a resumed game can undo those steps and no more. An undone step SHALL be redoable by a Redo control, repeatedly up to the state before the first undo, until a new step is accepted, which drops the redo line; Redo SHALL be disabled when there is nothing to redo; the redo line is kept for the session only.
 
 #### Scenario: Undone
 - **WHEN** Leo Anderson rests and Undo is chosen
@@ -78,6 +78,14 @@ A control beside the board SHALL revert the game to the state before the last ac
 #### Scenario: Session only
 - **WHEN** a game is loaded from a file
 - **THEN** it starts with nothing to undo, since the file holds one state
+
+#### Scenario: Redone
+- **WHEN** Leo Anderson rests, Undo is chosen and then Redo
+- **THEN** the rest is back as it was and Redo is disabled
+
+#### Scenario: A new step drops the redo line
+- **WHEN** a step is undone and a different step is taken
+- **THEN** Redo is disabled
 
 ### Requirement: The game is saved to and loaded from a file
 While a game is in progress the players SHALL be able to save it as a file named after the slot's own name when the players gave one, else after the seed and round; at any time they SHALL be able to load such a file, which replaces the game in progress with the file's state and starts with nothing to undo. An unreadable file, or one written by an older state shape, SHALL be refused with the same notes as the browser slot and leave the game as it was. **Deviation**: the file is plain JSON with no signature.
