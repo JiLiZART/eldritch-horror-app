@@ -6,7 +6,7 @@ Show the panel's own words, the game form, the three phase panels and their cont
 ## Requirements
 
 ### Requirement: The game and phase controls follow the chosen language
-When the board language is Russian, the New game form, the Action, Encounter and Mythos panels, the Acquire Assets form, the dice, the Trade form, the Game section, the panel's section headings, the five card-text groups with their shell, the Status table, the piece labels (on hover and in the selected space's piece list), the Selected space section's field names, its prompt and its empty markers, the Journal's phase words and its component-action prefix, and the Status section's deck and pile names and the set names SHALL show their labels, headings and notes in Russian, using the glossary's Russian names for rules terms; in English they SHALL read as today. Card names, investigator names, space names and the engine's log lines stay as the content and the engine give them.
+When the board language is Russian, the New game form, the Action, Encounter and Mythos panels, the Acquire Assets form, the dice, the Trade form, the Game section, the panel's section headings, the five card-text groups with their shell, the Status table, the piece labels (on hover and in the selected space's piece list), the Selected space section's field names, its prompt and its empty markers, the Journal's phase words and its component-action prefix, and the Status section's deck and pile names and the set names SHALL show their labels, headings and notes in Russian, using the glossary's Russian names for rules terms; in English they SHALL read as today. Space names SHALL be shown in the chosen language from the board data, wherever the panel names a space: the Status table, the Selected space section and its neighbours, the space list, the phase panels and the card-text groups. Card names, investigator names and the engine's log lines stay as the content and the engine give them.
 
 #### Scenario: Russian turn panel
 - **WHEN** the board language is Russian and Leo Anderson's Action turn begins
@@ -39,6 +39,10 @@ When the board language is Russian, the New game form, the Action, Encounter and
 #### Scenario: Deck names in Russian
 - **WHEN** the board language is Russian
 - **THEN** the Status section's Decks line names the asset deck, the monster cup, the gate stack and the clue pool with the glossary's Russian terms, and the Core set reads in Russian
+
+#### Scenario: Space names in Russian
+- **WHEN** the board language is Russian and Leo Anderson stands on Buenos Aires
+- **THEN** the Status table, the space list and the Travel controls name the space Буэнос-Айрес, as the board prints it
 
 ### Requirement: Both languages hold the same strings
 The two string files SHALL hold the same keys, and every key the panel asks for SHALL exist in both; a missing key SHALL fail the content validation and the tests rather than show at the table.
