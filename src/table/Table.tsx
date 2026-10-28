@@ -1,6 +1,7 @@
 import { Billboard, Html, Line, MapControls, useTexture } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { type ComponentRef, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import type { ThreeEvent } from "@react-three/fiber";
 import { SRGBColorSpace, type Texture, Vector3 } from "three";
 import { activeGraph } from "../content/board";
 import type { Board, BoardLabels, Space } from "../content/types";
@@ -50,9 +51,14 @@ function Scene({ board, labels, strings, pieces, tracks, tableau, enabled, selec
   const graph = useMemo(() => activeGraph(board, enabled), [board, enabled]);
   const at = useMemo(() => new Map(board.spaces.map((s) => [s.id, boardToWorld(s, board)])), [board]);
   const active = useMemo(() => new Set(graph.spaces.map((s) => s.id)), [graph]);
+  /** The card face last clicked, read until the selection changes (card-focus D1); `key` makes a repeated click glide again. */
+  const [focus, setFocus] = useState<{ position: [number, number]; size: [number, number]; key: number; forSelected: string | undefined }>();
+  const onFocus: FaceProps["onFocus"] = (position, size) => setFocus((prev) => ({ position, size, key: (prev?.key ?? 0) + 1, forSelected: selected }));
+  const focused = focus?.forSelected === selected ? focus : undefined;
+  const target = useMemo<CameraTarget | undefined>(() => (focused ? { position: focused.position, size: focused.size, key: focused.key } : selected && at.has(selected) ? { position: at.get(selected)! } : undefined), [focused, selected, at]);
   return (
     <>
-      <CameraRig board={board} withTableau={tableau !== undefined} target={selected ? at.get(selected) : undefined} reducedMotion={reducedMotion} />
+      <CameraRig board={board} withTableau={tableau !== undefined} target={target} reducedMotion={reducedMotion} />
       <BoardPlane board={board} />
       <BoardText labels={labels} strings={strings} active={active} selected={selected} onSelect={onSelect} reducedMotion={reducedMotion} />
       {graph.paths.map((p) => (
@@ -63,14 +69,22 @@ function Scene({ board, labels, strings, pieces, tracks, tableau, enabled, selec
       ))}
       {pieces.size > 0 && <Pieces pieces={pieces} at={at} />}
       {tracks && <Tracks board={board} tracks={tracks} />}
-      {tracks && tracks.reserve.length > 0 && <Reserve board={board} images={tracks.reserve} />}
-      {tableau && <Tableau board={board} tableau={tableau} />}
+      {tracks && tracks.reserve.length > 0 && <Reserve board={board} images={tracks.reserve} onFocus={onFocus} />}
+      {tableau && <Tableau board={board} tableau={tableau} onFocus={onFocus} />}
     </>
   );
 }
 
+/** Where the camera glides: a point, and for a card its height so the view zooms to read it (card-focus D2). */
+interface CameraTarget {
+  position: [number, number];
+  /** A card's `[width, height]`; the view zooms until it fills most of the view. */
+  size?: [number, number];
+  key?: number;
+}
+
 /** Top-down orthographic view: zoom bounded so the whole table fits, pan kept within it, no rotation (pan-clamp D2). */
-function CameraRig({ board, withTableau, target, reducedMotion }: { board: Board; withTableau: boolean; target: [number, number] | undefined; reducedMotion: boolean }) {
+function CameraRig({ board, withTableau, target, reducedMotion }: { board: Board; withTableau: boolean; target: CameraTarget | undefined; reducedMotion: boolean }) {
   const { size, camera } = useThree();
   const controls = useRef<ComponentRef<typeof MapControls>>(null);
   const extent = useMemo(() => tableExtent(board, withTableau), [board, withTableau]);
@@ -92,7 +106,8 @@ function CameraRig({ board, withTableau, target, reducedMotion }: { board: Board
     camera.zoom = minZoom;
     camera.updateProjectionMatrix();
   }, [camera, minZoom]);
-  const goal = useMemo(() => (target ? new Vector3(target[0], target[1], 0) : undefined), [target]);
+  const goal = useMemo(() => (target ? new Vector3(target.position[0], target.position[1], 0) : undefined), [target]);
+  const zoomGoal = target?.size ? Math.min(Math.max(Math.min(size.width / (target.size[0] * 1.2), size.height / (target.size[1] * 1.2)), minZoom), minZoom * 10) : undefined;
   // One glide per new target; a drag ends it, so the player's panning holds afterwards (camera-release D1).
   const gliding = useRef(false);
   useEffect(() => {
@@ -101,16 +116,20 @@ function CameraRig({ board, withTableau, target, reducedMotion }: { board: Board
   useFrame((_, dt) => {
     const c = controls.current;
     if (!c || !goal || !gliding.current) return;
-    if (c.target.distanceTo(goal) < 0.001) {
-      gliding.current = false;
-      return;
-    }
     const step = reducedMotion ? 1 : Math.min(1, dt * 6);
+    const before = c.target.clone();
     const delta = goal.clone().sub(c.target).multiplyScalar(step);
     c.target.add(delta);
     c.object.position.add(delta);
+    if (zoomGoal !== undefined) {
+      camera.zoom += (zoomGoal - camera.zoom) * step;
+      camera.updateProjectionMatrix();
+    }
     clamp();
     c.update();
+    // Settled once neither the view nor the zoom moves any more; the clamp may stop the glide short of the goal.
+    const zoomLeft = zoomGoal === undefined ? 0 : Math.abs(camera.zoom - zoomGoal) / zoomGoal;
+    if (c.target.distanceTo(before) < 0.0001 && zoomLeft < 0.001) gliding.current = false;
   });
   return (
     <MapControls
@@ -245,23 +264,36 @@ function Tracks({ board, tracks }: { board: Board; tracks: NonNullable<TableProp
 const CARD_ASPECT = 745 / 478;
 
 /** The reserve cards' faces in the printed slots, in reserve order (reserve-slots D3). */
-function Reserve({ board, images }: { board: Board; images: string[] }) {
+function Reserve({ board, images, onFocus }: { board: Board; images: string[]; onFocus: FaceProps["onFocus"] }) {
   const textures = useTexture(images.map((i) => `/${i}`), srgb);
   const w = board.tracks.reserve.width * BOARD_WIDTH;
   return (
     <>
       {textures.map((map, i) => (
-        <Face key={images[i]} map={map} position={reservePosition(board, i)} size={[w, w * CARD_ASPECT]} />
+        <Face key={images[i]} map={map} position={reservePosition(board, i)} size={[w, w * CARD_ASPECT]} onFocus={onFocus} />
       ))}
     </>
   );
 }
 
+interface FaceProps {
+  map: Texture;
+  position: [number, number];
+  size: [number, number];
+  /** A click brings the card up to read: its centre and size (card-focus D1). */
+  onFocus: (position: [number, number], size: [number, number]) => void;
+}
+
 /** One card face lying flat on the table. */
-function Face({ map, position, size }: { map: Texture; position: [number, number]; size: [number, number] }) {
+function Face({ map, position, size, onFocus }: FaceProps) {
+  const click = (e: ThreeEvent<MouseEvent>) => {
+    e.stopPropagation();
+    // A drag that starts on the card ends with a click event too; only a still pointer brings the card up.
+    if (e.delta <= 4) onFocus(position, size);
+  };
   return (
     <Billboard position={[...position, 0.06]}>
-      <mesh>
+      <mesh onClick={click}>
         <planeGeometry args={size} />
         <meshBasicMaterial map={map} transparent alphaTest={0.5} />
       </mesh>
@@ -270,7 +302,7 @@ function Face({ map, position, size }: { map: Texture; position: [number, number
 }
 
 /** The Ancient One sheet, the current mystery and the ongoing mythos cards in a column right of the board (tableau D2). */
-function Tableau({ board, tableau }: { board: Board; tableau: NonNullable<TableProps["tableau"]> }) {
+function Tableau({ board, tableau, onFocus }: { board: Board; tableau: NonNullable<TableProps["tableau"]>; onFocus: FaceProps["onFocus"] }) {
   const images = [tableau.sheet, ...(tableau.mystery ? [tableau.mystery] : []), ...tableau.mythos];
   const textures = useTexture(images.map((i) => `/${i}`), srgb);
   const textureOf = new Map(images.map((img, i) => [img, textures[i]!]));
@@ -278,10 +310,10 @@ function Tableau({ board, tableau }: { board: Board; tableau: NonNullable<TableP
   const [mw] = TABLEAU_ROWS[2]!;
   return (
     <>
-      <Face map={textureOf.get(tableau.sheet)!} position={tableauPosition(board, 0)} size={TABLEAU_ROWS[0]!} />
-      {tableau.mystery && <Face map={textureOf.get(tableau.mystery)!} position={tableauPosition(board, 1)} size={TABLEAU_ROWS[1]!} />}
+      <Face map={textureOf.get(tableau.sheet)!} position={tableauPosition(board, 0)} size={TABLEAU_ROWS[0]!} onFocus={onFocus} />
+      {tableau.mystery && <Face map={textureOf.get(tableau.mystery)!} position={tableauPosition(board, 1)} size={TABLEAU_ROWS[1]!} onFocus={onFocus} />}
       {tableau.mythos.map((img, i) => (
-        <Face key={`${img}#${i}`} map={textureOf.get(img)!} position={[mx - TABLEAU_ROWS[0]![0] / 2 + mw / 2 + i * (mw + 0.1), my]} size={TABLEAU_ROWS[2]!} />
+        <Face key={`${img}#${i}`} map={textureOf.get(img)!} position={[mx - TABLEAU_ROWS[0]![0] / 2 + mw / 2 + i * (mw + 0.1), my]} size={TABLEAU_ROWS[2]!} onFocus={onFocus} />
       ))}
     </>
   );
