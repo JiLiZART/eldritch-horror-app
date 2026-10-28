@@ -325,7 +325,7 @@ Clicking a card face on the table (a reserve card, the Ancient One sheet, the my
 - **THEN** the view glides and zooms onto the token, a further click shows its back, and the selection is London
 
 ### Requirement: The investigator sheets lie below the board
-During a game each investigator's sheet SHALL lie faceup in a row below the board, in seat order from the board's left edge, one per investigator in the game including a replaced or defeated one until they are removed; the table SHALL extend to hold the row, and clicking a sheet SHALL bring it up to read like any card face. While an investigator resolves an encounter card, that card SHALL lie to the right of their sheet until the encounter is finished.
+During a game each investigator's sheet SHALL lie faceup in a row below the board, in seat order from the board's left edge, one per investigator in the game including a replaced or defeated one until they are removed, a defeated investigator's sheet and held cards shown dimmed; the table SHALL extend to hold the row, and clicking a sheet SHALL bring it up to read like any card face. While an investigator resolves an encounter card, that card SHALL lie to the right of their sheet until the encounter is finished.
 
 #### Scenario: Two sheets at set-up
 - **WHEN** a game is set up with Leo Anderson and Lily Chen
@@ -342,6 +342,10 @@ During a game each investigator's sheet SHALL lie faceup in a row below the boar
 #### Scenario: The encounter card beside the sheet
 - **WHEN** Leo Anderson draws a general encounter card
 - **THEN** the card lies to the right of his sheet, readable by click, and leaves when the encounter is finished
+
+#### Scenario: A defeated investigator's sheet
+- **WHEN** Leo Anderson is defeated
+- **THEN** his sheet and the cards under it lie dimmed below the board while Lily Chen's stay as printed
 
 ### Requirement: Held cards lie under their investigator's sheet
 During a game each investigator's possessions and then conditions SHALL lie faceup as small card faces under that investigator's sheet, in the order held, three to a row from the sheet's left edge and wrapping to further rows; the table SHALL extend to hold the deepest row; clicking a held card SHALL bring it up to read like any card face.
