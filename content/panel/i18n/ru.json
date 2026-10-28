@@ -201,5 +201,10 @@
   "status.delayed": " (задержан)",
   "status.skills": "Навыки",
   "status.showSheet": "Показать лист",
-  "status.hideSheet": "Скрыть лист"
+  "status.hideSheet": "Скрыть лист",
+  "game.games": "Сохранённые партии",
+  "game.switch": "Открыть",
+  "game.remove": "Удалить",
+  "game.current": "(текущая)",
+  "game.new": "Новая партия"
 }

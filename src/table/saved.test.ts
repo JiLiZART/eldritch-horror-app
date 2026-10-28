@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { setupGame } from "../engine/setup";
-import { clearGame, fileName, loadGame, parseGame, saveGame, type Slot } from "./saved";
+import { fileName, loadGame, loadSlots, parseGame, removeGame, saveGame, type Slot } from "./saved";
 
 const root = join(import.meta.dirname, "../..");
 const board: Board = JSON.parse(readFileSync(join(root, "content/board/board.json"), "utf8"));
@@ -18,31 +18,43 @@ const fake = (): Slot & { items: Map<string, string> } => {
 };
 
 describe("the game in progress survives a reload", () => {
-  it("loads back what was saved, with no note", () => {
+  it("keeps two games in two listed slots and resumes the current one", () => {
     const storage = fake();
-    saveGame(storage, game());
-    expect(loadGame(storage)).toEqual({ state: game() });
+    const other = { ...game(), seed: 4 };
+    saveGame(storage, "a", game(), "Azathoth · seed 3 · round 1");
+    saveGame(storage, "b", other, "Azathoth · seed 4 · round 1");
+    const index = loadSlots(storage);
+    expect(index.slots.map((s) => s.name)).toEqual(["Azathoth · seed 3 · round 1", "Azathoth · seed 4 · round 1"]);
+    expect(index.current).toBe("b");
+    expect(loadGame(storage, "a")).toEqual({ state: game() });
+    expect(loadGame(storage, "b")).toEqual({ state: other });
   });
-  it("loads nothing from an empty slot", () => {
-    expect(loadGame(fake())).toEqual({});
-  });
-  it("sets aside garbage and a save without a phase with a note", () => {
+  it("removes one slot and keeps the other", () => {
     const storage = fake();
-    storage.setItem("eldritch-horror.game", "{not json");
-    expect(loadGame(storage)).toEqual({ note: "the saved game could not be read" });
-    storage.setItem("eldritch-horror.game", JSON.stringify({ seed: 3 }));
-    expect(loadGame(storage)).toEqual({ note: "the saved game could not be read" });
+    saveGame(storage, "a", game(), "A");
+    saveGame(storage, "b", { ...game(), seed: 4 }, "B");
+    expect(removeGame(storage, "b")).toEqual({ slots: [expect.objectContaining({ id: "a", name: "A" })] });
+    expect(loadGame(storage, "a")).toEqual({ state: game() });
+    expect(loadGame(storage, "b")).toEqual({});
   });
-  it("sets aside a save from an older state shape with a note", () => {
+  it("moves a save from before slots existed into a slot", () => {
     const storage = fake();
-    storage.setItem("eldritch-horror.game", JSON.stringify({ ...game(), version: 1 }));
-    expect(loadGame(storage)).toEqual({ note: "the saved game was written by an older version and was set aside" });
+    storage.setItem("eldritch-horror.game", JSON.stringify(game()));
+    const index = loadSlots(storage);
+    expect(index.slots).toHaveLength(1);
+    expect(index.current).toBe(index.slots[0]!.id);
+    expect(storage.items.has("eldritch-horror.game")).toBe(false);
+    expect(loadGame(storage, index.current!)).toEqual({ state: game() });
   });
-  it("clears the slot", () => {
+  it("sets aside garbage, a save without a phase and an older shape with a note", () => {
     const storage = fake();
-    saveGame(storage, game());
-    clearGame(storage);
-    expect(storage.items.size).toBe(0);
+    storage.setItem("eldritch-horror.game.x", "{not json");
+    expect(loadGame(storage, "x")).toEqual({ note: "the saved game could not be read" });
+    storage.setItem("eldritch-horror.game.x", JSON.stringify({ seed: 3 }));
+    expect(loadGame(storage, "x")).toEqual({ note: "the saved game could not be read" });
+    storage.setItem("eldritch-horror.game.x", JSON.stringify({ ...game(), version: 1 }));
+    expect(loadGame(storage, "x")).toEqual({ note: "the saved game was written by an older version and was set aside" });
+    expect(loadGame(storage, "nope")).toEqual({});
   });
 });
 

@@ -201,5 +201,10 @@
   "status.delayed": " (delayed)",
   "status.skills": "Skills",
   "status.showSheet": "Show sheet",
-  "status.hideSheet": "Hide sheet"
+  "status.hideSheet": "Hide sheet",
+  "game.games": "Saved games",
+  "game.switch": "Switch",
+  "game.remove": "Remove",
+  "game.current": "(current)",
+  "game.new": "New game"
 }

@@ -1,11 +1,26 @@
 import { STATE_VERSION, type GameState } from "../engine/types";
 
-/** The one saved game per browser (design D1); the engine never touches storage. */
+/** Saved games in the browser (design D1): an index of slots and one key per game; the engine never touches storage. */
 
 export type Slot = Pick<Storage, "getItem" | "setItem" | "removeItem">;
-const KEY = "eldritch-horror.game";
+export interface SlotInfo {
+  id: string;
+  name: string;
+  /** Milliseconds since the epoch of the last saved step. */
+  savedAt: number;
+}
+export interface SlotIndex {
+  /** The slot last played, resumed on load. */
+  current?: string;
+  slots: SlotInfo[];
+}
 
-/** A saved game's text (the slot or a file), or a note saying why it was set aside. */
+const INDEX = "eldritch-horror.games";
+/** The single-slot key from before slots existed; migrated into a slot on first load. */
+const LEGACY = "eldritch-horror.game";
+const key = (id: string) => `eldritch-horror.game.${id}`;
+
+/** A saved game's text (a slot or a file), or a note saying why it was set aside. */
 export function parseGame(text: string): { state?: GameState; note?: string } {
   let parsed: unknown;
   try {
@@ -18,28 +33,67 @@ export function parseGame(text: string): { state?: GameState; note?: string } {
   return { state: parsed as GameState };
 }
 
-/** The saved game, or a note saying why the slot was set aside; neither for an empty slot. */
-export function loadGame(storage: Slot): { state?: GameState; note?: string } {
-  let raw: string | null = null;
+const read = (storage: Slot, k: string): string | null => {
   try {
-    raw = storage.getItem(KEY);
+    return storage.getItem(k);
   } catch {
-    return { note: "the saved game could not be read" };
+    return null;
   }
+};
+const write = (storage: Slot, k: string, value: string): void => {
+  try {
+    storage.setItem(k, value);
+  } catch {}
+};
+const remove = (storage: Slot, k: string): void => {
+  try {
+    storage.removeItem(k);
+  } catch {}
+};
+
+export const newSlotId = () => `${Date.now().toString(36)}-${Math.floor(Math.random() * 1e6).toString(36)}`;
+
+/** The slot's name: the Ancient One, the seed and the round. */
+export const slotName = (state: GameState, ancientOne: string) => `${ancientOne} · seed ${state.seed} · round ${state.round}`;
+
+/** The slot index, moving a save from before slots existed into its own slot. */
+export function loadSlots(storage: Slot): SlotIndex {
+  const legacy = read(storage, LEGACY);
+  if (legacy !== null) {
+    const { state } = parseGame(legacy);
+    remove(storage, LEGACY);
+    if (state) saveGame(storage, newSlotId(), state, slotName(state, state.ancientOne.split("/").pop() ?? state.ancientOne));
+  }
+  try {
+    const parsed = JSON.parse(read(storage, INDEX) ?? "null") as SlotIndex | null;
+    return parsed && Array.isArray(parsed.slots) ? parsed : { slots: [] };
+  } catch {
+    return { slots: [] };
+  }
+}
+
+/** The saved game of a slot, or a note saying why it was set aside; neither for an empty slot. */
+export function loadGame(storage: Slot, id: string): { state?: GameState; note?: string } {
+  const raw = read(storage, key(id));
   return raw === null ? {} : parseGame(raw);
+}
+
+/** Saves the game into its slot and makes it the current one. */
+export function saveGame(storage: Slot, id: string, state: GameState, name: string): void {
+  write(storage, key(id), JSON.stringify(state));
+  const index = loadSlots(storage);
+  const info: SlotInfo = { id, name, savedAt: Date.now() };
+  write(storage, INDEX, JSON.stringify({ current: id, slots: [...index.slots.filter((s) => s.id !== id), info] }));
+}
+
+/** Removes a slot; a removed current slot leaves none current. */
+export function removeGame(storage: Slot, id: string): SlotIndex {
+  remove(storage, key(id));
+  const index = loadSlots(storage);
+  const next: SlotIndex = { ...(index.current === id ? {} : index.current ? { current: index.current } : {}), slots: index.slots.filter((s) => s.id !== id) };
+  write(storage, INDEX, JSON.stringify(next));
+  return next;
 }
 
 /** The download name: the seed and the round, so files sort and tell apart. */
 export const fileName = (state: GameState) => `eldritch-horror-${state.seed}-round-${state.round}.json`;
-
-export function saveGame(storage: Slot, state: GameState): void {
-  try {
-    storage.setItem(KEY, JSON.stringify(state));
-  } catch {}
-}
-
-export function clearGame(storage: Slot): void {
-  try {
-    storage.removeItem(KEY);
-  } catch {}
-}

@@ -11,7 +11,7 @@ import { NewGame } from "./NewGame";
 import { Panel } from "./Panel";
 import { LangProvider, useT } from "./lang";
 import { piecesOnSpace } from "./pieces";
-import { clearGame, fileName, loadGame, parseGame, saveGame } from "./saved";
+import { fileName, loadGame, loadSlots, newSlotId, parseGame, removeGame, saveGame, slotName } from "./saved";
 import { Table } from "./Table";
 import { type Act, Turn } from "./Turn";
 import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
@@ -39,16 +39,35 @@ export function App() {
   const [enabled, setEnabled] = useState(() => new Set(["eh01"]));
   const [selected, setSelected] = useState<string>();
   /** The game in progress (resumed from the browser's slot), or the reason the last start was refused. */
+  const [slots, setSlots] = useState(() => loadSlots(localStorage));
+  /** The slot the game in progress is saved to (save-slots D2). */
+  const [slot, setSlot] = useState<string | undefined>(slots.current);
   const [game, setGame] = useState<{ state?: GameState; error?: string }>(() => {
-    const { state, note } = loadGame(localStorage);
+    if (!slots.current) return {};
+    const { state, note } = loadGame(localStorage, slots.current);
     return { state, error: note };
   });
   /** States before each accepted step this session, newest last (design D2). */
   const [history, setHistory] = useState<GameState[]>([]);
   useEffect(() => {
-    if (game.state) saveGame(localStorage, game.state);
-    else clearGame(localStorage);
-  }, [game.state]);
+    if (!game.state || !slot) return;
+    saveGame(localStorage, slot, game.state, slotName(game.state, set.ancientOnes.find((a) => a.id === game.state!.ancientOne)?.name ?? game.state.ancientOne));
+    setSlots(loadSlots(localStorage));
+  }, [game.state, slot, set]);
+  /** Opens a game in a fresh slot (a start or a loaded file). */
+  const openNew = (state: GameState) => {
+    setSlot(newSlotId());
+    setGame({ state });
+    setHistory([]);
+    setRoute(undefined);
+  };
+  /** Puts the game in progress aside and shows the form; its slot stays saved. */
+  const leave = () => {
+    setSlot(undefined);
+    setGame({});
+    setHistory([]);
+    setRoute(undefined);
+  };
   /** Travel route being picked on the table; undefined outside route mode (design D3). */
   const [route, setRoute] = useState<string[]>();
   const reducedMotion = usePrefersReducedMotion();
@@ -65,8 +84,7 @@ export function App() {
   const message = (e: unknown) => (e instanceof Error ? e.message : String(e));
   const start = (options: SetupOptions) => {
     try {
-      setGame({ state: setupGame({ board, set }, options) });
-      setHistory([]);
+      openNew(setupGame({ board, set }, options));
     } catch (e) {
       setGame({ error: message(e) });
     }
@@ -108,8 +126,23 @@ export function App() {
           error={game.state ? undefined : game.error}
           onStart={start}
           onAbandon={() => {
-            setGame({});
+            if (slot) setSlots(removeGame(localStorage, slot));
+            leave();
+          }}
+          onNew={leave}
+          slots={slots.slots}
+          current={slot}
+          onSwitch={(id) => {
+            const { state, note } = loadGame(localStorage, id);
+            if (!state) return setGame({ ...game, error: note });
+            setSlot(id);
+            setGame({ state });
             setHistory([]);
+            setRoute(undefined);
+          }}
+          onRemove={(id) => {
+            setSlots(removeGame(localStorage, id));
+            if (id === slot) leave();
           }}
           onSave={() => {
             const url = URL.createObjectURL(new Blob([JSON.stringify(game.state)], { type: "application/json" }));
@@ -119,11 +152,8 @@ export function App() {
           }}
           onLoad={(text) => {
             const { state, note } = parseGame(text);
-            if (state) {
-              setGame({ state });
-              setHistory([]);
-              setRoute(undefined);
-            } else setGame({ ...game, error: note });
+            if (state) openNew(state);
+            else setGame({ ...game, error: note });
           }}
           canUndo={history.length > 0}
           onUndo={() => {

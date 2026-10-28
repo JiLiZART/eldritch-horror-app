@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { GameSet } from "../content/types";
 import type { Difficulty, SetupOptions } from "../engine/types";
 import { useT } from "./lang";
+import type { SlotInfo } from "./saved";
 
 interface NewGameProps {
   set: GameSet;
@@ -13,14 +14,21 @@ interface NewGameProps {
   onUndo: () => void;
   /** Downloads the game in progress as a file (design D2). */
   onSave: () => void;
-  /** Loads a saved game's text, replacing the game in progress (design D3). */
+  /** Loads a saved game's text into a new slot (design D3). */
   onLoad: (text: string) => void;
+  /** Puts the game in progress aside, its slot kept, and offers the form. */
+  onNew: () => void;
+  /** Every saved slot and the one in play (save-slots D3). */
+  slots: SlotInfo[];
+  current: string | undefined;
+  onSwitch: (id: string) => void;
+  onRemove: (id: string) => void;
 }
 
 const DIFFICULTIES: Difficulty[] = ["normal", "easy", "hard"];
 
 /** Setup choices; checkbox check order is seat order. Inputs outlive a running game so abandoning offers them again. */
-export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUndo, onSave, onLoad }: NewGameProps) {
+export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUndo, onSave, onLoad, onNew, slots, current, onSwitch, onRemove }: NewGameProps) {
   const [ancientOne, setAncientOne] = useState(set.ancientOnes[0]?.id ?? "");
   const [seats, setSeats] = useState<string[]>([]);
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
@@ -44,7 +52,10 @@ export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUn
           </button>{" "}
           <label>
             {t("game.load")} <input type="file" accept=".json,application/json" onChange={(e) => void e.target.files?.[0]?.text().then(onLoad)} />
-          </label>
+          </label>{" "}
+          <button type="button" onClick={onNew}>
+            {t("game.new")}
+          </button>
         </p>
       ) : (
         <form
@@ -93,6 +104,24 @@ export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUn
             {error}
           </p>
         </form>
+      )}
+      {slots.length > 0 && (
+        <section>
+          <h3>{t("game.games")}</h3>
+          <ul>
+            {slots.map((s) => (
+              <li key={s.id}>
+                {s.name} {s.id === current && t("game.current")}{" "}
+                <button type="button" disabled={s.id === current} onClick={() => onSwitch(s.id)}>
+                  {t("game.switch")}
+                </button>{" "}
+                <button type="button" onClick={() => onRemove(s.id)}>
+                  {t("game.remove")}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
     </section>
   );
