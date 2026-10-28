@@ -246,7 +246,7 @@ export function App() {
           }}
           onSave={() => {
             const url = URL.createObjectURL(new Blob([JSON.stringify(game.state)], { type: "application/json" }));
-            const a = Object.assign(document.createElement("a"), { href: url, download: fileName(game.state!) });
+            const a = Object.assign(document.createElement("a"), { href: url, download: fileName(game.state!, slots.slots.find((s) => s.id === slot)?.title) });
             a.click();
             URL.revokeObjectURL(url);
           }}

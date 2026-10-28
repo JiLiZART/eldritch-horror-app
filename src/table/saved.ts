@@ -129,5 +129,12 @@ export function removeGame(storage: Slot, id: string): SlotIndex {
   return next;
 }
 
-/** The download name: the seed and the round, so files sort and tell apart. */
-export const fileName = (state: GameState) => `eldritch-horror-${state.seed}-round-${state.round}.json`;
+/** The download name: the slot's own name when the players gave one, with characters a file system refuses turned to dashes; else the seed and the round, so files sort and tell apart (file-name-title D1). */
+export function fileName(state: GameState, title?: string): string {
+  const safe = title
+    ?.replace(/[^\p{L}\p{N} .-]+/gu, "-")
+    .replace(/\s+/g, " ")
+    .replace(/^[\s.-]+|[\s.-]+$/g, "")
+    .trim();
+  return safe ? `${safe}.json` : `eldritch-horror-${state.seed}-round-${state.round}.json`;
+}

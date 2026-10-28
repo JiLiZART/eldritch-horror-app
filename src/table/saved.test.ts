@@ -100,6 +100,9 @@ describe("the game is saved to and loaded from a file", () => {
   it("parses a saved state and names the file after the seed and round", () => {
     expect(parseGame(JSON.stringify(game()))).toEqual({ state: game() });
     expect(fileName({ ...game(), round: 3 })).toBe("eldritch-horror-3-round-3.json");
+    expect(fileName({ ...game(), round: 3 }, "Tuesday group")).toBe("Tuesday group.json");
+    expect(fileName(game(), " Azathoth / round 4: final? ")).toBe("Azathoth - round 4- final.json");
+    expect(fileName(game(), "   ")).toBe("eldritch-horror-3-round-1.json");
   });
   it("refuses garbage, an older shape and nothing", () => {
     expect(parseGame("{not json")).toEqual({ note: "the saved game could not be read" });
