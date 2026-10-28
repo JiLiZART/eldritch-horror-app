@@ -289,5 +289,7 @@
   "kind.sea": "море",
   "region.america": "Америка",
   "region.europe": "Европа",
-  "region.asia": "Азия"
+  "region.asia": "Азия",
+  "panel.filterGlossary": "Поиск по глоссарию",
+  "glossary.unofficial": "(неофициально)"
 }

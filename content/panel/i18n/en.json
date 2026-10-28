@@ -289,5 +289,7 @@
   "kind.sea": "sea",
   "region.america": "America",
   "region.europe": "Europe",
-  "region.asia": "Asia"
+  "region.asia": "Asia",
+  "panel.filterGlossary": "Filter the glossary",
+  "glossary.unofficial": "(unofficial)"
 }

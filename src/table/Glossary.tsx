@@ -15,9 +15,7 @@ export function Glossary() {
   return (
     <details className="glossary">
       <summary>{t("panel.glossary")}</summary>
-      <label>
-        Filter <input type="search" value={filter} onChange={(e) => setFilter(e.target.value)} />
-      </label>
+      <input type="search" aria-label={t("panel.filterGlossary")} placeholder={t("panel.filterGlossary")} value={filter} onChange={(e) => setFilter(e.target.value)} />
       {sections.map((s) => (
         <section key={s.section}>
           <h3>{s.section}</h3>
@@ -26,7 +24,7 @@ export function Glossary() {
               <div key={e.en}>
                 <dt>
                   {e.en} / {e.ru}
-                  {e.unofficial && " (unofficial)"}
+                  {e.unofficial && ` ${t("glossary.unofficial")}`}
                 </dt>
                 <dd>
                   {e.text} <small>{e.source}</small>
