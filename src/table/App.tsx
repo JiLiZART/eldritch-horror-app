@@ -91,6 +91,8 @@ export function App() {
   const [game, setGame] = useState<{ state?: GameState; error?: string }>({ state: resumed.state, error: resumed.note });
   /** States before each accepted step, newest last, saved with the slot (undo-across-reload D2). */
   const [history, setHistory] = useState<GameState[]>(resumed.history ?? []);
+  /** States undone this session, newest last; any accepted step drops them (redo D1). */
+  const [redo, setRedo] = useState<GameState[]>([]);
   /** Set when the state came from another window's save, so this window does not save it back (window-sync D1). */
   const followed = useRef(false);
   useEffect(() => {
@@ -118,6 +120,7 @@ export function App() {
       followed.current = true;
       setGame({ state });
       setHistory(history ?? []);
+      setRedo([]);
     };
     window.addEventListener("storage", follow);
     return () => window.removeEventListener("storage", follow);
@@ -129,6 +132,7 @@ export function App() {
     setSlot(id);
     setGame({ state });
     setHistory(history ?? []);
+    setRedo([]);
     setRoute(undefined);
   };
   /** Opens a game in a fresh slot (a start or a loaded file). */
@@ -136,6 +140,7 @@ export function App() {
     setSlot(newSlotId());
     setGame({ state });
     setHistory([]);
+    setRedo([]);
     setRoute(undefined);
   };
   /** Puts the game in progress aside and shows the form; its slot stays saved. */
@@ -143,6 +148,7 @@ export function App() {
     setSlot(undefined);
     setGame({});
     setHistory([]);
+    setRedo([]);
     setRoute(undefined);
   };
   /** Travel route being picked on the table; undefined outside route mode (design D3). */
@@ -272,6 +278,7 @@ export function App() {
       const before = game.state!;
       setGame({ state: fn(before) });
       setHistory((prev) => [...prev, before]);
+      setRedo([]);
       setRoute(undefined);
     } catch (e) {
       setGame({ state: game.state, error: message(e) });
@@ -336,8 +343,18 @@ export function App() {
           onFit={fitTable}
           canUndo={history.length > 0}
           onUndo={() => {
+            const current = game.state!;
+            setRedo((prev) => [...prev, current]);
             setGame({ state: history.at(-1) });
             setHistory((prev) => prev.slice(0, -1));
+            setRoute(undefined);
+          }}
+          canRedo={redo.length > 0}
+          onRedo={() => {
+            const next = redo.at(-1)!;
+            setHistory((prev) => [...prev, game.state!]);
+            setRedo((prev) => prev.slice(0, -1));
+            setGame({ state: next });
             setRoute(undefined);
           }}
         />

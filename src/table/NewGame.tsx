@@ -12,6 +12,9 @@ interface NewGameProps {
   onAbandon: () => void;
   canUndo: boolean;
   onUndo: () => void;
+  /** Reapplies the last undone step (redo D1). */
+  canRedo: boolean;
+  onRedo: () => void;
   /** Glides the view back to the whole table (fit-view D2). */
   onFit: () => void;
   /** Downloads the game in progress as a file (design D2). */
@@ -34,7 +37,7 @@ interface NewGameProps {
 const DIFFICULTIES: Difficulty[] = ["normal", "easy", "hard"];
 
 /** Setup choices; checkbox check order is seat order. Inputs outlive a running game so abandoning offers them again. */
-export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUndo, onFit, onSave, onLoad, onNew, slots, current, onSwitch, onRemove, onRename, onDuplicate }: NewGameProps) {
+export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUndo, canRedo, onRedo, onFit, onSave, onLoad, onNew, slots, current, onSwitch, onRemove, onRename, onDuplicate }: NewGameProps) {
   const [ancientOne, setAncientOne] = useState(set.ancientOnes[0]?.id ?? "");
   /** A removal or abandonment waiting for its second click (remove-confirm D1). */
   const [pending, setPending] = useState<{ kind: "abandon" } | { kind: "remove"; id: string }>();
@@ -78,6 +81,9 @@ export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUn
           {guarded(t("game.abandon"), { kind: "abandon" }, onAbandon)}{" "}
           <button type="button" disabled={!canUndo} onClick={onUndo}>
             {t("game.undo")}
+          </button>{" "}
+          <button type="button" disabled={!canRedo} onClick={onRedo}>
+            {t("game.redo")}
           </button>{" "}
           <button type="button" onClick={onFit}>
             {t("game.fitTable")}
