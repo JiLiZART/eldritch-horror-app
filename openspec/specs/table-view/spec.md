@@ -90,7 +90,7 @@ Clicking a marker SHALL select that space and show its id, English and Russian n
 - **THEN** the route is cancelled and the selection returns to the active investigator's space
 
 ### Requirement: Pieces stand where the game state puts them
-The table SHALL show the pieces of the game in progress at their spaces: each chosen investigator's pawn with its pawn image, lying on its side while the investigator is delayed or defeated and upright otherwise, a devoured or removed investigator's pawn gone, each open gate with its city's gate token, each facedown clue token, each monster with its token image and, once it has lost health, a numbered health token on it showing the health lost, the active expedition token, each rumor and eldritch token with the set's token image, and the lead investigator token beside the lead's pawn. Several pieces on one space SHALL remain distinguishable, and pointing at a piece SHALL show its label beside it until the pointer leaves; a monster's label SHALL carry its Will test modifier and horror, its Strength test modifier and damage, and its toughness as printed on the token, the cultist's from the Ancient One sheet, in the panel's language; a gate's label SHALL name its omen colour and say when it matches the current omen. Before a game starts, and after one is abandoned, no piece SHALL stand on the board.
+The table SHALL show the pieces of the game in progress at their spaces: each chosen investigator's pawn with its pawn image, lying on its side while the investigator is delayed or defeated and upright otherwise, a devoured or removed investigator's pawn gone, each open gate with its city's gate token, each facedown clue token, each monster with its token image and, once it has lost health, a numbered health token on it showing the health lost, the active expedition token, each rumor and eldritch token with the set's token image, and the lead investigator token beside the lead's pawn. Several pieces on one space SHALL remain distinguishable, and pointing at a piece SHALL show its label beside it until the pointer leaves; a monster's label SHALL carry its Will test modifier and horror, its Strength test modifier and damage, and its toughness as printed on the token, the cultist's from the Ancient One sheet, in the panel's language; a gate's label SHALL name its omen colour and say when it matches the current omen; a pawn's label SHALL carry the investigator's health, sanity and clues. Before a game starts, and after one is abandoned, no piece SHALL stand on the board.
 
 #### Scenario: Pawn placement
 - **WHEN** a game starts with Charlie Kane and Akachi Onyele
@@ -135,6 +135,10 @@ The table SHALL show the pieces of the game in progress at their spaces: each ch
 #### Scenario: Hover names the gate's colour
 - **WHEN** the omen is on green and the pointer rests on the gate on London, whose colour is blue
 - **THEN** the label says the gate is blue and does not say it matches; when the omen moves to blue, it says the gate matches the omen
+
+#### Scenario: Hover shows the investigator's condition
+- **WHEN** the pointer rests on Lily Chen's pawn while she has 4 health, 6 sanity and 1 clue
+- **THEN** the label shows her name with 4 health, 6 sanity and 1 clue beneath it
 
 ### Requirement: Reduced motion is honoured
 When the browser asks for reduced motion, camera moves triggered by the app SHALL be instant rather than animated.
