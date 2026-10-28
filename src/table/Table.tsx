@@ -146,6 +146,7 @@ function CameraRig({ board, withTableau, sheets, heldRows, target, reducedMotion
       enableRotate={false}
       enableDamping={!reducedMotion}
       screenSpacePanning
+      zoomToCursor
       minZoom={minZoom}
       maxZoom={minZoom * 10}
       minPolarAngle={0}
