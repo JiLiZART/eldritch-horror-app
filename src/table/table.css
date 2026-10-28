@@ -35,6 +35,13 @@ body {
 .panel label {
   display: block;
 }
+.effects summary {
+  font-weight: bold;
+  cursor: pointer;
+}
+.effects details {
+  margin: 0.25rem 0;
+}
 .swatch {
   display: inline-block;
   margin-right: 0.75rem;
