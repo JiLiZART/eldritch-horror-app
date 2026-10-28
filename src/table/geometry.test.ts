@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Board } from "../content/types";
-import { BOARD_WIDTH, TABLEAU_ROWS, boardSize, boardToWorld, doomPosition, omenPosition, reservePosition, spreadOnCircle, tableauPosition } from "./geometry";
+import { BOARD_WIDTH, TABLEAU_ROWS, boardSize, boardToWorld, doomPosition, omenPosition, reservePosition, spreadOnCircle, tableExtent, tableauPosition } from "./geometry";
 
 const board = { source: { file: "x", width: 2000, height: 1000 }, texture: "t", spaces: [], paths: [], tracks: { doom: { from: { x: 0.1, y: 0.1 }, to: { x: 0.9, y: 0.1 }, spaces: 21 }, omen: { center: { x: 0.9, y: 0.3 }, radius: 0.05 }, reserve: { from: { x: 0.1, y: 0.9 }, to: { x: 0.4, y: 0.9 }, slots: 4, width: 0.05 }, }, } as Board;
 
@@ -69,5 +69,15 @@ describe("tableau", () => {
       expect(top).toBeLessThan(above);
       expect(tableauPosition(board, row)[0]).toBe(tableauPosition(board, 0)[0]);
     }
+  });
+});
+
+describe("table extent", () => {
+  it("is the board's rectangle without the tableau", () => {
+    expect(tableExtent(board, false)).toEqual({ minX: -BOARD_WIDTH / 2, maxX: BOARD_WIDTH / 2, minY: -BOARD_WIDTH / 4, maxY: BOARD_WIDTH / 4 });
+  });
+  it("reaches the tableau column's right edge with it", () => {
+    const [x] = tableauPosition(board, 0);
+    expect(tableExtent(board, true)).toEqual({ minX: -BOARD_WIDTH / 2, maxX: x + TABLEAU_ROWS[0]![0] / 2, minY: -BOARD_WIDTH / 4, maxY: BOARD_WIDTH / 4 });
   });
 });

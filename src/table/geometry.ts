@@ -62,3 +62,10 @@ export function tableauPosition(board: Board, row: number): [x: number, y: numbe
   for (let r = 0; r < row; r++) top -= TABLEAU_ROWS[r]![1] + TABLEAU_GAP;
   return [x, top - TABLEAU_ROWS[row]![1] / 2];
 }
+
+/** The table the view stays within: the board's rectangle, reaching the tableau column's far edge during a game (pan-clamp D1). */
+export function tableExtent(board: Board, withTableau: boolean): { minX: number; maxX: number; minY: number; maxY: number } {
+  const [w, h] = boardSize(board);
+  const maxX = withTableau ? tableauPosition(board, 0)[0] + TABLEAU_ROWS[0]![0] / 2 : w / 2;
+  return { minX: -w / 2, maxX, minY: -h / 2, maxY: h / 2 };
+}

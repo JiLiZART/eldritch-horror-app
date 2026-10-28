@@ -5,7 +5,7 @@ import { SRGBColorSpace, type Texture, Vector3 } from "three";
 import { activeGraph } from "../content/board";
 import type { Board, BoardLabels, Space } from "../content/types";
 import { BoardText } from "./BoardText";
-import { BOARD_WIDTH, TABLEAU_ROWS, boardSize, boardToWorld, doomPosition, omenPosition, reservePosition, spreadOnCircle, tableauPosition } from "./geometry";
+import { BOARD_WIDTH, TABLEAU_ROWS, boardSize, boardToWorld, doomPosition, omenPosition, reservePosition, spreadOnCircle, tableExtent, tableauPosition } from "./geometry";
 import type { Piece, PieceKind } from "./pieces";
 import { PATH_COLORS } from "./sets";
 
@@ -52,7 +52,7 @@ function Scene({ board, labels, strings, pieces, tracks, tableau, enabled, selec
   const active = useMemo(() => new Set(graph.spaces.map((s) => s.id)), [graph]);
   return (
     <>
-      <CameraRig board={board} target={selected ? at.get(selected) : undefined} reducedMotion={reducedMotion} />
+      <CameraRig board={board} withTableau={tableau !== undefined} target={selected ? at.get(selected) : undefined} reducedMotion={reducedMotion} />
       <BoardPlane board={board} />
       <BoardText labels={labels} strings={strings} active={active} selected={selected} onSelect={onSelect} reducedMotion={reducedMotion} />
       {graph.paths.map((p) => (
@@ -69,12 +69,24 @@ function Scene({ board, labels, strings, pieces, tracks, tableau, enabled, selec
   );
 }
 
-/** Top-down orthographic view: zoom bounded so the whole board fits, pan only, no rotation. */
-function CameraRig({ board, target, reducedMotion }: { board: Board; target: [number, number] | undefined; reducedMotion: boolean }) {
+/** Top-down orthographic view: zoom bounded so the whole table fits, pan kept within it, no rotation (pan-clamp D2). */
+function CameraRig({ board, withTableau, target, reducedMotion }: { board: Board; withTableau: boolean; target: [number, number] | undefined; reducedMotion: boolean }) {
   const { size, camera } = useThree();
   const controls = useRef<ComponentRef<typeof MapControls>>(null);
-  const [w, h] = boardSize(board);
-  const minZoom = Math.min(size.width / w, size.height / h) * 0.95;
+  const extent = useMemo(() => tableExtent(board, withTableau), [board, withTableau]);
+  const minZoom = Math.min(size.width / (extent.maxX - extent.minX), size.height / (extent.maxY - extent.minY)) * 0.95;
+  /** Keeps the view inside the table: the half view stays within the extent, or sits at its centre when wider. */
+  const clamp = () => {
+    const c = controls.current;
+    if (!c) return;
+    const halfW = size.width / (2 * camera.zoom);
+    const halfH = size.height / (2 * camera.zoom);
+    const within = (v: number, lo: number, hi: number) => (lo > hi ? (lo + hi) / 2 : Math.min(Math.max(v, lo), hi));
+    const delta = new Vector3(within(c.target.x, extent.minX + halfW, extent.maxX - halfW) - c.target.x, within(c.target.y, extent.minY + halfH, extent.maxY - halfH) - c.target.y, 0);
+    if (delta.lengthSq() === 0) return;
+    c.target.add(delta);
+    c.object.position.add(delta);
+  };
   // Start fully zoomed out; MapControls keeps user zoom within [minZoom, maxZoom] from then on.
   useEffect(() => {
     camera.zoom = minZoom;
@@ -97,6 +109,7 @@ function CameraRig({ board, target, reducedMotion }: { board: Board; target: [nu
     const delta = goal.clone().sub(c.target).multiplyScalar(step);
     c.target.add(delta);
     c.object.position.add(delta);
+    clamp();
     c.update();
   });
   return (
@@ -106,6 +119,7 @@ function CameraRig({ board, target, reducedMotion }: { board: Board; target: [nu
       onStart={() => {
         gliding.current = false;
       }}
+      onChange={clamp}
       enableRotate={false}
       enableDamping={!reducedMotion}
       screenSpacePanning
