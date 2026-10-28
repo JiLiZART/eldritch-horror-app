@@ -271,5 +271,8 @@
   "table.roll": "{name} rolls {dice}",
   "game.duplicate": "Duplicate",
   "status.discards": "Discards",
-  "game.redo": "Redo"
+  "game.redo": "Redo",
+  "game.backup": "Save backup",
+  "game.restore": "Load backup",
+  "game.restored": "{added} saved games added, {skipped} set aside"
 }

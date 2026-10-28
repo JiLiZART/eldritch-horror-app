@@ -21,6 +21,9 @@ interface NewGameProps {
   onSave: () => void;
   /** Loads a saved game's text into a new slot (design D3). */
   onLoad: (text: string) => void;
+  /** Downloads every slot as one backup, and adds a backup's slots (backup-all D2). */
+  onBackup: () => void;
+  onRestore: (text: string) => void;
   /** Puts the game in progress aside, its slot kept, and offers the form. */
   onNew: () => void;
   /** Every saved slot and the one in play (save-slots D3). */
@@ -37,7 +40,7 @@ interface NewGameProps {
 const DIFFICULTIES: Difficulty[] = ["normal", "easy", "hard"];
 
 /** Setup choices; checkbox check order is seat order. Inputs outlive a running game so abandoning offers them again. */
-export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUndo, canRedo, onRedo, onFit, onSave, onLoad, onNew, slots, current, onSwitch, onRemove, onRename, onDuplicate }: NewGameProps) {
+export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUndo, canRedo, onRedo, onFit, onSave, onLoad, onBackup, onRestore, onNew, slots, current, onSwitch, onRemove, onRename, onDuplicate }: NewGameProps) {
   const [ancientOne, setAncientOne] = useState(set.ancientOnes[0]?.id ?? "");
   /** A removal or abandonment waiting for its second click (remove-confirm D1). */
   const [pending, setPending] = useState<{ kind: "abandon" } | { kind: "remove"; id: string }>();
@@ -94,6 +97,12 @@ export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUn
           <label>
             {t("game.load")} <input type="file" accept=".json,application/json" onChange={(e) => void e.target.files?.[0]?.text().then(onLoad)} />
           </label>{" "}
+          <button type="button" onClick={onBackup}>
+            {t("game.backup")}
+          </button>{" "}
+          <label>
+            {t("game.restore")} <input type="file" accept=".json,application/json" onChange={(e) => void e.target.files?.[0]?.text().then(onRestore)} />
+          </label>{" "}
           <button type="button" onClick={onNew}>
             {t("game.new")}
           </button>
@@ -138,6 +147,12 @@ export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUn
           <p>
             <label>
               {t("game.load")} <input type="file" accept=".json,application/json" onChange={(e) => void e.target.files?.[0]?.text().then(onLoad)} />
+          </label>{" "}
+          <button type="button" onClick={onBackup}>
+            {t("game.backup")}
+          </button>{" "}
+          <label>
+            {t("game.restore")} <input type="file" accept=".json,application/json" onChange={(e) => void e.target.files?.[0]?.text().then(onRestore)} />
             </label>
             <button type="submit">{t("game.start")}</button>
           </p>

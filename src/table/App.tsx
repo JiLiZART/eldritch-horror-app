@@ -13,7 +13,7 @@ import { NewGame } from "./NewGame";
 import { type FocusCard, journalLine, Panel } from "./Panel";
 import { LangProvider, translate, useT } from "./lang";
 import { piecesOnSpace } from "./pieces";
-import { duplicateGame, fileName, gameKey, INDEX_KEY, loadGame, loadSlots, newSlotId, parseGame, removeGame, renameGame, saveGame, slotName } from "./saved";
+import { duplicateGame, exportAll, fileName, gameKey, importAll, INDEX_KEY, loadGame, loadSlots, newSlotId, parseGame, removeGame, renameGame, saveGame, slotName } from "./saved";
 import { type CardFace, Table, type TableProps } from "./Table";
 import { type Act, Turn } from "./Turn";
 import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
@@ -364,6 +364,21 @@ export function App() {
             const { state, note } = parseGame(text);
             if (state) openNew(state);
             else setGame({ ...game, error: note });
+          }}
+          onBackup={() => {
+            const url = URL.createObjectURL(new Blob([exportAll(localStorage)], { type: "application/json" }));
+            const a = Object.assign(document.createElement("a"), { href: url, download: "eldritch-horror-backup.json" });
+            a.click();
+            URL.revokeObjectURL(url);
+          }}
+          onRestore={(text) => {
+            try {
+              const { added, skipped } = importAll(localStorage, text);
+              setSlots(loadSlots(localStorage));
+              setGame({ ...game, error: t("game.restored", { added, skipped }) });
+            } catch (e) {
+              setGame({ ...game, error: message(e) });
+            }
           }}
           onFit={fitTable}
           canUndo={history.length > 0}

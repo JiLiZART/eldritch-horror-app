@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { setupGame } from "../engine/setup";
-import { duplicateGame, fileName, loadGame, loadSlots, parseGame, removeGame, renameGame, saveGame, type Slot } from "./saved";
+import { duplicateGame, exportAll, fileName, importAll, loadGame, loadSlots, parseGame, removeGame, renameGame, saveGame, type Slot } from "./saved";
 
 const root = join(import.meta.dirname, "../..");
 const board: Board = JSON.parse(readFileSync(join(root, "content/board/board.json"), "utf8"));
@@ -55,6 +55,30 @@ describe("the game in progress survives a reload", () => {
     storage.setItem("eldritch-horror.game.x", JSON.stringify({ ...game(), version: 1 }));
     expect(loadGame(storage, "x")).toEqual({ note: "the saved game was written by an older version and was set aside" });
     expect(loadGame(storage, "nope")).toEqual({});
+  });
+});
+
+describe("every slot can be backed up and restored", () => {
+  it("round-trips two slots with their names, histories and times, adding beside what is there", () => {
+    const storage = fake();
+    saveGame(storage, "a", game(), "A", [{ ...game(), round: 0 }]);
+    renameGame(storage, "a", "Tuesday group");
+    saveGame(storage, "b", { ...game(), seed: 4 }, "B");
+    const text = exportAll(storage);
+    removeGame(storage, "a");
+    const result = importAll(storage, text);
+    expect(result).toEqual({ added: 2, skipped: 0 });
+    const index = loadSlots(storage);
+    expect(index.slots).toHaveLength(3);
+    const restored = index.slots.find((s) => s.title === "Tuesday group")!;
+    expect(restored.id).not.toBe("a");
+    expect(loadGame(storage, restored.id)).toEqual({ state: game(), history: [{ ...game(), round: 0 }] });
+  });
+  it("refuses a file that is not a backup and skips a state of an older shape", () => {
+    const storage = fake();
+    expect(() => importAll(storage, "{\"nope\":1}")).toThrow(/not a backup/);
+    const text = JSON.stringify({ backup: 1, slots: [{ name: "old", savedAt: 1, state: { ...game(), version: 1 }, history: [] }] });
+    expect(importAll(storage, text)).toEqual({ added: 0, skipped: 1 });
   });
 });
 

@@ -271,5 +271,8 @@
   "table.roll": "{name} бросает {dice}",
   "game.duplicate": "Дублировать",
   "status.discards": "Сбросы",
-  "game.redo": "Вернуть"
+  "game.redo": "Вернуть",
+  "game.backup": "Сохранить резервную копию",
+  "game.restore": "Загрузить резервную копию",
+  "game.restored": "Добавлено игр: {added}, отложено: {skipped}"
 }

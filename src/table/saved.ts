@@ -131,6 +131,45 @@ export function duplicateGame(storage: Slot, id: string): string {
   return copy;
 }
 
+/** Every slot with its name, history and time as one JSON document, for a backup (backup-all D1). */
+export function exportAll(storage: Slot): string {
+  const slots = loadSlots(storage).slots.flatMap((info) => {
+    const { state, history } = loadGame(storage, info.id);
+    return state ? [{ name: info.name, ...(info.title ? { title: info.title } : {}), savedAt: info.savedAt, state, history: history ?? [] }] : [];
+  });
+  return JSON.stringify({ backup: 1, slots });
+}
+
+/** Adds a backup's slots beside the ones present under fresh ids; a state of another shape is skipped; a file that is not a backup is refused. */
+export function importAll(storage: Slot, text: string): { added: number; skipped: number } {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    throw new Error("the file is not a backup");
+  }
+  const backup = parsed as { backup?: number; slots?: unknown[] };
+  if (!backup || backup.backup !== 1 || !Array.isArray(backup.slots)) throw new Error("the file is not a backup");
+  let added = 0;
+  let skipped = 0;
+  for (const entry of backup.slots as { name?: string; title?: string; savedAt?: number; state?: unknown; history?: unknown }[]) {
+    const { state } = parseGame(JSON.stringify(entry.state ?? null));
+    if (!state) {
+      skipped++;
+      continue;
+    }
+    const id = newSlotId();
+    saveGame(storage, id, state, entry.name ?? "", Array.isArray(entry.history) ? (entry.history as GameState[]) : []);
+    if (entry.title) renameGame(storage, id, entry.title);
+    if (typeof entry.savedAt === "number") {
+      const index = loadSlots(storage);
+      write(storage, INDEX, JSON.stringify({ ...index, slots: index.slots.map((s) => (s.id === id ? { ...s, savedAt: entry.savedAt as number } : s)) }));
+    }
+    added++;
+  }
+  return { added, skipped };
+}
+
 /** Removes a slot; a removed current slot leaves none current. */
 export function removeGame(storage: Slot, id: string): SlotIndex {
   remove(storage, key(id));
