@@ -1,4 +1,5 @@
 import { use, useEffect, useMemo, useRef, useState } from "react";
+import type React from "react";
 import { activeGraph } from "../content/board";
 import { content } from "../content/client";
 import { travel } from "../engine/actions";
@@ -20,6 +21,9 @@ import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
 const LANG_KEY = "eh.board-lang";
 /** Remembers that the panel is hidden for a table-only screen (panel-toggle D1). */
 const PANEL_KEY = "eh.panel-hidden";
+/** Remembers the panel's width in pixels (panel-width D1). */
+const WIDTH_KEY = "eh.panel-width";
+const clampWidth = (w: number) => Math.min(Math.max(w, 256), window.innerWidth / 2);
 
 /** Remembered board language; otherwise Russian for a Russian-preferring browser. */
 function initialLang(): Lang {
@@ -51,6 +55,31 @@ export function App() {
     try {
       localStorage.setItem(PANEL_KEY, shown ? "0" : "1");
     } catch {}
+  };
+  const [panelWidth, setPanelWidth] = useState<number | undefined>(() => {
+    try {
+      const saved = Number(localStorage.getItem(WIDTH_KEY));
+      return saved > 0 ? clampWidth(saved) : undefined;
+    } catch {
+      return undefined;
+    }
+  });
+  /** Dragging the panel's edge sets its width (panel-width D2). */
+  const dragPanel = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.currentTarget.setPointerCapture(e.pointerId);
+    const move = (ev: PointerEvent) => setPanelWidth(clampWidth(window.innerWidth - ev.clientX));
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      setPanelWidth((w) => {
+        try {
+          if (w) localStorage.setItem(WIDTH_KEY, String(Math.round(w)));
+        } catch {}
+        return w;
+      });
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
   };
   const [enabled, setEnabled] = useState(() => new Set(["eh01"]));
   const [selected, setSelected] = useState<string>();
@@ -210,7 +239,7 @@ export function App() {
   };
   return (
     <LangProvider lang={lang} strings={panel}>
-    <div className={panelHidden ? "layout panel-hidden" : "layout"}>
+    <div className={panelHidden ? "layout panel-hidden" : "layout"} style={panelWidth ? ({ "--panel-width": `${panelWidth}px` } as React.CSSProperties) : undefined}>
       {panelHidden && (
         <button type="button" className="show-panel" onClick={() => showPanel(true)}>
           <Text k="game.showPanel" />
@@ -219,6 +248,7 @@ export function App() {
       <main className="table">
         <Table board={board} labels={labels} strings={strings[lang]} pieces={pieces} tracks={game.state && { doom: game.state.doom, omen: game.state.omen, eldritch: [...game.state.eldritchOnOmen], reserve: game.state.reserve.map((id) => face(id, true)).filter(known), labels: { doom: t("track.doom", { doom: game.state.doom }), omen: t("track.omen", { omen: t(`omen.${OMEN_TRACK[game.state.omen]}`), count: game.state.eldritchOnOmen[game.state.omen] ?? 0 }), eldritch: OMEN_TRACK.map((c) => t("track.eldritch", { omen: t(`omen.${c}`) })) } }} tableau={tableau} sheets={sheets} fit={fit} focus={cardFocus} enabled={enabled} selected={selectedSpace?.id} route={route} onSelect={select} reducedMotion={reducedMotion} />
       </main>
+      {!panelHidden && <div className="panel-handle" role="separator" aria-orientation="vertical" aria-label={translate(panel[lang], "panel.resize")} onPointerDown={dragPanel} />}
       {!panelHidden && <Panel board={board} set={set} lang={lang} onLang={chooseLang} state={game.state} pieces={pieces} spaces={spaces} enabled={enabled} onToggle={toggle} selected={selectedSpace} onSelect={select} onHidePanel={() => showPanel(false)} onFocusCard={focusCard}>
         <NewGame
           set={set}

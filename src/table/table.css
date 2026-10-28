@@ -9,8 +9,16 @@ body {
 }
 .layout {
   display: grid;
-  grid-template-columns: 1fr 24rem;
+  grid-template-columns: 1fr 6px var(--panel-width, 24rem);
   height: 100vh;
+}
+/* The drag handle on the panel's edge (panel-width D2). */
+.panel-handle {
+  cursor: col-resize;
+  background: #3a3027;
+}
+.panel-handle:hover {
+  background: #6b5a47;
 }
 /* The table alone, for a shared screen (panel-toggle D1). */
 .layout.panel-hidden {

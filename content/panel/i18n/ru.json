@@ -260,5 +260,6 @@
   "game.showPanel": "Показать панель",
   "track.doom": "Рок {doom}",
   "track.omen": "Знамение: {omen}, Древних: {count}",
-  "track.eldritch": "Жетон Древних на {omen} знамении"
+  "track.eldritch": "Жетон Древних на {omen} знамении",
+  "panel.resize": "Ширина панели"
 }

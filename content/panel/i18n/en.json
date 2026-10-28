@@ -260,5 +260,6 @@
   "game.showPanel": "Show panel",
   "track.doom": "Doom {doom}",
   "track.omen": "Omen: {omen}, {count} eldritch",
-  "track.eldritch": "Eldritch token on the {omen} omen space"
+  "track.eldritch": "Eldritch token on the {omen} omen space",
+  "panel.resize": "Resize panel"
 }
