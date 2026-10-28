@@ -17,7 +17,7 @@ When the last seat ends its Action turn the Encounter phase SHALL begin with the
 - **THEN** the phase is Mythos with the top mythos card showing
 
 ### Requirement: One encounter of the investigator's choice
-With no monster on the space the investigator SHALL draw exactly one card from a deck the space allows: the location deck of the space's region or the general deck on any space; the research deck when a clue token lies on the space; the other world deck when a gate stands on the space; the expedition deck when the active expedition token lies on the space; the Ancient One's special deck on any space when the Ancient One has one; and, on a space where a defeated investigator's token lies, that investigator's sheet back as the encounter, after which the token and sheet leave the game. A deck that is empty when a draw is due, or that the draw leaves empty, SHALL at once be rebuilt by shuffling its discard; a deck whose discard is empty too SHALL refuse the draw naming the deck. The drawn card SHALL be shown until the player finishes, then discarded to its deck's discard; a finished expedition encounter SHALL move the expedition token to the space named by the new top expedition card. A deck the space does not allow, a second draw, a draw while a monster still stands on the space, or finishing while a monster on the space has not been fought SHALL be refused with the rule named; a survivor already fought ends the encounter without a draw. **Deviation**: the card text is left to the players; when the special deck may be drawn is the players' reading; rumor encounters are not offered.
+With no monster on the space the investigator SHALL draw exactly one card from a deck the space allows: the location deck of the space's region or the general deck on any space; the research deck when a clue token lies on the space; the other world deck when a gate stands on the space; the expedition deck when the active expedition token lies on the space; the Ancient One's special deck on any space when the Ancient One has one; and, on a space where a defeated investigator's token lies, that investigator's sheet back as the encounter, after which the token and sheet leave the game; and, on a space holding a rumor token, the rumor encounter printed on the rumor card in play, which discards nothing when finished. A deck that is empty when a draw is due, or that the draw leaves empty, SHALL at once be rebuilt by shuffling its discard; a deck whose discard is empty too SHALL refuse the draw naming the deck. The drawn card SHALL be shown until the player finishes, then discarded to its deck's discard; a finished expedition encounter SHALL move the expedition token to the space named by the new top expedition card. A deck the space does not allow, a second draw, a draw while a monster still stands on the space, or finishing while a monster on the space has not been fought SHALL be refused with the rule named; a survivor already fought ends the encounter without a draw. **Deviation**: the card text is left to the players; when the special deck may be drawn, and which rumor card a token belongs to, are the players' reading.
 
 #### Scenario: Location encounter
 - **WHEN** Leo Anderson on Buenos Aires, with no monster there, draws from the America deck
@@ -78,6 +78,14 @@ With no monster on the space the investigator SHALL draw exactly one card from a
 #### Scenario: Defeated investigator's encounter
 - **WHEN** Lily Chen on the city where Leo Anderson's defeated token lies resolves his encounter and finishes
 - **THEN** his sheet back was shown and his token and sheet are out of the game
+
+#### Scenario: Rumor encounter
+- **WHEN** Leo Anderson on a space holding a rumor token resolves the rumor encounter and finishes
+- **THEN** the log says the rumor card's text is left to the players and no deck or discard changed
+
+#### Scenario: No rumor token
+- **WHEN** Leo Anderson resolves a rumor encounter on a space without a rumor token
+- **THEN** it is refused because no rumor token lies there
 
 ### Requirement: An investigator at 0 health or sanity is defeated
 When an investigator's health or sanity reaches 0 they SHALL be defeated at once: doom advances by 1, their pawn moves to the nearest city space and lies there, their conditions are shuffled back into the condition deck, their improvement tokens are discarded, their turns are skipped for the rest of the game, and the lead token passes to the next seat when the defeated investigator held it. When every investigator is defeated the game SHALL be lost with the reason shown. The defeated investigator SHALL be shown as such beside the board and on the table. **Deviation**: among several nearest cities the first in board order is taken.

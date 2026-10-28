@@ -52,7 +52,7 @@ Resolving the card SHALL apply its icons left to right: advance omen (move the o
 - **THEN** the log says the rumor token and the card text are left to the players, and the card stays in play
 
 ### Requirement: Cards leave play by trait
-An event card SHALL be discarded after resolving; an ongoing card (rumor cards among them) SHALL stay in play until a game effect discards it. The ongoing cards SHALL be visible beside the board.
+An event card SHALL be discarded after resolving; an ongoing card (rumor cards among them) SHALL stay in play until a game effect discards it; in the Encounter and Mythos phases card text SHALL discard an ongoing card to the mythos discard, naming it, a card not in play being refused. The ongoing cards SHALL be visible beside the board. **Deviation**: the tokens a discarded rumor placed are removed by the players with the token controls.
 
 #### Scenario: Event discarded
 - **WHEN** an event card resolves
@@ -61,6 +61,10 @@ An event card SHALL be discarded after resolving; an ongoing card (rumor cards a
 #### Scenario: Ongoing kept
 - **WHEN** an ongoing card resolves
 - **THEN** it is listed in play and not on the discard
+
+#### Scenario: Ongoing card discarded by text
+- **WHEN** a rumor card in play is discarded by card text
+- **THEN** it is on the mythos discard and no longer listed in play
 
 ### Requirement: The lead may pass the token
 After the card resolves, the lead investigator MAY give the lead token to any other investigator; then the next round begins in the Action phase with the lead active.
