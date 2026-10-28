@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { activeGraph } from "../content/board";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { acquireAssets, componentAction, endTurn, prepareForTravel, rest, takeAssets, takeBankLoan, trade, travel } from "./actions";
@@ -73,6 +74,13 @@ describe("investigators act in seat order", () => {
 
 describe("a Detained investigator cannot move", () => {
   const jailed = () => patch(west(), charlie, { conditions: ["eh01/condition/detained-1"] });
+  it("refuses a route into a set not in play on the core board", () => {
+    const core = { ...board, ...activeGraph(board, new Set(["eh01"])) };
+    const s = setupGame({ board: core, set }, { ancientOne: "eh01/ancient-one/azathoth", investigators: [leo], seed: 3 });
+    const atIstanbul = { ...s, investigators: s.investigators.map((i) => (i.id === leo ? { ...i, space: "istanbul" } : i)) };
+    expect(() => travel(atIstanbul, core, ["eh05-cairo"])).toThrow(/eh05-cairo/);
+    expect(() => travel(atIstanbul, core, ["rome"])).not.toThrow();
+  });
   it("refuses travel", () => {
     expect(() => travel(jailed(), board, ["space-5"])).toThrow(/Detained investigator cannot move/);
   });

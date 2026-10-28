@@ -1,5 +1,5 @@
-import { useState, type ReactNode } from "react";
-import { neighbors } from "../content/board";
+import { useMemo, useState, type ReactNode } from "react";
+import { activeGraph, neighbors } from "../content/board";
 import type { Board, GameSet, Lang, Space } from "../content/types";
 import { OMEN_TRACK } from "../engine/omen";
 import type { GameState, JournalEntry } from "../engine/types";
@@ -36,6 +36,8 @@ const SET_NAMES: Record<string, string> = Object.fromEntries(BOARD_SETS.map((s) 
 export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled, onToggle, selected, onSelect, onHidePanel, onFocusCard, children }: PanelProps) {
   const t = useT();
   const spaceName = useSpaceName();
+  /** Neighbours come from the sets shown, not the whole board (engine-core-board D1). */
+  const shownBoard = useMemo(() => ({ ...board, ...activeGraph(board, enabled) }), [board, enabled]);
   /** Text narrowing the space list by name in the chosen language (space-filter D1). */
   const [filter, setFilter] = useState("");
   const shown = spaces.filter((s) => spaceName(board, s.id).toLocaleLowerCase().includes(filter.toLocaleLowerCase()));
@@ -100,7 +102,7 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
             <dt>{t("space.neighbours")}</dt>
             <dd>
               <ul>
-                {neighbors(board, selected.id).map((n) => (
+                {neighbors(shownBoard, selected.id).map((n) => (
                   <li key={n}>
                     <button type="button" onClick={() => onSelect(n)}>
                       {spaceName(board, n)}

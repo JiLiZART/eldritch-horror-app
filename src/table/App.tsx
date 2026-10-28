@@ -237,7 +237,9 @@ export function App() {
     setCardFocus((prev) => ({ place, index, ...(seat === undefined ? {} : { seat }), key: (prev?.key ?? 0) + 1 }));
   };
   const spaces = useMemo(() => activeGraph(board, enabled).spaces, [board, enabled]);
-  const pieces = useMemo(() => piecesOnSpace(game.state, board, set, t), [game.state, board, set, t]);
+  /** The board the game is played on: the core set's graph until a set's content exists; the toggles only preview the rest (engine-core-board D1). */
+  const playBoard = useMemo(() => ({ ...board, ...activeGraph(board, new Set(["eh01"])) }), [board]);
+  const pieces = useMemo(() => piecesOnSpace(game.state, playBoard, set, t), [game.state, playBoard, set, t]);
   const ancientOne = set.ancientOnes.find((a) => a.id === game.state?.ancientOne);
   /** A card's face for the table, named for its hover badge (card-hover D1); undefined for an unknown id. */
   const face = (id: string, value?: true) => {
@@ -283,7 +285,7 @@ export function App() {
   const message = (e: unknown) => (e instanceof Error ? e.message : String(e));
   const start = (options: SetupOptions) => {
     try {
-      openNew(setupGame({ board, set }, options));
+      openNew(setupGame({ board: playBoard, set }, options));
     } catch (e) {
       setGame({ error: message(e) });
     }
@@ -324,7 +326,7 @@ export function App() {
     if (!id) return;
     const draft = [...route, id];
     try {
-      travel(game.state!, board, draft);
+      travel(game.state!, playBoard, draft);
       setRoute(draft);
       setGame({ state: game.state });
     } catch (e) {
@@ -395,9 +397,9 @@ export function App() {
           canRedo={redo.length > 0}
           onRedo={redoStep}
         />
-        {game.state?.phase.name === "action" && <Turn board={board} set={set} state={game.state} phase={game.state.phase} error={game.error} route={route} onAct={act} onRoute={setRoute} onFocusCard={focusCard} />}
-        {game.state?.phase.name === "encounter" && <Encounter board={board} set={set} state={game.state} phase={game.state.phase} error={game.error} onAct={act} onFocusCard={focusCard} />}
-        {game.state?.phase.name === "mythos" && <Mythos board={board} set={set} state={game.state} phase={game.state.phase} error={game.error} onAct={act} onFocusCard={focusCard} />}
+        {game.state?.phase.name === "action" && <Turn board={playBoard} set={set} state={game.state} phase={game.state.phase} error={game.error} route={route} onAct={act} onRoute={setRoute} onFocusCard={focusCard} />}
+        {game.state?.phase.name === "encounter" && <Encounter board={playBoard} set={set} state={game.state} phase={game.state.phase} error={game.error} onAct={act} onFocusCard={focusCard} />}
+        {game.state?.phase.name === "mythos" && <Mythos board={playBoard} set={set} state={game.state} phase={game.state.phase} error={game.error} onAct={act} onFocusCard={focusCard} />}
         {game.state?.phase.name === "won" && (
           <section className="turn">
             <Heading k="app.win" />

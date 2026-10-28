@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { neighbors } from "../content/board";
+import { activeGraph } from "../content/board";
 import { loadSet } from "../content/load";
 import type { Board, Skill } from "../content/types";
 import { acquireAssets, componentAction, endTurn, prepareForTravel, rest, takeAssets, takeBankLoan, trade, travel } from "./actions";
@@ -17,7 +18,11 @@ import type { GameState } from "./types";
 /** Random play through the public engine (design D1–D4): refusals are expected, anything else is a bug. */
 
 const root = join(import.meta.dirname, "../..");
-const board: Board = JSON.parse(readFileSync(join(root, "content/board/board.json"), "utf8"));
+/** The game plays on the core set's graph until a set's content exists (engine-core-board D2). */
+const board: Board = (() => {
+  const full: Board = JSON.parse(readFileSync(join(root, "content/board/board.json"), "utf8"));
+  return { ...full, ...activeGraph(full, new Set(["eh01"])) };
+})();
 const set = loadSet(join(root, "content/sets/eh01"))!;
 const content = { board, set };
 const SKILLS: Skill[] = ["lore", "influence", "observation", "strength", "will"];
