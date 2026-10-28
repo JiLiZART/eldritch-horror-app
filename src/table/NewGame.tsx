@@ -8,12 +8,14 @@ interface NewGameProps {
   error: string | undefined;
   onStart: (options: SetupOptions) => void;
   onAbandon: () => void;
+  canUndo: boolean;
+  onUndo: () => void;
 }
 
 const DIFFICULTIES: Difficulty[] = ["normal", "easy", "hard"];
 
 /** Setup choices; checkbox check order is seat order. Inputs outlive a running game so abandoning offers them again. */
-export function NewGame({ set, running, error, onStart, onAbandon }: NewGameProps) {
+export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUndo }: NewGameProps) {
   const [ancientOne, setAncientOne] = useState(set.ancientOnes[0]?.id ?? "");
   const [seats, setSeats] = useState<string[]>([]);
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
@@ -24,9 +26,14 @@ export function NewGame({ set, running, error, onStart, onAbandon }: NewGameProp
     <section>
       <h2>Game</h2>
       {running ? (
-        <button type="button" onClick={onAbandon}>
-          Abandon game
-        </button>
+        <p>
+          <button type="button" onClick={onAbandon}>
+            Abandon game
+          </button>{" "}
+          <button type="button" disabled={!canUndo} onClick={onUndo}>
+            Undo
+          </button>
+        </p>
       ) : (
         <form
           onSubmit={(e) => {
