@@ -269,5 +269,6 @@
   "panel.copyJournal": "Скопировать журнал",
   "panel.copied": "Скопировано",
   "table.roll": "{name} бросает {dice}",
-  "game.duplicate": "Дублировать"
+  "game.duplicate": "Дублировать",
+  "status.discards": "Сбросы"
 }

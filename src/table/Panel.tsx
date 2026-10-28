@@ -194,6 +194,14 @@ function Status({ board, set, state, onSelect, onFocusCard }: { board: Board; se
   const { encounters, ...decks } = state.decks;
   const sizes = Object.entries({ ...decks, ...encounters, monsterCup: state.monsterCup, setAside: state.setAsideMonsters, gateStack: state.gateStack, cluePool: state.cluePool });
   const ongoing = state.ongoingMythos.map((id) => set.mythos.find((m) => m.id === id)).filter((m) => m !== undefined);
+  /** The card discards with their names, for abilities that search a discard (discard-piles D1). */
+  const discards: [string, string[]][] = (
+    [
+      ["asset", state.assetDiscard.map(cardName)],
+      ["artifact", state.artifactDiscard.map(cardName)],
+      ["mythos", state.mythosDiscard.map((id) => set.mythos.find((m) => m.id === id)?.name ?? id)],
+    ] as [string, string[]][]
+  ).filter(([, cards]) => cards.length > 0);
   return (
     <section className="status">
       <h2>
@@ -247,6 +255,19 @@ function Status({ board, set, state, onSelect, onFocusCard }: { board: Board; se
         <dt>{t("status.decks")}</dt>
         <dd>{sizes.map(([name, cards]) => `${t(`deck.${name}`)} ${cards.length}`).join(", ")}</dd>
       </dl>
+      {discards.length > 0 && (
+        <details>
+          <summary>{t("status.discards")}</summary>
+          <dl>
+            {discards.map(([name, cards]) => (
+              <div key={name}>
+                <dt>{t(`deck.${name}`)}</dt>
+                <dd>{cards.join(", ")}</dd>
+              </div>
+            ))}
+          </dl>
+        </details>
+      )}
       <table>
         <thead>
           <tr>

@@ -269,5 +269,6 @@
   "panel.copyJournal": "Copy journal",
   "panel.copied": "Copied",
   "table.roll": "{name} rolls {dice}",
-  "game.duplicate": "Duplicate"
+  "game.duplicate": "Duplicate",
+  "status.discards": "Discards"
 }
