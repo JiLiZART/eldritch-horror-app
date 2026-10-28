@@ -145,7 +145,16 @@ export function App() {
   // Escape clears the selection, or cancels the route being picked (escape-clears-selection D1); form fields keep their own Escape.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key !== "Escape" || e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement || e.target instanceof HTMLTextAreaElement) return;
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement || e.target instanceof HTMLTextAreaElement) return;
+      // Arrows pan by a fifth of the view, plus and minus zoom a step (keyboard-pan-zoom D1).
+      const step: Record<string, [number, number, number]> = { ArrowLeft: [-0.2, 0, 1], ArrowRight: [0.2, 0, 1], ArrowUp: [0, 0.2, 1], ArrowDown: [0, -0.2, 1], "+": [0, 0, 1.25], "=": [0, 0, 1.25], "-": [0, 0, 0.8] };
+      const nudgeBy = step[e.key];
+      if (nudgeBy) {
+        e.preventDefault();
+        setNudge((prev) => ({ dx: nudgeBy[0], dy: nudgeBy[1], zoom: nudgeBy[2], key: (prev?.key ?? 0) + 1 }));
+        return;
+      }
+      if (e.key !== "Escape") return;
       if (picking) {
         setRoute(undefined);
         const space = game.state?.investigators.find((i) => i.id === activeId)?.space;
@@ -159,6 +168,8 @@ export function App() {
   const [fit, setFit] = useState(0);
   /** The card the panel asked to bring up on the table (panel-card-focus D1). */
   const [cardFocus, setCardFocus] = useState<TableProps["focus"]>();
+  /** A keyboard pan or zoom request for the rig (keyboard-pan-zoom D1). */
+  const [nudge, setNudge] = useState<TableProps["nudge"]>();
   const focusCard: FocusCard = (place, index, seat) => setCardFocus((prev) => ({ place, index, ...(seat === undefined ? {} : { seat }), key: (prev?.key ?? 0) + 1 }));
   const spaces = useMemo(() => activeGraph(board, enabled).spaces, [board, enabled]);
   const t = useMemo(() => (key: string, vars?: Record<string, string | number>) => translate(panel[lang], key, vars), [panel, lang]);
@@ -246,7 +257,7 @@ export function App() {
         </button>
       )}
       <main className="table">
-        <Table board={board} labels={labels} strings={strings[lang]} pieces={pieces} tracks={game.state && { doom: game.state.doom, omen: game.state.omen, eldritch: [...game.state.eldritchOnOmen], reserve: game.state.reserve.map((id) => face(id, true)).filter(known), labels: { doom: t("track.doom", { doom: game.state.doom }), omen: t("track.omen", { omen: t(`omen.${OMEN_TRACK[game.state.omen]}`), count: game.state.eldritchOnOmen[game.state.omen] ?? 0 }), eldritch: OMEN_TRACK.map((c) => t("track.eldritch", { omen: t(`omen.${c}`) })) } }} tableau={tableau} sheets={sheets} fit={fit} focus={cardFocus} enabled={enabled} selected={selectedSpace?.id} route={route} onSelect={select} reducedMotion={reducedMotion} />
+        <Table board={board} labels={labels} strings={strings[lang]} pieces={pieces} tracks={game.state && { doom: game.state.doom, omen: game.state.omen, eldritch: [...game.state.eldritchOnOmen], reserve: game.state.reserve.map((id) => face(id, true)).filter(known), labels: { doom: t("track.doom", { doom: game.state.doom }), omen: t("track.omen", { omen: t(`omen.${OMEN_TRACK[game.state.omen]}`), count: game.state.eldritchOnOmen[game.state.omen] ?? 0 }), eldritch: OMEN_TRACK.map((c) => t("track.eldritch", { omen: t(`omen.${c}`) })) } }} tableau={tableau} sheets={sheets} fit={fit} focus={cardFocus} nudge={nudge} enabled={enabled} selected={selectedSpace?.id} route={route} onSelect={select} reducedMotion={reducedMotion} />
       </main>
       {!panelHidden && <div className="panel-handle" role="separator" aria-orientation="vertical" aria-label={translate(panel[lang], "panel.resize")} onPointerDown={dragPanel} />}
       {!panelHidden && <Panel board={board} set={set} lang={lang} onLang={chooseLang} state={game.state} pieces={pieces} spaces={spaces} enabled={enabled} onToggle={toggle} selected={selectedSpace} onSelect={select} onHidePanel={() => showPanel(false)} onFocusCard={focusCard}>

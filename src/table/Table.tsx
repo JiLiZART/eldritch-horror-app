@@ -32,6 +32,8 @@ export interface TableProps {
   sheets?: { sheet: CardFace; held: CardFace[]; health: number; sanity: number; improvements: Partial<Record<Skill, 1 | 2>>; tickets: Ticket[]; encounter?: CardFace }[];
   /** Changes each time the player asks for the whole table; the view glides out to it (fit-view D1). */
   fit?: number;
+  /** A keyboard pan (fractions of the view) and zoom factor, applied once per key (keyboard-pan-zoom D1). */
+  nudge?: { dx: number; dy: number; zoom: number; key: number };
   /** A card named by its place on the table, brought up as a click on it would (panel-card-focus D1). */
   focus?: { place: "reserve" | "mystery" | "mythos" | "sheet" | "held" | "encounter"; index: number; seat?: number; key: number };
   enabled: Set<string>;
@@ -60,7 +62,7 @@ export function Table(props: TableProps) {
   );
 }
 
-function Scene({ board, labels, strings, pieces, tracks, tableau, sheets, fit, focus: asked, enabled, selected, route, onSelect, reducedMotion }: TableProps) {
+function Scene({ board, labels, strings, pieces, tracks, tableau, sheets, fit, focus: asked, nudge, enabled, selected, route, onSelect, reducedMotion }: TableProps) {
   const graph = useMemo(() => activeGraph(board, enabled), [board, enabled]);
   const at = useMemo(() => new Map(board.spaces.map((s) => [s.id, boardToWorld(s, board)])), [board]);
   const active = useMemo(() => new Set(graph.spaces.map((s) => s.id)), [graph]);
@@ -106,7 +108,7 @@ function Scene({ board, labels, strings, pieces, tracks, tableau, sheets, fit, f
   );
   return (
     <>
-      <CameraRig extent={extent} target={target} reducedMotion={reducedMotion} />
+      <CameraRig extent={extent} target={target} nudge={nudge} reducedMotion={reducedMotion} />
       <BoardPlane board={board} />
       <BoardText labels={labels} strings={strings} active={active} selected={selected} onSelect={onSelect} reducedMotion={reducedMotion} />
       {graph.paths.map((p) => (
@@ -135,7 +137,7 @@ interface CameraTarget {
 }
 
 /** Top-down orthographic view: zoom bounded so the whole table fits, pan kept within it, no rotation (pan-clamp D2). */
-function CameraRig({ extent, target, reducedMotion }: { extent: ReturnType<typeof tableExtent>; target: CameraTarget | undefined; reducedMotion: boolean }) {
+function CameraRig({ extent, target, nudge, reducedMotion }: { extent: ReturnType<typeof tableExtent>; target: CameraTarget | undefined; nudge: TableProps["nudge"]; reducedMotion: boolean }) {
   const { size, camera } = useThree();
   const controls = useRef<ComponentRef<typeof MapControls>>(null);
   const minZoom = Math.min(size.width / (extent.maxX - extent.minX), size.height / (extent.maxY - extent.minY)) * 0.95;
@@ -163,6 +165,19 @@ function CameraRig({ extent, target, reducedMotion }: { extent: ReturnType<typeo
   useEffect(() => {
     gliding.current = goal !== undefined;
   }, [goal]);
+  // A keyboard pan or zoom is one instant step through the controls, clamped like a drag (keyboard-pan-zoom D2).
+  useEffect(() => {
+    const c = controls.current;
+    if (!nudge || !c) return;
+    gliding.current = false;
+    const delta = new Vector3((nudge.dx * size.width) / camera.zoom, (nudge.dy * size.height) / camera.zoom, 0);
+    c.target.add(delta);
+    c.object.position.add(delta);
+    camera.zoom = Math.min(Math.max(camera.zoom * nudge.zoom, minZoom), minZoom * 10);
+    camera.updateProjectionMatrix();
+    clamp();
+    c.update();
+  }, [nudge?.key]);
   useFrame((_, dt) => {
     const c = controls.current;
     if (!c || !goal || !gliding.current) return;
