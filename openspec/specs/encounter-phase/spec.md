@@ -68,7 +68,7 @@ With no monster on the space the investigator SHALL draw exactly one card from a
 - **THEN** the expedition token lies on the space named by the top card of the rebuilt deck
 
 ### Requirement: An investigator at 0 health or sanity is defeated
-When an investigator's health or sanity reaches 0 they SHALL be defeated at once: doom advances by 1, their pawn moves to the nearest city space and lies there, their conditions are shuffled back into the condition deck, their improvement tokens are discarded, their turns are skipped for the rest of the game, and the lead token passes to the next seat when the defeated investigator held it. When every investigator is defeated the game SHALL be lost with the reason shown. The defeated investigator SHALL be shown as such beside the board and on the table. **Deviation**: among several nearest cities the first in board order is taken; no replacement investigator is chosen, and the players are told so.
+When an investigator's health or sanity reaches 0 they SHALL be defeated at once: doom advances by 1, their pawn moves to the nearest city space and lies there, their conditions are shuffled back into the condition deck, their improvement tokens are discarded, their turns are skipped for the rest of the game, and the lead token passes to the next seat when the defeated investigator held it. When every investigator is defeated the game SHALL be lost with the reason shown. The defeated investigator SHALL be shown as such beside the board and on the table. **Deviation**: among several nearest cities the first in board order is taken.
 
 #### Scenario: Defeated by horror
 - **WHEN** Leo Anderson at 1 sanity loses 1 sanity in combat at doom 12
