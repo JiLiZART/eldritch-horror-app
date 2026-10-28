@@ -207,5 +207,14 @@
   "game.switch": "Switch",
   "game.remove": "Remove",
   "game.current": "(current)",
-  "game.new": "New game"
+  "game.new": "New game",
+  "piece.gate": "Gate",
+  "piece.expedition": "Active expedition",
+  "piece.clue": "Clue",
+  "piece.rumor": "Rumor",
+  "piece.eldritch": "Eldritch token",
+  "piece.lead": "Lead investigator",
+  "piece.monsterHurt": "{name} ({count} health lost)",
+  "piece.delayed": "{name} (delayed)",
+  "piece.defeated": "{name} (defeated)"
 }

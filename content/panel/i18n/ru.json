@@ -207,5 +207,14 @@
   "game.switch": "Открыть",
   "game.remove": "Удалить",
   "game.current": "(текущая)",
-  "game.new": "Новая партия"
+  "game.new": "Новая партия",
+  "piece.gate": "Врата",
+  "piece.expedition": "Активная экспедиция",
+  "piece.clue": "Улика",
+  "piece.rumor": "Слух",
+  "piece.eldritch": "Жетон Древних",
+  "piece.lead": "Ведущий сыщик",
+  "piece.monsterHurt": "{name} (потеряно {count} здоровья)",
+  "piece.delayed": "{name} (задержан)",
+  "piece.defeated": "{name} (побеждён)"
 }

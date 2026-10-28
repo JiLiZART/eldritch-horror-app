@@ -9,7 +9,7 @@ import { Encounter } from "./Encounter";
 import { Mythos } from "./Mythos";
 import { NewGame } from "./NewGame";
 import { Panel } from "./Panel";
-import { LangProvider, useT } from "./lang";
+import { LangProvider, translate, useT } from "./lang";
 import { piecesOnSpace } from "./pieces";
 import { fileName, loadGame, loadSlots, newSlotId, parseGame, removeGame, saveGame, slotName } from "./saved";
 import { Table, type TableProps } from "./Table";
@@ -80,7 +80,8 @@ export function App() {
   /** Bumped by Fit table; the rig glides to the whole table on each change (fit-view D1). */
   const [fit, setFit] = useState(0);
   const spaces = useMemo(() => activeGraph(board, enabled).spaces, [board, enabled]);
-  const pieces = useMemo(() => piecesOnSpace(game.state, set), [game.state, set]);
+  const t = useMemo(() => (key: string, vars?: Record<string, string | number>) => translate(panel[lang], key, vars), [panel, lang]);
+  const pieces = useMemo(() => piecesOnSpace(game.state, set, t), [game.state, set, t]);
   const ancientOne = set.ancientOnes.find((a) => a.id === game.state?.ancientOne);
   const front = (id: string) => set.cards.find((c) => c.id === id)?.images.front;
   const sheets = game.state?.investigators

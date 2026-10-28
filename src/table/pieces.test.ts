@@ -4,11 +4,16 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { setupGame } from "../engine/setup";
+import { translate } from "./lang";
 import { type Piece, piecesOnSpace } from "./pieces";
 
 const root = join(import.meta.dirname, "../..");
 const board: Board = JSON.parse(readFileSync(join(root, "content/board/board.json"), "utf8"));
 const set = loadSet(join(root, "content/sets/eh01"))!;
+const strings = (lang: string) => JSON.parse(readFileSync(join(root, `content/panel/i18n/${lang}.json`), "utf8")) as Record<string, string>;
+const en = strings("en");
+/** The panel's English translator, as the app binds it. */
+const t = (key: string, vars?: Record<string, string | number>) => translate(en, key, vars);
 const inv = (name: string) => `eh01/investigator/${name}`;
 const state = setupGame(
   { board, set },
@@ -17,7 +22,7 @@ const state = setupGame(
 const ORDER = ["gate", "expedition", "clue", "rumor", "eldritch", "monster", "pawn", "lead"];
 
 describe("piecesOnSpace", () => {
-  const pieces = piecesOnSpace(state, set);
+  const pieces = piecesOnSpace(state, set, t);
   const all = [...pieces.values()].flat();
   const ofKind = (kind: Piece["kind"]) => all.filter((p) => p.kind === kind);
 
@@ -35,9 +40,15 @@ describe("piecesOnSpace", () => {
     expect(ofKind("clue")[0]?.image).toBe("cards/eh01/tokens/clues/clues-back.webp");
     expect(pieces.get(state.activeExpedition)?.some((p) => p.kind === "expedition" && p.image === "cards/eh01/tokens/active-expedition-token.webp")).toBe(true);
   });
+  it("labels the pieces in the panel's language", () => {
+    const ru = strings("ru");
+    const labels = [...piecesOnSpace(state, set, (key, vars) => translate(ru, key, vars)).values()].flat().map((p) => p.label);
+    expect(labels).toContain("Врата");
+    expect(labels).toContain("Ведущий сыщик");
+  });
   it("marks a wounded monster's health lost and leaves an unhurt one unmarked", () => {
     const [m] = state.monsters;
-    const wounded = piecesOnSpace({ ...state, monsters: [{ ...m!, health: 2 }] }, set);
+    const wounded = piecesOnSpace({ ...state, monsters: [{ ...m!, health: 2 }] }, set, t);
     const [piece] = [...wounded.values()].flat().filter((p) => p.kind === "monster");
     expect(piece?.damage).toBe(2);
     expect(ofKind("monster")[0]?.damage).toBeUndefined();
@@ -51,29 +62,29 @@ describe("piecesOnSpace", () => {
   });
   it("lays a delayed or defeated pawn on its side", () => {
     const leo = inv("leo-anderson");
-    const pawn = (s: typeof state) => [...piecesOnSpace(s, set).values()].flat().find((p) => p.kind === "pawn" && p.id === leo)!;
+    const pawn = (s: typeof state) => [...piecesOnSpace(s, set, t).values()].flat().find((p) => p.kind === "pawn" && p.id === leo)!;
     expect(pawn(state).lying).toBeUndefined();
     expect(pawn({ ...state, investigators: state.investigators.map((i) => (i.id === leo ? { ...i, delayed: true as const } : i)) }).lying).toBe(true);
     expect(pawn({ ...state, investigators: state.investigators.map((i) => (i.id === leo ? { ...i, defeated: "sanity" as const } : i)) }).lying).toBe(true);
   });
   it("stands the lead token beside the lead's pawn and moves it with the lead", () => {
-    const lead = (s: typeof state) => [...piecesOnSpace(s, set).entries()].find(([, ps]) => ps.some((p) => p.kind === "lead"))?.[0];
+    const lead = (s: typeof state) => [...piecesOnSpace(s, set, t).entries()].find(([, ps]) => ps.some((p) => p.kind === "lead"))?.[0];
     expect(lead(state)).toBe(state.investigators[0]!.space);
-    expect(piecesOnSpace(state, set).get(state.investigators[0]!.space)?.at(-1)).toEqual({ kind: "lead", id: "lead", image: "cards/eh01/tokens/lead-investigator.webp", label: "Lead investigator" });
+    expect(piecesOnSpace(state, set, t).get(state.investigators[0]!.space)?.at(-1)).toEqual({ kind: "lead", id: "lead", image: "cards/eh01/tokens/lead-investigator.webp", label: "Lead investigator" });
     const lily = inv("lily-chen");
     expect(lead({ ...state, leadInvestigator: lily })).toBe(state.investigators.find((i) => i.id === lily)!.space);
   });
   it("draws no pawn for a devoured investigator", () => {
     const devoured = { ...state, investigators: state.investigators.map((i) => (i.id === inv("leo-anderson") ? { ...i, defeated: "devoured" as const } : i)) };
-    const all = [...piecesOnSpace(devoured, set).values()].flat();
+    const all = [...piecesOnSpace(devoured, set, t).values()].flat();
     expect(all.filter((p) => p.kind === "pawn")).toHaveLength(3);
   });
   it("draws no pawn for a removed investigator", () => {
     const removed = { ...state, investigators: state.investigators.map((i) => (i.id === inv("leo-anderson") ? { ...i, defeated: "health" as const, removed: true as const } : i)) };
-    expect([...piecesOnSpace(removed, set).values()].flat().filter((p) => p.kind === "pawn")).toHaveLength(3);
+    expect([...piecesOnSpace(removed, set, t).values()].flat().filter((p) => p.kind === "pawn")).toHaveLength(3);
   });
   it("shows a rumor token and each eldritch token on the space", () => {
-    const london = piecesOnSpace({ ...state, rumors: ["london"], eldritch: { london: 2 } }, set).get("london") ?? [];
+    const london = piecesOnSpace({ ...state, rumors: ["london"], eldritch: { london: 2 } }, set, t).get("london") ?? [];
     expect(london.filter((p) => p.kind === "rumor")).toEqual([{ kind: "rumor", id: "rumor:london#0", image: "cards/eh01/tokens/rumor-token.webp", label: "Rumor" }]);
     expect(london.filter((p) => p.kind === "eldritch").map((p) => p.image)).toEqual(["cards/eh01/tokens/eldritch-token.webp", "cards/eh01/tokens/eldritch-token.webp"]);
     expect(london.filter((p) => p.kind === "eldritch").map((p) => p.label)).toEqual(["Eldritch token", "Eldritch token"]);
@@ -85,6 +96,6 @@ describe("piecesOnSpace", () => {
     }
   });
   it("gives an empty map without a game", () => {
-    expect(piecesOnSpace(undefined, set).size).toBe(0);
+    expect(piecesOnSpace(undefined, set, t).size).toBe(0);
   });
 });
