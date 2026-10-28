@@ -117,7 +117,7 @@ export function Turn({ board, set, state, phase, error, route, onAct, onRoute, o
       )}
       {/* Keyed on the roll so a new roll starts with nothing chosen. */}
       {phase.acquiring && <Acquire key={state.rolls} set={set} state={state} roll={phase.acquiring} onAct={onAct} onFocusCard={onFocusCard} />}
-      {trading && !route && <Trade set={set} state={state} active={me.id} onAct={onAct} onClose={() => setTrading(false)} />}
+      {trading && !route && <Trade set={set} state={state} active={me.id} onAct={onAct} onClose={() => setTrading(false)} onFocusCard={onFocusCard} />}
       <p aria-live="assertive" className="error">
         {error}
       </p>

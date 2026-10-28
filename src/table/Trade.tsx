@@ -3,6 +3,7 @@ import type { GameSet } from "../content/types";
 import { type Offer, trade } from "../engine/actions";
 import type { GameState, InvestigatorState, Ticket } from "../engine/types";
 import { useT } from "./lang";
+import type { FocusCard } from "./Panel";
 import type { Act } from "./Turn";
 
 interface TradeProps {
@@ -12,10 +13,12 @@ interface TradeProps {
   active: string;
   onAct: Act;
   onClose: () => void;
+  /** Brings a held card up under its holder's sheet (trade-card-focus D1). */
+  onFocusCard: FocusCard;
 }
 
 /** Trade form (design D4): one offer per side, confirmed in one action. */
-export function Trade({ set, state, active, onAct, onClose }: TradeProps) {
+export function Trade({ set, state, active, onAct, onClose, onFocusCard }: TradeProps) {
   const me = state.investigators.find((i) => i.id === active)!;
   const partners = state.investigators.filter((i) => i.id !== me.id && i.space === me.space);
   const [partner, setPartner] = useState(partners[0]?.id ?? "");
@@ -43,8 +46,8 @@ export function Trade({ set, state, active, onAct, onClose }: TradeProps) {
           ))}
         </select>
       </label>
-      <OfferFields legend={t("trade.gives", { name: name(me.id) })} holder={me} set={set} offer={give} onChange={setGive} />
-      {other && <OfferFields legend={t("trade.gives", { name: name(other.id) })} holder={other} set={set} offer={receive} onChange={setReceive} />}
+      <OfferFields state={state} onFocusCard={onFocusCard} legend={t("trade.gives", { name: name(me.id) })} holder={me} set={set} offer={give} onChange={setGive} />
+      {other && <OfferFields state={state} onFocusCard={onFocusCard} legend={t("trade.gives", { name: name(other.id) })} holder={other} set={set} offer={receive} onChange={setReceive} />}
       <button type="submit">{t("trade.confirm")}</button>{" "}
       <button type="button" onClick={onClose}>
         {t("trade.close")}
@@ -56,18 +59,23 @@ export function Trade({ set, state, active, onAct, onClose }: TradeProps) {
 /** Ticket types held with their counts. */
 const held = (i: InvestigatorState): [Ticket, number][] => [...new Set(i.tickets)].map((t) => [t, i.tickets.filter((x) => x === t).length]);
 
-function OfferFields({ legend, holder, set, offer, onChange }: { legend: string; holder: InvestigatorState; set: GameSet; offer: Offer; onChange: (o: Offer) => void }) {
+function OfferFields({ legend, holder, set, state, offer, onChange, onFocusCard }: { legend: string; holder: InvestigatorState; set: GameSet; state: GameState; offer: Offer; onChange: (o: Offer) => void; onFocusCard: FocusCard }) {
+  const seat = state.investigators.filter((x) => !x.removed).findIndex((x) => x.id === holder.id);
   const cardName = (id: string) => set.cards.find((c) => c.id === id)?.name ?? id;
   const toggle = <T,>(list: T[] | undefined, item: T, on: boolean) => (on ? [...(list ?? []), item] : (list ?? []).filter((x) => x !== item));
   const t = useT();
   return (
     <fieldset>
       <legend>{legend}</legend>
-      {holder.possessions.map((id) => (
-        <label key={id}>
-          <input type="checkbox" checked={offer.possessions?.includes(id) ?? false} onChange={(e) => onChange({ ...offer, possessions: toggle(offer.possessions, id, e.target.checked) })} />{" "}
-          {cardName(id)}
-        </label>
+      {holder.possessions.map((id, n) => (
+        <span key={id}>
+          <label>
+            <input type="checkbox" checked={offer.possessions?.includes(id) ?? false} onChange={(e) => onChange({ ...offer, possessions: toggle(offer.possessions, id, e.target.checked) })} />
+          </label>{" "}
+          <button type="button" className="card-button" onClick={() => onFocusCard("held", n, seat)}>
+            {cardName(id)}
+          </button>{" "}
+        </span>
       ))}
       <label>
         {t("trade.clues", { count: holder.clues })} <input type="number" min={0} max={holder.clues} value={offer.clues ?? 0} onChange={(e) => onChange({ ...offer, clues: Number(e.target.value) })} />
