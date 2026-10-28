@@ -6,7 +6,7 @@ Keep the game in progress across reloads and let the players take back the last 
 ## Requirements
 
 ### Requirement: The game in progress survives a reload
-After every accepted step the game SHALL be saved in the browser; opening the table again SHALL resume the saved game in the same state; an unreadable save SHALL be ignored and the New game form shown. **Deviation**: one saved game per browser.
+After every accepted step the game SHALL be saved in the browser; opening the table again SHALL resume the saved game in the same state; an unreadable save, or one written by an older state shape, SHALL be set aside and the New game form shown with a note saying the saved game could not be resumed. **Deviation**: one saved game per browser.
 
 #### Scenario: Resumed
 - **WHEN** Leo Anderson has rested in round 1 and the page is reloaded
@@ -15,6 +15,10 @@ After every accepted step the game SHALL be saved in the browser; opening the ta
 #### Scenario: Unreadable save ignored
 - **WHEN** the saved game cannot be read
 - **THEN** the New game form is shown
+
+#### Scenario: Older save set aside
+- **WHEN** the saved game was written by an older state shape
+- **THEN** the New game form is shown with a note that the saved game could not be resumed
 
 ### Requirement: The last step can be undone
 A control beside the board SHALL revert the game to the state before the last accepted step, repeatedly, back to the freshly set-up game, after which it SHALL be disabled; a refused step SHALL NOT be undone since nothing changed; the undo history SHALL be kept for the session only, so a resumed game starts with nothing to undo.
