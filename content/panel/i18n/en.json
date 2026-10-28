@@ -255,5 +255,7 @@
   "gate.red": "red gate",
   "piece.investigatorHint": "{health} health, {sanity} sanity, {clues} clues",
   "panel.filterSpaces": "Filter spaces",
-  "game.rename": "Name"
+  "game.rename": "Name",
+  "game.hidePanel": "Hide panel",
+  "game.showPanel": "Show panel"
 }

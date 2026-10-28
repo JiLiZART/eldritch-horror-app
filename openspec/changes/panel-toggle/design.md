@@ -13,7 +13,7 @@ See proposal.md. `App` renders `.layout` with `main.table` and the `aside` panel
 ## Decisions
 
 ### D1. Hidden state in `App`
-`useState` read from `localStorage["eh.panel-hidden"]`, written on change (try/catch as the language key). When hidden, `.layout` gets `panel-hidden`, the aside is not rendered, and a small fixed `Show panel` button sits in the top-right corner. The Hide panel button lives in the Game section. Layer: view.
+`useState` read from `localStorage["eh.panel-hidden"]`, written on change (try/catch as the language key). When hidden, `.layout` gets `panel-hidden`, the aside is not rendered, and a small fixed `Show panel` button sits in the top-right corner. The Hide panel button sits in the panel header beside the title, so it is there before a game starts too. Layer: view.
 - Rejected: CSS-only collapse keeping the aside mounted. Not rendering it keeps the DOM small and the canvas is the only resize observer.
 
 ## Risks / Trade-offs

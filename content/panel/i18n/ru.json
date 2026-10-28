@@ -255,5 +255,7 @@
   "gate.red": "красные врата",
   "piece.investigatorHint": "здоровье {health}, рассудок {sanity}, улики {clues}",
   "panel.filterSpaces": "Поиск локации",
-  "game.rename": "Название"
+  "game.rename": "Название",
+  "game.hidePanel": "Скрыть панель",
+  "game.showPanel": "Показать панель"
 }

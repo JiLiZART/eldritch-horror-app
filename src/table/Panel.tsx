@@ -21,13 +21,15 @@ interface PanelProps {
   onToggle: (id: string, on: boolean) => void;
   selected: Space | undefined;
   onSelect: (id: string) => void;
+  /** Hides the panel for a table-only screen (panel-toggle D1). */
+  onHidePanel: () => void;
   children?: ReactNode;
 }
 
 /** Board set names beyond the core set, as the content names them; the core set's name is a panel string (deck-names-language D1). */
 const SET_NAMES: Record<string, string> = Object.fromEntries(BOARD_SETS.map((s) => [s.id, s.name]));
 
-export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled, onToggle, selected, onSelect, children }: PanelProps) {
+export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled, onToggle, selected, onSelect, onHidePanel, children }: PanelProps) {
   const t = useT();
   const spaceName = useSpaceName();
   /** Text narrowing the space list by name in the chosen language (space-filter D1). */
@@ -36,7 +38,12 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
   const pathType = (a: string, b: string) => board.paths.find((p) => (p.from === a && p.to === b) || (p.from === b && p.to === a))?.type;
   return (
     <aside className="panel">
-      <h1>Eldritch Horror</h1>
+      <h1>
+        Eldritch Horror{" "}
+        <button type="button" onClick={onHidePanel}>
+          {t("game.hidePanel")}
+        </button>
+      </h1>
       {children}
       {state && <Status board={board} set={set} state={state} onSelect={onSelect} />}
       {state && <Journal set={set} state={state} />}

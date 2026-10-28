@@ -17,6 +17,8 @@ import { type Act, Turn } from "./Turn";
 import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
 
 const LANG_KEY = "eh.board-lang";
+/** Remembers that the panel is hidden for a table-only screen (panel-toggle D1). */
+const PANEL_KEY = "eh.panel-hidden";
 
 /** Remembered board language; otherwise Russian for a Russian-preferring browser. */
 function initialLang(): Lang {
@@ -34,6 +36,19 @@ export function App() {
     setLang(next);
     try {
       localStorage.setItem(LANG_KEY, next);
+    } catch {}
+  };
+  const [panelHidden, setPanelHidden] = useState(() => {
+    try {
+      return localStorage.getItem(PANEL_KEY) === "1";
+    } catch {
+      return false;
+    }
+  });
+  const showPanel = (shown: boolean) => {
+    setPanelHidden(!shown);
+    try {
+      localStorage.setItem(PANEL_KEY, shown ? "0" : "1");
     } catch {}
   };
   const [enabled, setEnabled] = useState(() => new Set(["eh01"]));
@@ -171,11 +186,16 @@ export function App() {
   };
   return (
     <LangProvider lang={lang} strings={panel}>
-    <div className="layout">
+    <div className={panelHidden ? "layout panel-hidden" : "layout"}>
+      {panelHidden && (
+        <button type="button" className="show-panel" onClick={() => showPanel(true)}>
+          <Text k="game.showPanel" />
+        </button>
+      )}
       <main className="table">
         <Table board={board} labels={labels} strings={strings[lang]} pieces={pieces} tracks={game.state && { doom: game.state.doom, omen: game.state.omen, eldritch: [...game.state.eldritchOnOmen], reserve: game.state.reserve.map((id) => face(id, true)).filter(known) }} tableau={tableau} sheets={sheets} fit={fit} enabled={enabled} selected={selectedSpace?.id} route={route} onSelect={select} reducedMotion={reducedMotion} />
       </main>
-      <Panel board={board} set={set} lang={lang} onLang={chooseLang} state={game.state} pieces={pieces} spaces={spaces} enabled={enabled} onToggle={toggle} selected={selectedSpace} onSelect={select}>
+      {!panelHidden && <Panel board={board} set={set} lang={lang} onLang={chooseLang} state={game.state} pieces={pieces} spaces={spaces} enabled={enabled} onToggle={toggle} selected={selectedSpace} onSelect={select} onHidePanel={() => showPanel(false)}>
         <NewGame
           set={set}
           running={game.state !== undefined}
@@ -235,7 +255,7 @@ export function App() {
             <p>{game.state.phase.reason}</p>
           </section>
         )}
-      </Panel>
+      </Panel>}
     </div>
     </LangProvider>
   );
@@ -245,4 +265,10 @@ export function App() {
 function Heading({ k }: { k: string }) {
   const t = useT();
   return <h2>{t(k)}</h2>;
+}
+
+/** A translated text inside the provider. */
+function Text({ k }: { k: string }) {
+  const t = useT();
+  return <>{t(k)}</>;
 }

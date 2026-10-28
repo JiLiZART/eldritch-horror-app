@@ -12,6 +12,16 @@ body {
   grid-template-columns: 1fr 24rem;
   height: 100vh;
 }
+/* The table alone, for a shared screen (panel-toggle D1). */
+.layout.panel-hidden {
+  grid-template-columns: 1fr;
+}
+.show-panel {
+  position: fixed;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 1;
+}
 .table {
   min-width: 0;
 }
