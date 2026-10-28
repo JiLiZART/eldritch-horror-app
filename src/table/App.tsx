@@ -190,6 +190,13 @@ export function App() {
         setNudge((prev) => ({ dx: nudgeBy[0], dy: nudgeBy[1], zoom: nudgeBy[2], key: (prev?.key ?? 0) + 1 }));
         return;
       }
+      // The platform's undo and redo keys (keyboard-undo D1).
+      if ((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === "z" || e.key.toLowerCase() === "y")) {
+        e.preventDefault();
+        if (e.key.toLowerCase() === "y" || e.shiftKey) redoStep();
+        else undo();
+        return;
+      }
       if (e.key !== "Escape") return;
       if (cardUp.current) {
         fitTable();
@@ -203,7 +210,7 @@ export function App() {
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [picking, activeId, game.state]);
+  }, [picking, activeId, game.state, history, redo]);
   /** Bumped by Fit table; the rig glides to the whole table on each change (fit-view D1). */
   const [fit, setFit] = useState(0);
   /** A card is up to read; Escape puts it down by fitting the table first (escape-refits D1). */
@@ -271,6 +278,24 @@ export function App() {
     } catch (e) {
       setGame({ error: message(e) });
     }
+  };
+  /** Takes back the last accepted step, keeping it for Redo (redo D1). */
+  const undo = () => {
+    const before = history.at(-1);
+    if (!before) return;
+    setRedo((prev) => [...prev, game.state!]);
+    setGame({ state: before });
+    setHistory((prev) => prev.slice(0, -1));
+    setRoute(undefined);
+  };
+  /** Reapplies the last undone step. */
+  const redoStep = () => {
+    const next = redo.at(-1);
+    if (!next) return;
+    setHistory((prev) => [...prev, game.state!]);
+    setRedo((prev) => prev.slice(0, -1));
+    setGame({ state: next });
+    setRoute(undefined);
   };
   /** Runs an engine action; a refusal keeps the state and shows the rule. */
   const act: Act = (fn) => {
@@ -342,21 +367,9 @@ export function App() {
           }}
           onFit={fitTable}
           canUndo={history.length > 0}
-          onUndo={() => {
-            const current = game.state!;
-            setRedo((prev) => [...prev, current]);
-            setGame({ state: history.at(-1) });
-            setHistory((prev) => prev.slice(0, -1));
-            setRoute(undefined);
-          }}
+          onUndo={undo}
           canRedo={redo.length > 0}
-          onRedo={() => {
-            const next = redo.at(-1)!;
-            setHistory((prev) => [...prev, game.state!]);
-            setRedo((prev) => prev.slice(0, -1));
-            setGame({ state: next });
-            setRoute(undefined);
-          }}
+          onRedo={redoStep}
         />
         {game.state?.phase.name === "action" && <Turn board={board} set={set} state={game.state} phase={game.state.phase} error={game.error} route={route} onAct={act} onRoute={setRoute} onFocusCard={focusCard} />}
         {game.state?.phase.name === "encounter" && <Encounter board={board} set={set} state={game.state} phase={game.state.phase} error={game.error} onAct={act} onFocusCard={focusCard} />}
