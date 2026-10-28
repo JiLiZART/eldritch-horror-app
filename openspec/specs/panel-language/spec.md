@@ -6,7 +6,7 @@ Show the panel's own words, the game form, the three phase panels and their cont
 ## Requirements
 
 ### Requirement: The game and phase controls follow the chosen language
-When the board language is Russian, the New game form, the Action, Encounter and Mythos panels, the Acquire Assets form, the dice, the Trade form, the Game section, the panel's section headings, the five card-text groups with their shell, the Status table, the piece labels (on hover and in the selected space's piece list), the Selected space section's field names, its prompt, its empty markers and its kind, region and set values, the path legend, the set controls' names, the Journal's phase words and its component-action prefix, and the Status section's deck and pile names and the set names SHALL show their labels, headings and notes in Russian, using the glossary's Russian names for rules terms; in English they SHALL read as today. Space names SHALL be shown in the chosen language from the board data, wherever the panel names a space: the Status table, the Selected space section and its neighbours, the space list, the phase panels and the card-text groups. Card names, investigator names and the engine's log lines stay as the content and the engine give them.
+When the board language is Russian, the New game form, the Action, Encounter and Mythos panels, the Acquire Assets form, the dice, the Trade form, the Game section, the panel's section headings, the five card-text groups with their shell, the Status table, the piece labels (on hover and in the selected space's piece list), the Selected space section's field names, its prompt, its empty markers and its kind, region and set values, the path legend, the set controls' names, the glossary's filter label and its unofficial marker, the Journal's phase words and its component-action prefix, and the Status section's deck and pile names and the set names SHALL show their labels, headings and notes in Russian, using the glossary's Russian names for rules terms; in English they SHALL read as today. Space names SHALL be shown in the chosen language from the board data, wherever the panel names a space: the Status table, the Selected space section and its neighbours, the space list, the phase panels and the card-text groups. Card names, investigator names and the engine's log lines stay as the content and the engine give them.
 
 #### Scenario: Russian turn panel
 - **WHEN** the board language is Russian and Leo Anderson's Action turn begins
@@ -47,6 +47,10 @@ When the board language is Russian, the New game form, the Action, Encounter and
 #### Scenario: Legend values in Russian
 - **WHEN** the board language is Russian and London is selected
 - **THEN** the kind reads город, the region Европа and the set Базовая игра, the path legend reads поезд, корабль, тропа and местный, and the set controls read Хребты Безумия, Под пирамидами and Страна снов
+
+#### Scenario: Glossary filter in Russian
+- **WHEN** the board language is Russian and the glossary is unfolded
+- **THEN** the filter box is labelled in Russian and an unofficial entry's marker reads in Russian, while the entries' names and text read as the glossary prints them
 
 ### Requirement: Both languages hold the same strings
 The two string files SHALL hold the same keys, and every key the panel asks for SHALL exist in both; a missing key SHALL fail the content validation and the tests rather than show at the table.
