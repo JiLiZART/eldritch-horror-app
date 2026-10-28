@@ -135,9 +135,10 @@ export function placeInvestigator(i: Investigator, cards: Card[], decks: GameSta
     if (at < 0) throw new Error(`no copy of ${ref} left for ${i.id}`);
     (card.deck === "condition" ? conditions : possessions).push(...deck.splice(at, 1));
   }
-  const clues = i.starting.clues ?? 0;
-  heldClues.push(...cluePool.splice(0, clues));
-  return { id: i.id, space: i.startingSpace, health: i.health, sanity: i.sanity, clues, possessions, conditions, tickets: [], improvements: {} };
+  // Clue tokens are a limited supply (manual p.4), so a late newcomer gets only what the pool still holds (clue-supply D1).
+  const taken = cluePool.splice(0, i.starting.clues ?? 0);
+  heldClues.push(...taken);
+  return { id: i.id, space: i.startingSpace, health: i.health, sanity: i.sanity, clues: taken.length, possessions, conditions, tickets: [], improvements: {} };
 }
 
 /** Every non-epic token minus the sheet's set-aside monsters, shuffled. */
