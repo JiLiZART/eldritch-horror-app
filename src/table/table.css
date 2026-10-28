@@ -32,6 +32,20 @@ body {
 }
 .table {
   min-width: 0;
+  position: relative;
+}
+/* The round, phase and turn in the table's corner (table-status-line D1). */
+.table-status {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 1;
+  pointer-events: none;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: rgba(20, 16, 12, 0.85);
+  color: #f3e9d2;
+  font-size: 14px;
 }
 .panel {
   overflow: auto;

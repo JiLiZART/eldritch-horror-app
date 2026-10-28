@@ -134,7 +134,14 @@ export function App() {
   const [route, setRoute] = useState<string[]>();
   // The camera follows the turn (follow-active D1): keyed on the active investigator, not their space, and never mid-route.
   const phase = game.state?.phase;
+  const t = useMemo(() => (key: string, vars?: Record<string, string | number>) => translate(panel[lang], key, vars), [panel, lang]);
   const activeId = phase?.name === "action" || phase?.name === "encounter" ? phase.active : undefined;
+  /** The table's corner line: round, phase and whose turn, or the outcome (table-status-line D1). */
+  const status = !game.state || !phase
+    ? undefined
+    : phase.name === "won" || phase.name === "lost"
+      ? t(phase.name === "won" ? "app.win" : "app.lose")
+      : [t("panel.round", { round: game.state.round }), t(`journal.${phase.name}`), activeId && set.investigators.find((i) => i.id === activeId)?.name].filter(Boolean).join(" · ");
   const picking = route !== undefined;
   useEffect(() => {
     if (!activeId || picking) return;
@@ -172,7 +179,6 @@ export function App() {
   const [nudge, setNudge] = useState<TableProps["nudge"]>();
   const focusCard: FocusCard = (place, index, seat) => setCardFocus((prev) => ({ place, index, ...(seat === undefined ? {} : { seat }), key: (prev?.key ?? 0) + 1 }));
   const spaces = useMemo(() => activeGraph(board, enabled).spaces, [board, enabled]);
-  const t = useMemo(() => (key: string, vars?: Record<string, string | number>) => translate(panel[lang], key, vars), [panel, lang]);
   const pieces = useMemo(() => piecesOnSpace(game.state, board, set, t), [game.state, board, set, t]);
   const ancientOne = set.ancientOnes.find((a) => a.id === game.state?.ancientOne);
   /** A card's face for the table, named for its hover badge (card-hover D1); undefined for an unknown id. */
@@ -257,7 +263,7 @@ export function App() {
         </button>
       )}
       <main className="table">
-        <Table board={board} labels={labels} strings={strings[lang]} pieces={pieces} tracks={game.state && { doom: game.state.doom, omen: game.state.omen, eldritch: [...game.state.eldritchOnOmen], reserve: game.state.reserve.map((id) => face(id, true)).filter(known), labels: { doom: t("track.doom", { doom: game.state.doom }), omen: t("track.omen", { omen: t(`omen.${OMEN_TRACK[game.state.omen]}`), count: game.state.eldritchOnOmen[game.state.omen] ?? 0 }), eldritch: OMEN_TRACK.map((c) => t("track.eldritch", { omen: t(`omen.${c}`) })) } }} tableau={tableau} sheets={sheets} fit={fit} focus={cardFocus} nudge={nudge} enabled={enabled} selected={selectedSpace?.id} route={route} onSelect={select} reducedMotion={reducedMotion} />
+        <Table board={board} labels={labels} strings={strings[lang]} pieces={pieces} tracks={game.state && { doom: game.state.doom, omen: game.state.omen, eldritch: [...game.state.eldritchOnOmen], reserve: game.state.reserve.map((id) => face(id, true)).filter(known), labels: { doom: t("track.doom", { doom: game.state.doom }), omen: t("track.omen", { omen: t(`omen.${OMEN_TRACK[game.state.omen]}`), count: game.state.eldritchOnOmen[game.state.omen] ?? 0 }), eldritch: OMEN_TRACK.map((c) => t("track.eldritch", { omen: t(`omen.${c}`) })) } }} tableau={tableau} sheets={sheets} fit={fit} focus={cardFocus} nudge={nudge} status={status} enabled={enabled} selected={selectedSpace?.id} route={route} onSelect={select} reducedMotion={reducedMotion} />
       </main>
       {!panelHidden && <div className="panel-handle" role="separator" aria-orientation="vertical" aria-label={translate(panel[lang], "panel.resize")} onPointerDown={dragPanel} />}
       {!panelHidden && <Panel board={board} set={set} lang={lang} onLang={chooseLang} state={game.state} pieces={pieces} spaces={spaces} enabled={enabled} onToggle={toggle} selected={selectedSpace} onSelect={select} onHidePanel={() => showPanel(false)} onFocusCard={focusCard}>
