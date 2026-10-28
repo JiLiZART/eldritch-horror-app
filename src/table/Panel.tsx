@@ -35,7 +35,7 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
     <aside className="panel">
       <h1>Eldritch Horror</h1>
       {children}
-      {state && <Status board={board} set={set} state={state} />}
+      {state && <Status board={board} set={set} state={state} onSelect={onSelect} />}
       {state && <Journal set={set} state={state} />}
       <Glossary />
       <fieldset>
@@ -145,7 +145,7 @@ function Journal({ set, state }: { set: GameSet; state: GameState }) {
   );
 }
 
-function Status({ board, set, state }: { board: Board; set: GameSet; state: GameState }) {
+function Status({ board, set, state, onSelect }: { board: Board; set: GameSet; state: GameState; onSelect: (id: string) => void }) {
   const t = useT();
   /** The one investigator whose sheet image is open (design D2). */
   const [sheet, setSheet] = useState<string>();
@@ -235,7 +235,12 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
                   </p>
                 )}
               </td>
-              <td>{spaceName(board, i.space)}</td>
+              <td>
+                {/* Selecting the space glides the view to the pawn (status-space-select D1). */}
+                <button type="button" onClick={() => onSelect(i.space)}>
+                  {spaceName(board, i.space)}
+                </button>
+              </td>
               <td>{i.health}</td>
               <td>{i.sanity}</td>
               <td>{i.clues}</td>
