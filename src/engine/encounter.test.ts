@@ -266,6 +266,10 @@ describe("one encounter of the investigator's choice", () => {
     expect(() => drawEncounter(once, content, "general")).toThrow(/fought first/);
     expect(finishEncounter(once, content).phase).toMatchObject({ name: "encounter", active: lily });
   });
+  it("keeps the encounter's lines in the journal when the seat passes", () => {
+    const s = finishEncounter(drawEncounter(encounters(), content, "america"), content);
+    expect(s.journal).toContainEqual({ round: 1, phase: "encounter", who: leo, text: "draws from the america deck: the card text is left to the players" });
+  });
   it("discards the card to its deck's discard on finish", () => {
     const s = encounters();
     const card = s.decks.encounters.america![0]!;

@@ -112,6 +112,12 @@ describe("travel moves along paths", () => {
 });
 
 describe("rest recovers health and sanity", () => {
+  it("writes the action to the journal, a refusal nothing", () => {
+    const s = rest(solo(akachi), set);
+    expect(s.journal).toEqual([{ round: 1, phase: "action", who: akachi, text: "rest" }]);
+    expect(() => rest(s, set)).toThrow();
+    expect(s.journal).toHaveLength(1);
+  });
   it("gives Akachi Onyele at 4/6 one health and one sanity", () => {
     const s = rest(patch(solo(akachi), akachi, { health: 4, sanity: 6 }), set);
     expect(who(s, akachi)).toMatchObject({ health: 5, sanity: 7 });

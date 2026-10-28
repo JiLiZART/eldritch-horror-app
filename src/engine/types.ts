@@ -106,6 +106,15 @@ export interface WonPhase {
   reason: string;
 }
 
+/** One kept line of the game's record (design D1): a phase log line or an action name. */
+export interface JournalEntry {
+  round: number;
+  phase: "action" | "encounter" | "mythos";
+  /** Investigator id the line is about; absent for Mythos lines. */
+  who?: string;
+  text: string;
+}
+
 /** The phase in progress. */
 export type Phase = ActionPhase | EncounterPhase | MythosPhase | LostPhase | WonPhase;
 
@@ -134,6 +143,8 @@ export interface GameState {
   referenceCard: ReferenceCard;
   round: number;
   phase: Phase;
+  /** Every phase's log lines once the phase or seat passed, and every action performed, oldest first. */
+  journal: JournalEntry[];
   leadInvestigator: string;
   investigators: InvestigatorState[];
   /** Space ids with an open gate. */

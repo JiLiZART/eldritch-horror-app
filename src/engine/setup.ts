@@ -83,6 +83,7 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
     eldritch: {},
     referenceCard,
     round: 1,
+    journal: [],
     phase: { name: "action", active: investigators[0]!.id, taken: [] },
     leadInvestigator: investigators[0]!.id,
     investigators,

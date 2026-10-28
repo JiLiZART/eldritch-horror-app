@@ -31,6 +31,9 @@ describe("setup accepts a legal group", () => {
     expect(() => setup({ ancientOne: ao("nope") })).toThrow(/nope/);
     expect(() => setup({ investigators: [inv("nope")] })).toThrow(/nope/);
   });
+  it("starts with an empty journal", () => {
+    expect(setup().journal).toEqual([]);
+  });
   it("gives the lead token to seat 0", () => {
     const s = setup({ investigators: [inv("leo-anderson"), inv("lily-chen")] });
     expect(s.leadInvestigator).toBe(inv("leo-anderson"));

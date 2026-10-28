@@ -39,6 +39,7 @@ function perform(state: GameState, action: ActionName, next: InvestigatorState):
     ...state,
     phase: { ...phase, taken: [...phase.taken, action] },
     investigators: state.investigators.map((i) => (i.id === next.id ? next : i)),
+    journal: [...state.journal, { round: state.round, phase: "action", who: next.id, text: action }],
   };
 }
 

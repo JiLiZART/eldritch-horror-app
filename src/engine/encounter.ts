@@ -1,6 +1,7 @@
 import { distance } from "../content/board";
 import type { MonsterCombat } from "../content/types";
 import { awakenAt0 } from "./ancientOne";
+import { keepLog } from "./journal";
 import { drawMythos } from "./mythos";
 import type { Content } from "./setup";
 import { reshuffle } from "./rng";
@@ -205,7 +206,8 @@ export function finishEncounter(state: GameState, content: Content): GameState {
   return advance(s, me.id);
 }
 
-function advance(state: GameState, after: string): GameState {
+function advance(start: GameState, after: string): GameState {
+  const state = keepLog(start);
   const next = nextStanding(state, after);
   return next === undefined ? drawMythos(state) : { ...state, phase: { name: "encounter", active: next, log: [], fought: [] } };
 }

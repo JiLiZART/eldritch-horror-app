@@ -1,5 +1,6 @@
 import type { GameSet, MythosCard, MythosEffect } from "../content/types";
 import { awakenAt0 } from "./ancientOne";
+import { keepLog } from "./journal";
 import { OMEN_TRACK } from "./omen";
 import { rng, type Random } from "./rng";
 import { placeInvestigator, type Content } from "./setup";
@@ -9,7 +10,8 @@ import type { GameState, MythosPhase } from "./types";
 /** Mythos phase (manual_eng.pdf p.3–4; EH_reference.pdf p.6): draw, resolve the icons left to right, then the next round. */
 
 /** Moves the top mythos card into the phase; an empty deck loses the game (manual p.4). */
-export function drawMythos(state: GameState): GameState {
+export function drawMythos(start: GameState): GameState {
+  const state = keepLog(start);
   const [card, ...deck] = state.decks.mythos;
   if (card === undefined) return { ...state, phase: { name: "lost", reason: "the mythos deck is empty: no card can be drawn, so the investigators lose" } };
   return { ...state, decks: { ...state.decks, mythos: deck }, phase: { name: "mythos", card } };
@@ -111,5 +113,5 @@ export function nextRound(state: GameState, set: GameSet, lead = state.leadInves
   const chosen = state.investigators.find((i) => i.id === lead);
   if (!chosen) throw new Error(`no investigator ${lead} to take the lead`);
   if (chosen.defeated) throw new Error(`${lead} is defeated and cannot take the lead`);
-  return { ...state, round: state.round + 1, leadInvestigator: lead, phase: { name: "action", active: lead, taken: [] } };
+  return { ...keepLog(state), round: state.round + 1, leadInvestigator: lead, phase: { name: "action", active: lead, taken: [] } };
 }

@@ -142,6 +142,14 @@ describe("the lead may pass the token", () => {
     expect(() => nextRound(m.state, set)).toThrow(/resolve/);
     expect(() => nextRound(game(), set)).toThrow(/Mythos phase/);
   });
+  it("keeps the resolution lines in the journal after the encounter lines", () => {
+    const resolved = resolve({ effects: ["advance-omen"] });
+    const next = nextRound(resolved, set, lily);
+    const mythosLines = next.journal.filter((e) => e.phase === "mythos");
+    expect(mythosLines.map((e) => e.text)).toEqual(resolved.phase.name === "mythos" ? resolved.phase.log : []);
+    expect(mythosLines[0]).toMatchObject({ round: 1, phase: "mythos" });
+    expect(next.journal.findIndex((e) => e.phase === "mythos")).toBeGreaterThanOrEqual(next.journal.filter((e) => e.phase === "encounter").length);
+  });
   it("passes the lead to Lily Chen for round 2", () => {
     const next = nextRound(resolve({ effects: ["advance-omen"] }), set, lily);
     expect(next.leadInvestigator).toBe(lily);

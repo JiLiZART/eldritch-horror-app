@@ -31,6 +31,7 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
       <h1>Eldritch Horror</h1>
       {children}
       {state && <Status board={board} set={set} state={state} />}
+      {state && <Journal set={set} state={state} />}
       <fieldset>
         <legend>Board language</legend>
         {(["en", "ru"] as const).map((l) => (
@@ -107,6 +108,32 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
         </ul>
       </section>
     </aside>
+  );
+}
+
+/** The game's record beside the board (design D4): folded, grouped by round, oldest first. */
+function Journal({ set, state }: { set: GameSet; state: GameState }) {
+  const name = (id: string) => set.investigators.find((i) => i.id === id)?.name ?? id;
+  const rounds = [...new Set(state.journal.map((e) => e.round))];
+  return (
+    <details className="journal">
+      <summary>Journal ({state.journal.length} lines)</summary>
+      {rounds.map((round) => (
+        <section key={round}>
+          <h3>Round {round}</h3>
+          <ol>
+            {state.journal
+              .filter((e) => e.round === round)
+              .map((e, n) => (
+                <li key={n}>
+                  {e.phase === "action" ? "Action" : e.phase === "encounter" ? "Encounter" : "Mythos"}
+                  {e.who && `, ${name(e.who)}`}: {e.text}
+                </li>
+              ))}
+          </ol>
+        </section>
+      ))}
+    </details>
   );
 }
 
