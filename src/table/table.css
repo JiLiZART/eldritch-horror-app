@@ -154,4 +154,7 @@ body {
   border: 0;
   background: none;
   cursor: pointer;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline dotted;
 }
