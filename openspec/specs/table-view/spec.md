@@ -231,7 +231,7 @@ While a game is in progress the table SHALL show each reserve card's face in the
 - **THEN** the slots show the refilled reserve
 
 ### Requirement: The Ancient One's tableau lies beside the board
-The Ancient One sheet SHALL lie faceup to the right of the board, flipped to its back once the Ancient One has awakened; the current mystery card SHALL lie below the sheet, and the ongoing mythos cards SHALL lie in a row below the mystery, in play order; the tableau SHALL be empty without a game in progress.
+The Ancient One sheet SHALL lie faceup to the right of the board, flipped to its back once the Ancient One has awakened; the current mystery card SHALL lie below the sheet, and the ongoing mythos cards SHALL lie in a row below the mystery, in play order, with the mythos card drawn this round lying first in that row while the Mythos phase lasts; the tableau SHALL be empty without a game in progress.
 
 #### Scenario: Sheet and mystery at set-up
 - **WHEN** a game against Azathoth is set up
@@ -244,6 +244,10 @@ The Ancient One sheet SHALL lie faceup to the right of the board, flipped to its
 #### Scenario: Awakened
 - **WHEN** the Ancient One awakens
 - **THEN** the sheet shows its back
+
+#### Scenario: The drawn mythos card on the table
+- **WHEN** the Mythos phase opens and its card is drawn
+- **THEN** that card lies first in the tableau's mythos row until the phase ends, and leaves the row unless it stays in play as an ongoing card
 
 ### Requirement: A card face can be brought up to read
 Clicking a card face on the table (a reserve card, the Ancient One sheet, the mystery card or an ongoing mythos card) SHALL glide the view to that card and zoom until the card fills most of the view's height, within the zoom limits; the selection SHALL NOT change. The player's own panning and zooming afterwards SHALL hold as usual.
