@@ -1,4 +1,4 @@
-import { use, useEffect, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useRef, useState } from "react";
 import { activeGraph } from "../content/board";
 import { content } from "../content/client";
 import { travel } from "../engine/actions";
@@ -11,7 +11,7 @@ import { NewGame } from "./NewGame";
 import { Panel } from "./Panel";
 import { LangProvider, translate, useT } from "./lang";
 import { piecesOnSpace } from "./pieces";
-import { fileName, loadGame, loadSlots, newSlotId, parseGame, removeGame, renameGame, saveGame, slotName } from "./saved";
+import { fileName, gameKey, loadGame, loadSlots, newSlotId, parseGame, removeGame, renameGame, saveGame, slotName } from "./saved";
 import { type CardFace, Table, type TableProps } from "./Table";
 import { type Act, Turn } from "./Turn";
 import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
@@ -61,11 +61,31 @@ export function App() {
   const [game, setGame] = useState<{ state?: GameState; error?: string }>({ state: resumed.state, error: resumed.note });
   /** States before each accepted step, newest last, saved with the slot (undo-across-reload D2). */
   const [history, setHistory] = useState<GameState[]>(resumed.history ?? []);
+  /** Set when the state came from another window's save, so this window does not save it back (window-sync D1). */
+  const followed = useRef(false);
   useEffect(() => {
     if (!game.state || !slot) return;
+    if (followed.current) {
+      followed.current = false;
+      return;
+    }
     saveGame(localStorage, slot, game.state, slotName(game.state, set.ancientOnes.find((a) => a.id === game.state!.ancientOne)?.name ?? game.state.ancientOne), history);
     setSlots(loadSlots(localStorage));
   }, [game.state, slot, set, history]);
+  // Another window of this browser saving the same slot moves this one along with it (window-sync D1).
+  useEffect(() => {
+    if (!slot) return;
+    const follow = (e: StorageEvent) => {
+      if (e.key !== gameKey(slot)) return;
+      const { state, history } = loadGame(localStorage, slot);
+      if (!state) return;
+      followed.current = true;
+      setGame({ state });
+      setHistory(history ?? []);
+    };
+    window.addEventListener("storage", follow);
+    return () => window.removeEventListener("storage", follow);
+  }, [slot]);
   /** Opens a game in a fresh slot (a start or a loaded file). */
   const openNew = (state: GameState) => {
     setSlot(newSlotId());

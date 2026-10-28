@@ -20,7 +20,9 @@ export interface SlotIndex {
 const INDEX = "eldritch-horror.games";
 /** The single-slot key from before slots existed; migrated into a slot on first load. */
 const LEGACY = "eldritch-horror.game";
-const key = (id: string) => `eldritch-horror.game.${id}`;
+/** The storage key of a slot's game; other windows watch it to follow the game (window-sync D1). */
+export const gameKey = (id: string) => `eldritch-horror.game.${id}`;
+const key = gameKey;
 /** The states before the slot's last accepted steps, newest last (undo-across-reload D1). */
 const historyKey = (id: string) => `eldritch-horror.history.${id}`;
 const HISTORY = 10;
@@ -93,8 +95,9 @@ export function loadGame(storage: Slot, id: string): { state?: GameState; histor
 
 /** Saves the game and the last ten states before its steps into its slot and makes it the current one. */
 export function saveGame(storage: Slot, id: string, state: GameState, name: string, history: GameState[] = []): void {
-  write(storage, key(id), JSON.stringify(state));
+  // The history goes first: another window following the game key must find the history already there (window-sync D1).
   write(storage, historyKey(id), JSON.stringify(history.slice(-HISTORY)));
+  write(storage, key(id), JSON.stringify(state));
   const index = loadSlots(storage);
   const title = index.slots.find((s) => s.id === id)?.title;
   const info: SlotInfo = { id, name, savedAt: Date.now(), ...(title ? { title } : {}) };

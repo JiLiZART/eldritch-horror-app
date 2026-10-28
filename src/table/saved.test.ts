@@ -76,6 +76,12 @@ describe("the last step can be undone", () => {
     saveGame(storage, "a", game(), "A", steps(12));
     expect(loadGame(storage, "a").history?.map((s) => s.round)).toEqual([3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
   });
+  it("writes the history before the game, so a following window finds both", () => {
+    const order: string[] = [];
+    const storage: Slot = { getItem: () => null, setItem: (k) => void order.push(k), removeItem: () => {} };
+    saveGame(storage, "a", game(), "A", steps(1));
+    expect(order.indexOf("eldritch-horror.history.a")).toBeLessThan(order.indexOf("eldritch-horror.game.a"));
+  });
   it("drops the history with its slot", () => {
     const storage = fake();
     saveGame(storage, "a", game(), "A", steps(2));
