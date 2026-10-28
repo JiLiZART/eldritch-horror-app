@@ -102,6 +102,25 @@ function check(s: GameState, ref: ReturnType<typeof reference>, where: string, p
     if (i.defeated === "sanity") expect(i.sanity, `${where}: ${i.id} defeated by sanity`).toBe(0);
   }
   for (const m of s.monsters) expect(spaces.has(m.space), `${where}: monster ${m.id} on ${m.space}`).toBe(true);
+  // The board's own numbers stay within the rules (fuzz-board-bounds D1).
+  const sheet = set.ancientOnes.find((a) => a.id === s.ancientOne)!;
+  for (const m of s.monsters) {
+    const printed = set.monsters.find((x) => x.id === m.id)!;
+    const combat = printed.combat.onAncientOneSheet ? sheet.cultists : printed.combat;
+    expect(m.health, `${where}: monster ${m.id} health lost`).toBeGreaterThanOrEqual(0);
+    if (combat.toughness !== undefined) expect(m.health, `${where}: monster ${m.id} health lost under toughness ${combat.toughness}`).toBeLessThan(combat.toughness);
+  }
+  for (const [kind, list] of [["gates", s.gates], ["clues", s.clues]] as const) {
+    expect(new Set(list).size, `${where}: ${kind} laid once per space`).toBe(list.length);
+    for (const space of list) expect(spaces.has(space), `${where}: ${kind} on ${space}`).toBe(true);
+  }
+  for (const space of s.rumors) expect(spaces.has(space), `${where}: rumor on ${space}`).toBe(true);
+  for (const [space, count] of Object.entries(s.eldritch)) {
+    expect(spaces.has(space), `${where}: eldritch on ${space}`).toBe(true);
+    expect(count, `${where}: eldritch count on ${space}`).toBeGreaterThanOrEqual(0);
+  }
+  for (const count of s.eldritchOnOmen) expect(count, `${where}: eldritch on the omen track`).toBeGreaterThanOrEqual(0);
+  expect(s.mysteryTokens, `${where}: mystery tokens`).toBeGreaterThanOrEqual(0);
 }
 
 /** Candidate steps for the state, each closing over random picks. */
