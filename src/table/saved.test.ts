@@ -18,20 +18,25 @@ const fake = (): Slot & { items: Map<string, string> } => {
 };
 
 describe("the game in progress survives a reload", () => {
-  it("loads back what was saved", () => {
+  it("loads back what was saved, with no note", () => {
     const storage = fake();
     saveGame(storage, game());
-    expect(loadGame(storage)).toEqual(game());
+    expect(loadGame(storage)).toEqual({ state: game() });
   });
   it("loads nothing from an empty slot", () => {
-    expect(loadGame(fake())).toBeUndefined();
+    expect(loadGame(fake())).toEqual({});
   });
-  it("ignores garbage and a save without a phase", () => {
+  it("sets aside garbage and a save without a phase with a note", () => {
     const storage = fake();
     storage.setItem("eldritch-horror.game", "{not json");
-    expect(loadGame(storage)).toBeUndefined();
+    expect(loadGame(storage)).toEqual({ note: "the saved game could not be read" });
     storage.setItem("eldritch-horror.game", JSON.stringify({ seed: 3 }));
-    expect(loadGame(storage)).toBeUndefined();
+    expect(loadGame(storage)).toEqual({ note: "the saved game could not be read" });
+  });
+  it("sets aside a save from an older state shape with a note", () => {
+    const storage = fake();
+    storage.setItem("eldritch-horror.game", JSON.stringify({ ...game(), version: 1 }));
+    expect(loadGame(storage)).toEqual({ note: "the saved game was written by an older version and was set aside" });
   });
   it("clears the slot", () => {
     const storage = fake();

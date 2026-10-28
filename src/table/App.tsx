@@ -38,7 +38,10 @@ export function App() {
   const [enabled, setEnabled] = useState(() => new Set(["eh01"]));
   const [selected, setSelected] = useState<string>();
   /** The game in progress (resumed from the browser's slot), or the reason the last start was refused. */
-  const [game, setGame] = useState<{ state?: GameState; error?: string }>(() => ({ state: loadGame(localStorage) }));
+  const [game, setGame] = useState<{ state?: GameState; error?: string }>(() => {
+    const { state, note } = loadGame(localStorage);
+    return { state, error: note };
+  });
   /** States before each accepted step this session, newest last (design D2). */
   const [history, setHistory] = useState<GameState[]>([]);
   useEffect(() => {

@@ -1,6 +1,7 @@
 import type { AncientOne, Board, Card, GameSet, Investigator, Monster, MythosColor, MythosStage } from "../content/types";
 import { rng, shuffle, type Random } from "./rng";
 import { spawnClue, spawnGate } from "./spawn";
+import { STATE_VERSION } from "./types";
 import type { GameState, InvestigatorState, MonsterInstance, ReferenceCard, SetupOptions } from "./types";
 
 export interface Content {
@@ -83,6 +84,7 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
     rumors: [],
     eldritch: {},
     referenceCard,
+    version: STATE_VERSION,
     round: 1,
     journal: [],
     phase: { name: "action", active: investigators[0]!.id, taken: [] },

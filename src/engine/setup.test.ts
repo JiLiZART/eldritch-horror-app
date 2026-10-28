@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { setupGame } from "./setup";
+import { STATE_VERSION } from "./types";
 import type { SetupOptions } from "./types";
 
 const root = join(import.meta.dirname, "../..");
@@ -36,6 +37,9 @@ describe("setup accepts a legal group", () => {
     const starting = s.investigators.reduce((n, i) => n + i.clues, 0);
     expect(s.heldClues).toHaveLength(starting);
     for (const id of s.heldClues) expect(s.cluePool).not.toContain(id);
+  });
+  it("carries the current state version", () => {
+    expect(setup().version).toBe(STATE_VERSION);
   });
   it("starts with an empty journal", () => {
     expect(setup().journal).toEqual([]);

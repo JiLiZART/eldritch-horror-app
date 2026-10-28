@@ -1,6 +1,9 @@
 import type { Skill } from "../content/types";
 /** Game state: plain JSON data, index 0 of every deck is the top card. View state lives elsewhere. */
 
+/** Shape of `GameState` as saved; bump it whenever a field is added, removed or renamed, so an older save is set aside instead of breaking later. */
+export const STATE_VERSION = 2;
+
 export type Difficulty = "normal" | "easy" | "hard";
 
 export interface SetupOptions {
@@ -126,6 +129,8 @@ export interface ReferenceCard {
 }
 
 export interface GameState {
+  /** `STATE_VERSION` at the time of setup. */
+  version: number;
   seed: number;
   /** Tests rolled so far; seeds the next test's dice. */
   rolls: number;
