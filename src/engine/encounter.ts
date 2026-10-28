@@ -134,16 +134,19 @@ function settle(state: GameState, content: Content, monster: MonsterInstance): G
   const { name, epic, combat } = combatOf(state, content, target.id);
   if (combat.toughness !== undefined && target.health >= combat.toughness) {
     const gone = { ...state, monsters: state.monsters.filter((m) => m !== target) };
-    return log(epic ? gone : toCup(gone, [target]), `the ${name} is defeated${epic ? "" : " and returns to the cup"}`);
+    return log(epic ? gone : toCup(gone, [target]), `the ${name} is defeated${epic ? "" : target.setAside ? " and is set aside again" : " and returns to the cup"}`);
   }
   const stays = log(state, `the ${name} stays with ${target.health} health lost${combat.toughness === undefined ? " (toughness printed as a formula: left to the players)" : ""}`);
   return target.ambush ? log(returnAmbushers(stays), `the ${name} returns to the cup after the ambush`) : stays;
 }
 
 /** Tokens go back into the cup, which is shuffled at once from the seed (EH_reference p.11). */
-export function toCup(state: GameState, tokens: MonsterInstance[]): GameState {
-  const { items: monsterCup, rolls } = reshuffle(state, [...state.monsterCup, ...tokens.map(({ id, instance }) => ({ id, instance }))]);
-  return { ...state, monsterCup, rolls };
+export function toCup(state: GameState, tokens: (MonsterInstance & { setAside?: true })[]): GameState {
+  const strip = ({ id, instance }: MonsterInstance) => ({ id, instance });
+  const aside = tokens.filter((t) => t.setAside).map(strip);
+  const back = tokens.filter((t) => !t.setAside).map(strip);
+  const { items: monsterCup, rolls } = back.length > 0 ? reshuffle(state, [...state.monsterCup, ...back]) : { items: state.monsterCup, rolls: state.rolls };
+  return { ...state, monsterCup, rolls, setAsideMonsters: [...state.setAsideMonsters, ...aside] };
 }
 
 /** Ambushing tokens were never spawned: back to the cup (manual p.3 "Ambush"). */

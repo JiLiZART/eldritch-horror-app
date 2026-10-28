@@ -144,7 +144,7 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
   const cardName = (id: string) => set.cards.find((c) => c.id === id)?.name ?? id;
   const spaceName = (id: string) => board.spaces.find((s) => s.id === id)?.name.en ?? id;
   const { encounters, ...decks } = state.decks;
-  const sizes = Object.entries({ ...decks, ...encounters, "monster cup": state.monsterCup, "gate stack": state.gateStack, "clue pool": state.cluePool });
+  const sizes = Object.entries({ ...decks, ...encounters, "monster cup": state.monsterCup, "set aside": state.setAsideMonsters, "gate stack": state.gateStack, "clue pool": state.cluePool });
   const ongoing = state.ongoingMythos.map((id) => set.mythos.find((m) => m.id === id)).filter((m) => m !== undefined);
   return (
     <section className="status">

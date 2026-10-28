@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn } from "./actions";
-import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spendClue } from "./effects";
+import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spawnSetAside, spendClue } from "./effects";
 import { finishEncounter } from "./encounter";
 import { resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
@@ -409,5 +409,33 @@ describe("a random space is drawn from the clue pool", () => {
   });
   it("refuses with no token anywhere", () => {
     expect(() => moveInvestigatorRandomly({ ...encounters(), cluePool: [], clueDiscard: [] }, content, leo)).toThrow(/lead investigator chooses the space/);
+  });
+});
+
+describe("set-aside monsters are spawned by name and set aside again", () => {
+  const deepOne = "eh01/monster/deep-one";
+  /** Cthulhu's Encounter phase with Leo Anderson encountering and no monster on either space. */
+  const cthulhu = (): GameState => {
+    const s = setupGame(content, { ancientOne: "eh01/ancient-one/cthulhu", investigators: [leo, lily], seed: 3 });
+    return endTurn(endTurn({ ...s, monsters: s.monsters.filter((m) => !s.investigators.some((i) => i.space === m.space)) }));
+  };
+  it("spawns a set-aside Deep One on the named space", () => {
+    const before = cthulhu();
+    const s = spawnSetAside(before, content, leo, deepOne, "shanghai");
+    expect(s.monsters.at(-1)).toMatchObject({ id: deepOne, space: "shanghai", setAside: true });
+    expect(s.setAsideMonsters).toHaveLength(before.setAsideMonsters.length - 1);
+    expect(log(s)).toMatch(/Deep One spawns from the set-aside pile on Shanghai/);
+  });
+  it("refuses when none of the kind is set aside", () => {
+    const once = spawnSetAside(cthulhu(), content, leo, deepOne, "shanghai");
+    expect(() => spawnSetAside(once, content, leo, deepOne, "london")).toThrow(/no Deep One is set aside/);
+  });
+  it("sets a discarded one aside again, not into the cup", () => {
+    const once = spawnSetAside(cthulhu(), content, leo, deepOne, "shanghai");
+    const token = once.monsters.at(-1)!;
+    const s = discardMonster(once, content, token);
+    expect(s.setAsideMonsters.some((m) => m.id === deepOne)).toBe(true);
+    expect(s.monsterCup.some((m) => m.id === deepOne && m.instance === token.instance)).toBe(false);
+    expect(log(s)).toMatch(/is discarded and is set aside again/);
   });
 });

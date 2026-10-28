@@ -126,6 +126,15 @@ describe("two tests decide the fight", () => {
     });
     expect(differs).toBe(true);
   });
+  it("sets a defeated set-aside monster aside again", () => {
+    const s = seedFor(place(encounters(), byakhee, "buenos-aires"), 1, 2);
+    const flagged: GameState = { ...s, monsters: s.monsters.map((m) => (m.id === byakhee ? { ...m, setAside: true as const } : m)) };
+    const token = flagged.monsters.find((m) => m.id === byakhee)!;
+    const after = brawl(flagged, token);
+    expect(onBoard(after, byakhee)).toHaveLength(0);
+    expect(after.setAsideMonsters).toContainEqual({ id: token.id, instance: token.instance });
+    expect(after.monsterCup.filter((m) => m.id === byakhee && m.instance === token.instance)).toHaveLength(0);
+  });
   it("finishes a wounded monster", () => {
     const { after } = vs(1, 1, 1);
     expect(onBoard(after, byakhee)).toHaveLength(0);

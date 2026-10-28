@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Board, Deck, GameSet, Skill } from "../content/types";
 import { changeDoom, changeMysteryTokens, solveFinalMystery, solveMystery } from "../engine/ancientOne";
-import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spendClue } from "../engine/effects";
+import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spawnSetAside, spendClue } from "../engine/effects";
 import { OMEN_TRACK } from "../engine/omen";
 import { monsterKey } from "../engine/encounter";
 import { spaceName } from "../engine/spawn";
@@ -32,6 +32,8 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
   const [skill, setSkill] = useState<Skill>("lore");
   const [omenSlot, setOmenSlot] = useState(0);
   const [target, setTarget] = useState<NearestTarget>("city");
+  const [aside, setAside] = useState("");
+  const asideKinds = [...new Set(state.setAsideMonsters.map((m) => m.id))].map((k) => ({ id: k, label: `${set.monsters.find((m) => m.id === k)?.name ?? k} (${state.setAsideMonsters.filter((m) => m.id === k).length})` }));
   const content = { board, set };
   const me = state.investigators.find((i) => i.id === id) ?? state.investigators[0]!;
   const name = (x: string) => set.investigators.find((i) => i.id === x)?.name ?? x;
@@ -193,6 +195,25 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
           <button type="button" onClick={() => onAct((s) => spawnMonsterRandomly(s, content, me.id))}>
             Spawn monster on a random space
           </button>
+          {asideKinds.length > 0 && (
+            <>
+              {" "}
+              <label>
+                Set aside{" "}
+                <select value={aside} onChange={(e) => setAside(e.target.value)}>
+                  <option value="">choose</option>
+                  {asideKinds.map((k) => (
+                    <option key={k.id} value={k.id}>
+                      {k.label}
+                    </option>
+                  ))}
+                </select>
+              </label>{" "}
+              <button type="button" disabled={!aside} onClick={() => onAct((s) => spawnSetAside(s, content, me.id, aside, space))}>
+                Spawn set-aside on {spaceName(content, space)}
+              </button>
+            </>
+          )}
           {state.phase.name === "encounter" && (
             <button type="button" onClick={() => onAct((s) => ambush(s, content))}>
               Ambush

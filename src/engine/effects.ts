@@ -178,7 +178,7 @@ export function moveMonsterToward(state: GameState, content: Content, monster: M
 export function discardMonster(state: GameState, content: Content, monster: MonsterInstance): GameState {
   const { token, label, epic } = monsterOn(state, content, monster);
   const left = { ...state, monsters: state.monsters.filter((m) => m !== token) };
-  return epic ? note(left, `${label} is discarded and leaves the game`) : note(toCup(left, [token]), `${label} is discarded and returns to the cup`);
+  return epic ? note(left, `${label} is discarded and leaves the game`) : note(toCup(left, [token]), `${label} is discarded and ${token.setAside ? "is set aside again" : "returns to the cup"}`);
 }
 
 export type BoardToken = "rumor" | "eldritch";
@@ -243,6 +243,18 @@ export function spawnMonsterByText(state: GameState, content: Content, id: strin
   subject(state, id);
   knownSpace(content, space);
   return spawnMonster(state, content, space);
+}
+
+/** Ancient One text spawns a set-aside monster by kind (manual p.4): none left of the kind means all are on the board. */
+export function spawnSetAside(state: GameState, content: Content, id: string, monsterId: string, space: string): GameState {
+  subject(state, id);
+  knownSpace(content, space);
+  const sheet = content.set.monsters.find((m) => m.id === monsterId);
+  const token = state.setAsideMonsters.find((m) => m.id === monsterId);
+  if (!token) throw new Error(`no ${sheet?.name ?? monsterId} is set aside`);
+  const at = sheet?.spawnMoveTo ?? space;
+  const spawned: MonsterOnBoard = { ...token, space: at, health: 0, setAside: true };
+  return note({ ...state, setAsideMonsters: state.setAsideMonsters.filter((m) => m !== token), monsters: [...state.monsters, spawned] }, `${sheet?.name ?? monsterId} spawns from the set-aside pile on ${spaceName(content, at)}`);
 }
 
 /** "A monster ambushes you" (manual p.3): the top cup token fights at once on the investigator's space, not spawned, back to the cup afterwards. */

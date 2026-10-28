@@ -36,6 +36,8 @@ export interface MonsterOnBoard extends MonsterInstance {
   health: number;
   /** Drawn for an ambush, not spawned: back to the cup once the fight ends (manual p.3). */
   ambush?: true;
+  /** Spawned from the set-aside pile: set aside again, never into the cup (manual p.4). */
+  setAside?: true;
 }
 
 export type Ticket = "train" | "ship";
