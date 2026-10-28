@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn } from "./actions";
-import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spawnSetAside, spendClue, takePossessions } from "./effects";
+import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spawnNamed, spawnSetAside, spendClue, standUp, takePossessions } from "./effects";
 import { defeat, finishEncounter } from "./encounter";
 import { resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
@@ -149,6 +149,32 @@ describe("a defeated investigator's possessions are collected", () => {
     expect(who(taken, leo).possessions).toEqual([]);
     expect(log(taken)).toMatch(/Lily Chen takes Leo Anderson's possessions/);
     expect(() => takePossessions(taken, content, lily, leo)).toThrow(/nothing is left/);
+  });
+});
+
+describe("a named monster is spawned from the cup", () => {
+  const cultist = "eh01/monster/cultist";
+  it("takes the kind from wherever it lies in the cup", () => {
+    const before = encounters();
+    const s = spawnNamed(before, content, leo, cultist, "london");
+    expect(s.monsters.at(-1)).toMatchObject({ id: cultist, space: "london" });
+    expect(s.monsterCup).toHaveLength(before.monsterCup.length - 1);
+    expect(log(s)).toMatch(/Cultist spawns on London/);
+  });
+  it("refuses a kind the cup lacks", () => {
+    const s = encounters();
+    expect(() => spawnNamed({ ...s, monsterCup: s.monsterCup.filter((m) => m.id !== cultist) }, content, leo, cultist, "london")).toThrow(/no Cultist is in the cup/);
+  });
+});
+
+describe("card text ends the delay early", () => {
+  it("stands a delayed investigator up", () => {
+    const s = standUp(delay(encounters(), content, leo), content, leo);
+    expect(who(s, leo).delayed).toBeUndefined();
+    expect(log(s)).toMatch(/Leo Anderson stands up/);
+  });
+  it("refuses when not delayed", () => {
+    expect(() => standUp(encounters(), content, leo)).toThrow(/is not delayed/);
   });
 });
 

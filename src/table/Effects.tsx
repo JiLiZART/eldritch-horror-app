@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Board, Deck, GameSet, Skill } from "../content/types";
 import { changeDoom, changeMysteryTokens, solveFinalMystery, solveMystery } from "../engine/ancientOne";
-import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spawnSetAside, spendClue } from "../engine/effects";
+import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spawnNamed, spawnSetAside, spendClue, standUp } from "../engine/effects";
 import { OMEN_TRACK } from "../engine/omen";
 import { monsterKey } from "../engine/encounter";
 import { spaceName } from "../engine/spawn";
@@ -33,6 +33,8 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
   const [omenSlot, setOmenSlot] = useState(0);
   const [target, setTarget] = useState<NearestTarget>("city");
   const [aside, setAside] = useState("");
+  const [kind, setKind] = useState("");
+  const cupKinds = [...new Set(state.monsterCup.map((m) => m.id))].map((k) => ({ id: k, label: `${set.monsters.find((m) => m.id === k)?.name ?? k} (${state.monsterCup.filter((m) => m.id === k).length})` })).sort((a, b) => a.label.localeCompare(b.label));
   const asideKinds = [...new Set(state.setAsideMonsters.map((m) => m.id))].map((k) => ({ id: k, label: `${set.monsters.find((m) => m.id === k)?.name ?? k} (${state.setAsideMonsters.filter((m) => m.id === k).length})` }));
   const content = { board, set };
   const me = state.investigators.find((i) => i.id === id) ?? state.investigators[0]!;
@@ -92,6 +94,9 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
           </button>
           <button type="button" onClick={() => onAct((s) => delay(s, content, me.id))}>
             Delay
+          </button>
+          <button type="button" onClick={() => onAct((s) => standUp(s, content, me.id))}>
+            Stand up
           </button>
           <button type="button" onClick={() => onAct((s) => devour(s, content, me.id))}>
             Devour
@@ -194,6 +199,21 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
           </button>
           <button type="button" onClick={() => onAct((s) => spawnMonsterRandomly(s, content, me.id))}>
             Spawn monster on a random space
+          </button>
+          {" "}
+          <label>
+            Kind in the cup{" "}
+            <select value={kind} onChange={(e) => setKind(e.target.value)}>
+              <option value="">choose</option>
+              {cupKinds.map((k) => (
+                <option key={k.id} value={k.id}>
+                  {k.label}
+                </option>
+              ))}
+            </select>
+          </label>{" "}
+          <button type="button" disabled={!kind} onClick={() => onAct((s) => spawnNamed(s, content, me.id, kind, space))}>
+            Spawn named on {spaceName(content, space)}
           </button>
           {asideKinds.length > 0 && (
             <>

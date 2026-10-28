@@ -56,6 +56,13 @@ export function moveInvestigatorToNearest(state: GameState, content: Content, id
   return moveInvestigator(state, content, id, space);
 }
 
+/** Card text ends a delay early (manual p.4 "Delayed"). */
+export function standUp(state: GameState, content: Content, id: string): GameState {
+  const me = subject(state, id);
+  if (!me.delayed) throw new Error(`${name(content, id)} is not delayed`);
+  return note(replace(state, { ...me, delayed: undefined }), `${name(content, id)} stands up`);
+}
+
 /** Lays the token on its side (manual p.4 "Delayed"). Deviation: text that ends the delay early is left to the players. */
 export function delay(state: GameState, content: Content, id: string): GameState {
   const me = subject(state, id);
@@ -243,6 +250,17 @@ export function spawnMonsterByText(state: GameState, content: Content, id: strin
   subject(state, id);
   knownSpace(content, space);
   return spawnMonster(state, content, space);
+}
+
+/** Card text spawns a monster of a named kind from wherever it lies in the cup; the rest keep their order. */
+export function spawnNamed(state: GameState, content: Content, id: string, monsterId: string, space: string): GameState {
+  subject(state, id);
+  knownSpace(content, space);
+  const sheet = content.set.monsters.find((m) => m.id === monsterId);
+  const token = state.monsterCup.find((m) => m.id === monsterId);
+  if (!token) throw new Error(`no ${sheet?.name ?? monsterId} is in the cup`);
+  const at = sheet?.spawnMoveTo ?? space;
+  return note({ ...state, monsterCup: state.monsterCup.filter((m) => m !== token), monsters: [...state.monsters, { ...token, space: at, health: 0 }] }, `${sheet?.name ?? monsterId} spawns on ${spaceName(content, at)}`);
 }
 
 /** Ancient One text spawns a set-aside monster by kind (manual p.4): none left of the kind means all are on the board. */
