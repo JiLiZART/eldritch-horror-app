@@ -49,7 +49,7 @@ When the app opens, the board texture SHALL be visible on a flat table seen from
 - **THEN** one line beside the Game controls names the arrow, plus, minus and Escape keys and what they do, in Russian
 
 ### Requirement: Spaces and paths are drawn from the board data
-Every active space SHALL be marked at its coordinates on the texture and every active path SHALL be drawn between its two spaces, coloured by type (train, ship, uncharted, local), matching `inspired/All_boards.jpg` and the `board-graph` capability.
+Every active space SHALL be marked at its coordinates on the texture and every active path SHALL be drawn between its two spaces, coloured by type (train, ship, uncharted, local), matching `inspired/All_boards.jpg` and the `board-graph` capability. The path legend SHALL list only the types among the paths shown, in the order train, ship, uncharted, local.
 
 #### Scenario: Core graph
 - **WHEN** only the core set is enabled
@@ -58,6 +58,10 @@ Every active space SHALL be marked at its coordinates on the texture and every a
 #### Scenario: Path colour
 - **WHEN** the path between San Francisco and space 5 is drawn
 - **THEN** it uses the train colour from the legend shown on screen
+
+#### Scenario: Legend without local paths
+- **WHEN** only the core set is enabled
+- **THEN** the legend reads train, ship and uncharted, and once The Dreamlands is toggled on it adds local
 
 ### Requirement: Sets can be toggled
 The player SHALL be able to enable or disable each set that adds spaces (Mountains of Madness, Under the Pyramids, The Dreamlands). Disabling a set SHALL hide its spaces and every path touching them. While any set beyond the core is toggled on, the panel SHALL say in one line, in its language, that those spaces are a preview and the game plays on the core set.
