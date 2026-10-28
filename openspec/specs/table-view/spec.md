@@ -39,7 +39,7 @@ The player SHALL be able to enable or disable each set that adds spaces (Mountai
 - **THEN** the core set is always on and cannot be switched off
 
 ### Requirement: A space can be selected
-Clicking a marker SHALL select that space and show its id, English and Russian names, kind, region, set, its neighbours with the path type to each, and the pieces standing on it. Clicking empty table SHALL clear the selection.
+Clicking a marker SHALL select that space and show its id, English and Russian names, kind, region, set, its neighbours with the path type to each, and the pieces standing on it. Clicking empty table SHALL clear the selection. When the active investigator changes in the Action or Encounter phase, their space SHALL become the selected space, so the camera follows the turn; a route being picked SHALL NOT be disturbed.
 
 #### Scenario: Select London
 - **WHEN** the player clicks the London marker
@@ -52,6 +52,14 @@ Clicking a marker SHALL select that space and show its id, English and Russian n
 #### Scenario: Pieces on the space
 - **WHEN** a game is in progress and the player selects a city holding a gate, a monster and an investigator
 - **THEN** the panel names the gate, the monster and the investigator on that space
+
+#### Scenario: Camera follows the active investigator
+- **WHEN** the turn or the encounter passes to Lily Chen on Shanghai
+- **THEN** Shanghai becomes the selected space and the camera moves there
+
+#### Scenario: Route picking undisturbed
+- **WHEN** a travel route is being picked
+- **THEN** the selection stays with the route until it is confirmed or cancelled
 
 ### Requirement: Pieces stand where the game state puts them
 The table SHALL show the pieces of the game in progress at their spaces: each chosen investigator's pawn with its pawn image, lying on its side while the investigator is delayed or defeated and upright otherwise, a devoured or removed investigator's pawn gone, each open gate with its city's gate token, each facedown clue token, each monster with its token image, the active expedition token, each rumor and eldritch token with the set's token image, and the lead investigator token beside the lead's pawn. Several pieces on one space SHALL remain distinguishable. Before a game starts, and after one is abandoned, no piece SHALL stand on the board.
