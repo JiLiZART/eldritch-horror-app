@@ -143,8 +143,13 @@ export function devour(state: GameState, content: Content, id: string): GameStat
 
 
 /** "Move to a random space" by card text. */
-export function moveInvestigatorRandomly(state: GameState, content: Content, id: string): GameState {
+/** Whether a clue token is left to draw a random space from (random-space-choice D1). */
+export const clueTokensLeft = (state: GameState): boolean => state.cluePool.length > 0 || state.clueDiscard.length > 0;
+
+/** With no clue token left the lead investigator names the space (EH_reference p.11; random-space-choice D2). */
+export function moveInvestigatorRandomly(state: GameState, content: Content, id: string, chosen?: string): GameState {
   subject(state, id);
+  if (!clueTokensLeft(state) && chosen) return moveInvestigator(note(state, `no clue token is left, so the lead investigator names ${spaceName(content, chosen)}`), content, id, chosen);
   const drawn = randomSpace(state);
   return moveInvestigator(named(drawn.state, content, drawn.space), content, id, drawn.space);
 }

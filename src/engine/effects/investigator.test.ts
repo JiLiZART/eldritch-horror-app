@@ -3,7 +3,7 @@ import { finishEncounter } from "../encounter";
 import { resolveMythos } from "../mythos";
 import { note } from "../spawn";
 import type { GameState } from "../types";
-import { changeHealth, changeSanity, delay, devour, discardImprovement, gainClue, improveSkill, moveInvestigator, moveInvestigatorRandomly, moveInvestigatorToNearest, nearestSpaces, spawnMonsterRandomly, spendClue, spendHealth, spendSanity, standUp } from "../effects";
+import { changeHealth, changeSanity, clueTokensLeft, delay, devour, discardImprovement, gainClue, improveSkill, moveInvestigator, moveInvestigatorRandomly, moveInvestigatorToNearest, nearestSpaces, spawnMonsterRandomly, spendClue, spendHealth, spendSanity, standUp } from "../effects";
 import { set, content, leo, lily, game, who, patch, encounters, log, cardName, encountersLog } from "./fixture";
 
 describe("card text is applied in the Encounter and Mythos phases", () => {
@@ -215,6 +215,16 @@ describe("a devoured investigator leaves the game", () => {
 
 describe("a random space is drawn from the clue pool", () => {
   const topLondon = (s: GameState): GameState => ({ ...s, cluePool: ["london", ...s.cluePool.filter((c) => c !== "london")] });
+  it("lets the lead name the space once no clue token is left, and ignores the name while one is", () => {
+    const bare = { ...encounters(), cluePool: [], clueDiscard: [] };
+    expect(clueTokensLeft(bare)).toBe(false);
+    expect(clueTokensLeft(encounters())).toBe(true);
+    expect(() => moveInvestigatorRandomly(bare, content, leo)).toThrow(/the lead investigator chooses the space/);
+    const chosen = moveInvestigatorRandomly(bare, content, leo, "tokyo");
+    expect(who(chosen, leo).space).toBe("tokyo");
+    expect(log(chosen)).toMatch(/no clue token is left, so the lead investigator names Tokyo/);
+    expect(who(moveInvestigatorRandomly(topLondon(encounters()), content, leo, "tokyo"), leo).space).toBe("london");
+  });
   it("moves the investigator to the top clue token's space and discards the token", () => {
     const s = moveInvestigatorRandomly(topLondon(encounters()), content, leo);
     expect(who(s, leo).space).toBe("london");

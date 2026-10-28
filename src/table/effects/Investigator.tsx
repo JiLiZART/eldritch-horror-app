@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Board, Skill, GameSet } from "../../content/types";
-import { changeHealth, changeSanity, delay, devour, discardImprovement, gainClue, improveSkill, moveInvestigator, moveInvestigatorRandomly, moveInvestigatorToNearest, nearestSpaces, spendClue, spendHealth, spendSanity, standUp } from "../../engine/effects";
+import { changeHealth, changeSanity, clueTokensLeft, delay, devour, discardImprovement, gainClue, improveSkill, moveInvestigator, moveInvestigatorRandomly, moveInvestigatorToNearest, nearestSpaces, spendClue, spendHealth, spendSanity, standUp } from "../../engine/effects";
 import type { NearestTarget } from "../../engine/effects";
 import type { GameState, InvestigatorState } from "../../engine/types";
 import { useSpaceName, useT } from "../lang";
@@ -25,6 +25,8 @@ export function InvestigatorEffects({ board, set, state, me, space, onAct }: Pro
   const [target, setTarget] = useState<NearestTarget>("city");
   /** The players' pick among tied nearest spaces (nearest-choice D3). */
   const [chosen, setChosen] = useState("");
+  /** The lead's named space when no clue token is left to draw a random one (random-space-choice D3). */
+  const [named, setNamed] = useState("");
   const content = { board, set };
   const tied = nearestSpaces(state, content, me.id, target);
   const t = useT();
@@ -69,7 +71,17 @@ export function InvestigatorEffects({ board, set, state, me, space, onAct }: Pro
         <button type="button" onClick={() => onAct((s) => moveInvestigator(s, content, me.id, space))}>
           {t("effects.moveToSpace", { space: spaceName(board, space) })}
         </button>
-        <button type="button" onClick={() => onAct((s) => moveInvestigatorRandomly(s, content, me.id))}>
+        {!clueTokensLeft(state) && (
+          <select value={named} onChange={(e) => setNamed(e.target.value)}>
+            <option value="">{t("effects.choose")}</option>
+            {board.spaces.map((s) => (
+              <option key={s.id} value={s.id}>
+                {spaceName(board, s.id)}
+              </option>
+            ))}
+          </select>
+        )}{" "}
+        <button type="button" onClick={() => onAct((s) => moveInvestigatorRandomly(s, content, me.id, named || undefined))}>
           {t("effects.moveRandom")}
         </button>{" "}
         <label>
