@@ -13,7 +13,7 @@ See proposal.md. `Tableau` draws the mystery card as a `Face` at `tableauPositio
 ## Decisions
 
 ### D1. `tableau.tokens`
-`TableProps.tableau` gains `tokens: number`; `Tableau` draws that many 0.3-wide token meshes at `spreadOnCircle(tokens, 0.35)` offsets from the card's centre, 0.01 above it, no click (a click there focuses the card). Layer: view.
+`TableProps.tableau` gains `tokens: number`; `Tableau` draws that many 0.26-wide token meshes at `spreadOnCircle(tokens, 0.17)` offsets from the card's art corner (0.85 right and 0.38 up from its centre), so the text stays readable, 0.01 above it, no click (a click there focuses the card). Layer: view.
 
 ## Risks / Trade-offs
 

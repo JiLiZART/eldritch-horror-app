@@ -21,7 +21,7 @@ export interface TableProps {
   /** The doom value, the omen index and the eldritch tokens per omen space; undefined without a game (track-tokens D3). */
   tracks?: { doom: number; omen: number; eldritch: number[]; reserve: string[] };
   /** The Ancient One's card faces beside the board: the sheet, the current mystery and the ongoing mythos cards (tableau D2). */
-  tableau?: { sheet: string; mystery?: string; mythos: string[] };
+  tableau?: { sheet: string; mystery?: string; mythos: string[]; tokens: number };
   /** The investigators' sheet faces in seat order, below the board, each with the cards held under it (held-cards D2). */
   sheets?: { image: string; held: string[]; health: number; sanity: number; improvements: Partial<Record<Skill, 1 | 2>>; tickets: Ticket[] }[];
   /** Changes each time the player asks for the whole table; the view glides out to it (fit-view D1). */
@@ -333,15 +333,25 @@ function Face({ map, position, size, onFocus }: FaceProps) {
 
 /** The Ancient One sheet, the current mystery and the ongoing mythos cards in a column right of the board (tableau D2). */
 function Tableau({ board, tableau, onFocus }: { board: Board; tableau: NonNullable<TableProps["tableau"]>; onFocus: FaceProps["onFocus"] }) {
-  const images = [tableau.sheet, ...(tableau.mystery ? [tableau.mystery] : []), ...tableau.mythos];
+  const mysteryToken = `${TOKENS}/mystery-token.webp`;
+  const images = [tableau.sheet, ...(tableau.mystery ? [tableau.mystery] : []), ...tableau.mythos, mysteryToken];
   const textures = useTexture(images.map((i) => `/${i}`), srgb);
   const textureOf = new Map(images.map((img, i) => [img, textures[i]!]));
   const [mx, my] = tableauPosition(board, 2);
   const [mw] = TABLEAU_ROWS[2]!;
+  const [cx, cy] = tableauPosition(board, 1);
   return (
     <>
       <Face map={textureOf.get(tableau.sheet)!} position={tableauPosition(board, 0)} size={TABLEAU_ROWS[0]!} onFocus={onFocus} />
       {tableau.mystery && <Face map={textureOf.get(tableau.mystery)!} position={tableauPosition(board, 1)} size={TABLEAU_ROWS[1]!} onFocus={onFocus} />}
+      {tableau.mystery &&
+        spreadOnCircle(tableau.tokens, 0.17).map(([dx, dy], n) => (
+          // The tokens the mystery has collected, fanned on the art corner of its card so the text stays readable (mystery-card-tokens D1).
+          <mesh key={`token#${n}`} position={[cx + 0.85 + dx, cy + 0.38 + dy, 0.07]}>
+            <planeGeometry args={[0.26, 0.26]} />
+            <meshBasicMaterial map={textureOf.get(mysteryToken)} transparent alphaTest={0.5} />
+          </mesh>
+        ))}
       {tableau.mythos.map((img, i) => (
         <Face key={`${img}#${i}`} map={textureOf.get(img)!} position={[mx - TABLEAU_ROWS[0]![0] / 2 + mw / 2 + i * (mw + 0.1), my]} size={TABLEAU_ROWS[2]!} onFocus={onFocus} />
       ))}

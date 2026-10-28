@@ -88,7 +88,7 @@ export function App() {
     .filter((i) => !i.removed)
     .map((i) => ({ image: set.investigators.find((x) => x.id === i.id)?.images.front, held: [...i.possessions, ...i.conditions].map(front).filter((c): c is string => !!c), health: i.health, sanity: i.sanity, improvements: i.improvements, tickets: i.tickets }))
     .filter((s): s is NonNullable<TableProps["sheets"]>[number] => !!s.image);
-  const tableau = game.state && ancientOne && { sheet: game.state.awakened && ancientOne.images.back ? ancientOne.images.back : ancientOne.images.front, mystery: ancientOne.mysteries.find((m) => m.id === game.state!.currentMystery)?.images.front, mythos: game.state.ongoingMythos.map((id) => set.mythos.find((m) => m.id === id)?.images.front).filter((i): i is string => !!i) };
+  const tableau = game.state && ancientOne && { sheet: game.state.awakened && ancientOne.images.back ? ancientOne.images.back : ancientOne.images.front, mystery: ancientOne.mysteries.find((m) => m.id === game.state!.currentMystery)?.images.front, mythos: game.state.ongoingMythos.map((id) => set.mythos.find((m) => m.id === id)?.images.front).filter((i): i is string => !!i), tokens: game.state.mysteryTokens };
   const selectedSpace = spaces.find((s) => s.id === selected);
   const toggle = (id: string, on: boolean) =>
     setEnabled((prev) => {
