@@ -248,5 +248,9 @@
   "set.eh01": "Базовая игра",
   "piece.will": "Воля {modifier}, ужас {horror}",
   "piece.strength": "Сила {modifier}, урон {damage}",
-  "piece.toughness": "стойкость {toughness}"
+  "piece.toughness": "стойкость {toughness}",
+  "piece.matchesOmen": "совпадают со знамением",
+  "gate.green": "зелёные врата",
+  "gate.blue": "синие врата",
+  "gate.red": "красные врата"
 }

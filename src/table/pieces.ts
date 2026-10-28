@@ -1,4 +1,5 @@
-import type { GameSet, MonsterCombat } from "../content/types";
+import type { Board, GameSet, MonsterCombat } from "../content/types";
+import { OMEN_TRACK } from "../engine/omen";
 import type { GameState } from "../engine/types";
 
 export type PieceKind = "gate" | "expedition" | "clue" | "rumor" | "eldritch" | "monster" | "pawn" | "lead";
@@ -27,12 +28,17 @@ const byId = <T extends { id: string }>(list: T[], id: string): T => {
 /** A panel translator, bound to the chosen language (piece-labels-language D1). */
 export type Translate = (key: string, vars?: Record<string, string | number>) => string;
 
-export function piecesOnSpace(state: GameState | undefined, set: GameSet, t: Translate): Map<string, Piece[]> {
+export function piecesOnSpace(state: GameState | undefined, board: Board, set: GameSet, t: Translate): Map<string, Piece[]> {
   const out = new Map<string, Piece[]>();
   if (!state) return out;
   const add = (space: string, piece: Piece) => out.set(space, [...(out.get(space) ?? []), piece]);
   const tokens = `cards/${set.id}/tokens`;
-  for (const space of state.gates) add(space, { kind: "gate", id: `gate:${space}`, image: `${tokens}/gates/${space}.webp`, label: t("piece.gate") });
+  for (const space of state.gates) {
+    // The gate's printed colour and whether the omen sits on it now (gate-hover-colour D1).
+    const colour = board.spaces.find((s) => s.id === space)?.gate;
+    const hint = colour && `${t(`gate.${colour}`)}${colour === OMEN_TRACK[state.omen] ? `, ${t("piece.matchesOmen")}` : ""}`;
+    add(space, { kind: "gate", id: `gate:${space}`, image: `${tokens}/gates/${space}.webp`, label: t("piece.gate"), ...(hint ? { hint } : {}) });
+  }
   add(state.activeExpedition, { kind: "expedition", id: "expedition", image: `${tokens}/active-expedition-token.webp`, label: t("piece.expedition") });
   for (const space of state.clues) add(space, { kind: "clue", id: `clue:${space}`, image: `${tokens}/clues/clues-back.webp`, label: t("piece.clue") });
   state.rumors.forEach((space, n) => add(space, { kind: "rumor", id: `rumor:${space}#${n}`, image: `${tokens}/rumor-token.webp`, label: t("piece.rumor") }));

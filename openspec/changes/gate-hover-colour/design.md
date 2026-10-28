@@ -13,7 +13,7 @@ See proposal.md. `piecesOnSpace` builds gate pieces per `state.gates`; `Space.ga
 ## Decisions
 
 ### D1. Gate hint
-`piecesOnSpace` takes the board too (it has the set and the state; the board gives the space's colour): `hint = t("piece.gateColour", { colour: t("omen.<colour>") })` plus `", " + t("piece.matchesOmen")` when the colour equals `OMEN_TRACK[state.omen]`. A space without a printed gate colour gets no hint. `pieces.test.ts` covers both branches. Layer: view model.
+`piecesOnSpace` takes the board too (it has the set and the state; the board gives the space's colour): `hint = t("gate.<colour>")` (its own strings, since Russian declines the colour with the plural noun) plus `", " + t("piece.matchesOmen")` when the colour equals `OMEN_TRACK[state.omen]`. A space without a printed gate colour gets no hint. `pieces.test.ts` covers both branches. Layer: view model.
 
 ## Risks / Trade-offs
 

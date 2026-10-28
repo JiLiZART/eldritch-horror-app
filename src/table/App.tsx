@@ -94,7 +94,7 @@ export function App() {
   const [fit, setFit] = useState(0);
   const spaces = useMemo(() => activeGraph(board, enabled).spaces, [board, enabled]);
   const t = useMemo(() => (key: string, vars?: Record<string, string | number>) => translate(panel[lang], key, vars), [panel, lang]);
-  const pieces = useMemo(() => piecesOnSpace(game.state, set, t), [game.state, set, t]);
+  const pieces = useMemo(() => piecesOnSpace(game.state, board, set, t), [game.state, board, set, t]);
   const ancientOne = set.ancientOnes.find((a) => a.id === game.state?.ancientOne);
   const front = (id: string) => set.cards.find((c) => c.id === id)?.images.front;
   const sheets = game.state?.investigators

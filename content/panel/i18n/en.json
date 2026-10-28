@@ -248,5 +248,9 @@
   "set.eh01": "Core",
   "piece.will": "Will {modifier}, horror {horror}",
   "piece.strength": "Strength {modifier}, damage {damage}",
-  "piece.toughness": "toughness {toughness}"
+  "piece.toughness": "toughness {toughness}",
+  "piece.matchesOmen": "matches the omen",
+  "gate.green": "green gate",
+  "gate.blue": "blue gate",
+  "gate.red": "red gate"
 }
