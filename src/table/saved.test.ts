@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { setupGame } from "../engine/setup";
-import { fileName, loadGame, loadSlots, parseGame, removeGame, saveGame, type Slot } from "./saved";
+import { fileName, loadGame, loadSlots, parseGame, removeGame, renameGame, saveGame, type Slot } from "./saved";
 
 const root = join(import.meta.dirname, "../..");
 const board: Board = JSON.parse(readFileSync(join(root, "content/board/board.json"), "utf8"));
@@ -55,6 +55,17 @@ describe("the game in progress survives a reload", () => {
     storage.setItem("eldritch-horror.game.x", JSON.stringify({ ...game(), version: 1 }));
     expect(loadGame(storage, "x")).toEqual({ note: "the saved game was written by an older version and was set aside" });
     expect(loadGame(storage, "nope")).toEqual({});
+  });
+});
+
+describe("a slot can carry a players' name", () => {
+  it("keeps the title through a later save and clears it when emptied", () => {
+    const storage = fake();
+    saveGame(storage, "a", game(), "Azathoth · seed 3 · round 1");
+    renameGame(storage, "a", "Tuesday group");
+    saveGame(storage, "a", { ...game(), round: 2 }, "Azathoth · seed 3 · round 2");
+    expect(loadSlots(storage).slots[0]).toMatchObject({ name: "Azathoth · seed 3 · round 2", title: "Tuesday group" });
+    expect(renameGame(storage, "a", "").slots[0]?.title).toBeUndefined();
   });
 });
 

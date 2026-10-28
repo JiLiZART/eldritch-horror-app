@@ -25,12 +25,14 @@ interface NewGameProps {
   current: string | undefined;
   onSwitch: (id: string) => void;
   onRemove: (id: string) => void;
+  /** Names a slot; empty clears the name (slot-rename D2). */
+  onRename: (id: string, title: string) => void;
 }
 
 const DIFFICULTIES: Difficulty[] = ["normal", "easy", "hard"];
 
 /** Setup choices; checkbox check order is seat order. Inputs outlive a running game so abandoning offers them again. */
-export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUndo, onFit, onSave, onLoad, onNew, slots, current, onSwitch, onRemove }: NewGameProps) {
+export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUndo, onFit, onSave, onLoad, onNew, slots, current, onSwitch, onRemove, onRename }: NewGameProps) {
   const [ancientOne, setAncientOne] = useState(set.ancientOnes[0]?.id ?? "");
   const [seats, setSeats] = useState<string[]>([]);
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
@@ -116,7 +118,8 @@ export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUn
           <ul>
             {slots.map((s) => (
               <li key={s.id}>
-                {s.name} {s.id === current && t("game.current")}{" "}
+                {s.title ?? s.name} {s.id === current && t("game.current")}{" "}
+                <input type="text" aria-label={t("game.rename")} placeholder={t("game.rename")} value={s.title ?? ""} onChange={(e) => onRename(s.id, e.target.value)} />{" "}
                 <button type="button" disabled={s.id === current} onClick={() => onSwitch(s.id)}>
                   {t("game.switch")}
                 </button>{" "}

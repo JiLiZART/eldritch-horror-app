@@ -254,5 +254,6 @@
   "gate.blue": "синие врата",
   "gate.red": "красные врата",
   "piece.investigatorHint": "здоровье {health}, рассудок {sanity}, улики {clues}",
-  "panel.filterSpaces": "Поиск локации"
+  "panel.filterSpaces": "Поиск локации",
+  "game.rename": "Название"
 }

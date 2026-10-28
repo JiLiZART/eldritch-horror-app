@@ -254,5 +254,6 @@
   "gate.blue": "blue gate",
   "gate.red": "red gate",
   "piece.investigatorHint": "{health} health, {sanity} sanity, {clues} clues",
-  "panel.filterSpaces": "Filter spaces"
+  "panel.filterSpaces": "Filter spaces",
+  "game.rename": "Name"
 }

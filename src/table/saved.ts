@@ -6,6 +6,8 @@ export type Slot = Pick<Storage, "getItem" | "setItem" | "removeItem">;
 export interface SlotInfo {
   id: string;
   name: string;
+  /** The players' own name for the slot, shown instead of `name` while set (slot-rename D1). */
+  title?: string;
   /** Milliseconds since the epoch of the last saved step. */
   savedAt: number;
 }
@@ -94,8 +96,24 @@ export function saveGame(storage: Slot, id: string, state: GameState, name: stri
   write(storage, key(id), JSON.stringify(state));
   write(storage, historyKey(id), JSON.stringify(history.slice(-HISTORY)));
   const index = loadSlots(storage);
-  const info: SlotInfo = { id, name, savedAt: Date.now() };
+  const title = index.slots.find((s) => s.id === id)?.title;
+  const info: SlotInfo = { id, name, savedAt: Date.now(), ...(title ? { title } : {}) };
   write(storage, INDEX, JSON.stringify({ current: id, slots: [...index.slots.filter((s) => s.id !== id), info] }));
+}
+
+/** Sets the players' name for a slot; an empty name clears it (slot-rename D1). */
+export function renameGame(storage: Slot, id: string, title: string): SlotIndex {
+  const index = loadSlots(storage);
+  const next: SlotIndex = {
+    ...index,
+    slots: index.slots.map((s) => {
+      if (s.id !== id) return s;
+      const { title: _, ...rest } = s;
+      return title.trim() ? { ...rest, title: title.trim() } : rest;
+    }),
+  };
+  write(storage, INDEX, JSON.stringify(next));
+  return next;
 }
 
 /** Removes a slot; a removed current slot leaves none current. */

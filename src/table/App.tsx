@@ -11,7 +11,7 @@ import { NewGame } from "./NewGame";
 import { Panel } from "./Panel";
 import { LangProvider, translate, useT } from "./lang";
 import { piecesOnSpace } from "./pieces";
-import { fileName, loadGame, loadSlots, newSlotId, parseGame, removeGame, saveGame, slotName } from "./saved";
+import { fileName, loadGame, loadSlots, newSlotId, parseGame, removeGame, renameGame, saveGame, slotName } from "./saved";
 import { type CardFace, Table, type TableProps } from "./Table";
 import { type Act, Turn } from "./Turn";
 import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
@@ -184,6 +184,7 @@ export function App() {
             setHistory(history ?? []);
             setRoute(undefined);
           }}
+          onRename={(id, title) => setSlots(renameGame(localStorage, id, title))}
           onRemove={(id) => {
             setSlots(removeGame(localStorage, id));
             if (id === slot) leave();
