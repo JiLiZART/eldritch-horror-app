@@ -17,6 +17,11 @@ export function LangProvider({ lang, strings, children }: { lang: Lang; strings:
   return <LangContext.Provider value={{ lang, strings: strings[lang] }}>{children}</LangContext.Provider>;
 }
 
+/** The chosen language, for locale-aware formatting (slot-order D1). */
+export function useLang(): Lang {
+  return useContext(LangContext).lang;
+}
+
 /** The lookup for the current language. */
 export function useT(): (key: string, vars?: Record<string, string | number>) => string {
   const { strings } = useContext(LangContext);

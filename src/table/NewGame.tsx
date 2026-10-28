@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { GameSet } from "../content/types";
 import type { Difficulty, SetupOptions } from "../engine/types";
-import { useT } from "./lang";
+import { useLang, useT } from "./lang";
 import type { SlotInfo } from "./saved";
 
 interface NewGameProps {
@@ -38,6 +38,7 @@ export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUn
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 1e9));
   const t = useT();
+  const lang = useLang();
   const toggleSeat = (id: string, on: boolean) => setSeats((prev) => (on ? [...prev, id] : prev.filter((s) => s !== id)));
   const name = (id: string) => set.investigators.find((i) => i.id === id)?.name ?? id;
   return (
@@ -116,9 +117,11 @@ export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUn
         <section>
           <h3>{t("game.games")}</h3>
           <ul>
-            {slots.map((s) => (
+            {[...slots]
+              .sort((a, b) => b.savedAt - a.savedAt)
+              .map((s) => (
               <li key={s.id}>
-                {s.title ?? s.name} {s.id === current && t("game.current")}{" "}
+                {s.title ?? s.name} <time dateTime={new Date(s.savedAt).toISOString()}>{new Date(s.savedAt).toLocaleString(lang)}</time> {s.id === current && t("game.current")}{" "}
                 <input type="text" aria-label={t("game.rename")} placeholder={t("game.rename")} value={s.title ?? ""} onChange={(e) => onRename(s.id, e.target.value)} />{" "}
                 <button type="button" disabled={s.id === current} onClick={() => onSwitch(s.id)}>
                   {t("game.switch")}
