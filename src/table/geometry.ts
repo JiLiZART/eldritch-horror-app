@@ -77,6 +77,8 @@ export function sheetPosition(board: Board, index: number): [x: number, y: numbe
 export const HELD: [width: number, height: number] = [0.7, (0.7 * 745) / 478];
 const HELD_GAP = 0.15;
 const HELD_PER_ROW = 3;
+/** Felt around the outermost cards, so one at the edge can be centred when read (table-margin D1). */
+export const TABLE_MARGIN = 0.3;
 
 /** The centre of held card `index` under sheet `seat`: rows of three from the sheet's left edge (held-cards D1). */
 export function heldPosition(board: Board, seat: number, index: number): [x: number, y: number] {
@@ -92,5 +94,5 @@ export function tableExtent(board: Board, { tableau, sheets, heldRows }: { table
   const tableauX = tableau ? tableauPosition(board, 0)[0] + TABLEAU_ROWS[0]![0] / 2 : w / 2;
   const sheetsX = sheets > 0 ? sheetPosition(board, sheets - 1)[0] + SHEET[0] / 2 : w / 2;
   const minY = heldRows > 0 ? heldPosition(board, 0, (heldRows - 1) * HELD_PER_ROW)[1] - HELD[1] / 2 : sheets > 0 ? sheetPosition(board, 0)[1] - SHEET[1] / 2 : -h / 2;
-  return { minX: -w / 2, maxX: Math.max(tableauX, sheetsX), minY, maxY: h / 2 };
+  return { minX: -w / 2 - TABLE_MARGIN, maxX: Math.max(tableauX, sheetsX) + TABLE_MARGIN, minY: minY - TABLE_MARGIN, maxY: h / 2 + TABLE_MARGIN };
 }
