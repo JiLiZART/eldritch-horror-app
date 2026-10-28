@@ -104,3 +104,14 @@ Each of the 34 illustrated locations SHALL lie exactly over its art on the board
 #### Scenario: Disabled set
 - **WHEN** Mountains of Madness is disabled and the pointer rests over the Lake Camp illustration
 - **THEN** the art does not grow and clicking it selects nothing
+
+### Requirement: The rules glossary is shown beside the board
+The panel SHALL offer the rules glossary, folded by default: every entry with its English and Russian names, its text and its sources, grouped under the glossary's sections, in the glossary's order; a filter box SHALL narrow the entries to those whose names or text contain the typed words, matching without regard to case. The glossary shown SHALL be the one the specs and code cite, so the two never drift.
+
+#### Scenario: Entry shown
+- **WHEN** the players unfold the glossary
+- **THEN** "Delayed / Задержанный сыщик" is listed under its section with its text and source
+
+#### Scenario: Filtered
+- **WHEN** the players type "ближайш" in the filter
+- **THEN** only entries naming or mentioning it remain, "Nearest / Ближайший" among them
