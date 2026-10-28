@@ -77,6 +77,19 @@ export function App() {
     if (space) setSelected(space);
   }, [activeId, picking]);
   const reducedMotion = usePrefersReducedMotion();
+  // Escape clears the selection, or cancels the route being picked (escape-clears-selection D1); form fields keep their own Escape.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape" || e.target instanceof HTMLInputElement || e.target instanceof HTMLSelectElement || e.target instanceof HTMLTextAreaElement) return;
+      if (picking) {
+        setRoute(undefined);
+        const space = game.state?.investigators.find((i) => i.id === activeId)?.space;
+        setSelected(space);
+      } else setSelected(undefined);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [picking, activeId, game.state]);
   /** Bumped by Fit table; the rig glides to the whole table on each change (fit-view D1). */
   const [fit, setFit] = useState(0);
   const spaces = useMemo(() => activeGraph(board, enabled).spaces, [board, enabled]);
