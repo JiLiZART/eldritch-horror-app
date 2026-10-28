@@ -267,5 +267,6 @@
   "game.keys": "Клавиши: стрелки двигают стол, + и − меняют масштаб, Esc снимает выбор",
   "panel.filterJournal": "Поиск в журнале",
   "panel.copyJournal": "Скопировать журнал",
-  "panel.copied": "Скопировано"
+  "panel.copied": "Скопировано",
+  "table.roll": "{name} бросает {dice}"
 }

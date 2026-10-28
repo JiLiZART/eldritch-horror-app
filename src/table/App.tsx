@@ -138,6 +138,8 @@ export function App() {
   const activeId = phase?.name === "action" || phase?.name === "encounter" ? phase.active : undefined;
   /** The table's corner line: round, phase and whose turn, or the outcome (table-status-line D1). */
   const lastEntry = game.state?.journal.at(-1);
+  /** The roll waiting on the players, shown on the table (table-dice D1). */
+  const openRoll = phase?.name === "action" ? phase.acquiring : phase?.name === "encounter" ? phase.combat?.roll : undefined;
   const status = !game.state || !phase
     ? undefined
     : {
@@ -146,6 +148,7 @@ export function App() {
             ? t(phase.name === "won" ? "app.win" : "app.lose")
             : [t("panel.round", { round: game.state.round }), t(`journal.${phase.name}`), activeId && set.investigators.find((i) => i.id === activeId)?.name].filter(Boolean).join(" · "),
         ...(lastEntry ? { last: journalLine(lastEntry, set, t) } : {}),
+        ...(openRoll ? { dice: t("table.roll", { name: set.investigators.find((i) => i.id === openRoll.investigator)?.name ?? openRoll.investigator, dice: openRoll.dice.map((d) => (d >= 5 ? `[${d}]` : `${d}`)).join(" ") }) } : {}),
       };
   const picking = route !== undefined;
   useEffect(() => {

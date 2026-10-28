@@ -34,7 +34,7 @@ export interface TableProps {
   /** Changes each time the player asks for the whole table; the view glides out to it (fit-view D1). */
   fit?: number;
   /** The round, phase and active investigator, or the outcome, and the last journal line, shown in the table's corner (table-status-line D1, table-ticker D1). */
-  status?: { line: string; last?: string };
+  status?: { line: string; last?: string; dice?: string };
   /** A keyboard pan (fractions of the view) and zoom factor, applied once per key (keyboard-pan-zoom D1). */
   nudge?: { dx: number; dy: number; zoom: number; key: number };
   /** A card named by its place on the table, brought up as a click on it would (panel-card-focus D1). */
@@ -61,6 +61,7 @@ export function Table(props: TableProps) {
         <div className="table-status">
           {props.status.line}
           {props.status.last && <small>{props.status.last}</small>}
+          {props.status.dice && <small>{props.status.dice}</small>}
         </div>
       )}
       <Canvas flat orthographic camera={{ position: [0, 0, 50], up: [0, 0, 1], near: 0.1, far: 100 }} onPointerMissed={() => props.onSelect(undefined)}>
