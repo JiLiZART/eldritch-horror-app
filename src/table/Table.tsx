@@ -240,7 +240,15 @@ function Pieces({ pieces, at }: { pieces: Map<string, Piece[]>; at: Map<string, 
           /** Half the piece's standing height: a pawn's foot rests on the space, the label floats above the top. */
           const half = (p.lying ? w : h) / 2;
           return (
-            <Billboard key={p.id} position={[x + dx, y + dy + (p.kind === "pawn" ? half : 0), 0.05 + k * 0.001]}>
+            <group key={p.id}>
+              {/* A flat ring on the table under the pawn whose turn it is (active-pawn-ring D2). */}
+              {p.active && (
+                <mesh position={[x + dx, y + dy, 0.02]}>
+                  <ringGeometry args={[0.14, 0.2, 32]} />
+                  <meshBasicMaterial color="#e8c872" />
+                </mesh>
+              )}
+              <Billboard position={[x + dx, y + dy + (p.kind === "pawn" ? half : 0), 0.05 + k * 0.001]}>
               {/* A lying pawn turns a quarter turn in the billboard's plane, so the standee rests sideways on the board (design D2). */}
               <mesh rotation={[0, 0, p.lying ? Math.PI / 2 : 0]} onPointerOver={() => setHovered(p.id)} onPointerOut={() => setHovered((h) => (h === p.id ? undefined : h))}>
                 <planeGeometry args={[w, h]} />
@@ -261,6 +269,7 @@ function Pieces({ pieces, at }: { pieces: Map<string, Piece[]>; at: Map<string, 
                 </Html>
               )}
             </Billboard>
+            </group>
           );
         });
       })}

@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
+import { endTurn } from "../engine/actions";
 import { setupGame } from "../engine/setup";
 import { translate } from "./lang";
 import { type Piece, piecesOnSpace } from "./pieces";
@@ -87,6 +88,14 @@ describe("piecesOnSpace", () => {
     expect(pawn(state).lying).toBeUndefined();
     expect(pawn({ ...state, investigators: state.investigators.map((i) => (i.id === leo ? { ...i, delayed: true as const } : i)) }).lying).toBe(true);
     expect(pawn({ ...state, investigators: state.investigators.map((i) => (i.id === leo ? { ...i, defeated: "sanity" as const } : i)) }).lying).toBe(true);
+  });
+  it("rings the pawn whose turn it is and none in the Mythos phase", () => {
+    const active = (s: typeof state) => [...piecesOnSpace(s, board, set, t).values()].flat().filter((p) => p.kind === "pawn" && p.active).map((p) => p.id);
+    expect(active(state)).toEqual([state.leadInvestigator]);
+    const next = endTurn(state);
+    expect(next.phase.name === "action" ? next.phase.active : undefined).not.toBe(state.leadInvestigator);
+    expect(active(next)).toEqual([next.phase.name === "action" ? next.phase.active : undefined]);
+    expect(active({ ...state, phase: { name: "mythos" } as typeof state.phase })).toEqual([]);
   });
   it("stands the lead token beside the lead's pawn and moves it with the lead", () => {
     const lead = (s: typeof state) => [...piecesOnSpace(s, board, set, t).entries()].find(([, ps]) => ps.some((p) => p.kind === "lead"))?.[0];
