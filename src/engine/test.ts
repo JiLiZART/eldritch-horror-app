@@ -12,13 +12,14 @@ const count = (dice: number[]) => dice.filter((d) => d >= 5).length;
 /**
  * Tests a skill: printed value plus modifier dice, at least 1; each 5 or 6 is a success.
  * Dice come from the seed and the state's roll counter, so two tests in one round differ and a replay repeats.
- * Deviation: possession bonuses and improvements are left to the players.
+ * Deviation: possession bonuses are left to the players.
  */
 export function test(state: GameState, set: GameSet, investigator: string, skill: Skill, modifier: number): TestResult {
   const sheet = set.investigators.find((i) => i.id === investigator);
   if (!sheet) throw new Error(`Unknown investigator ${investigator}`);
   const random = rng(state.seed * 31 + state.rolls);
-  const dice = Array.from({ length: Math.max(1, sheet.skills[skill] + modifier) }, () => 1 + Math.floor(random() * 6));
+  const improvement = state.investigators.find((i) => i.id === investigator)?.improvements[skill] ?? 0;
+  const dice = Array.from({ length: Math.max(1, sheet.skills[skill] + improvement + modifier) }, () => 1 + Math.floor(random() * 6));
   return { state: { ...state, rolls: state.rolls + 1 }, investigator, dice, successes: count(dice) };
 }
 

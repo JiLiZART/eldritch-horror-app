@@ -21,6 +21,11 @@ describe("skill test", () => {
   it("adds the modifier to the dice count", () => {
     expect(skillTest(game(), set, charlie, "influence", -1).dice).toHaveLength(3);
   });
+  it("adds the improvement to the dice count", () => {
+    const s = game();
+    const improved: GameState = { ...s, investigators: s.investigators.map((i) => (i.id === charlie ? { ...i, improvements: { influence: 2 as const } } : i)) };
+    expect(skillTest(improved, set, charlie, "influence", 0).dice).toHaveLength(6);
+  });
   it("rolls at least 1 die", () => {
     expect(skillTest(game(), set, norman, "influence", -2).dice).toHaveLength(1);
   });

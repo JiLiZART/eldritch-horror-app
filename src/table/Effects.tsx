@@ -1,7 +1,7 @@
 import { useState } from "react";
-import type { Board, Deck, GameSet } from "../content/types";
+import type { Board, Deck, GameSet, Skill } from "../content/types";
 import { changeDoom, solveFinalMystery, solveMystery } from "../engine/ancientOne";
-import { changeHealth, changeSanity, closeGate, delay, discardCard, discardMonster, gainCard, gainClue, moveInvestigator, moveMonster, moveMonsterToward, spendClue } from "../engine/effects";
+import { changeHealth, changeSanity, closeGate, delay, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveMonsterToward, spendClue } from "../engine/effects";
 import { monsterKey } from "../engine/encounter";
 import { spaceName } from "../engine/spawn";
 import type { GameState } from "../engine/types";
@@ -17,6 +17,8 @@ interface EffectsProps {
 }
 
 const DECKS: Deck[] = ["asset", "spell", "condition", "artifact"];
+const SKILLS: Skill[] = ["lore", "influence", "observation", "strength", "will"];
+const capital = (s: string) => s[0]!.toUpperCase() + s.slice(1);
 
 /** Card text applied by hand (design D6): one button per effect for a chosen investigator. Rules stay in the engine. */
 export function Effects({ board, set, state, who, onAct }: EffectsProps) {
@@ -25,6 +27,7 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
   const [cardName, setCardName] = useState("");
   const [space, setSpace] = useState(board.spaces[0]!.id);
   const [monster, setMonster] = useState("");
+  const [skill, setSkill] = useState<Skill>("lore");
   const content = { board, set };
   const me = state.investigators.find((i) => i.id === id) ?? state.investigators[0]!;
   const name = (x: string) => set.investigators.find((i) => i.id === x)?.name ?? x;
@@ -91,6 +94,24 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
         </label>{" "}
         <button type="button" onClick={() => onAct((s) => moveInvestigator(s, content, me.id, space))}>
           Move
+        </button>
+      </p>
+      <p>
+        <label>
+          Skill{" "}
+          <select value={skill} onChange={(e) => setSkill(e.target.value as Skill)}>
+            {SKILLS.map((k) => (
+              <option key={k} value={k}>
+                {capital(k)}
+              </option>
+            ))}
+          </select>
+        </label>{" "}
+        <button type="button" onClick={() => onAct((s) => improveSkill(s, content, me.id, skill))}>
+          Improve
+        </button>
+        <button type="button" onClick={() => onAct((s) => discardImprovement(s, content, me.id, skill))}>
+          Discard improvement
         </button>
       </p>
       <p>

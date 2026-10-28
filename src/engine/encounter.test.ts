@@ -262,6 +262,10 @@ describe("an investigator at 0 health or sanity is defeated", () => {
   it("still lets a delayed investigator encounter", () => {
     expect(finishEncounter(patch(encounters(), lily, { delayed: true }), content).phase).toMatchObject({ name: "encounter", active: lily });
   });
+  it("discards its improvement tokens", () => {
+    const s = defeat(patch(encounters(), leo, { improvements: { lore: 1 } }), content, leo, "health");
+    expect(who(s, leo).improvements).toEqual({});
+  });
   it("lies in the nearest city with its conditions back in the deck", () => {
     const s = defeat(patch(encounters(), leo, { space: "space-2", conditions: ["eh01/condition/cursed-1"] }), content, leo, "health");
     expect(who(s, leo).space).toBe("san-francisco");

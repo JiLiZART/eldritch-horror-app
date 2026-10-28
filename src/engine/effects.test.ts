@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn } from "./actions";
-import { changeHealth, changeSanity, closeGate, delay, discardCard, discardMonster, gainCard, gainClue, moveInvestigator, moveMonster, moveMonsterToward, spendClue } from "./effects";
+import { changeHealth, changeSanity, closeGate, delay, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveMonsterToward, spendClue } from "./effects";
 import { finishEncounter } from "./encounter";
 import { resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
@@ -109,6 +109,28 @@ describe("card text delays an investigator", () => {
   });
   it("refuses an already delayed investigator", () => {
     expect(() => delay(delay(encounters(), content, leo), content, leo)).toThrow(/already delayed/);
+  });
+});
+
+describe("a skill is improved by card text", () => {
+  it("improves to +1 and logs it", () => {
+    const s = improveSkill(encounters(), content, leo, "lore");
+    expect(who(s, leo).improvements).toEqual({ lore: 1 });
+    expect(log(s)).toMatch(/Leo Anderson improves Lore to \+1/);
+  });
+  it("flips to +2", () => {
+    expect(who(improveSkill(patch(encounters(), leo, { improvements: { lore: 1 } }), content, leo, "lore"), leo).improvements).toEqual({ lore: 2 });
+  });
+  it("refuses a third improvement", () => {
+    expect(() => improveSkill(patch(encounters(), leo, { improvements: { lore: 2 } }), content, leo, "lore")).toThrow(/at most twice/);
+  });
+  it("discards one step", () => {
+    const s = discardImprovement(patch(encounters(), leo, { improvements: { lore: 2 } }), content, leo, "lore");
+    expect(who(s, leo).improvements).toEqual({ lore: 1 });
+    expect(who(discardImprovement(s, content, leo, "lore"), leo).improvements).toEqual({});
+  });
+  it("refuses to discard what is not there", () => {
+    expect(() => discardImprovement(encounters(), content, leo, "lore")).toThrow(/Lore is not improved/);
   });
 });
 

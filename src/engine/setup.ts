@@ -127,7 +127,7 @@ function placeInvestigator(i: Investigator, cards: Card[], decks: GameState["dec
   }
   const clues = i.starting.clues ?? 0;
   cluePool.splice(0, clues);
-  return { id: i.id, space: i.startingSpace, health: i.health, sanity: i.sanity, clues, possessions, conditions, tickets: [] };
+  return { id: i.id, space: i.startingSpace, health: i.health, sanity: i.sanity, clues, possessions, conditions, tickets: [], improvements: {} };
 }
 
 /** Every non-epic token minus the sheet's set-aside monsters, shuffled. */

@@ -1,5 +1,5 @@
 import { distance, neighbors } from "../content/board";
-import type { Deck } from "../content/types";
+import type { Deck, Skill } from "../content/types";
 import { defeat } from "./encounter";
 import { reshuffle } from "./rng";
 import type { Content } from "./setup";
@@ -46,6 +46,27 @@ export function delay(state: GameState, content: Content, id: string): GameState
   const me = subject(state, id);
   if (me.delayed) throw new Error(`${name(content, id)} is already delayed`);
   return note(replace(state, { ...me, delayed: true }), `${name(content, id)} is delayed`);
+}
+
+const SKILL_NAMES: Record<Skill, string> = { lore: "Lore", influence: "Influence", observation: "Observation", strength: "Strength", will: "Will" };
+
+/** +1, then flipped to +2; at most twice per game (EH_reference p.13). Deviation: impairment tokens are not modelled. */
+export function improveSkill(state: GameState, content: Content, id: string, skill: Skill): GameState {
+  const me = subject(state, id);
+  const level = me.improvements[skill] ?? 0;
+  if (level >= 2) throw new Error(`${SKILL_NAMES[skill]} is improved at most twice`);
+  const next = (level + 1) as 1 | 2;
+  return note(replace(state, { ...me, improvements: { ...me.improvements, [skill]: next } }), `${name(content, id)} improves ${SKILL_NAMES[skill]} to +${next}`);
+}
+
+/** Card text takes the token one step back. */
+export function discardImprovement(state: GameState, content: Content, id: string, skill: Skill): GameState {
+  const me = subject(state, id);
+  const level = me.improvements[skill] ?? 0;
+  if (level === 0) throw new Error(`${SKILL_NAMES[skill]} is not improved`);
+  const { [skill]: _, ...rest } = me.improvements;
+  const improvements = level === 2 ? { ...rest, [skill]: 1 as const } : rest;
+  return note(replace(state, { ...me, improvements }), `${name(content, id)} discards a ${SKILL_NAMES[skill]} improvement`);
 }
 
 /** The clue token on the space, else the top of the pool with the discard reshuffled in first (manual p.4). */

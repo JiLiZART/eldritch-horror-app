@@ -177,6 +177,7 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
             <th>Tickets</th>
             <th>Possessions</th>
             <th>Conditions</th>
+            <th>Improvements</th>
           </tr>
         </thead>
         <tbody>
@@ -195,6 +196,11 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
               <td>{i.tickets.join(", ")}</td>
               <td>{i.possessions.map(cardName).join(", ")}</td>
               <td>{i.conditions.map(cardName).join(", ")}</td>
+              <td>
+                {Object.entries(i.improvements)
+                  .map(([k, v]) => `${k[0]!.toUpperCase()}${k.slice(1)} +${v}`)
+                  .join(", ")}
+              </td>
             </tr>
           ))}
         </tbody>

@@ -1,3 +1,4 @@
+import type { Skill } from "../content/types";
 /** Game state: plain JSON data, index 0 of every deck is the top card. View state lives elsewhere. */
 
 export type Difficulty = "normal" | "easy" | "hard";
@@ -46,6 +47,8 @@ export interface InvestigatorState {
   conditions: string[];
   /** Travel tickets held, at most 2. */
   tickets: Ticket[];
+  /** Improvement tokens by skill, +1 or +2; absent means none (manual p.9). */
+  improvements: Partial<Record<Skill, 1 | 2>>;
   /** Set at 0 health or sanity; the investigator's turns are skipped from then on. */
   defeated?: "health" | "sanity";
   /** Token on its side: no actions until the next Action turn stands it up. */

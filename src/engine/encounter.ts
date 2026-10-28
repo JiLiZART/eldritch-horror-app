@@ -213,7 +213,7 @@ export function defeat(state: GameState, content: Content, investigator: string,
   const cities = content.board.spaces.filter((sp) => sp.kind === "city").map((sp) => sp.id);
   const space = cities.reduce((best, id) => (distance(content.board, me.space, id) < distance(content.board, me.space, best) ? id : best));
   const { items: condition, rolls } = reshuffle(state, [...state.decks.condition, ...me.conditions]);
-  const fallen = { ...me, defeated: cause, space, conditions: [] };
+  const fallen = { ...me, defeated: cause, space, conditions: [], improvements: {} };
   let s = awakenAt0(note(replaceInvestigator({ ...state, doom: state.doom - 1, rolls, decks: { ...state.decks, condition } }, fallen), `${investigatorName(content, investigator)} is defeated and lies on ${spaceName(content, space)}`), content);
   if (s.leadInvestigator === investigator) s = { ...s, leadInvestigator: nextStanding(s, investigator) ?? investigator };
   if (!s.investigators.some((i) => !i.defeated)) return { ...s, phase: { name: "lost", reason: `every investigator is defeated (doom ${s.doom})` } };
