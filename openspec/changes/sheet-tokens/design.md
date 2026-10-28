@@ -13,7 +13,7 @@ See proposal.md. `Sheets` draws each sheet as a `Face` at `sheetPosition`; the s
 ## Decisions
 
 ### D1. Fixed stamp fractions
-The heart's centre is at (0.59, 0.57) of the sheet from its top-left, the brain's at (0.83, 0.57); the token is 0.42 wide, 0.42 by 386 / 365 high, drawn 0.01 above the sheet. A plain mesh with no click, so a click there focuses the sheet. Layer: view.
+The heart's centre is at (0.635, 0.575) of the sheet from its top-left, the brain's at (0.848, 0.575); the token is 0.38 wide, 0.38 by 386 / 365 high, drawn 0.01 above the sheet. A plain mesh with no click, so a click there focuses the sheet. Layer: view.
 - Rejected: per-investigator stamp positions in content. The core sheets share one layout.
 
 ### D2. Prop
