@@ -1,5 +1,6 @@
 import type { Board, GameSet } from "../content/types";
-import { continueFight, drawEncounter, fight, finishEncounter, monsterKey } from "../engine/encounter";
+import { takePossessions } from "../engine/effects";
+import { continueFight, drawEncounter, encounterFallen, fight, finishEncounter, monsterKey } from "../engine/encounter";
 import { isDetained } from "../engine/types";
 import type { EncounterPhase, GameState } from "../engine/types";
 import { Dice } from "./Dice";
@@ -29,8 +30,12 @@ export function Encounter({ board, set, state, phase, error, onAct }: EncounterP
     state.clues.includes(me.space) && "research",
     state.gates.includes(me.space) && "other-world",
     state.activeExpedition === me.space && "expedition",
+    state.decks.special.length + (state.encounterDiscards.special?.length ?? 0) > 0 && "special",
   ].filter((d): d is string => typeof d === "string");
-  const cards = phase.card?.deck === "research" ? set.ancientOnes.find((a) => a.id === state.ancientOne)?.research : set.encounterDecks.find((d) => d.id === phase.card?.deck)?.cards;
+  const ancientOne = set.ancientOnes.find((a) => a.id === state.ancientOne);
+  const fallenHere = state.investigators.filter((i) => i.defeated && i.defeated !== "devoured" && !i.removed && i.id !== me.id && i.space === me.space);
+  const fallenSheet = phase.card?.deck === "fallen" ? set.investigators.find((i) => i.id === phase.card?.id) : undefined;
+  const cards = phase.card?.deck === "research" ? ancientOne?.research : phase.card?.deck === "special" ? ancientOne?.special : set.encounterDecks.find((d) => d.id === phase.card?.deck)?.cards;
   const card = cards?.find((c) => c.id === phase.card?.id);
   const detained = isDetained(me) ? set.cards.find((c) => me.conditions.includes(c.id) && /\/condition\/detained-\d+$/.test(c.id)) : undefined;
   return (
@@ -78,6 +83,23 @@ export function Encounter({ board, set, state, phase, error, onAct }: EncounterP
               Draw {d}
             </button>
           ))}
+        </p>
+      )}
+      {!detained && monsters.length === 0 && !phase.card && fallenHere.length > 0 && (
+        <p>
+          {fallenHere.map((f) => (
+            <button key={f.id} type="button" onClick={() => onAct((s) => encounterFallen(s, content, f.id))}>
+              Resolve {set.investigators.find((i) => i.id === f.id)?.name ?? f.id}'s encounter
+            </button>
+          ))}
+        </p>
+      )}
+      {fallenSheet && (
+        <p className="cards">
+          {fallenSheet.images.back && <img className="mythos-card" src={`/${fallenSheet.images.back}`} alt={`${fallenSheet.name} sheet back`} />}{" "}
+          <button type="button" onClick={() => onAct((s) => takePossessions(s, content, me.id, fallenSheet.id))}>
+            Take possessions
+          </button>
         </p>
       )}
       {card && (

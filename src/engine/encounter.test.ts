@@ -5,7 +5,7 @@ import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn, rest } from "./actions";
 import { ambush } from "./effects";
-import { continueFight, defeat, drawEncounter, fight, finishEncounter } from "./encounter";
+import { continueFight, defeat, drawEncounter, encounterFallen, fight, finishEncounter } from "./encounter";
 import { nextRound, replaceInvestigator, resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
 import { rerollDie, test } from "./test";
@@ -217,6 +217,36 @@ describe("a monster ambushes the investigator", () => {
   it("refuses an empty cup and the Action phase", () => {
     expect(() => ambush({ ...encounters(), monsterCup: [] }, content)).toThrow(/monster cup is empty/);
     expect(() => ambush(game(), content)).toThrow(/Encounter phase/);
+  });
+});
+
+describe("special and defeated investigator encounters", () => {
+  const cthulhu = (): GameState => {
+    const s = setupGame(content, { ancientOne: "eh01/ancient-one/cthulhu", investigators: [leo, lily], seed: 3 });
+    return encounters({ ...s, monsters: s.monsters.filter((m) => !s.investigators.some((i) => i.space === m.space)) });
+  };
+  it("draws the special deck anywhere and discards the card on finish", () => {
+    const s = cthulhu();
+    const drawn = drawEncounter(s, content, "special");
+    expect(drawn.phase).toMatchObject({ card: { deck: "special", id: s.decks.special[0] } });
+    expect(drawn.decks.special).toHaveLength(5);
+    expect(finishEncounter(drawn, content).encounterDiscards.special).toEqual([s.decks.special[0]]);
+  });
+  it("refuses the special deck of an Ancient One without one", () => {
+    expect(() => drawEncounter(encounters(), content, "special")).toThrow(/no special encounters/);
+  });
+  /** Leo Anderson lying defeated on Buenos Aires, Lily Chen encountering there. */
+  const fallen = () => patch(defeat(encounters(), content, leo, "health"), lily, { space: "buenos-aires" });
+  it("resolves the fallen one's sheet back and removes the token on finish", () => {
+    const s = encounterFallen(fallen(), content, leo);
+    expect(s.phase).toMatchObject({ card: { deck: "fallen", id: leo } });
+    expect(s.phase.name === "encounter" ? s.phase.log.join("\n") : "").toMatch(/resolves the back of Leo Anderson's sheet/);
+    const done = finishEncounter(s, content);
+    expect(who(done, leo).removed).toBe(true);
+    expect(done.encounterDiscards.fallen).toBeUndefined();
+  });
+  it("refuses without a fallen token on the space", () => {
+    expect(() => encounterFallen(defeat(encounters(), content, leo, "health"), content, leo)).toThrow(/no defeated investigator's token lies on Shanghai/);
   });
 });
 

@@ -310,3 +310,13 @@ export function spawnMonsterRandomly(state: GameState, content: Content, id: str
   const drawn = randomSpace(state);
   return spawnMonsterByText(named(drawn.state, content, drawn.space), content, id, drawn.space);
 }
+
+/** A comrade on the fallen one's city collects the possessions set aside with the sheet (manual p.4); whether the back grants them is the players' reading. */
+export function takePossessions(state: GameState, content: Content, to: string, from: string): GameState {
+  const me = subject(state, to);
+  const other = state.investigators.find((i) => i.id === from);
+  if (!other || !other.defeated || other.defeated === "devoured" || other.space !== me.space) throw new Error(`no defeated investigator's sheet lies on ${spaceName(content, me.space)}`);
+  if (other.possessions.length === 0) throw new Error(`nothing is left with ${name(content, from)}'s sheet`);
+  const investigators = state.investigators.map((i) => (i.id === to ? { ...i, possessions: [...i.possessions, ...other.possessions] } : i.id === from ? { ...i, possessions: [] } : i));
+  return note({ ...state, investigators }, `${name(content, to)} takes ${name(content, from)}'s possessions`);
+}

@@ -41,6 +41,10 @@ describe("setup accepts a legal group", () => {
   it("carries the current state version", () => {
     expect(setup().version).toBe(STATE_VERSION);
   });
+  it("shuffles the Ancient One's special deck when it has one", () => {
+    expect(setup({ ancientOne: "eh01/ancient-one/cthulhu" }).decks.special).toHaveLength(6);
+    expect(setup().decks.special).toEqual([]);
+  });
   it("starts with an empty journal", () => {
     expect(setup().journal).toEqual([]);
   });

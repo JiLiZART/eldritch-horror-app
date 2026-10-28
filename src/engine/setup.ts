@@ -56,6 +56,7 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
     mythos: buildMythosDeck(set, ancientOne, difficulty, random),
     mystery: shuffle(ancientOne.mysteries.map((c) => c.id), random),
     research: shuffle(ancientOne.research.map((c) => c.id), random),
+    special: shuffle((ancientOne.special ?? []).map((c) => c.id), random),
     encounters: Object.fromEntries(set.encounterDecks.map((d) => [d.id, shuffle(d.cards.map((c) => c.id), random)])),
   };
 

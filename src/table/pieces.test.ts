@@ -47,6 +47,10 @@ describe("piecesOnSpace", () => {
     const all = [...piecesOnSpace(devoured, set).values()].flat();
     expect(all.filter((p) => p.kind === "pawn")).toHaveLength(3);
   });
+  it("draws no pawn for a removed investigator", () => {
+    const removed = { ...state, investigators: state.investigators.map((i) => (i.id === inv("leo-anderson") ? { ...i, defeated: "health" as const, removed: true as const } : i)) };
+    expect([...piecesOnSpace(removed, set).values()].flat().filter((p) => p.kind === "pawn")).toHaveLength(3);
+  });
   it("shows a rumor token and each eldritch token on the space", () => {
     const london = piecesOnSpace({ ...state, rumors: ["london"], eldritch: { london: 2 } }, set).get("london") ?? [];
     expect(london.filter((p) => p.kind === "rumor")).toEqual([{ kind: "rumor", id: "rumor:london#0", image: "icons/rumor-token.png", label: "Rumor" }]);

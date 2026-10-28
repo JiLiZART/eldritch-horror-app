@@ -2,7 +2,7 @@ import type { Skill } from "../content/types";
 /** Game state: plain JSON data, index 0 of every deck is the top card. View state lives elsewhere. */
 
 /** Shape of `GameState` as saved; bump it whenever a field is added, removed or renamed, so an older save is set aside instead of breaking later. */
-export const STATE_VERSION = 3;
+export const STATE_VERSION = 4;
 
 export type Difficulty = "normal" | "easy" | "hard";
 
@@ -60,6 +60,8 @@ export interface InvestigatorState {
   defeated?: "health" | "sanity" | "devoured";
   /** The investigator who took this fallen seat at the end of a Mythos phase (manual p.4). */
   replacedBy?: string;
+  /** Token and sheet out of the game after a comrade resolved the sheet back (manual p.4). */
+  removed?: true;
   /** Token on its side: no actions until the next Action turn stands it up. */
   delayed?: true;
 }
@@ -179,6 +181,8 @@ export interface GameState {
     mythos: string[];
     mystery: string[];
     research: string[];
+    /** The Ancient One's special encounters; empty without any. */
+    special: string[];
     /** Keyed by encounter deck id (america, europe, asia, general, other-world, expedition). */
     encounters: Record<string, string[]>;
   };

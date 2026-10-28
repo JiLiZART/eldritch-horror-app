@@ -160,9 +160,10 @@ const signed = (n: number) => (n > 0 ? ` +${n}` : n < 0 ? ` ${n}` : "");
 const investigatorName = ({ set }: Content, id: string) => set.investigators.find((i) => i.id === id)?.name ?? id;
 
 /** Rule words for a deck the space does not allow. */
-function allowed(state: GameState, { board }: Content, space: string, deck: string): string | undefined {
+function allowed(state: GameState, { board, set }: Content, space: string, deck: string): string | undefined {
   const at = board.spaces.find((s) => s.id === space);
   if (deck === "general") return undefined;
+  if (deck === "special") return (set.ancientOnes.find((a) => a.id === state.ancientOne)?.special?.length ?? 0) > 0 ? undefined : "the Ancient One has no special encounters";
   if (deck === "research") return state.clues.includes(space) ? undefined : "a research encounter needs a clue on the space";
   if (deck === "other-world") return state.gates.includes(space) ? undefined : "an other world encounter needs a gate on the space";
   if (deck === "expedition") return state.activeExpedition === space ? undefined : "an expedition encounter needs the active expedition token on the space";
@@ -170,11 +171,26 @@ function allowed(state: GameState, { board }: Content, space: string, deck: stri
   return `no encounter deck ${deck}`;
 }
 
-const cardsOf = (state: GameState, deck: string) => (deck === "research" ? state.decks.research : state.decks.encounters[deck]!);
+const OWN_DECKS = ["research", "special"] as const;
+const own = (deck: string): deck is "research" | "special" => (OWN_DECKS as readonly string[]).includes(deck);
+const cardsOf = (state: GameState, deck: string) => (own(deck) ? state.decks[deck] : state.decks.encounters[deck]!);
 const withCards = (state: GameState, deck: string, cards: string[]): GameState => ({
   ...state,
-  decks: deck === "research" ? { ...state.decks, research: cards } : { ...state.decks, encounters: { ...state.decks.encounters, [deck]: cards } },
+  decks: own(deck) ? { ...state.decks, [deck]: cards } : { ...state.decks, encounters: { ...state.decks.encounters, [deck]: cards } },
 });
+
+/** The encounter on the back of a defeated investigator's sheet lying on the space (manual p.4); finishing removes the token and sheet. */
+export function encounterFallen(state: GameState, content: Content, fallen: string): GameState {
+  const phase = encounterPhase(state);
+  const me = active(state);
+  if (phase.combat) throw new Error("the fight is not over");
+  if (isDetained(me)) throw new Error("a Detained investigator resolves the back of Detained instead of an encounter");
+  if (monstersOn(state, me.space).length > 0) throw new Error("the monsters on the space must be fought first");
+  if (phase.card) throw new Error("an investigator resolves one encounter");
+  const other = state.investigators.find((i) => i.id === fallen);
+  if (!other || !other.defeated || other.defeated === "devoured" || other.removed || other.space !== me.space) throw new Error(`no defeated investigator's token lies on ${spaceName(content, me.space)}`);
+  return log({ ...state, phase: { ...phase, card: { deck: "fallen", id: fallen } } }, `${investigatorName(content, me.id)} resolves the back of ${investigatorName(content, fallen)}'s sheet: the text is left to the players`);
+}
 
 /** An empty deck takes its shuffled discard at once (manual p.4); the mythos deck never does. */
 function replenish(state: GameState, deck: string): GameState {
@@ -208,7 +224,10 @@ export function finishEncounter(state: GameState, content: Content): GameState {
   if (phase.combat) throw new Error("the fight is not over");
   if (!isDetained(me) && unfought(state, me.space).length > 0) throw new Error("the monsters on the space must be fought first");
   let s = state;
-  if (phase.card) {
+  if (phase.card?.deck === "fallen") {
+    const gone = phase.card.id;
+    s = log(replaceInvestigator(s, { ...s.investigators.find((i) => i.id === gone)!, removed: true }), `${investigatorName(content, gone)}'s token and sheet leave the game`);
+  } else if (phase.card) {
     const { deck, id } = phase.card;
     s = { ...s, encounterDiscards: { ...s.encounterDiscards, [deck]: [id, ...(s.encounterDiscards[deck] ?? [])] } };
     if (deck === "expedition") s = { ...s, activeExpedition: expeditionSpace(content, s.decks.encounters.expedition ?? []) };

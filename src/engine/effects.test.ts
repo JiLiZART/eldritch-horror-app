@@ -4,8 +4,8 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn } from "./actions";
-import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spawnSetAside, spendClue } from "./effects";
-import { finishEncounter } from "./encounter";
+import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spawnSetAside, spendClue, takePossessions } from "./effects";
+import { defeat, finishEncounter } from "./encounter";
 import { resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
 import { note } from "./spawn";
@@ -138,6 +138,17 @@ describe("an investigator is moved to the nearest space", () => {
     const s = moveInvestigatorToNearest({ ...encounters(), gates: ["london"] }, content, leo, "gate");
     expect(who(s, leo).space).toBe("london");
     expect(() => moveInvestigatorToNearest({ ...encounters(), clues: [] }, content, leo, "clue")).toThrow(/no space with a clue exists/);
+  });
+});
+
+describe("a defeated investigator's possessions are collected", () => {
+  it("moves them all once", () => {
+    const s = patch(defeat(encounters(), content, leo, "health"), lily, { space: "buenos-aires" });
+    const taken = takePossessions(s, content, lily, leo);
+    expect(who(taken, lily).possessions.map(cardName)).toContain("Hired Muscle");
+    expect(who(taken, leo).possessions).toEqual([]);
+    expect(log(taken)).toMatch(/Lily Chen takes Leo Anderson's possessions/);
+    expect(() => takePossessions(taken, content, lily, leo)).toThrow(/nothing is left/);
   });
 });
 
