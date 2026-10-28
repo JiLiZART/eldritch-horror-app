@@ -127,3 +127,18 @@ The panel SHALL offer the rules glossary, folded by default: every entry with it
 #### Scenario: Filtered
 - **WHEN** the players type "ближайш" in the filter
 - **THEN** only entries naming or mentioning it remain, "Nearest / Ближайший" among them
+
+### Requirement: The doom and omen tokens stand on their tracks
+While a game is in progress the table SHALL show the doom token on the printed doom track at the space matching the current doom, the omen token on the printed omen track at the current omen's space, and one eldritch token beside each omen space per token placed there; the tokens SHALL move when doom, the omen or the eldritch tokens change, and none SHALL stand before a game starts. The track positions SHALL come from board data, not from the image, so another board can declare its own.
+
+#### Scenario: Doom advances
+- **WHEN** doom goes from 15 to 14
+- **THEN** the doom token stands on the track's 14 space
+
+#### Scenario: Omen moves
+- **WHEN** the omen advances from green to blue
+- **THEN** the omen token stands on the blue space clockwise from the comet
+
+#### Scenario: Eldritch tokens on the track
+- **WHEN** two eldritch tokens lie on the green omen space
+- **THEN** two eldritch tokens show beside the comet
