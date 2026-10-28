@@ -5,7 +5,7 @@ import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn } from "./actions";
 import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spawnNamed, spawnSetAside, spendClue, standUp, takePossessions } from "./effects";
-import { defeat, finishEncounter } from "./encounter";
+import { defeat, fight, finishEncounter } from "./encounter";
 import { resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
 import { note } from "./spawn";
@@ -107,6 +107,10 @@ describe("spent clues join the clue discard", () => {
     const before = encounters();
     const s = gainClue(before, content, leo);
     expect(s.heldClues).toEqual([...before.heldClues, before.cluePool[0]]);
+  });
+  it("keeps the clue discard when the pool still has tokens", () => {
+    const before = { ...encounters(), clueDiscard: ["arkham"] };
+    expect(gainClue(before, content, leo).clueDiscard).toEqual(["arkham"]);
   });
   it("moves a spent token to the discard with the pool unchanged", () => {
     const before = gainClue(encounters(), content, leo);
@@ -313,6 +317,12 @@ describe("a monster is moved by card text", () => {
     const s = moveMonsterToward(before, content, byakhee);
     expect(s.monsters).toEqual(before.monsters);
     expect(log(s)).toMatch(/the Byakhee is already with Leo Anderson/);
+  });
+  it("refuses to move or discard the monster being fought", () => {
+    const s = withMonster(byakhee, "buenos-aires");
+    const waiting = fight(s, content, byakhee);
+    expect(() => moveMonster(waiting, content, byakhee, "arkham")).toThrow(/fight is not over/);
+    expect(() => discardMonster(waiting, content, byakhee)).toThrow(/fight is not over/);
   });
   it("refuses a monster not on the board", () => {
     expect(() => moveMonster(encounters(), content, { id: "eh01/monster/byakhee", instance: 9 }, "arkham")).toThrow(/no Byakhee on the board/);

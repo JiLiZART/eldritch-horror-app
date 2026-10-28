@@ -185,13 +185,15 @@ describe("the back of Detained replaces the encounter", () => {
   });
 });
 
+/** Leo Anderson's encounter with the Color Out of Space (back: move to Tunguska) on top of the cup. */
+const trapColor = (s = encounters()): GameState => {
+  const token = s.monsterCup.find((m) => m.id === "eh01/monster/color-out-of-space")!;
+  return { ...s, monsterCup: [token, ...s.monsterCup.filter((m) => m !== token)] };
+};
+
 describe("a monster ambushes the investigator", () => {
   const color = "eh01/monster/color-out-of-space";
-  /** Leo Anderson's encounter with the Color Out of Space (back: move to Tunguska) on top of the cup. */
-  const trap = (s = encounters()): GameState => {
-    const token = s.monsterCup.find((m) => m.id === color)!;
-    return { ...s, monsterCup: [token, ...s.monsterCup.filter((m) => m !== token)] };
-  };
+  const trap = trapColor;
   it("fights the top token on the investigator's space with the Will dice waiting", () => {
     const s = ambush(trap(), content);
     expect(onBoard(s, color)).toMatchObject([{ space: "buenos-aires", ambush: true }]);
@@ -244,6 +246,17 @@ describe("special and defeated investigator encounters", () => {
     const done = finishEncounter(s, content);
     expect(who(done, leo).removed).toBe(true);
     expect(done.encounterDiscards.fallen).toBeUndefined();
+  });
+  it("discards the drawn card when the investigator falls mid-encounter", () => {
+    const drawn = drawEncounter(encounters(), content, "america");
+    const card = (drawn.phase as { card: { id: string } }).card.id;
+    expect(defeat(drawn, content, leo, "health").encounterDiscards.america).toEqual([card]);
+  });
+  it("keeps an ambusher's fight when another investigator falls", () => {
+    const waiting = ambush(trapColor(), content);
+    const s = defeat(waiting, content, lily, "health");
+    expect(s.phase).toMatchObject({ combat: { step: "will" } });
+    expect(onBoard(s, "eh01/monster/color-out-of-space")).toHaveLength(1);
   });
   it("refuses without a fallen token on the space", () => {
     expect(() => encounterFallen(defeat(encounters(), content, leo, "health"), content, leo)).toThrow(/no defeated investigator's token lies on Shanghai/);

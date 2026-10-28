@@ -109,7 +109,8 @@ export function continueFight(state: GameState, content: Content): GameState {
   const { combat: waiting, ...phase } = encounterPhase(state);
   if (!waiting) throw new Error("no fight is waiting");
   const me = active(state);
-  const target = state.monsters.find((m) => m.id === waiting.monster.id && m.instance === waiting.monster.instance)!;
+  const target = state.monsters.find((m) => m.id === waiting.monster.id && m.instance === waiting.monster.instance);
+  if (!target) throw new Error("the monster left the fight");
   const { name, combat } = combatOf(state, content, target.id);
   const { dice, successes } = waiting.roll;
   const plural = `${successes} success${successes === 1 ? "" : "es"}`;
@@ -223,16 +224,17 @@ export function finishEncounter(state: GameState, content: Content): GameState {
   const me = active(state);
   if (phase.combat) throw new Error("the fight is not over");
   if (!isDetained(me) && unfought(state, me.space).length > 0) throw new Error("the monsters on the space must be fought first");
-  let s = state;
-  if (phase.card?.deck === "fallen") {
-    const gone = phase.card.id;
-    s = log(replaceInvestigator(s, { ...s.investigators.find((i) => i.id === gone)!, removed: true }), `${investigatorName(content, gone)}'s token and sheet leave the game`);
-  } else if (phase.card) {
-    const { deck, id } = phase.card;
-    s = { ...s, encounterDiscards: { ...s.encounterDiscards, [deck]: [id, ...(s.encounterDiscards[deck] ?? [])] } };
-    if (deck === "expedition") s = { ...s, activeExpedition: expeditionSpace(content, s.decks.encounters.expedition ?? []) };
-  }
-  return advance(s, me.id);
+  return advance(discardDrawn(state, content), me.id);
+}
+
+/** The drawn card leaves play: to its discard, a fallen one's token and sheet out of the game; nothing when none is drawn. */
+function discardDrawn(state: GameState, content: Content): GameState {
+  const phase = encounterPhase(state);
+  if (!phase.card) return state;
+  const { deck, id } = phase.card;
+  if (deck === "fallen") return log(replaceInvestigator(state, { ...state.investigators.find((i) => i.id === id)!, removed: true }), `${investigatorName(content, id)}'s token and sheet leave the game`);
+  const s: GameState = { ...state, encounterDiscards: { ...state.encounterDiscards, [deck]: [id, ...(state.encounterDiscards[deck] ?? [])] } };
+  return deck === "expedition" ? { ...s, activeExpedition: expeditionSpace(content, s.decks.encounters.expedition ?? []) } : s;
 }
 
 function advance(start: GameState, after: string): GameState {
@@ -258,7 +260,10 @@ export function defeat(state: GameState, content: Content, investigator: string,
 
 /** The steps defeat and devouring share (manual p.4): doom by 1, the seat skipped, the lead passed, the loss check, the encounter passed on. */
 export function fall(state: GameState, content: Content, fallen: InvestigatorState, line: string): GameState {
-  let s = awakenAt0(note(replaceInvestigator({ ...returnAmbushers(state), doom: state.doom - 1 }, fallen), line), content);
+  // The fighter fell: the ambusher goes back and the drawn card leaves play; another seat's fall leaves the encounter as it is.
+  const mine = state.phase.name === "encounter" && state.phase.active === fallen.id;
+  const cleared = mine ? discardDrawn(returnAmbushers(state), content) : state;
+  let s = awakenAt0(note(replaceInvestigator({ ...cleared, doom: state.doom - 1 }, fallen), line), content);
   if (s.leadInvestigator === fallen.id) s = { ...s, leadInvestigator: nextStanding(s, fallen.id) ?? fallen.id };
   if (!s.investigators.some((i) => !i.defeated)) return { ...s, phase: { name: "lost", reason: `${line}: every investigator is defeated (doom ${s.doom})` } };
   // shortcut: a fall in the Action phase would leave the active seat on a fallen investigator; card text is applied in the other phases only.

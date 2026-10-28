@@ -96,10 +96,11 @@ export function gainClue(state: GameState, content: Content, id: string): GameSt
   const me = subject(state, id);
   const held = replace(state, { ...me, clues: me.clues + 1 });
   if (state.clues.includes(me.space)) return note({ ...held, clues: state.clues.filter((s) => s !== me.space), heldClues: [...state.heldClues, me.space] }, `${name(content, id)} gains the clue on ${spaceName(content, me.space)}`);
-  const pool = state.cluePool.length === 0 && state.clueDiscard.length > 0 ? reshuffle(state, state.clueDiscard) : { items: state.cluePool, rolls: state.rolls };
+  const rebuilt = state.cluePool.length === 0 && state.clueDiscard.length > 0;
+  const pool = rebuilt ? reshuffle(state, state.clueDiscard) : { items: state.cluePool, rolls: state.rolls };
   const [token, ...rest] = pool.items;
   if (token === undefined) throw new Error("no clue can be gained: the pool and discard are empty");
-  return note({ ...held, cluePool: rest, clueDiscard: [], heldClues: [...state.heldClues, token], rolls: pool.rolls }, `${name(content, id)} gains 1 clue from the pool`);
+  return note({ ...held, cluePool: rest, clueDiscard: rebuilt ? [] : state.clueDiscard, heldClues: [...state.heldClues, token], rolls: pool.rolls }, `${name(content, id)} gains 1 clue from the pool`);
 }
 
 /** Deviation: a spent clue leaves the game; the pool only tracks tokens on the board. */
@@ -160,6 +161,8 @@ function monsterOn(state: GameState, { set }: Content, monster: MonsterInstance)
   const sheet = set.monsters.find((m) => m.id === monster.id);
   const token = state.monsters.find((m) => m.id === monster.id && m.instance === monster.instance);
   if (!token) throw new Error(`no ${sheet?.name ?? monster.id} on the board`);
+  const fighting = state.phase.name === "encounter" ? state.phase.combat?.monster : undefined;
+  if (fighting && fighting.id === token.id && fighting.instance === token.instance) throw new Error("the fight is not over");
   return { token, label: `the ${sheet?.name ?? monster.id}`, epic: sheet?.epic ?? false };
 }
 
