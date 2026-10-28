@@ -10,6 +10,16 @@ export interface SetupOptions {
   seed: number;
 }
 
+/** Dice that landed and wait for rerolls before the result counts (manual p.3, p.8). */
+export interface Roll {
+  /** Investigator id who rolled and may spend clues. */
+  investigator: string;
+  /** Faces rolled, 1 to 6. */
+  dice: number[];
+  /** Dice showing 5 or 6; the test passes with at least 1. */
+  successes: number;
+}
+
 /** One physical monster token; `instance` tells identical tokens apart. */
 export interface MonsterInstance {
   id: string;
@@ -50,8 +60,8 @@ export interface ActionPhase {
   active: string;
   /** Actions the active investigator has performed this phase. */
   taken: ActionName[];
-  /** Acquire Assets rolled and waiting for the cards to be chosen. */
-  acquiring?: { dice: number[]; successes: number };
+  /** Acquire Assets rolled and waiting for rerolls and the cards to be chosen. */
+  acquiring?: Roll;
 }
 
 export interface EncounterPhase {
@@ -64,6 +74,8 @@ export interface EncounterPhase {
   fought: string[];
   /** The encounter card drawn, until the player finishes. */
   card?: { deck: string; id: string };
+  /** A fight waiting on its Will or Strength dice for rerolls before the losses are taken. */
+  combat?: { monster: MonsterInstance; step: "will" | "strength"; roll: Roll };
 }
 
 export interface MythosPhase {

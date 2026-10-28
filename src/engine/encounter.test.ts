@@ -4,10 +4,10 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn, rest } from "./actions";
-import { defeat, drawEncounter, fight, finishEncounter } from "./encounter";
+import { continueFight, defeat, drawEncounter, fight, finishEncounter } from "./encounter";
 import { nextRound, resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
-import { test } from "./test";
+import { rerollDie, test } from "./test";
 import type { GameState, InvestigatorState } from "./types";
 
 const root = join(import.meta.dirname, "../..");
@@ -45,6 +45,12 @@ const seedFor = (s: GameState, will: number | undefined, strength: number | unde
   throw new Error("no seed found");
 };
 const onBoard = (s: GameState, id: string) => s.monsters.filter((m) => m.id === id);
+/** Fights and continues through every waiting roll. */
+const brawl = (s: GameState, monster: { id: string; instance: number }): GameState => {
+  let t = fight(s, content, monster);
+  while (t.phase.name === "encounter" && t.phase.combat) t = continueFight(t, content);
+  return t;
+};
 
 describe("investigators encounter in seat order", () => {
   it("opens the Encounter phase with the lead when the last seat ends its turn", () => {
@@ -67,14 +73,14 @@ describe("monsters on the space must be fought", () => {
   it("fights in the order of choice", () => {
     const s = place(place(encounters(), ghoul, "buenos-aires"), "eh01/monster/cultist", "buenos-aires");
     const cultist = s.monsters.find((m) => m.id === "eh01/monster/cultist" && m.space === "buenos-aires")!;
-    const next = fight(s, content, cultist);
+    const next = brawl(s, cultist);
     expect(onBoard(next, ghoul)).toHaveLength(1);
     expect(next.phase.name === "encounter" && next.phase.log.join("\n")).toMatch(/Cultist/);
   });
   it("refuses fighting the same monster twice in one encounter", () => {
     const s = place(encounters(), "eh01/monster/cultist", "buenos-aires");
     const cultist = s.monsters.find((m) => m.id === "eh01/monster/cultist" && m.space === "buenos-aires")!;
-    const once = fight(s, content, cultist);
+    const once = brawl(s, cultist);
     expect(onBoard(once, "eh01/monster/cultist").some((m) => m.space === "buenos-aires")).toBe(true);
     expect(() => fight(once, content, cultist)).toThrow(/once per encounter/);
   });
@@ -91,7 +97,7 @@ describe("monsters on the space must be fought", () => {
 describe("two tests decide the fight", () => {
   const vs = (will: number | undefined, strength: number | undefined, health = 0) => {
     const s = seedFor(place(encounters(), byakhee, "buenos-aires", health), will, strength);
-    return { before: s, after: fight(s, content, { id: byakhee, instance: s.monsters.find((m) => m.id === byakhee)!.instance }) };
+    return { before: s, after: brawl(s, { id: byakhee, instance: s.monsters.find((m) => m.id === byakhee)!.instance }) };
   };
   it("loses sanity and health by the difference and wounds the monster", () => {
     const { before, after } = vs(0, 1);
@@ -111,9 +117,24 @@ describe("two tests decide the fight", () => {
   });
   it("skips a test the token does not print", () => {
     const s = place(encounters(), "eh01/monster/riot", "buenos-aires");
-    const after = fight(s, content, s.monsters.find((m) => m.id === "eh01/monster/riot")!);
+    const after = brawl(s, s.monsters.find((m) => m.id === "eh01/monster/riot")!);
     expect(after.rolls).toBe(s.rolls + 1);
     expect(who(after, leo).sanity).toBe(who(s, leo).sanity);
+  });
+  it("waits after the Will dice with nothing lost yet", () => {
+    const { before } = vs(0, 1);
+    const waiting = fight(before, content, before.monsters.find((m) => m.id === byakhee)!);
+    expect(waiting.phase).toMatchObject({ combat: { step: "will", roll: { investigator: leo } } });
+    expect(who(waiting, leo).sanity).toBe(who(before, leo).sanity);
+    expect(() => drawEncounter(waiting, content, "general")).toThrow(/fight is not over/);
+    expect(() => finishEncounter(waiting, content)).toThrow(/fight is not over/);
+  });
+  it("rerolls a Will die for a clue and logs it", () => {
+    const { before } = vs(0, 1);
+    const waiting = fight(patch(before, leo, { clues: 1 }), content, before.monsters.find((m) => m.id === byakhee)!);
+    const rerolled = rerollDie(waiting, set, 0);
+    expect(who(rerolled, leo).clues).toBe(0);
+    expect(rerolled.phase.name === "encounter" ? rerolled.phase.log.at(-1) : "").toMatch(/Leo Anderson rerolls die 1: /);
   });
   it("logs the dice, the losses and the monster's fate", () => {
     const { after } = vs(0, 1);
@@ -160,7 +181,7 @@ describe("one encounter of the investigator's choice", () => {
   });
   it("ends the encounter without a draw when a fought monster survives", () => {
     const s = place(encounters(), "eh01/monster/cultist", "buenos-aires");
-    const once = fight(s, content, s.monsters.find((m) => m.id === "eh01/monster/cultist" && m.space === "buenos-aires")!);
+    const once = brawl(s, s.monsters.find((m) => m.id === "eh01/monster/cultist" && m.space === "buenos-aires")!);
     expect(() => drawEncounter(once, content, "general")).toThrow(/fought first/);
     expect(finishEncounter(once, content).phase).toMatchObject({ name: "encounter", active: lily });
   });
@@ -186,7 +207,7 @@ describe("an investigator at 0 health or sanity is defeated", () => {
   };
   it("is defeated by sanity: doom advances and the next seat encounters", () => {
     const s = lastStand();
-    const next = fight(s, content, s.monsters.find((m) => m.id === byakhee)!);
+    const next = brawl(s, s.monsters.find((m) => m.id === byakhee)!);
     expect(who(next, leo).defeated).toBe("sanity");
     expect(next.doom).toBe(11);
     expect(next.phase).toMatchObject({ name: "encounter", active: lily });

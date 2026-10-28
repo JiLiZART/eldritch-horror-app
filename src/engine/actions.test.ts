@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { acquireAssets, endTurn, prepareForTravel, rest, takeAssets, trade, travel } from "./actions";
+import { rerollDie } from "./test";
 import { finishEncounter } from "./encounter";
 import { nextRound, resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
@@ -179,7 +180,7 @@ describe("Acquire Assets", () => {
   /** The Influence test already rolled with `successes`. */
   const rolled = (successes: number, s = shop()): GameState => ({
     ...s,
-    phase: { name: "action", active: charlie, taken: [], acquiring: { dice: Array(successes).fill(5), successes } },
+    phase: { name: "action", active: charlie, taken: [], acquiring: { investigator: charlie, dice: Array(successes).fill(5), successes } },
   });
 
   it("tests Influence and waits for the choice", () => {
@@ -190,6 +191,16 @@ describe("Acquire Assets", () => {
     expect(acquiring.successes).toBe(acquiring.dice.filter((d) => d >= 5).length);
     expect(s.rolls).toBe(shop().rolls + 1);
     expect(s.reserve).toEqual(shop().reserve);
+  });
+  it("measures the cards against the rerolled result", () => {
+    for (let seed = 0; seed < 50; seed++) {
+      const s = rerollDie(patch({ ...rolled(3), seed }, charlie, { clues: 1 }), set, 0);
+      if (s.phase.name === "action" && s.phase.acquiring!.successes === 2) {
+        expect(() => takeAssets(s, set, [tome])).toThrow(/total value 3.*result 2/);
+        return;
+      }
+    }
+    throw new Error("no seed rerolled below 5");
   });
   it("gains cards within the result and refills the reserve", () => {
     const s = takeAssets(rolled(3), set, [revolver, automatic]);

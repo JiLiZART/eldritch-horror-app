@@ -4,7 +4,8 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { setupGame } from "./setup";
-import { test as skillTest } from "./test";
+import { rerollDie, test as skillTest } from "./test";
+import type { GameState } from "./types";
 
 const root = join(import.meta.dirname, "../..");
 const board: Board = JSON.parse(readFileSync(join(root, "content/board/board.json"), "utf8"));
@@ -40,5 +41,42 @@ describe("skill test", () => {
   it("counts the roll on the state so the next test rolls new dice", () => {
     const first = skillTest(game(), set, charlie, "influence", 0);
     expect(first.state.rolls).toBe(game().rolls + 1);
+  });
+});
+
+describe("a die is rerolled for a clue", () => {
+  /** Charlie Kane's Influence roll waiting in the Action phase, with `clues` to spend. */
+  const waiting = (dice: number[], clues = 2, seed = 3): GameState => {
+    const s = game(seed);
+    return {
+      ...s,
+      investigators: s.investigators.map((i) => (i.id === charlie ? { ...i, clues } : i)),
+      phase: { name: "action", active: charlie, taken: [], acquiring: { investigator: charlie, dice, successes: dice.filter((d) => d >= 5).length } },
+    };
+  };
+  const roll = (s: GameState) => (s.phase.name === "action" ? s.phase.acquiring! : undefined!);
+  it("spends 1 clue, replaces the die and recounts", () => {
+    const s = rerollDie(waiting([1, 2, 3, 4]), set, 1);
+    expect(s.investigators.find((i) => i.id === charlie)!.clues).toBe(1);
+    expect(roll(s).dice.filter((_, n) => n !== 1)).toEqual([1, 3, 4]);
+    expect(roll(s).dice[1]).toBeGreaterThanOrEqual(1);
+    expect(roll(s).successes).toBe(roll(s).dice.filter((d) => d >= 5).length);
+    expect(s.rolls).toBe(game().rolls + 1);
+  });
+  it("keeps a worse face", () => {
+    for (let seed = 0; seed < 50; seed++) {
+      const s = rerollDie(waiting([6, 6, 6, 6], 1, seed), set, 0);
+      if (roll(s).dice[0]! < 5) {
+        expect(roll(s).successes).toBe(3);
+        return;
+      }
+    }
+    throw new Error("no seed rerolled below 5");
+  });
+  it("refuses without a clue", () => {
+    expect(() => rerollDie(waiting([1, 2, 3, 4], 0), set, 0)).toThrow(/costs 1 clue/);
+  });
+  it("refuses when no roll is waiting", () => {
+    expect(() => rerollDie(game(), set, 0)).toThrow(/no roll is waiting/);
   });
 });

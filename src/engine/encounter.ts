@@ -7,7 +7,7 @@ import { reshuffle } from "./rng";
 import { expeditionSpace } from "./setup";
 import { note, spaceName } from "./spawn";
 import { test } from "./test";
-import type { EncounterPhase, GameState, InvestigatorState, MonsterInstance, MonsterOnBoard } from "./types";
+import type { EncounterPhase, GameState, InvestigatorState, MonsterInstance } from "./types";
 
 /** Encounter phase (manual_eng.pdf p.3–4, p.8; EH_reference.pdf p.2, p.5, p.8): fight the monsters on the space, or draw one encounter card. */
 
@@ -63,49 +63,76 @@ function combatOf(state: GameState, { set }: Content, id: string): { name: strin
 }
 
 /**
- * One combat encounter (manual p.8): Will test, lose sanity by which the horror exceeds the successes; Strength test, lose health
- * by which the damage exceeds the successes while the monster loses health equal to them; at its toughness the monster is defeated.
- * A test the token does not print is skipped. Deviation: token text is left to the players; a toughness formula never defeats.
+ * One combat encounter (manual p.8), in steps so clues can reroll: the Will test waits; continuing takes sanity by which the horror exceeds
+ * the successes and rolls the Strength test, which waits; continuing takes health by which the damage exceeds the successes while the
+ * monster loses health equal to them; at its toughness the monster is defeated. A test the token does not print is skipped.
+ * Deviation: token text is left to the players; a toughness formula never defeats.
  */
 export function fight(state: GameState, content: Content, monster: MonsterInstance): GameState {
   const me = active(state);
   const target = state.monsters.find((m) => m.id === monster.id && m.instance === monster.instance);
   if (!target || target.space !== me.space) throw new Error("combat is against monsters on the investigator's space");
   const phase = encounterPhase(state);
+  if (phase.combat) throw new Error("the fight is not over");
   if (phase.fought.includes(monsterKey(target))) throw new Error("each monster is fought once per encounter");
-  const { name, epic, combat } = combatOf(state, content, target.id);
+  const { name, epic } = combatOf(state, content, target.id);
   if (epic && monstersOn(state, me.space).some((m) => !combatOf(state, content, m.id).epic)) throw new Error("every non-epic monster is fought before an epic one");
-  let s = log({ ...state, phase: { ...phase, fought: [...phase.fought, monsterKey(target)] } }, `${investigatorName(content, me.id)} fights the ${name}`);
-  const plural = (n: number) => `${n} success${n === 1 ? "" : "es"}`;
-  const roll = (skill: "will" | "strength", modifier: number) => {
-    const r = test(s, content.set, me.id, skill, modifier);
-    s = r.state;
-    return r;
-  };
-  let hurt = { ...me };
-  if (combat.will) {
-    const { dice, successes } = roll("will", combat.will.modifier);
-    const lost = Math.max(0, combat.will.horror - successes);
-    hurt = { ...hurt, sanity: hurt.sanity - lost };
-    s = log(s, `Will test${signed(combat.will.modifier)}: dice ${dice.join(" ")}, ${plural(successes)} against horror ${combat.will.horror}: loses ${lost} sanity`);
-    s = replaceInvestigator(s, hurt);
-    if (hurt.sanity <= 0) return defeat(log(s, "the combat ends"), content, me.id, "sanity");
-  } else s = log(s, "the token prints no Will test");
-  let wounded: MonsterOnBoard = target;
-  if (combat.strength) {
-    const { dice, successes } = roll("strength", combat.strength.modifier);
-    const lost = Math.max(0, combat.strength.damage - successes);
-    hurt = { ...hurt, health: hurt.health - lost };
-    wounded = { ...target, health: target.health + successes };
-    s = log(s, `Strength test${signed(combat.strength.modifier)}: dice ${dice.join(" ")}, ${plural(successes)} against damage ${combat.strength.damage}: loses ${lost} health, the ${name} loses ${successes} health`);
-    s = replaceInvestigator(s, hurt);
-  } else s = log(s, "the token prints no Strength test");
-  if (combat.toughness !== undefined && wounded.health >= combat.toughness) {
-    s = log({ ...s, monsters: s.monsters.filter((m) => m !== target), monsterCup: epic ? s.monsterCup : [...s.monsterCup, { id: target.id, instance: target.instance }] }, `the ${name} is defeated${epic ? "" : " and returns to the cup"}`);
-  } else {
-    s = log({ ...s, monsters: s.monsters.map((m) => (m === target ? wounded : m)) }, `the ${name} stays with ${wounded.health} health lost${combat.toughness === undefined ? " (toughness printed as a formula: left to the players)" : ""}`);
+  const s = log({ ...state, phase: { ...phase, fought: [...phase.fought, monsterKey(target)] } }, `${investigatorName(content, me.id)} fights the ${name}`);
+  return proceed(s, content, target, undefined);
+}
+
+/** Rolls the next printed test and waits, or settles the fight after the last one. */
+function proceed(state: GameState, content: Content, target: MonsterInstance, done: "will" | "strength" | undefined): GameState {
+  const { combat } = combatOf(state, content, target.id);
+  let s = state;
+  if (done === undefined) {
+    if (combat.will) return wait(s, content, target, "will", combat.will.modifier);
+    s = log(s, "the token prints no Will test");
   }
-  return hurt.health <= 0 ? defeat(s, content, me.id, "health") : s;
+  if (done !== "strength") {
+    if (combat.strength) return wait(s, content, target, "strength", combat.strength.modifier);
+    s = log(s, "the token prints no Strength test");
+  }
+  return settle(s, content, target);
+}
+
+function wait(state: GameState, content: Content, target: MonsterInstance, step: "will" | "strength", modifier: number): GameState {
+  const { state: s, ...roll } = test(state, content.set, active(state).id, step, modifier);
+  return { ...s, phase: { ...encounterPhase(s), combat: { monster: { id: target.id, instance: target.instance }, step, roll } } };
+}
+
+/** Takes the waiting roll's result: the loss, the monster's wound, then the next step (manual p.8). */
+export function continueFight(state: GameState, content: Content): GameState {
+  const { combat: waiting, ...phase } = encounterPhase(state);
+  if (!waiting) throw new Error("no fight is waiting");
+  const me = active(state);
+  const target = state.monsters.find((m) => m.id === waiting.monster.id && m.instance === waiting.monster.instance)!;
+  const { name, combat } = combatOf(state, content, target.id);
+  const { dice, successes } = waiting.roll;
+  const plural = `${successes} success${successes === 1 ? "" : "es"}`;
+  let s: GameState = { ...state, phase };
+  if (waiting.step === "will") {
+    const lost = Math.max(0, combat.will!.horror - successes);
+    s = log(s, `Will test${signed(combat.will!.modifier)}: dice ${dice.join(" ")}, ${plural} against horror ${combat.will!.horror}: loses ${lost} sanity`);
+    s = replaceInvestigator(s, { ...me, sanity: me.sanity - lost });
+    if (me.sanity - lost <= 0) return defeat(log(s, "the combat ends"), content, me.id, "sanity");
+    return proceed(s, content, target, "will");
+  }
+  const lost = Math.max(0, combat.strength!.damage - successes);
+  s = log(s, `Strength test${signed(combat.strength!.modifier)}: dice ${dice.join(" ")}, ${plural} against damage ${combat.strength!.damage}: loses ${lost} health, the ${name} loses ${successes} health`);
+  s = replaceInvestigator({ ...s, monsters: s.monsters.map((m) => (m === target ? { ...m, health: m.health + successes } : m)) }, { ...me, health: me.health - lost });
+  s = settle(s, content, target);
+  return me.health - lost <= 0 ? defeat(s, content, me.id, "health") : s;
+}
+
+/** Defeated at its toughness and back to the cup, or it stays wounded. */
+function settle(state: GameState, content: Content, monster: MonsterInstance): GameState {
+  const target = state.monsters.find((m) => m.id === monster.id && m.instance === monster.instance)!;
+  const { name, epic, combat } = combatOf(state, content, target.id);
+  if (combat.toughness !== undefined && target.health >= combat.toughness) {
+    return log({ ...state, monsters: state.monsters.filter((m) => m !== target), monsterCup: epic ? state.monsterCup : [...state.monsterCup, { id: target.id, instance: target.instance }] }, `the ${name} is defeated${epic ? "" : " and returns to the cup"}`);
+  }
+  return log(state, `the ${name} stays with ${target.health} health lost${combat.toughness === undefined ? " (toughness printed as a formula: left to the players)" : ""}`);
 }
 
 const signed = (n: number) => (n > 0 ? ` +${n}` : n < 0 ? ` ${n}` : "");
@@ -126,6 +153,7 @@ function allowed(state: GameState, { board }: Content, space: string, deck: stri
 export function drawEncounter(state: GameState, content: Content, deck: string): GameState {
   const phase = encounterPhase(state);
   const me = active(state);
+  if (phase.combat) throw new Error("the fight is not over");
   if (monstersOn(state, me.space).length > 0) throw new Error("the monsters on the space must be fought first");
   if (phase.card) throw new Error("an investigator resolves one encounter");
   const refusal = allowed(state, content, me.space, deck);
@@ -140,6 +168,7 @@ export function drawEncounter(state: GameState, content: Content, deck: string):
 export function finishEncounter(state: GameState, content: Content): GameState {
   const phase = encounterPhase(state);
   const me = active(state);
+  if (phase.combat) throw new Error("the fight is not over");
   if (unfought(state, me.space).length > 0) throw new Error("the monsters on the space must be fought first");
   let s = state;
   if (phase.card) {

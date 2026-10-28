@@ -173,8 +173,8 @@ export function acquireAssets(state: GameState, board: Board, set: GameSet): Gam
   if (space?.kind !== "city") throw new Error(`Acquire Assets needs a city space; ${me.space} is ${space?.kind ?? "unknown"}`);
   const monster = state.monsters.find((m) => m.space === me.space);
   if (monster) throw new Error(`Acquire Assets is not allowed on a space with a monster (${monster.id})`);
-  const { state: next, dice, successes } = test(state, set, me.id, "influence", 0);
-  return { ...next, phase: { ...actionPhase(state), acquiring: { dice, successes } } };
+  const { state: next, ...roll } = test(state, set, me.id, "influence", 0);
+  return { ...next, phase: { ...actionPhase(state), acquiring: roll } };
 }
 
 /**

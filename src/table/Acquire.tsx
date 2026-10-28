@@ -1,18 +1,17 @@
 import { useState } from "react";
 import type { GameSet } from "../content/types";
 import { takeAssets } from "../engine/actions";
-import type { GameState } from "../engine/types";
+import type { GameState, Roll } from "../engine/types";
+import { Dice } from "./Dice";
 import type { Act } from "./Turn";
 
 interface AcquireProps {
   set: GameSet;
   state: GameState;
-  /** The Influence roll waiting for its choice. */
-  roll: { dice: number[]; successes: number };
+  /** The Influence roll waiting for rerolls and its choice. */
+  roll: Roll;
   onAct: Act;
 }
-
-const FACES = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
 
 /** Acquire Assets choice (design D5): the roll, reserve cards to gain within it, or one card to discard instead. */
 export function Acquire({ set, state, roll, onAct }: AcquireProps) {
@@ -31,13 +30,7 @@ export function Acquire({ set, state, roll, onAct }: AcquireProps) {
     >
       <p>
         Influence roll{" "}
-        <span className="dice" aria-label={`rolled ${roll.dice.join(", ")}`}>
-          {roll.dice.map((d, i) => (
-            <b key={i} className={d >= 5 ? "success" : undefined}>
-              {FACES[d - 1]}
-            </b>
-          ))}
-        </span>{" "}
+        <Dice set={set} state={state} roll={roll} onAct={onAct} />{" "}
         result {roll.successes}, chosen value {total}
       </p>
       {state.reserve.map((id) => (

@@ -1,6 +1,7 @@
 import type { Board, GameSet } from "../content/types";
-import { drawEncounter, fight, finishEncounter, monsterKey } from "../engine/encounter";
+import { continueFight, drawEncounter, fight, finishEncounter, monsterKey } from "../engine/encounter";
 import type { EncounterPhase, GameState } from "../engine/types";
+import { Dice } from "./Dice";
 import { Effects } from "./Effects";
 import type { Act } from "./Turn";
 
@@ -44,8 +45,8 @@ export function Encounter({ board, set, state, phase, error, onAct }: EncounterP
               <li key={`${m.id}#${m.instance}`}>
                 {sheet?.images.back && <img className="token" src={`/${sheet.images.back}`} alt={`${sheet.name} token back`} />} {sheet?.name ?? m.id}, {m.health} health lost{" "}
                 {phase.fought.includes(monsterKey(m)) ? (
-                  "(fought)"
-                ) : (
+                  phase.combat?.monster.id === m.id && phase.combat.monster.instance === m.instance ? "(fighting)" : "(fought)"
+                ) : phase.combat ? null : (
                   <button type="button" onClick={() => onAct((s) => fight(s, content, m))}>
                     Fight
                   </button>
@@ -54,6 +55,14 @@ export function Encounter({ board, set, state, phase, error, onAct }: EncounterP
             );
           })}
         </ul>
+      )}
+      {phase.combat && (
+        <p>
+          {phase.combat.step === "will" ? "Will" : "Strength"} test <Dice set={set} state={state} roll={phase.combat.roll} onAct={onAct} /> result {phase.combat.roll.successes}{" "}
+          <button type="button" onClick={() => onAct((s) => continueFight(s, content))}>
+            Continue
+          </button>
+        </p>
       )}
       {monsters.length === 0 && !phase.card && (
         <p>
