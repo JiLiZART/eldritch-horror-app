@@ -144,12 +144,28 @@ function Journal({ set, state }: { set: GameSet; state: GameState }) {
   const t = useT();
   /** Text narrowing the lines across every round (journal-filter D1). */
   const [filter, setFilter] = useState("");
-  const lines = state.journal.map((e) => ({ round: e.round, text: journalLine(e, set, t) })).filter((l) => l.text.toLocaleLowerCase().includes(filter.toLocaleLowerCase()));
+  const all = state.journal.map((e) => ({ round: e.round, text: journalLine(e, set, t) }));
+  const lines = all.filter((l) => l.text.toLocaleLowerCase().includes(filter.toLocaleLowerCase()));
   const rounds = [...new Set(lines.map((l) => l.round))];
+  /** Shows "Copied" on the button for a moment after the clipboard took the journal (journal-export D1). */
+  const [copied, setCopied] = useState(false);
+  const copy = () => {
+    const text = [...new Set(all.map((l) => l.round))].map((round) => [t("panel.round", { round }), ...all.filter((l) => l.round === round).map((l) => l.text)].join("\n")).join("\n\n");
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      })
+      .catch(() => {});
+  };
   return (
     <details className="journal">
       <summary>{t("panel.journal", { count: state.journal.length })}</summary>
-      <input type="search" aria-label={t("panel.filterJournal")} placeholder={t("panel.filterJournal")} value={filter} onChange={(e) => setFilter(e.target.value)} />
+      <input type="search" aria-label={t("panel.filterJournal")} placeholder={t("panel.filterJournal")} value={filter} onChange={(e) => setFilter(e.target.value)} />{" "}
+      <button type="button" onClick={copy}>
+        {copied ? t("panel.copied") : t("panel.copyJournal")}
+      </button>
       {rounds.map((round) => (
         <section key={round}>
           <h3>{t("panel.round", { round })}</h3>

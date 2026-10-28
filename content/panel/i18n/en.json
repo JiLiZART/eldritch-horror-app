@@ -265,5 +265,7 @@
   "game.confirm": "Confirm",
   "game.cancel": "Cancel",
   "game.keys": "Keys: arrows pan, + and − zoom, Esc clears the selection",
-  "panel.filterJournal": "Filter journal"
+  "panel.filterJournal": "Filter journal",
+  "panel.copyJournal": "Copy journal",
+  "panel.copied": "Copied"
 }
