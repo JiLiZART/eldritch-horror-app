@@ -252,5 +252,6 @@
   "piece.matchesOmen": "совпадают со знамением",
   "gate.green": "зелёные врата",
   "gate.blue": "синие врата",
-  "gate.red": "красные врата"
+  "gate.red": "красные врата",
+  "piece.investigatorHint": "здоровье {health}, рассудок {sanity}, улики {clues}"
 }

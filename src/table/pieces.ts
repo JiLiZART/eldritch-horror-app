@@ -65,7 +65,7 @@ export function piecesOnSpace(state: GameState | undefined, board: Board, set: G
     if (i.defeated === "devoured" || i.removed) continue;
     const investigator = byId(set.investigators, i.id);
     const label = i.defeated ? t("piece.defeated", { name: investigator.name }) : i.delayed ? t("piece.delayed", { name: investigator.name }) : investigator.name;
-    add(i.space, { kind: "pawn", id: i.id, image: investigator.pawn, label, ...(i.defeated || i.delayed ? { lying: true as const } : {}) });
+    add(i.space, { kind: "pawn", id: i.id, image: investigator.pawn, label, ...(i.defeated || i.delayed ? { lying: true as const } : {}), hint: t("piece.investigatorHint", { health: i.health, sanity: i.sanity, clues: i.clues }) });
   }
   // The lead investigator token beside the lead's pawn (manual p.3); the engine keeps the lead on a standing investigator.
   const lead = state.investigators.find((i) => i.id === state.leadInvestigator);

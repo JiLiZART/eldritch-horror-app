@@ -252,5 +252,6 @@
   "piece.matchesOmen": "matches the omen",
   "gate.green": "green gate",
   "gate.blue": "blue gate",
-  "gate.red": "red gate"
+  "gate.red": "red gate",
+  "piece.investigatorHint": "{health} health, {sanity} sanity, {clues} clues"
 }

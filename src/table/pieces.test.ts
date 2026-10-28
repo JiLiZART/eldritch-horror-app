@@ -46,6 +46,12 @@ describe("piecesOnSpace", () => {
     expect(labels).toContain("Врата");
     expect(labels).toContain("Ведущий сыщик");
   });
+  it("hints an investigator's health, sanity and clues", () => {
+    const lily = inv("lily-chen");
+    const s = { ...state, investigators: state.investigators.map((i) => (i.id === lily ? { ...i, health: 4, sanity: 6, clues: 1 } : i)) };
+    const pawn = [...piecesOnSpace(s, board, set, t).values()].flat().find((p) => p.kind === "pawn" && p.id === lily);
+    expect(pawn?.hint).toBe("4 health, 6 sanity, 1 clues");
+  });
   it("hints a gate's colour and whether it matches the omen", () => {
     const hint = (omen: number) => [...piecesOnSpace({ ...state, gates: ["london"], omen }, board, set, t).values()].flat().find((p) => p.kind === "gate")?.hint;
     expect(hint(0)).toBe("blue gate");
@@ -73,7 +79,7 @@ describe("piecesOnSpace", () => {
     const monster = set.monsters.find((x) => x.id === m!.id)!;
     expect(pieces.get(m!.space)).toContainEqual(expect.objectContaining({ kind: "monster", id: `${m!.id}#${m!.instance}`, image: monster.images.front, label: monster.name }));
     const akachi = set.investigators.find((i) => i.id === inv("akachi-onyele"))!;
-    expect(pieces.get("space-15")).toContainEqual({ kind: "pawn", id: akachi.id, image: akachi.pawn, label: akachi.name });
+    expect(pieces.get("space-15")).toContainEqual(expect.objectContaining({ kind: "pawn", id: akachi.id, image: akachi.pawn, label: akachi.name }));
   });
   it("lays a delayed or defeated pawn on its side", () => {
     const leo = inv("leo-anderson");
