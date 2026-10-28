@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { GameSet } from "../content/types";
-import { takeAssets } from "../engine/actions";
+import { takeAssets, takeBankLoan } from "../engine/actions";
 import type { GameState, Roll } from "../engine/types";
 import { Dice } from "./Dice";
 import type { Act } from "./Turn";
@@ -9,7 +9,7 @@ interface AcquireProps {
   set: GameSet;
   state: GameState;
   /** The Influence roll waiting for rerolls and its choice. */
-  roll: Roll;
+  roll: Roll & { loan?: true };
   onAct: Act;
 }
 
@@ -31,7 +31,11 @@ export function Acquire({ set, state, roll, onAct }: AcquireProps) {
       <p>
         Influence roll{" "}
         <Dice set={set} state={state} roll={roll} onAct={onAct} />{" "}
-        result {roll.successes}, chosen value {total}
+        result {roll.successes + (roll.loan ? 2 : 0)}
+        {roll.loan && " (+2 Bank Loan)"}, chosen value {total}{" "}
+        <button type="button" disabled={roll.loan} onClick={() => onAct((s) => takeBankLoan(s, set))}>
+          Take Bank Loan (+2 successes, gain Debt)
+        </button>
       </p>
       {state.reserve.map((id) => (
         <label key={id}>

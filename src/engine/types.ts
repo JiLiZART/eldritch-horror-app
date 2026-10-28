@@ -70,8 +70,8 @@ export interface ActionPhase {
   active: string;
   /** Actions the active investigator has performed this phase. */
   taken: ActionName[];
-  /** Acquire Assets rolled and waiting for rerolls and the cards to be chosen. */
-  acquiring?: Roll;
+  /** Acquire Assets rolled and waiting for rerolls and the cards to be chosen; `loan` once the Bank Loan added 2 successes (manual p.3). */
+  acquiring?: Roll & { loan?: true };
 }
 
 export interface EncounterPhase {

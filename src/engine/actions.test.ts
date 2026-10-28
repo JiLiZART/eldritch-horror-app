@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
-import { acquireAssets, endTurn, prepareForTravel, rest, takeAssets, trade, travel } from "./actions";
+import { acquireAssets, endTurn, prepareForTravel, rest, takeAssets, takeBankLoan, trade, travel } from "./actions";
 import { rerollDie } from "./test";
 import { finishEncounter } from "./encounter";
 import { nextRound, resolveMythos } from "./mythos";
@@ -208,6 +208,22 @@ describe("Acquire Assets", () => {
     expect(acquiring.successes).toBe(acquiring.dice.filter((d) => d >= 5).length);
     expect(s.rolls).toBe(shop().rolls + 1);
     expect(s.reserve).toEqual(shop().reserve);
+  });
+  it("takes the Bank Loan: 2 more successes for a Debt condition", () => {
+    const s = takeBankLoan(rolled(1), set);
+    expect(who(s, charlie).conditions.map((c) => set.cards.find((x) => x.id === c)?.name)).toEqual(["Debt"]);
+    expect(who(takeAssets(s, set, [tome]), charlie).possessions).toContain(tome);
+    expect(() => takeAssets(s, set, [tome, revolver])).toThrow(/total value 4.*result 3/);
+  });
+  it("refuses the loan with Debt held or taken twice", () => {
+    const debt = set.cards.find((c) => c.name === "Debt")!.id;
+    expect(() => takeBankLoan(patch(rolled(1), charlie, { conditions: [debt] }), set)).toThrow(/already has Debt/);
+    expect(() => takeBankLoan(takeBankLoan(rolled(1), set), set)).toThrow(/already taken/);
+  });
+  it("keeps the loan through a reroll", () => {
+    const s = rerollDie(patch(takeBankLoan(rolled(1), set), charlie, { clues: 1 }), set, 0);
+    const result = s.phase.name === "action" ? s.phase.acquiring!.successes : -1;
+    expect(() => takeAssets(s, set, [tome, revolver, automatic])).toThrow(new RegExp(`result ${result + 2}`));
   });
   it("measures the cards against the rerolled result", () => {
     for (let seed = 0; seed < 50; seed++) {

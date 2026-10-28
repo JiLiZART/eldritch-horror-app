@@ -180,6 +180,25 @@ export function acquireAssets(state: GameState, board: Board, set: GameSet): Gam
   return { ...next, phase: { ...actionPhase(state), acquiring: roll } };
 }
 
+/** The Bank Loan printed on the board (manual p.3): 2 more successes for a Debt condition, once per roll, never with Debt already held. */
+export function takeBankLoan(state: GameState, set: GameSet): GameState {
+  const phase = actionPhase(state);
+  if (!phase.acquiring) throw new Error("no Acquire Assets roll is waiting for a choice");
+  if (phase.acquiring.loan) throw new Error("the Bank Loan was already taken on this roll");
+  const me = active(state);
+  const isDebt = (id: string) => set.cards.find((c) => c.id === id)?.name === "Debt";
+  if (me.conditions.some(isDebt)) throw new Error(`${set.investigators.find((i) => i.id === me.id)?.name ?? me.id} already has Debt`);
+  const at = state.decks.condition.length - 1 - [...state.decks.condition].reverse().findIndex(isDebt);
+  if (at >= state.decks.condition.length) throw new Error("no Debt card is left in the condition deck");
+  const debt = state.decks.condition[at]!;
+  return {
+    ...state,
+    decks: { ...state.decks, condition: state.decks.condition.filter((_, n) => n !== at) },
+    investigators: state.investigators.map((i) => (i.id === me.id ? { ...i, conditions: [...i.conditions, debt] } : i)),
+    phase: { ...phase, acquiring: { ...phase.acquiring, loan: true } },
+  };
+}
+
 /**
  * Acquire Assets, step 2: gain reserve cards with a total value at most the result, or, gaining none, discard 1 reserve card.
  * Deviation: the Bank Loan and Debt are not modelled.
@@ -187,7 +206,7 @@ export function acquireAssets(state: GameState, board: Board, set: GameSet): Gam
 export function takeAssets(state: GameState, set: GameSet, cards: string[], discard?: string): GameState {
   const phase = actionPhase(state);
   if (!phase.acquiring) throw new Error("no Acquire Assets roll is waiting for a choice");
-  const { successes } = phase.acquiring;
+  const successes = phase.acquiring.successes + (phase.acquiring.loan ? 2 : 0);
   const reserve = [...state.reserve];
   const pick = (card: string) => {
     const at = reserve.indexOf(card);
