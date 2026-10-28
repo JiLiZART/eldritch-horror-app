@@ -1,5 +1,5 @@
 import react from "@vitejs/plugin-react";
-import { cpSync, existsSync, readFileSync, realpathSync } from "node:fs";
+import { cpSync, existsSync, readFileSync, realpathSync, rmSync } from "node:fs";
 import { join, resolve, sep } from "node:path";
 import { defineConfig, type Plugin } from "vite";
 
@@ -11,6 +11,10 @@ function contentDir(): Plugin {
     name: "content-dir",
     configResolved(config) {
       outDir = config.build.outDir;
+    },
+    // Empties the output folder with retries: Finder drops .DS_Store files into it mid-removal, which Vite's own emptying cannot survive.
+    buildStart() {
+      rmSync(outDir, { recursive: true, force: true, maxRetries: 10, retryDelay: 50 });
     },
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
@@ -34,4 +38,5 @@ function contentDir(): Plugin {
 
 export default defineConfig({
   plugins: [react(), contentDir()],
+  build: { emptyOutDir: false },
 });
