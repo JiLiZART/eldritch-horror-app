@@ -3,6 +3,7 @@ import type { GameSet } from "../content/types";
 import { takeAssets, takeBankLoan } from "../engine/actions";
 import type { GameState, Roll } from "../engine/types";
 import { Dice } from "./Dice";
+import { useT } from "./lang";
 import type { Act } from "./Turn";
 
 interface AcquireProps {
@@ -17,6 +18,7 @@ interface AcquireProps {
 export function Acquire({ set, state, roll, onAct }: AcquireProps) {
   const [chosen, setChosen] = useState<string[]>([]);
   const [discard, setDiscard] = useState("");
+  const t = useT();
   const card = (id: string) => set.cards.find((c) => c.id === id);
   const total = chosen.reduce((sum, id) => sum + (card(id)?.value ?? 0), 0);
   const toggle = (id: string, on: boolean) => setChosen((prev) => (on ? [...prev, id] : prev.filter((c) => c !== id)));
@@ -29,12 +31,13 @@ export function Acquire({ set, state, roll, onAct }: AcquireProps) {
       }}
     >
       <p>
-        Influence roll{" "}
+        {t("acquire.roll")}{" "}
         <Dice set={set} state={state} roll={roll} onAct={onAct} />{" "}
-        result {roll.successes + (roll.loan ? 2 : 0)}
-        {roll.loan && " (+2 Bank Loan)"}, chosen value {total}{" "}
+        {t("acquire.result", { result: roll.successes + (roll.loan ? 2 : 0) })}
+        {roll.loan && t("acquire.loan")}
+        {t("acquire.chosen", { total })}{" "}
         <button type="button" disabled={roll.loan} onClick={() => onAct((s) => takeBankLoan(s, set))}>
-          Take Bank Loan (+2 successes, gain Debt)
+          {t("acquire.takeLoan")}
         </button>
       </p>
       {state.reserve.map((id) => (
@@ -44,9 +47,9 @@ export function Acquire({ set, state, roll, onAct }: AcquireProps) {
       ))}
       {chosen.length === 0 && (
         <label>
-          Discard instead{" "}
+          {t("acquire.discardInstead")}{" "}
           <select value={discard} onChange={(e) => setDiscard(e.target.value)}>
-            <option value="">nothing</option>
+            <option value="">{t("acquire.nothing")}</option>
             {state.reserve.map((id) => (
               <option key={id} value={id}>
                 {card(id)?.name ?? id}
@@ -55,7 +58,7 @@ export function Acquire({ set, state, roll, onAct }: AcquireProps) {
           </select>
         </label>
       )}
-      <button type="submit">Take</button>
+      <button type="submit">{t("acquire.take")}</button>
     </form>
   );
 }

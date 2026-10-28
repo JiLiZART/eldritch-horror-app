@@ -23,6 +23,12 @@ if (existsSync(setsDir)) {
   }
 }
 
+// The panel's two string files hold the same keys (panel-language D4).
+const panelEn = readJson<Record<string, string>>(join(root, "content/panel/i18n/en.json")) ?? {};
+const panelRu = readJson<Record<string, string>>(join(root, "content/panel/i18n/ru.json")) ?? {};
+for (const key of Object.keys(panelEn)) if (!(key in panelRu)) errors.push(`panel string ${key} missing in ru.json`);
+for (const key of Object.keys(panelRu)) if (!(key in panelEn)) errors.push(`panel string ${key} missing in en.json`);
+
 const manifest = readJson<IconManifest>(join(root, "content/icons/manifest.json"));
 if (manifest) {
   const dir = join(pub, "icons");

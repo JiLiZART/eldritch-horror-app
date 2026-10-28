@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { GameSet } from "../content/types";
 import { type Offer, trade } from "../engine/actions";
 import type { GameState, InvestigatorState, Ticket } from "../engine/types";
+import { useT } from "./lang";
 import type { Act } from "./Turn";
 
 interface TradeProps {
@@ -22,7 +23,8 @@ export function Trade({ set, state, active, onAct, onClose }: TradeProps) {
   const [receive, setReceive] = useState<Offer>({});
   const other = partners.find((i) => i.id === partner);
   const name = (id: string) => set.investigators.find((i) => i.id === id)?.name ?? id;
-  if (partners.length === 0) return <p>Nobody shares {name(me.id)}'s space to trade with.</p>;
+  const t = useT();
+  if (partners.length === 0) return <p>{t("trade.nobody", { name: name(me.id) })}</p>;
   return (
     <form
       onSubmit={(e) => {
@@ -32,7 +34,7 @@ export function Trade({ set, state, active, onAct, onClose }: TradeProps) {
       }}
     >
       <label>
-        Trade with{" "}
+        {t("trade.with")}{" "}
         <select value={partner} onChange={(e) => setPartner(e.target.value)}>
           {partners.map((i) => (
             <option key={i.id} value={i.id}>
@@ -41,11 +43,11 @@ export function Trade({ set, state, active, onAct, onClose }: TradeProps) {
           ))}
         </select>
       </label>
-      <OfferFields legend={`${name(me.id)} gives`} holder={me} set={set} offer={give} onChange={setGive} />
-      {other && <OfferFields legend={`${name(other.id)} gives`} holder={other} set={set} offer={receive} onChange={setReceive} />}
-      <button type="submit">Confirm trade</button>{" "}
+      <OfferFields legend={t("trade.gives", { name: name(me.id) })} holder={me} set={set} offer={give} onChange={setGive} />
+      {other && <OfferFields legend={t("trade.gives", { name: name(other.id) })} holder={other} set={set} offer={receive} onChange={setReceive} />}
+      <button type="submit">{t("trade.confirm")}</button>{" "}
       <button type="button" onClick={onClose}>
-        Close
+        {t("trade.close")}
       </button>
     </form>
   );
@@ -57,6 +59,7 @@ const held = (i: InvestigatorState): [Ticket, number][] => [...new Set(i.tickets
 function OfferFields({ legend, holder, set, offer, onChange }: { legend: string; holder: InvestigatorState; set: GameSet; offer: Offer; onChange: (o: Offer) => void }) {
   const cardName = (id: string) => set.cards.find((c) => c.id === id)?.name ?? id;
   const toggle = <T,>(list: T[] | undefined, item: T, on: boolean) => (on ? [...(list ?? []), item] : (list ?? []).filter((x) => x !== item));
+  const t = useT();
   return (
     <fieldset>
       <legend>{legend}</legend>
@@ -67,17 +70,17 @@ function OfferFields({ legend, holder, set, offer, onChange }: { legend: string;
         </label>
       ))}
       <label>
-        Clues (of {holder.clues}) <input type="number" min={0} max={holder.clues} value={offer.clues ?? 0} onChange={(e) => onChange({ ...offer, clues: Number(e.target.value) })} />
+        {t("trade.clues", { count: holder.clues })} <input type="number" min={0} max={holder.clues} value={offer.clues ?? 0} onChange={(e) => onChange({ ...offer, clues: Number(e.target.value) })} />
       </label>
-      {held(holder).map(([t, count]) => (
-        <label key={t}>
-          {t} tickets (of {count}){" "}
+      {held(holder).map(([tk, count]) => (
+        <label key={tk}>
+          {t("trade.tickets", { ticket: t(`ticket.${tk}`), count })}{" "}
           <input
             type="number"
             min={0}
             max={count}
-            value={offer.tickets?.filter((x) => x === t).length ?? 0}
-            onChange={(e) => onChange({ ...offer, tickets: [...(offer.tickets ?? []).filter((x) => x !== t), ...Array<Ticket>(Number(e.target.value)).fill(t)] })}
+            value={offer.tickets?.filter((x) => x === tk).length ?? 0}
+            onChange={(e) => onChange({ ...offer, tickets: [...(offer.tickets ?? []).filter((x) => x !== tk), ...Array<Ticket>(Number(e.target.value)).fill(tk)] })}
           />
         </label>
       ))}

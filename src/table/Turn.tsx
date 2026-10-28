@@ -3,6 +3,7 @@ import type { Board, GameSet } from "../content/types";
 import { acquireAssets, componentAction, endTurn, prepareForTravel, rest, travel } from "../engine/actions";
 import type { ActionPhase, GameState, Ticket } from "../engine/types";
 import { Acquire } from "./Acquire";
+import { useT } from "./lang";
 import { Trade } from "./Trade";
 
 export type Act = (fn: (state: GameState) => GameState) => void;
@@ -27,6 +28,7 @@ export function Turn({ board, set, state, phase, error, route, onAct, onRoute }:
   const [discard, setDiscard] = useState<Ticket>("train");
   const [trading, setTrading] = useState(false);
   const [component, setComponent] = useState("");
+  const t = useT();
   const me = state.investigators.find((i) => i.id === phase.active)!;
   const name = (id: string) => set.investigators.find((i) => i.id === id)?.name ?? id;
   const spaceName = (id: string) => board.spaces.find((s) => s.id === id)?.name.en ?? id;
@@ -35,62 +37,62 @@ export function Turn({ board, set, state, phase, error, route, onAct, onRoute }:
   /** The own sheet and possessions, then same-space investigators' possessions for a local action. */
   const components = state.investigators
     .filter((i) => !i.defeated && i.space === me.space)
-    .flatMap((i) => (i.id === me.id ? [{ id: i.id, label: `${name(i.id)}'s sheet` }, ...i.possessions.map((c) => ({ id: c, label: cardTitle(c) }))] : i.possessions.map((c) => ({ id: c, label: `${cardTitle(c)} (${name(i.id)})` }))));
+    .flatMap((i) => (i.id === me.id ? [{ id: i.id, label: t("turn.sheet", { name: name(i.id) }) }, ...i.possessions.map((c) => ({ id: c, label: cardTitle(c) }))] : i.possessions.map((c) => ({ id: c, label: `${cardTitle(c)} (${name(i.id)})` }))));
   return (
     <section className="turn">
-      <h2>Round {state.round}, Action phase</h2>
+      <h2>{t("turn.heading", { round: state.round })}</h2>
       <p>
-        {name(me.id)} is active, {2 - phase.taken.length} actions left, tickets: {me.tickets.join(", ") || "none"}
+        {t("turn.status", { name: name(me.id), left: 2 - phase.taken.length, tickets: me.tickets.map((x) => t(`ticket.${x}`)).join(", ") || t("game.none") })}
       </p>
       {me.delayed ? (
         <div>
-          <p>{name(me.id)} is delayed: ending the turn stands the token up.</p>
+          <p>{t("turn.delayed", { name: name(me.id) })}</p>
           <button type="button" onClick={() => onAct(endTurn)}>
-            End turn
+            {t("turn.endTurn")}
           </button>
         </div>
       ) : route ? (
         <div>
-          <p>Route: {route.length ? route.map(spaceName).join(" → ") : "pick spaces on the table"}</p>
+          <p>{t("turn.route", { route: route.length ? route.map(spaceName).join(" → ") : t("turn.pickSpaces") })}</p>
           <button type="button" disabled={route.length === 0} onClick={() => onAct((s) => travel(s, board, route))}>
-            Confirm travel
+            {t("turn.confirmTravel")}
           </button>{" "}
           <button type="button" onClick={() => onRoute(undefined)}>
-            Cancel
+            {t("turn.cancel")}
           </button>
         </div>
       ) : (
         <div>
           <button type="button" onClick={() => onRoute([])}>
-            Travel
+            {t("turn.travel")}
           </button>{" "}
           <button type="button" onClick={() => onAct((s) => rest(s, set))}>
-            Rest
+            {t("turn.rest")}
           </button>{" "}
-          {TICKETS.map((t) => (
-            <button key={t} type="button" onClick={() => onAct((s) => prepareForTravel(s, board, t, full ? discard : undefined))}>
-              Prepare for travel: {t}
+          {TICKETS.map((tk) => (
+            <button key={tk} type="button" onClick={() => onAct((s) => prepareForTravel(s, board, tk, full ? discard : undefined))}>
+              {t("turn.prepare", { ticket: t(`ticket.${tk}`) })}
             </button>
           ))}{" "}
           {full && (
             <label>
-              give up{" "}
+              {t("turn.giveUp")}{" "}
               <select value={discard} onChange={(e) => setDiscard(e.target.value as Ticket)}>
-                {TICKETS.map((t) => (
-                  <option key={t} value={t}>
-                    {t} ticket
+                {TICKETS.map((tk) => (
+                  <option key={tk} value={tk}>
+                    {t("turn.ticket", { ticket: t(`ticket.${tk}`) })}
                   </option>
                 ))}
               </select>
             </label>
           )}
           <button type="button" onClick={() => onAct((s) => acquireAssets(s, board, set))}>
-            Acquire Assets
+            {t("turn.acquire")}
           </button>{" "}
           <label>
-            Component{" "}
+            {t("turn.component")}{" "}
             <select value={component} onChange={(e) => setComponent(e.target.value)}>
-              <option value="">choose</option>
+              <option value="">{t("turn.choose")}</option>
               {components.map((c) => (
                 <option key={c.id} value={c.id} disabled={state.usedComponents.includes(c.id)}>
                   {c.label}
@@ -99,13 +101,13 @@ export function Turn({ board, set, state, phase, error, route, onAct, onRoute }:
             </select>
           </label>{" "}
           <button type="button" disabled={!component} onClick={() => onAct((s) => componentAction(s, set, component))}>
-            Component action
+            {t("turn.componentAction")}
           </button>{" "}
           <button type="button" onClick={() => setTrading((on) => !on)}>
-            Trade
+            {t("turn.trade")}
           </button>{" "}
           <button type="button" onClick={() => onAct(endTurn)}>
-            End turn
+            {t("turn.endTurn")}
           </button>
         </div>
       )}

@@ -4,6 +4,7 @@ import type { Board, GameSet, Lang, Space } from "../content/types";
 import { OMEN_TRACK } from "../engine/omen";
 import type { GameState } from "../engine/types";
 import { Glossary } from "./Glossary";
+import { useT } from "./lang";
 import type { Piece } from "./pieces";
 import { BOARD_SETS, PATH_COLORS } from "./sets";
 
@@ -26,6 +27,7 @@ interface PanelProps {
 const SET_NAMES: Record<string, string> = { eh01: "Core", ...Object.fromEntries(BOARD_SETS.map((s) => [s.id, s.name])) };
 
 export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled, onToggle, selected, onSelect, children }: PanelProps) {
+  const t = useT();
   const pathType = (a: string, b: string) => board.paths.find((p) => (p.from === a && p.to === b) || (p.from === b && p.to === a))?.type;
   return (
     <aside className="panel">
@@ -35,7 +37,7 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
       {state && <Journal set={set} state={state} />}
       <Glossary />
       <fieldset>
-        <legend>Board language</legend>
+        <legend>{t("panel.boardLanguage")}</legend>
         {(["en", "ru"] as const).map((l) => (
           <label key={l}>
             <input type="radio" name="board-lang" checked={lang === l} onChange={() => onLang(l)} /> {l === "en" ? "English" : "Русский"}
@@ -43,7 +45,7 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
         ))}
       </fieldset>
       <fieldset>
-        <legend>Sets</legend>
+        <legend>{t("panel.sets")}</legend>
         <label>
           <input type="checkbox" checked disabled /> Core
         </label>
@@ -54,7 +56,7 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
         ))}
       </fieldset>
       <fieldset>
-        <legend>Paths</legend>
+        <legend>{t("panel.paths")}</legend>
         {Object.entries(PATH_COLORS).map(([type, color]) => (
           <span key={type} className="swatch">
             <i style={{ background: color }} /> {type}
@@ -62,7 +64,7 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
         ))}
       </fieldset>
       <section aria-live="polite">
-        <h2>Selected space</h2>
+        <h2>{t("panel.selectedSpace")}</h2>
         {selected ? (
           <dl>
             <dt>Id</dt>
@@ -98,7 +100,7 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
         )}
       </section>
       <section>
-        <h2>Spaces</h2>
+        <h2>{t("panel.spaces")}</h2>
         <ul className="spaces">
           {spaces.map((s) => (
             <li key={s.id}>
@@ -115,15 +117,16 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
 
 /** The game's record beside the board (design D4): folded, grouped by round, oldest first. */
 function Journal({ set, state }: { set: GameSet; state: GameState }) {
+  const t = useT();
   const name = (id: string) => set.investigators.find((i) => i.id === id)?.name ?? id;
   const text = (line: string) => (line.startsWith("component:") ? `component action: ${set.cards.find((c) => c.id === line.slice(10))?.name ?? name(line.slice(10))}` : line);
   const rounds = [...new Set(state.journal.map((e) => e.round))];
   return (
     <details className="journal">
-      <summary>Journal ({state.journal.length} lines)</summary>
+      <summary>{t("panel.journal", { count: state.journal.length })}</summary>
       {rounds.map((round) => (
         <section key={round}>
-          <h3>Round {round}</h3>
+          <h3>{t("panel.round", { round })}</h3>
           <ol>
             {state.journal
               .filter((e) => e.round === round)

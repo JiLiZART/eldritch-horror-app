@@ -3,6 +3,7 @@ import type { Board, GameSet } from "../content/types";
 import { nextRound, replaceInvestigator, resolveMythos } from "../engine/mythos";
 import type { GameState, MythosPhase } from "../engine/types";
 import { Effects } from "./Effects";
+import { useT } from "./lang";
 import type { Act } from "./Turn";
 
 interface MythosProps {
@@ -18,13 +19,14 @@ interface MythosProps {
 export function Mythos({ board, set, state, phase, error, onAct }: MythosProps) {
   const [lead, setLead] = useState(state.leadInvestigator);
   const [newcomer, setNewcomer] = useState("");
+  const t = useT();
   const unused = set.investigators.filter((i) => !state.investigators.some((x) => x.id === i.id));
   const fallen = state.awakened ? [] : state.investigators.filter((i) => i.defeated && !i.replacedBy);
   const card = set.mythos.find((m) => m.id === phase.card);
   const name = (id: string) => set.investigators.find((i) => i.id === id)?.name ?? id;
   return (
     <section className="turn">
-      <h2>Round {state.round}, Mythos phase</h2>
+      <h2>{t("mythos.heading", { round: state.round })}</h2>
       <p className="cards">{card && <img className="mythos-card" src={`/${card.images.front}`} alt={card.name} />}</p>
       {phase.log ? (
         <>
@@ -36,9 +38,9 @@ export function Mythos({ board, set, state, phase, error, onAct }: MythosProps) 
           {fallen.map((f) => (
             <p key={f.id}>
               <label>
-                {name(f.id)} {f.defeated === "devoured" ? "was devoured" : "is defeated"}: replaced by{" "}
+                {t(f.defeated === "devoured" ? "mythos.devoured" : "mythos.defeated", { name: name(f.id) })}{" "}
                 <select value={newcomer} onChange={(e) => setNewcomer(e.target.value)}>
-                  <option value="">choose an investigator</option>
+                  <option value="">{t("mythos.chooseInvestigator")}</option>
                   {unused.map((i) => (
                     <option key={i.id} value={i.id}>
                       {i.name}
@@ -47,12 +49,12 @@ export function Mythos({ board, set, state, phase, error, onAct }: MythosProps) 
                 </select>
               </label>{" "}
               <button type="button" disabled={!newcomer} onClick={() => onAct((s) => replaceInvestigator(s, { board, set }, f.id, newcomer))}>
-                Replace
+                {t("mythos.replace")}
               </button>
             </p>
           ))}
           <label>
-            Lead investigator for the next round{" "}
+            {t("mythos.lead")}{" "}
             <select value={lead} onChange={(e) => setLead(e.target.value)}>
               {state.investigators.filter((i) => !i.defeated).map((i) => (
                 <option key={i.id} value={i.id}>
@@ -62,13 +64,13 @@ export function Mythos({ board, set, state, phase, error, onAct }: MythosProps) 
             </select>
           </label>
           <button type="button" onClick={() => onAct((s) => nextRound(s, set, lead))}>
-            Next round
+            {t("mythos.nextRound")}
           </button>
           <Effects board={board} set={set} state={state} who={state.leadInvestigator} onAct={onAct} />
         </>
       ) : (
         <button type="button" onClick={() => onAct((s) => resolveMythos(s, { board, set }))}>
-          Resolve
+          {t("mythos.resolve")}
         </button>
       )}
       <p aria-live="assertive" className="error">

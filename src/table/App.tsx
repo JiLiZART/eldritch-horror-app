@@ -9,6 +9,7 @@ import { Encounter } from "./Encounter";
 import { Mythos } from "./Mythos";
 import { NewGame } from "./NewGame";
 import { Panel } from "./Panel";
+import { LangProvider, useT } from "./lang";
 import { piecesOnSpace } from "./pieces";
 import { clearGame, fileName, loadGame, parseGame, saveGame } from "./saved";
 import { Table } from "./Table";
@@ -27,7 +28,7 @@ function initialLang(): Lang {
 }
 
 export function App() {
-  const { board, set, labels, strings } = use(content);
+  const { board, set, labels, strings, panel } = use(content);
   const [lang, setLang] = useState(initialLang);
   const chooseLang = (next: Lang) => {
     setLang(next);
@@ -95,6 +96,7 @@ export function App() {
     }
   };
   return (
+    <LangProvider lang={lang} strings={panel}>
     <div className="layout">
       <main className="table">
         <Table board={board} labels={labels} strings={strings[lang]} pieces={pieces} enabled={enabled} selected={selectedSpace?.id} route={route} onSelect={select} reducedMotion={reducedMotion} />
@@ -135,17 +137,24 @@ export function App() {
         {game.state?.phase.name === "mythos" && <Mythos board={board} set={set} state={game.state} phase={game.state.phase} error={game.error} onAct={act} />}
         {game.state?.phase.name === "won" && (
           <section className="turn">
-            <h2>The investigators win</h2>
+            <Heading k="app.win" />
             <p>{game.state.phase.reason}</p>
           </section>
         )}
         {game.state?.phase.name === "lost" && (
           <section className="turn">
-            <h2>The investigators lose</h2>
+            <Heading k="app.lose" />
             <p>{game.state.phase.reason}</p>
           </section>
         )}
       </Panel>
     </div>
+    </LangProvider>
   );
+}
+
+/** A translated heading inside the provider. */
+function Heading({ k }: { k: string }) {
+  const t = useT();
+  return <h2>{t(k)}</h2>;
 }

@@ -24,10 +24,12 @@ async function fetchSet(id: string): Promise<GameSet> {
 }
 
 /** Static content served next to the app; fetched once per page load. */
-export const content: Promise<{ board: Board; set: GameSet; labels: BoardLabels; strings: BoardStrings }> = Promise.all([
+export const content: Promise<{ board: Board; set: GameSet; labels: BoardLabels; strings: BoardStrings; panel: BoardStrings }> = Promise.all([
   required<Board>("/content/board/board.json"),
   fetchSet("eh01"),
   required<BoardLabels>("/content/board/labels.json"),
   required<Record<string, string>>("/content/board/i18n/en.json"),
   required<Record<string, string>>("/content/board/i18n/ru.json"),
-]).then(([board, set, labels, en, ru]) => ({ board, set, labels, strings: { en, ru } }));
+  required<Record<string, string>>("/content/panel/i18n/en.json"),
+  required<Record<string, string>>("/content/panel/i18n/ru.json"),
+]).then(([board, set, labels, en, ru, panelEn, panelRu]) => ({ board, set, labels, strings: { en, ru }, panel: { en: panelEn, ru: panelRu } }));

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { GameSet } from "../content/types";
 import type { Difficulty, SetupOptions } from "../engine/types";
+import { useT } from "./lang";
 
 interface NewGameProps {
   set: GameSet;
@@ -24,24 +25,25 @@ export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUn
   const [seats, setSeats] = useState<string[]>([]);
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 1e9));
+  const t = useT();
   const toggleSeat = (id: string, on: boolean) => setSeats((prev) => (on ? [...prev, id] : prev.filter((s) => s !== id)));
   const name = (id: string) => set.investigators.find((i) => i.id === id)?.name ?? id;
   return (
     <section>
-      <h2>Game</h2>
+      <h2>{t("game.title")}</h2>
       {running ? (
         <p>
           <button type="button" onClick={onAbandon}>
-            Abandon game
+            {t("game.abandon")}
           </button>{" "}
           <button type="button" disabled={!canUndo} onClick={onUndo}>
-            Undo
+            {t("game.undo")}
           </button>{" "}
           <button type="button" onClick={onSave}>
-            Save to file
+            {t("game.save")}
           </button>{" "}
           <label>
-            Load from file <input type="file" accept=".json,application/json" onChange={(e) => void e.target.files?.[0]?.text().then(onLoad)} />
+            {t("game.load")} <input type="file" accept=".json,application/json" onChange={(e) => void e.target.files?.[0]?.text().then(onLoad)} />
           </label>
         </p>
       ) : (
@@ -52,7 +54,7 @@ export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUn
           }}
         >
           <label>
-            Ancient One{" "}
+            {t("game.ancientOne")}{" "}
             <select value={ancientOne} onChange={(e) => setAncientOne(e.target.value)}>
               {set.ancientOnes.map((a) => (
                 <option key={a.id} value={a.id}>
@@ -62,30 +64,30 @@ export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUn
             </select>
           </label>
           <fieldset>
-            <legend>Investigators (check in seat order)</legend>
+            <legend>{t("game.investigators")}</legend>
             {set.investigators.map((i) => (
               <label key={i.id}>
                 <input type="checkbox" checked={seats.includes(i.id)} onChange={(e) => toggleSeat(i.id, e.target.checked)} /> {i.name}
               </label>
             ))}
-            <p>Seats: {seats.length ? seats.map(name).join(", ") : "none"}</p>
+            <p>{t("game.seats", { seats: seats.length ? seats.map(name).join(", ") : t("game.none") })}</p>
           </fieldset>
           <fieldset>
-            <legend>Difficulty</legend>
+            <legend>{t("game.difficulty")}</legend>
             {DIFFICULTIES.map((d) => (
               <label key={d}>
-                <input type="radio" name="difficulty" checked={difficulty === d} onChange={() => setDifficulty(d)} /> {d}
+                <input type="radio" name="difficulty" checked={difficulty === d} onChange={() => setDifficulty(d)} /> {t(`difficulty.${d}`)}
               </label>
             ))}
           </fieldset>
           <label>
-            Seed <input type="number" value={seed} onChange={(e) => setSeed(Number(e.target.value))} />
+            {t("game.seed")} <input type="number" value={seed} onChange={(e) => setSeed(Number(e.target.value))} />
           </label>
           <p>
             <label>
-              Load from file <input type="file" accept=".json,application/json" onChange={(e) => void e.target.files?.[0]?.text().then(onLoad)} />
+              {t("game.load")} <input type="file" accept=".json,application/json" onChange={(e) => void e.target.files?.[0]?.text().then(onLoad)} />
             </label>
-            <button type="submit">Start</button>
+            <button type="submit">{t("game.start")}</button>
           </p>
           <p aria-live="assertive" className="error">
             {error}

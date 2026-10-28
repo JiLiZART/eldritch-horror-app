@@ -5,6 +5,7 @@ import { isDetained } from "../engine/types";
 import type { EncounterPhase, GameState } from "../engine/types";
 import { Dice } from "./Dice";
 import { Effects } from "./Effects";
+import { useT } from "./lang";
 import type { Act } from "./Turn";
 
 interface EncounterProps {
@@ -19,6 +20,7 @@ interface EncounterProps {
 /** The Encounter phase beside the board (design D5): the monsters to fight, the decks the space allows, the drawn card. Rules stay in the engine. */
 export function Encounter({ board, set, state, phase, error, onAct }: EncounterProps) {
   const content = { board, set };
+  const t = useT();
   const me = state.investigators.find((i) => i.id === phase.active)!;
   const space = board.spaces.find((s) => s.id === me.space);
   const name = set.investigators.find((i) => i.id === me.id)?.name ?? me.id;
@@ -40,13 +42,11 @@ export function Encounter({ board, set, state, phase, error, onAct }: EncounterP
   const detained = isDetained(me) ? set.cards.find((c) => me.conditions.includes(c.id) && /\/condition\/detained-\d+$/.test(c.id)) : undefined;
   return (
     <section className="turn">
-      <h2>Round {state.round}, Encounter phase</h2>
-      <p>
-        {name} encounters on {space?.name.en ?? me.space}
-      </p>
+      <h2>{t("encounter.heading", { round: state.round })}</h2>
+      <p>{t("encounter.on", { name, space: space?.name.en ?? me.space })}</p>
       {detained && (
         <p className="cards">
-          {detained.images.back && <img className="mythos-card" src={`/${detained.images.back}`} alt="Detained back" />} {name} resolves the back of Detained instead of an encounter.
+          {detained.images.back && <img className="mythos-card" src={`/${detained.images.back}`} alt="Detained back" />} {t("encounter.detained", { name })}
         </p>
       )}
       {!detained && monsters.length > 0 && (
@@ -55,12 +55,12 @@ export function Encounter({ board, set, state, phase, error, onAct }: EncounterP
             const sheet = set.monsters.find((x) => x.id === m.id);
             return (
               <li key={`${m.id}#${m.instance}`}>
-                {sheet?.images.back && <img className="token" src={`/${sheet.images.back}`} alt={`${sheet.name} token back`} />} {sheet?.name ?? m.id}, {m.health} health lost{" "}
+                {sheet?.images.back && <img className="token" src={`/${sheet.images.back}`} alt={`${sheet.name} token back`} />} {t("encounter.healthLost", { name: sheet?.name ?? m.id, health: m.health })}{" "}
                 {phase.fought.includes(monsterKey(m)) ? (
-                  phase.combat?.monster.id === m.id && phase.combat.monster.instance === m.instance ? "(fighting)" : "(fought)"
+                  phase.combat?.monster.id === m.id && phase.combat.monster.instance === m.instance ? t("encounter.fighting") : t("encounter.fought")
                 ) : phase.combat ? null : (
                   <button type="button" onClick={() => onAct((s) => fight(s, content, m))}>
-                    Fight
+                    {t("encounter.fight")}
                   </button>
                 )}
               </li>
@@ -70,9 +70,9 @@ export function Encounter({ board, set, state, phase, error, onAct }: EncounterP
       )}
       {phase.combat && (
         <p>
-          {phase.combat.step === "will" ? "Will" : "Strength"} test <Dice set={set} state={state} roll={phase.combat.roll} onAct={onAct} /> result {phase.combat.roll.successes}{" "}
+          {t("encounter.test", { skill: t(`skill.${phase.combat.step}`) })} <Dice set={set} state={state} roll={phase.combat.roll} onAct={onAct} /> {t("encounter.result", { result: phase.combat.roll.successes })}{" "}
           <button type="button" onClick={() => onAct((s) => continueFight(s, content))}>
-            Continue
+            {t("encounter.continue")}
           </button>
         </p>
       )}
@@ -80,12 +80,12 @@ export function Encounter({ board, set, state, phase, error, onAct }: EncounterP
         <p>
           {decks.map((d) => (
             <button key={d} type="button" onClick={() => onAct((s) => drawEncounter(s, content, d))}>
-              Draw {d}
+              {t("encounter.draw", { deck: d })}
             </button>
           ))}
           {state.rumors.includes(me.space) && (
             <button type="button" onClick={() => onAct((s) => encounterRumor(s, content))}>
-              Resolve rumor
+              {t("encounter.rumor")}
             </button>
           )}
         </p>
@@ -94,7 +94,7 @@ export function Encounter({ board, set, state, phase, error, onAct }: EncounterP
         <p>
           {fallenHere.map((f) => (
             <button key={f.id} type="button" onClick={() => onAct((s) => encounterFallen(s, content, f.id))}>
-              Resolve {set.investigators.find((i) => i.id === f.id)?.name ?? f.id}'s encounter
+              {t("encounter.fallen", { name: set.investigators.find((i) => i.id === f.id)?.name ?? f.id })}
             </button>
           ))}
         </p>
@@ -103,7 +103,7 @@ export function Encounter({ board, set, state, phase, error, onAct }: EncounterP
         <p className="cards">
           {fallenSheet.images.back && <img className="mythos-card" src={`/${fallenSheet.images.back}`} alt={`${fallenSheet.name} sheet back`} />}{" "}
           <button type="button" onClick={() => onAct((s) => takePossessions(s, content, me.id, fallenSheet.id))}>
-            Take possessions
+            {t("encounter.takePossessions")}
           </button>
         </p>
       )}
@@ -118,14 +118,14 @@ export function Encounter({ board, set, state, phase, error, onAct }: EncounterP
         ))}
       </ol>
       <button type="button" disabled={!detained && unfought.length > 0} onClick={() => onAct((s) => finishEncounter(s, content))}>
-        Finish
+        {t("encounter.finish")}
       </button>
       <Effects key={phase.active} board={board} set={set} state={state} who={phase.active} onAct={onAct} />
       <p aria-live="assertive" className="error">
         {error}
       </p>
       <p>
-        <small>Card text and token text are left to the players.</small>
+        <small>{t("encounter.note")}</small>
       </p>
     </section>
   );
