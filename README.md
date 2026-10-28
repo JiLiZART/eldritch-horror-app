@@ -63,20 +63,30 @@ a monster's combat numbers, a gate's colour and whether it matches the omen,
 an investigator's health, sanity and clues, a card's name. Clicking any card
 brings it up to read, and so does its name or thumbnail in the panel: the
 Status table, the Acquire Assets and Trade forms, the Encounter and Mythos
-panels. Fit table takes the view back to the whole table; Hide panel gives
-the table the whole window, and the panel's edge drags to resize it. The
-wheel zooms under the pointer, dragging pans, the arrow keys pan and the plus
-and minus keys zoom, Escape clears the selection, and the view stays within
-the table. A second window of the same browser follows the game as it is
-played, so one screen can show the table while another runs the panel.
+panels; a further click turns a double-sided card over, and a double-click
+on a monster brings its token up the same way. Fit table, or a double-click
+on felt, takes the view back to the whole table; Escape puts a card down
+first; Hide panel gives the table the whole window, and the panel's edge
+drags to resize it. The wheel zooms under the pointer, dragging pans, the
+arrow keys pan and the plus and minus keys zoom, Escape clears the
+selection, and the view stays within the table. The table's corner states
+the round, the phase and whose turn, the last journal line and any open
+roll's dice, so a second window of the same browser, which follows the game
+as it is played, can show the table alone while another runs the panel. The
+panel's Status section lists the discard piles under a fold; the journal has
+a text filter and a Copy journal button.
 
 **Keeping the game.** Every accepted step is saved in the browser and resumes
-on reload; Undo takes back the last steps, ten of them even across a reload;
-Save to file and Load from file move a game between browsers as plain JSON,
-the file named after the slot's name when you gave it one. Saved games list
-the last played first with its time; each can be named; Remove and Abandon
-game ask for a confirming click. A save from an older state shape is set
-aside with a note rather than resumed.
+on reload; Undo takes back the last steps, ten of them even across a reload,
+and Redo puts an undone step back until a new one is taken; the platform's
+undo and redo keys do the same. Save to file and Load from file move a game
+between browsers as plain JSON, the file named after the slot's name when
+you gave it one; Save backup and Load backup carry every saved game at once,
+names and histories included, the loaded ones added beside what is there.
+Saved games list the last played first with its time; each can be named or
+duplicated to branch the game; Remove and Abandon game ask for a confirming
+click; a second window's list follows. A save from an older state shape is
+set aside with a note rather than resumed.
 
 ## What the engine models
 
