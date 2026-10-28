@@ -42,6 +42,13 @@ describe("piecesOnSpace", () => {
     const akachi = set.investigators.find((i) => i.id === inv("akachi-onyele"))!;
     expect(pieces.get("space-15")).toContainEqual({ kind: "pawn", id: akachi.id, image: akachi.pawn, label: akachi.name });
   });
+  it("lays a delayed or defeated pawn on its side", () => {
+    const leo = inv("leo-anderson");
+    const pawn = (s: typeof state) => [...piecesOnSpace(s, set).values()].flat().find((p) => p.kind === "pawn" && p.id === leo)!;
+    expect(pawn(state).lying).toBeUndefined();
+    expect(pawn({ ...state, investigators: state.investigators.map((i) => (i.id === leo ? { ...i, delayed: true as const } : i)) }).lying).toBe(true);
+    expect(pawn({ ...state, investigators: state.investigators.map((i) => (i.id === leo ? { ...i, defeated: "sanity" as const } : i)) }).lying).toBe(true);
+  });
   it("draws no pawn for a devoured investigator", () => {
     const devoured = { ...state, investigators: state.investigators.map((i) => (i.id === inv("leo-anderson") ? { ...i, defeated: "devoured" as const } : i)) };
     const all = [...piecesOnSpace(devoured, set).values()].flat();

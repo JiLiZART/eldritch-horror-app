@@ -159,8 +159,9 @@ function Pieces({ pieces, at }: { pieces: Map<string, Piece[]>; at: Map<string, 
           const [w, h] = SIZE[p.kind];
           const [dx, dy] = offsets[k]!;
           return (
-            <Billboard key={p.id} position={[x + dx, y + dy + (p.kind === "pawn" ? h / 2 : 0), 0.05 + k * 0.001]}>
-              <mesh>
+            <Billboard key={p.id} position={[x + dx, y + dy + (p.kind === "pawn" ? (p.lying ? w : h) / 2 : 0), 0.05 + k * 0.001]}>
+              {/* A lying pawn turns a quarter turn in the billboard's plane, so the standee rests sideways on the board (design D2). */}
+              <mesh rotation={[0, 0, p.lying ? Math.PI / 2 : 0]}>
                 <planeGeometry args={[w, h]} />
                 <meshBasicMaterial map={textureOf.get(p.image)} transparent alphaTest={0.5} />
               </mesh>

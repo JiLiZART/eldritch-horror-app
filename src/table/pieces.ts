@@ -9,6 +9,8 @@ export interface Piece {
   id: string;
   image: string;
   label: string;
+  /** A pawn laid on its side: the investigator is delayed or defeated (manual p.4). */
+  lying?: true;
 }
 
 const byId = <T extends { id: string }>(list: T[], id: string): T => {
@@ -37,7 +39,8 @@ export function piecesOnSpace(state: GameState | undefined, set: GameSet): Map<s
   for (const i of state.investigators) {
     if (i.defeated === "devoured" || i.removed) continue;
     const investigator = byId(set.investigators, i.id);
-    add(i.space, { kind: "pawn", id: i.id, image: investigator.pawn, label: i.defeated ? `${investigator.name} (defeated)` : i.delayed ? `${investigator.name} (delayed)` : investigator.name });
+    const label = i.defeated ? `${investigator.name} (defeated)` : i.delayed ? `${investigator.name} (delayed)` : investigator.name;
+    add(i.space, { kind: "pawn", id: i.id, image: investigator.pawn, label, ...(i.defeated || i.delayed ? { lying: true as const } : {}) });
   }
   return out;
 }
