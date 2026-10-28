@@ -13,9 +13,11 @@ pnpm dev          # then open the printed localhost URL
 
 **Start a game.** Pick an Ancient One, tick the investigators in seat order,
 choose a difficulty and a seed, press Start. The same seed with the same
-choices replays the same setup and the same dice. The Board language toggle
-switches the board and the whole panel between English and Russian; card and
-investigator names and the engine's log lines stay English.
+choices replays the same setup and the same dice. The game plays on the core
+set's board; the Sets toggles only preview the expansion spaces, and a note
+under them says so while one is on. The Board language toggle switches the
+board and the whole panel between English and Russian; card and investigator
+names and the engine's log lines stay English.
 
 **Action phase.** The active investigator has two different actions: Travel
 (pick a route on the table, tickets extend it), Rest, Prepare for Travel,
@@ -49,9 +51,10 @@ their tokens, devouring. Every refusal is explained in the rule's words.
 **Reading the table.** The Status table lists each investigator's space,
 health, sanity, clues, tickets, cards, conditions and five skills with their
 improvements, and opens the sheet image on request; a delayed or defeated
-pawn lies on its side on the board. The journal beside the board keeps every
-phase log and action by round, and the Rules glossary (English and Russian,
-with sources) sits below it.
+pawn lies on its side on the board, and a defeated investigator's sheet and
+cards lie dimmed. The journal beside the board keeps every phase log and
+action by round, and the Rules glossary (English and Russian, with sources,
+and a filter box) sits below it.
 
 **The table itself.** Beside the board lie the Ancient One sheet (its back
 once awakened), the current mystery with the tokens it has collected and the
@@ -70,11 +73,12 @@ first; Hide panel gives the table the whole window, and the panel's edge
 drags to resize it. The wheel zooms under the pointer, dragging pans, the
 arrow keys pan and the plus and minus keys zoom, Escape clears the
 selection, and the view stays within the table. The table's corner states
-the round, the phase and whose turn, the last journal line and any open
-roll's dice, so a second window of the same browser, which follows the game
-as it is played, can show the table alone while another runs the panel. The
-panel's Status section lists the discard piles under a fold; the journal has
-a text filter and a Copy journal button.
+the round, the phase and whose turn, the doom and the omen, the last journal
+line and any open roll's dice, so a second window of the same browser, which
+follows the game as it is played, can show the table alone while another
+runs the panel. The panel's Status section lists the discard piles and the
+monster cup's contents under folds; the path legend names only the path
+types drawn; the journal has a text filter and a Copy journal button.
 
 **Keeping the game.** Every accepted step is saved in the browser and resumes
 on reload; Undo takes back the last steps, ten of them even across a reload,
