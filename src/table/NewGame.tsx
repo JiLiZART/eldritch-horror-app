@@ -68,6 +68,9 @@ export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUn
   return (
     <section>
       <h2>{t("game.title")}</h2>
+      <p>
+        <small>{t("game.keys")}</small>
+      </p>
       {running ? (
         <p>
           {guarded(t("game.abandon"), { kind: "abandon" }, onAbandon)}{" "}

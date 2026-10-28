@@ -263,5 +263,6 @@
   "track.eldritch": "Eldritch token on the {omen} omen space",
   "panel.resize": "Resize panel",
   "game.confirm": "Confirm",
-  "game.cancel": "Cancel"
+  "game.cancel": "Cancel",
+  "game.keys": "Keys: arrows pan, + and − zoom, Esc clears the selection"
 }
