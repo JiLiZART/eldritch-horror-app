@@ -6,7 +6,7 @@ Show the board data on an interactive table so the graph can be inspected by eye
 ## Requirements
 
 ### Requirement: The board is shown on a table
-When the app opens, the board texture SHALL be visible on a flat table seen from above, keeping the source aspect ratio, and the player SHALL be able to pan and zoom the view without rotating it under the table; a scroll zoom SHALL keep the point under the pointer where it is, so zooming in lands on what the pointer rests on. The view SHALL stay within the table, which is the board alone without a game and the board with the tableau beside it during one, so zooming out fully shows the whole table and panning stops at its edges; the table SHALL carry a small margin around its contents, so a card at its edge can be centred when brought up to read. The panel beside the table SHALL be hideable by a control that stays visible while it is hidden, so the table fills the window on a shared screen; the choice SHALL be remembered in the browser.
+When the app opens, the board texture SHALL be visible on a flat table seen from above, keeping the source aspect ratio, and the player SHALL be able to pan and zoom the view without rotating it under the table; a scroll zoom SHALL keep the point under the pointer where it is, so zooming in lands on what the pointer rests on. The view SHALL stay within the table, which is the board alone without a game and the board with the tableau beside it during one, so zooming out fully shows the whole table and panning stops at its edges; the table SHALL carry a small margin around its contents, so a card at its edge can be centred when brought up to read. The panel beside the table SHALL be hideable by a control that stays visible while it is hidden, so the table fills the window on a shared screen; the choice SHALL be remembered in the browser. The panel's width SHALL be adjustable by dragging its edge, within sensible bounds, the table refitting as it changes, and the width SHALL be remembered in the browser.
 
 #### Scenario: First open
 - **WHEN** the app loads
@@ -35,6 +35,10 @@ When the app opens, the board texture SHALL be visible on a flat table seen from
 #### Scenario: Hide the panel
 - **WHEN** the player hides the panel
 - **THEN** the table fills the window, the whole table still fits at full zoom-out, a Show panel control remains, and after a reload the panel is still hidden
+
+#### Scenario: Widen the panel
+- **WHEN** the player drags the panel's edge to the left
+- **THEN** the panel widens, the table refits to the narrower canvas, and after a reload the panel keeps that width
 
 ### Requirement: Spaces and paths are drawn from the board data
 Every active space SHALL be marked at its coordinates on the texture and every active path SHALL be drawn between its two spaces, coloured by type (train, ship, uncharted, local), matching `inspired/All_boards.jpg` and the `board-graph` capability.
