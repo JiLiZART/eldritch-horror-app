@@ -46,6 +46,8 @@ export interface TableProps {
   onSelect: (id: string | undefined) => void;
   /** A double-click on empty table asks for the whole table (double-click-fit D1). */
   onFit: () => void;
+  /** Told when a card is brought up by a click on the table, so Escape can put it down (escape-refits D1). */
+  onCardUp: () => void;
   reducedMotion: boolean;
 }
 
@@ -94,13 +96,16 @@ export function Table(props: TableProps) {
   );
 }
 
-function Scene({ board, labels, strings, pieces, tracks, tableau, sheets, fit, focus: asked, nudge, enabled, selected, route, onSelect, reducedMotion }: TableProps) {
+function Scene({ board, labels, strings, pieces, tracks, tableau, sheets, fit, focus: asked, nudge, enabled, selected, route, onSelect, onCardUp, reducedMotion }: TableProps) {
   const graph = useMemo(() => activeGraph(board, enabled), [board, enabled]);
   const at = useMemo(() => new Map(board.spaces.map((s) => [s.id, boardToWorld(s, board)])), [board]);
   const active = useMemo(() => new Set(graph.spaces.map((s) => s.id)), [graph]);
   /** The card face last clicked, read until the selection changes (card-focus D1); `key` makes a repeated click glide again. */
   const [focus, setFocus] = useState<{ position: [number, number]; size: [number, number]; key: number; forSelected: string | undefined }>();
-  const onFocus: FaceProps["onFocus"] = (position, size) => setFocus((prev) => ({ position, size, key: (prev?.key ?? 0) + 1, forSelected: selected }));
+  const onFocus: FaceProps["onFocus"] = (position, size) => {
+    setFocus((prev) => ({ position, size, key: (prev?.key ?? 0) + 1, forSelected: selected }));
+    onCardUp();
+  };
   const focused = focus?.forSelected === selected ? focus : undefined;
   // A card asked for from the panel resolves to the same focus a click on it makes (panel-card-focus D1).
   useEffect(() => {
