@@ -97,7 +97,7 @@ Gaining a card from a deck SHALL take the top card of the asset or artifact deck
 - **THEN** he gains that artifact and the discard is empty
 
 ### Requirement: The effects are offered beside the board
-During the Encounter phase and after the mythos card is resolved the players SHALL see, for a chosen standing investigator, controls to change health and sanity, gain and spend a clue, close the gate on their space, gain a card from a deck or by name, and discard a held card; and, for a chosen monster on the board, controls to move it to a named space, move it toward the nearest investigator and discard it; a refusal SHALL be explained in the rule's words, and each investigator's conditions SHALL be listed. The controls SHALL be grouped by what they touch: the investigator, their cards, the board, the monsters and the Ancient One; each group can be folded away and unfolded, the investigator group open at first, so the row of effects a card needs is found without scrolling past the rest.
+During the Encounter phase and after the mythos card is resolved the players SHALL see, for a chosen standing investigator, controls to change health and sanity, gain and spend a clue, close the gate on their space, gain a card from a deck or by name, and discard a held card; and, for a chosen monster on the board, controls to move it to a named space, move it toward the nearest investigator and discard it; a refusal SHALL be explained in the rule's words, and each investigator's conditions SHALL be listed. Each held card SHALL show its face on request, and a double-sided card its back on a further request, so the text the players apply by hand is readable at the table. The controls SHALL be grouped by what they touch: the investigator, their cards, the board, the monsters and the Ancient One; each group can be folded away and unfolded, the investigator group open at first, so the row of effects a card needs is found without scrolling past the rest.
 
 #### Scenario: Controls shown
 - **WHEN** Leo Anderson has an encounter card showing
@@ -118,6 +118,14 @@ During the Encounter phase and after the mythos card is resolved the players SHA
 #### Scenario: Unfolded
 - **WHEN** the players unfold the board group
 - **THEN** the spawn and token controls are shown and the other groups stay as they were
+
+#### Scenario: Card face shown
+- **WHEN** Leo Anderson's held Hired Muscle is asked for
+- **THEN** its face is shown beside the card's name
+
+#### Scenario: Back on request
+- **WHEN** a held spell's back is asked for
+- **THEN** its back is shown in place of the face
 
 ### Requirement: An investigator is moved by card text
 In the Encounter and Mythos phases a standing investigator SHALL be moved to any space the players name, without spending a ticket or an action; an unknown space SHALL be refused naming it. A move to a random space SHALL take the space printed on the top clue token of the pool, that token going to the clue discard, the discard being shuffled into an empty pool first; with no clue token anywhere the move SHALL be refused saying the lead investigator chooses the space instead. A move to the nearest space of a kind, or to the nearest space holding a gate or a clue, SHALL take the matching space at the smallest number of paths from the investigator, their own space counting first when it matches; with no matching space the move SHALL be refused naming what was sought. **Deviation**: among several nearest spaces the first in board order is taken instead of the active investigator's choice.
