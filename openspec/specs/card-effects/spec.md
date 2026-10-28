@@ -174,7 +174,7 @@ In the Encounter and Mythos phases a monster on the board SHALL be moved to any 
 - **THEN** it is refused naming the monster
 
 ### Requirement: A monster is discarded by card text
-In the Encounter and Mythos phases a monster on the board SHALL be discarded by card text: a non-epic monster is shuffled back into the monster cup, an epic monster leaves the game. The log SHALL say where the monster went. **Deviation**: set-aside monsters return to the cup too.
+In the Encounter and Mythos phases a monster on the board SHALL be discarded by card text: a non-epic monster is shuffled back into the monster cup, a set-aside monster is set aside again, an epic monster leaves the game. The log SHALL say where the monster went.
 
 #### Scenario: Returns to the cup
 - **WHEN** a Byakhee on London is discarded by card text
@@ -184,8 +184,12 @@ In the Encounter and Mythos phases a monster on the board SHALL be discarded by 
 - **WHEN** an epic monster on Arkham is discarded by card text
 - **THEN** it is neither on the board nor in the cup, and the log says it leaves the game
 
+#### Scenario: Set aside again
+- **WHEN** a Deep One spawned from the set-aside pile is discarded by card text
+- **THEN** it is set aside again and not in the cup
+
 ### Requirement: Gates, clues and monsters are spawned by card text
-In the Encounter and Mythos phases the players SHALL spawn a gate, a clue, or a monster on any space they name, by the same rules the Mythos icons follow: the gate opens from the top of the gate stack with 1 monster from the cup, the gate discard reshuffled in first and doom advancing by 1 instead when no token is left; the clue comes from the top of the pool, the clue discard reshuffled in first, none when both are empty; the monster is the top of the cup, moved where its token back says, none when the cup is empty; a monster spawned on a random space takes the space of the top clue token of the pool, that token going to the clue discard, and is refused with no clue token anywhere. Each spawn SHALL be logged, and the reshuffles SHALL follow the game seed. **Deviation**: the space a card names is the players' reading; named and set-aside monsters are not offered.
+In the Encounter and Mythos phases the players SHALL spawn a gate, a clue, or a monster on any space they name, by the same rules the Mythos icons follow: the gate opens from the top of the gate stack with 1 monster from the cup, the gate discard reshuffled in first and doom advancing by 1 instead when no token is left; the clue comes from the top of the pool, the clue discard reshuffled in first, none when both are empty; the monster is the top of the cup, moved where its token back says, none when the cup is empty; a monster spawned on a random space takes the space of the top clue token of the pool, that token going to the clue discard, and is refused with no clue token anywhere. Each spawn SHALL be logged, and the reshuffles SHALL follow the game seed. A set-aside monster of a named kind SHALL be spawned on any space the players name when one of that kind is still set aside, moved where its token back says; with every token of that kind on the board the spawn SHALL be refused naming the kind. **Deviation**: the space a card names is the players' reading; named monsters from the cup are not offered.
 
 #### Scenario: Gate spawned
 - **WHEN** card text spawns a gate with London on top of the stack
@@ -206,6 +210,14 @@ In the Encounter and Mythos phases the players SHALL spawn a gate, a clue, or a 
 #### Scenario: Monster on a random space
 - **WHEN** card text spawns a monster on a random space with London printed on the top clue token
 - **THEN** the monster spawns on London, or where its back sends it, and the token lies on the clue discard
+
+#### Scenario: Set-aside monster spawned
+- **WHEN** Cthulhu's text spawns a Deep One on Shanghai
+- **THEN** the set-aside Deep One stands on Shanghai and one fewer monster is set aside
+
+#### Scenario: None set aside
+- **WHEN** a second Deep One is spawned with the only one on the board
+- **THEN** it is refused because no Deep One is set aside
 
 ### Requirement: A monster ambushes the investigator
 In the Encounter phase the encountering investigator SHALL fight the top monster of the cup at once when card text says a monster ambushes them: the monster is not spawned, so its token back does not move it and no spawn effect applies; the fight follows the combat rules; when the fight settles, defeated or not, the monster is shuffled back into the cup, and so it is when the investigator is defeated during the fight. With an empty cup the ambush SHALL be refused saying so. **Deviation**: an epic monster is never in the cup and never ambushes.
