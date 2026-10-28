@@ -88,11 +88,19 @@ When the browser asks for reduced motion, camera moves triggered by the app SHAL
 - **THEN** any view change happens without animation
 
 ### Requirement: The game status is shown beside the board
-While a game is in progress the panel SHALL show doom, the omen space with any eldritch tokens on it, the reference card values, the current mystery card, the reserve cards, the size of each deck, and for each investigator in seat order the lead marker, space, health, sanity, clues and possessions by card name.
+While a game is in progress the panel SHALL show doom, the omen space with any eldritch tokens on it, the reference card values, the current mystery card, the reserve cards, the size of each deck, and for each investigator in seat order the lead marker, space, health, sanity, clues and possessions by card name, their five skills as the printed value plus any improvement, and their sheet image on request.
 
 #### Scenario: Status after setup
 - **WHEN** a game starts with Azathoth and Akachi Onyele
 - **THEN** the panel shows doom 15, omen green with 1 eldritch token, gates 1 clues 1 surge 1, one Azathoth mystery card, four reserve cards, and Akachi Onyele as lead on space 15 with 5 health, 7 sanity, 1 clue and Mists of Releh
+
+#### Scenario: Skills listed
+- **WHEN** Leo Anderson has Lore 2 printed and Lore improved by 1
+- **THEN** his row lists Lore 3 among the five skills
+
+#### Scenario: Sheet on request
+- **WHEN** the players ask for Leo Anderson's sheet
+- **THEN** its image is shown beside his row until hidden
 
 ### Requirement: Location art responds to the pointer
 Each of the 34 illustrated locations SHALL lie exactly over its art on the board. While the pointer is over it, or while its space is selected, it SHALL grow from its centre together with its printed text. Clicking it SHALL select its space exactly as clicking the space's marker does. The art of a location whose set is disabled SHALL not grow or select anything. With reduced motion the growth SHALL be instant.
