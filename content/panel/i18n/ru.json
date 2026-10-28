@@ -225,5 +225,9 @@
   "space.pieces": "Фишки",
   "space.neighbours": "Соседи",
   "space.none": "нет",
-  "space.pick": "Нажмите на маркер или выберите локацию ниже."
+  "space.pick": "Нажмите на маркер или выберите локацию ниже.",
+  "journal.action": "Фаза действий",
+  "journal.encounter": "Фаза контактов",
+  "journal.mythos": "Фаза Мифа",
+  "journal.component": "действие компонента: {name}"
 }

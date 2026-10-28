@@ -119,7 +119,7 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
 function Journal({ set, state }: { set: GameSet; state: GameState }) {
   const t = useT();
   const name = (id: string) => set.investigators.find((i) => i.id === id)?.name ?? id;
-  const text = (line: string) => (line.startsWith("component:") ? `component action: ${set.cards.find((c) => c.id === line.slice(10))?.name ?? name(line.slice(10))}` : line);
+  const text = (line: string) => (line.startsWith("component:") ? t("journal.component", { name: set.cards.find((c) => c.id === line.slice(10))?.name ?? name(line.slice(10)) }) : line);
   const rounds = [...new Set(state.journal.map((e) => e.round))];
   return (
     <details className="journal">
@@ -132,7 +132,7 @@ function Journal({ set, state }: { set: GameSet; state: GameState }) {
               .filter((e) => e.round === round)
               .map((e, n) => (
                 <li key={n}>
-                  {e.phase === "action" ? "Action" : e.phase === "encounter" ? "Encounter" : "Mythos"}
+                  {t(`journal.${e.phase}`)}
                   {e.who && `, ${name(e.who)}`}: {text(e.text)}
                 </li>
               ))}

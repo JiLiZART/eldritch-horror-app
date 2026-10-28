@@ -225,5 +225,9 @@
   "space.pieces": "Pieces",
   "space.neighbours": "Neighbours",
   "space.none": "none",
-  "space.pick": "Click a marker or pick a space below."
+  "space.pick": "Click a marker or pick a space below.",
+  "journal.action": "Action",
+  "journal.encounter": "Encounter",
+  "journal.mythos": "Mythos",
+  "journal.component": "component action: {name}"
 }
