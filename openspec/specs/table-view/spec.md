@@ -114,7 +114,7 @@ Clicking a marker, or a piece standing on a space, SHALL select that space and s
 - **THEN** Shanghai becomes the selected space, exactly as if its marker was clicked
 
 ### Requirement: Pieces stand where the game state puts them
-The table SHALL show the pieces of the game in progress at their spaces: each chosen investigator's pawn with its pawn image, lying on its side while the investigator is delayed or defeated and upright otherwise, a devoured or removed investigator's pawn gone, each open gate with its city's gate token, each facedown clue token, each monster with its token image and, once it has lost health, a numbered health token on it showing the health lost, the active expedition token, each rumor and eldritch token with the set's token image, the lead investigator token beside the lead's pawn, and a ring on the table under the pawn of the investigator whose turn it is in the Action or Encounter phase. Several pieces on one space SHALL remain distinguishable, and pointing at a piece SHALL show its label beside it until the pointer leaves; a monster's label SHALL carry its Will test modifier and horror, its Strength test modifier and damage, and its toughness as printed on the token, the cultist's from the Ancient One sheet, in the panel's language; a gate's label SHALL name its omen colour and say when it matches the current omen; a pawn's label SHALL carry the investigator's health, sanity and clues. Before a game starts, and after one is abandoned, no piece SHALL stand on the board.
+The table SHALL show the pieces of the game in progress at their spaces: each chosen investigator's pawn with its pawn image, lying on its side while the investigator is delayed or defeated and upright otherwise, a devoured or removed investigator's pawn gone, each open gate with its city's gate token, each facedown clue token, each monster with its token image and, once it has lost health, a numbered health token on it showing the health lost, the active expedition token, each rumor and eldritch token with the set's token image, the lead investigator token beside the lead's pawn, and a ring on the table under the pawn of the investigator whose turn it is in the Action or Encounter phase. Several pieces on one space SHALL remain distinguishable, and pointing at a piece SHALL show its label beside it until the pointer leaves, a touch showing it for a moment instead, since a finger cannot hover; a monster's label SHALL carry its Will test modifier and horror, its Strength test modifier and damage, and its toughness as printed on the token, the cultist's from the Ancient One sheet, in the panel's language; a gate's label SHALL name its omen colour and say when it matches the current omen; a pawn's label SHALL carry the investigator's health, sanity and clues. Before a game starts, and after one is abandoned, no piece SHALL stand on the board.
 
 #### Scenario: Pawn placement
 - **WHEN** a game starts with Charlie Kane and Akachi Onyele
@@ -167,6 +167,10 @@ The table SHALL show the pieces of the game in progress at their spaces: each ch
 #### Scenario: The active pawn is ringed
 - **WHEN** it is Lily Chen's turn in the Action phase
 - **THEN** a ring lies under her pawn and under no other; when the turn passes to Leo Anderson the ring moves to his
+
+#### Scenario: A touch shows the label
+- **WHEN** a finger taps a monster token on a touch screen
+- **THEN** its label shows beside it for a moment and then goes, and the tap still selects the space
 
 ### Requirement: Reduced motion is honoured
 When the browser asks for reduced motion, camera moves triggered by the app SHALL be instant rather than animated.
