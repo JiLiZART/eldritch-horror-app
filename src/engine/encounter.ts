@@ -221,11 +221,15 @@ export function defeat(state: GameState, content: Content, investigator: string,
   const cities = content.board.spaces.filter((sp) => sp.kind === "city").map((sp) => sp.id);
   const space = cities.reduce((best, id) => (distance(content.board, me.space, id) < distance(content.board, me.space, best) ? id : best));
   const { items: condition, rolls } = reshuffle(state, [...state.decks.condition, ...me.conditions]);
-  const fallen = { ...me, defeated: cause, space, conditions: [], improvements: {} };
-  state = returnAmbushers(state);
-  let s = awakenAt0(note(replaceInvestigator({ ...state, doom: state.doom - 1, rolls, decks: { ...state.decks, condition } }, fallen), `${investigatorName(content, investigator)} is defeated and lies on ${spaceName(content, space)}`), content);
-  if (s.leadInvestigator === investigator) s = { ...s, leadInvestigator: nextStanding(s, investigator) ?? investigator };
-  if (!s.investigators.some((i) => !i.defeated)) return { ...s, phase: { name: "lost", reason: `every investigator is defeated (doom ${s.doom})` } };
-  // shortcut: defeat is only reached from combat today; a defeat in the Action phase would leave the active seat on a fallen investigator, upgrade when encounter text is applied by hand.
-  return s.phase.name === "encounter" && s.phase.active === investigator ? advance(s, investigator) : s;
+  const fallen: InvestigatorState = { ...me, defeated: cause, space, conditions: [], improvements: {} };
+  return fall({ ...state, rolls, decks: { ...state.decks, condition } }, content, fallen, `${investigatorName(content, investigator)} is defeated and lies on ${spaceName(content, space)}`);
+}
+
+/** The steps defeat and devouring share (manual p.4): doom by 1, the seat skipped, the lead passed, the loss check, the encounter passed on. */
+export function fall(state: GameState, content: Content, fallen: InvestigatorState, line: string): GameState {
+  let s = awakenAt0(note(replaceInvestigator({ ...returnAmbushers(state), doom: state.doom - 1 }, fallen), line), content);
+  if (s.leadInvestigator === fallen.id) s = { ...s, leadInvestigator: nextStanding(s, fallen.id) ?? fallen.id };
+  if (!s.investigators.some((i) => !i.defeated)) return { ...s, phase: { name: "lost", reason: `${line}: every investigator is defeated (doom ${s.doom})` } };
+  // shortcut: a fall in the Action phase would leave the active seat on a fallen investigator; card text is applied in the other phases only.
+  return s.phase.name === "encounter" && s.phase.active === fallen.id ? advance(s, fallen.id) : s;
 }

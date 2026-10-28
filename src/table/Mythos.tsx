@@ -36,7 +36,7 @@ export function Mythos({ board, set, state, phase, error, onAct }: MythosProps) 
           {fallen.map((f) => (
             <p key={f.id}>
               <label>
-                {name(f.id)} is defeated: replaced by{" "}
+                {name(f.id)} {f.defeated === "devoured" ? "was devoured" : "is defeated"}: replaced by{" "}
                 <select value={newcomer} onChange={(e) => setNewcomer(e.target.value)}>
                   <option value="">choose an investigator</option>
                   {unused.map((i) => (

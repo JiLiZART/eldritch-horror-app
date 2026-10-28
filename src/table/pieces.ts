@@ -35,6 +35,7 @@ export function piecesOnSpace(state: GameState | undefined, set: GameSet): Map<s
     add(m.space, { kind: "monster", id: `${m.id}#${m.instance}`, image: monster.images.front, label: m.health > 0 ? `${monster.name} (${m.health} health lost)` : monster.name });
   }
   for (const i of state.investigators) {
+    if (i.defeated === "devoured") continue;
     const investigator = byId(set.investigators, i.id);
     add(i.space, { kind: "pawn", id: i.id, image: investigator.pawn, label: i.defeated ? `${investigator.name} (defeated)` : i.delayed ? `${investigator.name} (delayed)` : investigator.name });
   }

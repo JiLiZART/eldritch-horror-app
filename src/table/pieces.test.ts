@@ -42,6 +42,11 @@ describe("piecesOnSpace", () => {
     const akachi = set.investigators.find((i) => i.id === inv("akachi-onyele"))!;
     expect(pieces.get("space-15")).toContainEqual({ kind: "pawn", id: akachi.id, image: akachi.pawn, label: akachi.name });
   });
+  it("draws no pawn for a devoured investigator", () => {
+    const devoured = { ...state, investigators: state.investigators.map((i) => (i.id === inv("leo-anderson") ? { ...i, defeated: "devoured" as const } : i)) };
+    const all = [...piecesOnSpace(devoured, set).values()].flat();
+    expect(all.filter((p) => p.kind === "pawn")).toHaveLength(3);
+  });
   it("shows a rumor token and each eldritch token on the space", () => {
     const london = piecesOnSpace({ ...state, rumors: ["london"], eldritch: { london: 2 } }, set).get("london") ?? [];
     expect(london.filter((p) => p.kind === "rumor")).toEqual([{ kind: "rumor", id: "rumor:london#0", image: "icons/rumor-token.png", label: "Rumor" }]);

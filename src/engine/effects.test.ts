@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn } from "./actions";
-import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spendClue } from "./effects";
+import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spendClue } from "./effects";
 import { finishEncounter } from "./encounter";
 import { resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
@@ -25,6 +25,7 @@ const patch = (s: GameState, id: string, fields: Partial<InvestigatorState>): Ga
 const encounters = () => endTurn(endTurn(game()));
 const log = (s: GameState) => (s.phase.name === "encounter" || s.phase.name === "mythos" ? (s.phase.log ?? []).join("\n") : "");
 const cardName = (id: string) => set.cards.find((c) => c.id === id)?.name;
+const encountersLog = (s: GameState) => s;
 const byakhee = { id: "eh01/monster/byakhee", instance: 0 };
 const cthulhu = { id: "eh01/monster/cthulhu", instance: 0 };
 /** The Encounter phase with one monster standing on `space`, taken out of the cup. */
@@ -320,5 +321,26 @@ describe("gates, clues and monsters are spawned by card text", () => {
   });
   it("ambushes only in the Encounter phase", () => {
     expect(ambush).toBeTypeOf("function");
+  });
+});
+
+describe("a devoured investigator leaves the game", () => {
+  const muscle = who(encounters(), leo).possessions.find((c) => cardName(c) === "Hired Muscle")!;
+  it("discards everything, advances doom and passes the encounter", () => {
+    const s = devour({ ...patch(encounters(), leo, { clues: 1, improvements: { lore: 1 } }), doom: 12 }, content, leo);
+    expect(s.doom).toBe(11);
+    expect(s.assetDiscard).toContain(muscle);
+    expect(who(s, leo)).toMatchObject({ defeated: "devoured", clues: 0, possessions: [], conditions: [], improvements: {}, tickets: [] });
+    expect(s.phase).toMatchObject({ name: "encounter", active: lily });
+    expect(log(encountersLog(s))).toBe("");
+  });
+  it("logs it and passes the lead", () => {
+    const before = { ...encounters(), doom: 12 };
+    const s = devour(before, content, leo);
+    expect(s.leadInvestigator).toBe(lily);
+  });
+  it("loses the game when the last standing investigator is devoured", () => {
+    const s = devour(patch(encounters(), lily, { defeated: "health" }), content, leo);
+    expect(s.phase).toEqual({ name: "lost", reason: expect.stringMatching(/Leo Anderson is devoured/) });
   });
 });

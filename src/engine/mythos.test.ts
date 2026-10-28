@@ -184,6 +184,11 @@ describe("a defeated investigator is replaced at the end of the Mythos phase", (
     expect(s.phase.name === "mythos" ? s.phase.log?.at(-1) : "").toBe("Charlie Kane takes Leo Anderson's seat");
     expect(endTurn(nextRound(s, set, lily)).phase).toMatchObject({ name: "action", active: charlie });
   });
+  it("seats a newcomer for a devoured investigator too", () => {
+    const s = fallen();
+    const devoured: GameState = { ...s, investigators: s.investigators.map((i) => (i.id === leo ? { ...i, defeated: "devoured" as const } : i)) };
+    expect(replaceInvestigator(devoured, content, leo, charlie).investigators.map((i) => i.id)).toEqual([leo, charlie, lily]);
+  });
   it("refuses an investigator already in the game", () => {
     expect(() => replaceInvestigator(fallen(), content, leo, lily)).toThrow(/already in the game/);
   });

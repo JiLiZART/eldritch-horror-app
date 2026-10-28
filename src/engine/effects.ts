@@ -1,6 +1,6 @@
 import { distance, neighbors } from "../content/board";
 import type { Deck, Skill } from "../content/types";
-import { defeat, fight } from "./encounter";
+import { defeat, fall, fight } from "./encounter";
 import { OMEN_TRACK } from "./omen";
 import { reshuffle, rng } from "./rng";
 import type { Content } from "./setup";
@@ -241,4 +241,21 @@ export function ambush(state: GameState, content: Content): GameState {
   const sheet = content.set.monsters.find((m) => m.id === token.id);
   const drawn = note({ ...state, monsterCup: cup, monsters: [...state.monsters, { ...token, space: me.space, health: 0, ambush: true as const }] }, `${sheet?.name ?? token.id} ambushes ${name(content, me.id)}`);
   return fight(drawn, content, token);
+}
+
+/** "You are devoured" (manual p.4): doom by 1, everything held discarded, the sheet and token back to the box; a new sheet at the end of the Mythos phase. */
+export function devour(state: GameState, content: Content, id: string): GameState {
+  const me = subject(state, id);
+  const piles = { assetDiscard: [...state.assetDiscard], artifactDiscard: [...state.artifactDiscard], spell: [...state.decks.spell], condition: [...state.decks.condition], "unique-asset": [...state.decks["unique-asset"]] };
+  for (const cardId of [...me.possessions, ...me.conditions]) {
+    const deck = content.set.cards.find((c) => c.id === cardId)?.deck;
+    if (deck === "asset") piles.assetDiscard.push(cardId);
+    else if (deck === "artifact") piles.artifactDiscard.push(cardId);
+    else if (deck) piles[deck].push(cardId);
+  }
+  const { items: spell, rolls: r1 } = reshuffle(state, piles.spell);
+  const { items: condition, rolls: r2 } = reshuffle({ ...state, rolls: r1 }, piles.condition);
+  const s: GameState = { ...state, rolls: r2, assetDiscard: piles.assetDiscard, artifactDiscard: piles.artifactDiscard, decks: { ...state.decks, spell, condition, "unique-asset": piles["unique-asset"] } };
+  const gone: InvestigatorState = { ...me, defeated: "devoured", possessions: [], conditions: [], clues: 0, tickets: [], improvements: {}, delayed: undefined };
+  return fall(s, content, gone, `${name(content, id)} is devoured`);
 }
