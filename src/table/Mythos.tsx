@@ -4,6 +4,7 @@ import { nextRound, replaceInvestigator, resolveMythos } from "../engine/mythos"
 import type { GameState, MythosPhase } from "../engine/types";
 import { Effects } from "./Effects";
 import { useT } from "./lang";
+import type { FocusCard } from "./Panel";
 import type { Act } from "./Turn";
 
 interface MythosProps {
@@ -13,10 +14,12 @@ interface MythosProps {
   phase: MythosPhase;
   error: string | undefined;
   onAct: Act;
+  /** Brings the drawn card up in the tableau (mythos-card-focus D1). */
+  onFocusCard: FocusCard;
 }
 
 /** The Mythos phase beside the board (design D6): the drawn card, its resolution log, the lead choice. Rules stay in the engine. */
-export function Mythos({ board, set, state, phase, error, onAct }: MythosProps) {
+export function Mythos({ board, set, state, phase, error, onAct, onFocusCard }: MythosProps) {
   const [lead, setLead] = useState(state.leadInvestigator);
   const [newcomer, setNewcomer] = useState("");
   const t = useT();
@@ -27,7 +30,13 @@ export function Mythos({ board, set, state, phase, error, onAct }: MythosProps) 
   return (
     <section className="turn">
       <h2>{t("mythos.heading", { round: state.round })}</h2>
-      <p className="cards">{card && <img className="mythos-card" src={`/${card.images.front}`} alt={card.name} />}</p>
+      <p className="cards">
+        {card && (
+          <button type="button" className="card-button" onClick={() => onFocusCard("mythos", 0)}>
+            <img className="mythos-card" src={`/${card.images.front}`} alt={card.name} />
+          </button>
+        )}
+      </p>
       {phase.log ? (
         <>
           <ol>
