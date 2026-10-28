@@ -42,18 +42,15 @@ export function App() {
   const [slots, setSlots] = useState(() => loadSlots(localStorage));
   /** The slot the game in progress is saved to (save-slots D2). */
   const [slot, setSlot] = useState<string | undefined>(slots.current);
-  const [game, setGame] = useState<{ state?: GameState; error?: string }>(() => {
-    if (!slots.current) return {};
-    const { state, note } = loadGame(localStorage, slots.current);
-    return { state, error: note };
-  });
-  /** States before each accepted step this session, newest last (design D2). */
-  const [history, setHistory] = useState<GameState[]>([]);
+  const [resumed] = useState(() => (slots.current ? loadGame(localStorage, slots.current) : {}));
+  const [game, setGame] = useState<{ state?: GameState; error?: string }>({ state: resumed.state, error: resumed.note });
+  /** States before each accepted step, newest last, saved with the slot (undo-across-reload D2). */
+  const [history, setHistory] = useState<GameState[]>(resumed.history ?? []);
   useEffect(() => {
     if (!game.state || !slot) return;
-    saveGame(localStorage, slot, game.state, slotName(game.state, set.ancientOnes.find((a) => a.id === game.state!.ancientOne)?.name ?? game.state.ancientOne));
+    saveGame(localStorage, slot, game.state, slotName(game.state, set.ancientOnes.find((a) => a.id === game.state!.ancientOne)?.name ?? game.state.ancientOne), history);
     setSlots(loadSlots(localStorage));
-  }, [game.state, slot, set]);
+  }, [game.state, slot, set, history]);
   /** Opens a game in a fresh slot (a start or a loaded file). */
   const openNew = (state: GameState) => {
     setSlot(newSlotId());
@@ -142,11 +139,11 @@ export function App() {
           slots={slots.slots}
           current={slot}
           onSwitch={(id) => {
-            const { state, note } = loadGame(localStorage, id);
+            const { state, history, note } = loadGame(localStorage, id);
             if (!state) return setGame({ ...game, error: note });
             setSlot(id);
             setGame({ state });
-            setHistory([]);
+            setHistory(history ?? []);
             setRoute(undefined);
           }}
           onRemove={(id) => {

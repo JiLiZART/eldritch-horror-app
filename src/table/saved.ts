@@ -19,6 +19,9 @@ const INDEX = "eldritch-horror.games";
 /** The single-slot key from before slots existed; migrated into a slot on first load. */
 const LEGACY = "eldritch-horror.game";
 const key = (id: string) => `eldritch-horror.game.${id}`;
+/** The states before the slot's last accepted steps, newest last (undo-across-reload D1). */
+const historyKey = (id: string) => `eldritch-horror.history.${id}`;
+const HISTORY = 10;
 
 /** A saved game's text (a slot or a file), or a note saying why it was set aside. */
 export function parseGame(text: string): { state?: GameState; note?: string } {
@@ -72,15 +75,24 @@ export function loadSlots(storage: Slot): SlotIndex {
   }
 }
 
-/** The saved game of a slot, or a note saying why it was set aside; neither for an empty slot. */
-export function loadGame(storage: Slot, id: string): { state?: GameState; note?: string } {
+/** The saved game of a slot with its undo history, or a note saying why it was set aside; neither for an empty slot. */
+export function loadGame(storage: Slot, id: string): { state?: GameState; history?: GameState[]; note?: string } {
   const raw = read(storage, key(id));
-  return raw === null ? {} : parseGame(raw);
+  if (raw === null) return {};
+  const { state, note } = parseGame(raw);
+  if (!state) return { note };
+  let history: GameState[] = [];
+  try {
+    const parsed = JSON.parse(read(storage, historyKey(id)) ?? "[]") as unknown;
+    if (Array.isArray(parsed)) history = parsed as GameState[];
+  } catch {}
+  return { state, history };
 }
 
-/** Saves the game into its slot and makes it the current one. */
-export function saveGame(storage: Slot, id: string, state: GameState, name: string): void {
+/** Saves the game and the last ten states before its steps into its slot and makes it the current one. */
+export function saveGame(storage: Slot, id: string, state: GameState, name: string, history: GameState[] = []): void {
   write(storage, key(id), JSON.stringify(state));
+  write(storage, historyKey(id), JSON.stringify(history.slice(-HISTORY)));
   const index = loadSlots(storage);
   const info: SlotInfo = { id, name, savedAt: Date.now() };
   write(storage, INDEX, JSON.stringify({ current: id, slots: [...index.slots.filter((s) => s.id !== id), info] }));
@@ -89,6 +101,7 @@ export function saveGame(storage: Slot, id: string, state: GameState, name: stri
 /** Removes a slot; a removed current slot leaves none current. */
 export function removeGame(storage: Slot, id: string): SlotIndex {
   remove(storage, key(id));
+  remove(storage, historyKey(id));
   const index = loadSlots(storage);
   const next: SlotIndex = { ...(index.current === id ? {} : index.current ? { current: index.current } : {}), slots: index.slots.filter((s) => s.id !== id) };
   write(storage, INDEX, JSON.stringify(next));
