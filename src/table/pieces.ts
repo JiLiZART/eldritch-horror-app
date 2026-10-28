@@ -18,6 +18,8 @@ export interface Piece {
   hint?: string;
   /** The pawn of the investigator whose turn it is; ringed on the table (active-pawn-ring D1). */
   active?: true;
+  /** A monster token's printed back, read when the token is brought up and turned (monster-focus D1). */
+  back?: string;
 }
 
 const byId = <T extends { id: string }>(list: T[], id: string): T => {
@@ -61,7 +63,7 @@ export function piecesOnSpace(state: GameState | undefined, board: Board, set: G
   for (const m of state.monsters) {
     const monster = byId(set.monsters, m.id);
     const combat = monster.combat.onAncientOneSheet && sheet ? sheet.cultists : monster.combat;
-    add(m.space, { kind: "monster", id: `${m.id}#${m.instance}`, image: monster.images.front, label: m.health > 0 ? t("piece.monsterHurt", { name: monster.name, count: m.health }) : monster.name, ...(m.health > 0 ? { damage: m.health } : {}), hint: hint(combat) });
+    add(m.space, { kind: "monster", id: `${m.id}#${m.instance}`, image: monster.images.front, label: m.health > 0 ? t("piece.monsterHurt", { name: monster.name, count: m.health }) : monster.name, ...(m.health > 0 ? { damage: m.health } : {}), hint: hint(combat), ...(monster.images.back ? { back: monster.images.back } : {}) });
   }
   for (const i of state.investigators) {
     if (i.defeated === "devoured" || i.removed) continue;

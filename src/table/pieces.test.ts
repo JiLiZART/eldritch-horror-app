@@ -53,6 +53,12 @@ describe("piecesOnSpace", () => {
     const pawn = [...piecesOnSpace(s, board, set, t).values()].flat().find((p) => p.kind === "pawn" && p.id === lily);
     expect(pawn?.hint).toBe("4 health, 6 sanity, 1 clues");
   });
+  it("carries a monster token's back for reading it on the table", () => {
+    const [m] = state.monsters;
+    const piece = [...piecesOnSpace(state, board, set, t).values()].flat().find((p) => p.kind === "monster");
+    expect(piece?.back).toBe(set.monsters.find((x) => x.id === m!.id)?.images.back);
+    expect(piece?.back).toMatch(/-back\.webp$/);
+  });
   it("hints a gate's colour and whether it matches the omen", () => {
     const hint = (omen: number) => [...piecesOnSpace({ ...state, gates: ["london"], omen }, board, set, t).values()].flat().find((p) => p.kind === "gate")?.hint;
     expect(hint(0)).toBe("blue gate");

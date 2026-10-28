@@ -159,9 +159,9 @@ function Scene({ board, labels, strings, pieces, tracks, tableau, sheets, fit, f
       {graph.spaces.map((s) => (
         <Marker key={s.id} space={s} position={at.get(s.id)!} selected={s.id === selected} onRoute={route?.includes(s.id) ?? false} onSelect={onSelect} />
       ))}
-      {pieces.size > 0 && <Pieces pieces={pieces} at={at} onSelect={onSelect} />}
-      {tracks && <Tracks board={board} tracks={tracks} />}
       <FocusedAt.Provider value={fitting ? undefined : focused?.position}>
+      {pieces.size > 0 && <Pieces pieces={pieces} at={at} onSelect={onSelect} onFocus={onFocus} />}
+      {tracks && <Tracks board={board} tracks={tracks} />}
       {tracks && tracks.reserve.length > 0 && <Reserve board={board} cards={tracks.reserve} onFocus={onFocus} />}
       {tableau && <Tableau board={board} tableau={tableau} onFocus={onFocus} />}
       {sheets && sheets.length > 0 && <Sheets board={board} sheets={sheets} onFocus={onFocus} />}
@@ -308,9 +308,12 @@ const SIZE: Record<PieceKind, [width: number, height: number]> = {
   lead: [0.22, 0.22],
 };
 
-function Pieces({ pieces, at, onSelect }: { pieces: Map<string, Piece[]>; at: Map<string, [number, number]>; onSelect: (id: string) => void }) {
+function Pieces({ pieces, at, onSelect, onFocus }: { pieces: Map<string, Piece[]>; at: Map<string, [number, number]>; onSelect: (id: string) => void; onFocus: FaceProps["onFocus"] }) {
   const damageToken = (n: number) => `${TOKENS}/health/health-0${Math.min(9, n)}.webp`;
-  const images = useMemo(() => [...new Set([...pieces.values()].flat().flatMap((p) => (p.damage ? [p.image, damageToken(p.damage)] : [p.image])))], [pieces]);
+  const images = useMemo(() => [...new Set([...pieces.values()].flat().flatMap((p) => [p.image, ...(p.damage ? [damageToken(p.damage)] : []), ...(p.back ? [p.back] : [])]))], [pieces]);
+  /** The token brought up and turned to its back (monster-focus D2). */
+  const focusedAt = useContext(FocusedAt);
+  const [turned, setTurned] = useState<string>();
   const textures = useTexture(images.map((i) => `/${i}`), srgb);
   const textureOf = new Map(images.map((img, i) => [img, textures[i]]));
   /** The piece under the pointer, whose label floats beside it (piece-hover D1). */
@@ -328,6 +331,9 @@ function Pieces({ pieces, at, onSelect }: { pieces: Map<string, Piece[]>; at: Ma
           const [dx, dy] = offsets[k]!;
           /** Half the piece's standing height: a pawn's foot rests on the space, the label floats above the top. */
           const half = (p.lying ? w : h) / 2;
+          const px = x + dx;
+          const py = y + dy + (p.kind === "pawn" ? half : 0);
+          const focused = focusedAt !== undefined && focusedAt[0] === px && focusedAt[1] === py;
           return (
             <group key={p.id}>
               {/* A flat ring on the table under the pawn whose turn it is (active-pawn-ring D2). */}
@@ -337,7 +343,7 @@ function Pieces({ pieces, at, onSelect }: { pieces: Map<string, Piece[]>; at: Ma
                   <meshBasicMaterial color="#e8c872" />
                 </mesh>
               )}
-              <Billboard position={[x + dx, y + dy + (p.kind === "pawn" ? half : 0), 0.05 + k * 0.001]}>
+              <Billboard position={[px, py, 0.05 + k * 0.001]}>
               {/* A lying pawn turns a quarter turn in the billboard's plane, so the standee rests sideways on the board (design D2). */}
               <mesh
                 rotation={[0, 0, p.lying ? Math.PI / 2 : 0]}
@@ -353,11 +359,18 @@ function Pieces({ pieces, at, onSelect }: { pieces: Map<string, Piece[]>; at: Ma
                 // A still click selects the space the piece stands on; a drag that started here only pans (piece-click-selects D1).
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (e.delta <= 4) onSelect(space);
+                  if (e.delta > 4) return;
+                  // A token brought up turns over on a click instead of selecting (monster-focus D2).
+                  if (focused && p.back) setTurned((id) => (id === p.id ? undefined : p.id));
+                  else onSelect(space);
+                }}
+                onDoubleClick={(e) => {
+                  e.stopPropagation();
+                  if (p.back) onFocus([px, py], [w, h]);
                 }}
               >
                 <planeGeometry args={[w, h]} />
-                <meshBasicMaterial map={textureOf.get(p.image)} transparent alphaTest={0.5} />
+                <meshBasicMaterial map={textureOf.get(focused && turned === p.id && p.back ? p.back : p.image)} transparent alphaTest={0.5} />
               </mesh>
               {p.damage && (
                 <mesh position={[0.08, -0.08, 0.002]}>
