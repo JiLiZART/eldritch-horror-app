@@ -4,7 +4,7 @@ import { defeat, fall, fight, toCup } from "./encounter";
 import { OMEN_TRACK } from "./omen";
 import { reshuffle, rng } from "./rng";
 import type { Content } from "./setup";
-import { note, spaceName, spawnClue, spawnGate, spawnMonster, textPhase } from "./spawn";
+import { note, spaceName, spawnClue, spawnGate, spawnMonster, spendHeldClue, textPhase } from "./spawn";
 import { isDetained } from "./types";
 import type { GameState, InvestigatorState, MonsterInstance, MonsterOnBoard } from "./types";
 
@@ -74,17 +74,18 @@ export function discardImprovement(state: GameState, content: Content, id: strin
 export function gainClue(state: GameState, content: Content, id: string): GameState {
   const me = subject(state, id);
   const held = replace(state, { ...me, clues: me.clues + 1 });
-  if (state.clues.includes(me.space)) return note({ ...held, clues: state.clues.filter((s) => s !== me.space) }, `${name(content, id)} gains the clue on ${spaceName(content, me.space)}`);
+  if (state.clues.includes(me.space)) return note({ ...held, clues: state.clues.filter((s) => s !== me.space), heldClues: [...state.heldClues, me.space] }, `${name(content, id)} gains the clue on ${spaceName(content, me.space)}`);
   const pool = state.cluePool.length === 0 && state.clueDiscard.length > 0 ? reshuffle(state, state.clueDiscard) : { items: state.cluePool, rolls: state.rolls };
-  if (pool.items.length === 0) throw new Error("no clue can be gained: the pool and discard are empty");
-  return note({ ...held, cluePool: pool.items.slice(1), clueDiscard: [], rolls: pool.rolls }, `${name(content, id)} gains 1 clue from the pool`);
+  const [token, ...rest] = pool.items;
+  if (token === undefined) throw new Error("no clue can be gained: the pool and discard are empty");
+  return note({ ...held, cluePool: rest, clueDiscard: [], heldClues: [...state.heldClues, token], rolls: pool.rolls }, `${name(content, id)} gains 1 clue from the pool`);
 }
 
 /** Deviation: a spent clue leaves the game; the pool only tracks tokens on the board. */
 export function spendClue(state: GameState, content: Content, id: string): GameState {
   const me = subject(state, id);
   if (me.clues === 0) throw new Error(`${name(content, id)} holds no clue`);
-  return note(replace(state, { ...me, clues: me.clues - 1 }), `${name(content, id)} spends 1 clue`);
+  return note(replace(spendHeldClue(state), { ...me, clues: me.clues - 1 }), `${name(content, id)} spends 1 clue`);
 }
 
 /** The gate token on the space goes to the gate discard; monsters stay (manual p.4). */
@@ -253,7 +254,8 @@ export function devour(state: GameState, content: Content, id: string): GameStat
   }
   const { items: spell, rolls: r1 } = reshuffle(state, piles.spell);
   const { items: condition, rolls: r2 } = reshuffle({ ...state, rolls: r1 }, piles.condition);
-  const s: GameState = { ...state, rolls: r2, assetDiscard: piles.assetDiscard, artifactDiscard: piles.artifactDiscard, decks: { ...state.decks, spell, condition, "unique-asset": piles["unique-asset"] } };
+  let s: GameState = { ...state, rolls: r2, assetDiscard: piles.assetDiscard, artifactDiscard: piles.artifactDiscard, decks: { ...state.decks, spell, condition, "unique-asset": piles["unique-asset"] } };
+  for (let n = 0; n < me.clues; n++) s = spendHeldClue(s);
   const gone: InvestigatorState = { ...me, defeated: "devoured", possessions: [], conditions: [], clues: 0, tickets: [], improvements: {}, delayed: undefined };
   return fall(s, content, gone, `${name(content, id)} is devoured`);
 }

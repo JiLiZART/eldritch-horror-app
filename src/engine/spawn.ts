@@ -18,6 +18,13 @@ export function textPhase(state: GameState): void {
   if (state.phase.name === "mythos" && !state.phase.log) throw new Error("the mythos card is resolved first");
 }
 
+/** One held clue token goes to the clue discard (manual p.4); any held token will do, fronts are read only when drawn. */
+export function spendHeldClue(state: GameState): GameState {
+  const token = state.heldClues.at(-1);
+  if (token === undefined) throw new Error("no clue token is held");
+  return { ...state, heldClues: state.heldClues.slice(0, -1), clueDiscard: [token, ...state.clueDiscard] };
+}
+
 export const spaceName = ({ board }: Content, id: string) => board.spaces.find((s) => s.id === id)?.name.en ?? id;
 
 /** Opens the top gate of the stack with 1 monster; reshuffles the discard first, advances doom instead when no token is left. */

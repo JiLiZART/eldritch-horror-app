@@ -1,5 +1,6 @@
 import type { GameSet, Skill } from "../content/types";
 import { rng } from "./rng";
+import { spendHeldClue } from "./spawn";
 import type { GameState, Roll } from "./types";
 
 export interface TestResult extends Roll {
@@ -37,7 +38,7 @@ export function rerollDie(state: GameState, set: GameSet, die: number): GameStat
   if (me.clues === 0) throw new Error("a reroll costs 1 clue");
   const dice = roll.dice.map((d, n) => (n === die ? face(state) : d));
   const next: Roll = { ...roll, dice, successes: count(dice) };
-  const s: GameState = { ...state, rolls: state.rolls + 1, investigators: state.investigators.map((i) => (i === me ? { ...i, clues: i.clues - 1 } : i)) };
+  const s: GameState = { ...spendHeldClue(state), rolls: state.rolls + 1, investigators: state.investigators.map((i) => (i === me ? { ...i, clues: i.clues - 1 } : i)) };
   if (s.phase.name === "action") return { ...s, phase: { ...s.phase, acquiring: next } };
   if (s.phase.name !== "encounter" || !s.phase.combat) throw new Error("no roll is waiting");
   const name = set.investigators.find((i) => i.id === me.id)?.name ?? me.id;

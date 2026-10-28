@@ -31,6 +31,12 @@ describe("setup accepts a legal group", () => {
     expect(() => setup({ ancientOne: ao("nope") })).toThrow(/nope/);
     expect(() => setup({ investigators: [inv("nope")] })).toThrow(/nope/);
   });
+  it("holds the starting clue tokens out of the pool", () => {
+    const s = setup();
+    const starting = s.investigators.reduce((n, i) => n + i.clues, 0);
+    expect(s.heldClues).toHaveLength(starting);
+    for (const id of s.heldClues) expect(s.cluePool).not.toContain(id);
+  });
   it("starts with an empty journal", () => {
     expect(setup().journal).toEqual([]);
   });

@@ -55,6 +55,7 @@ describe("a die is rerolled for a clue", () => {
     const s = game(seed);
     return {
       ...s,
+      heldClues: Array.from({ length: clues }, () => "arkham"),
       investigators: s.investigators.map((i) => (i.id === charlie ? { ...i, clues } : i)),
       phase: { name: "action", active: charlie, taken: [], acquiring: { investigator: charlie, dice, successes: dice.filter((d) => d >= 5).length } },
     };
@@ -77,6 +78,12 @@ describe("a die is rerolled for a clue", () => {
       }
     }
     throw new Error("no seed rerolled below 5");
+  });
+  it("moves the spent token to the clue discard", () => {
+    const before = { ...waiting([1, 2, 3, 4]), heldClues: ["arkham", "london"] };
+    const s = rerollDie(before, set, 0);
+    expect(s.clueDiscard).toEqual(["london"]);
+    expect(s.heldClues).toEqual(["arkham"]);
   });
   it("refuses without a clue", () => {
     expect(() => rerollDie(waiting([1, 2, 3, 4], 0), set, 0)).toThrow(/costs 1 clue/);

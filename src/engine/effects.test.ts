@@ -97,8 +97,29 @@ describe("clues are gained and spent", () => {
     expect(() => gainClue({ ...encounters(), cluePool: [], clueDiscard: [] }, content, leo)).toThrow(/no clue can be gained/);
   });
   it("spends one and refuses with none", () => {
-    expect(who(spendClue(patch(encounters(), leo, { clues: 1 }), content, leo), leo).clues).toBe(0);
+    expect(who(spendClue({ ...patch(encounters(), leo, { clues: 1 }), heldClues: ["arkham"] }, content, leo), leo).clues).toBe(0);
     expect(() => spendClue(encounters(), content, leo)).toThrow(/holds no clue/);
+  });
+});
+
+describe("spent clues join the clue discard", () => {
+  it("keeps a gained token in the held list", () => {
+    const before = encounters();
+    const s = gainClue(before, content, leo);
+    expect(s.heldClues).toEqual([...before.heldClues, before.cluePool[0]]);
+  });
+  it("moves a spent token to the discard with the pool unchanged", () => {
+    const before = gainClue(encounters(), content, leo);
+    const s = spendClue(before, content, leo);
+    expect(s.clueDiscard).toEqual([before.heldClues.at(-1)]);
+    expect(s.heldClues).toEqual(before.heldClues.slice(0, -1));
+    expect(s.cluePool).toEqual(before.cluePool);
+  });
+  it("moves a devoured investigator's tokens", () => {
+    const before = gainClue(gainClue(encounters(), content, leo), content, leo);
+    const s = devour(before, content, leo);
+    expect(s.clueDiscard).toHaveLength(before.clueDiscard.length + who(before, leo).clues);
+    expect(s.heldClues).toHaveLength(before.heldClues.length - who(before, leo).clues);
   });
 });
 
@@ -329,7 +350,7 @@ describe("gates, clues and monsters are spawned by card text", () => {
 describe("a devoured investigator leaves the game", () => {
   const muscle = who(encounters(), leo).possessions.find((c) => cardName(c) === "Hired Muscle")!;
   it("discards everything, advances doom and passes the encounter", () => {
-    const s = devour({ ...patch(encounters(), leo, { clues: 1, improvements: { lore: 1 } }), doom: 12 }, content, leo);
+    const s = devour({ ...patch(encounters(), leo, { clues: 1, improvements: { lore: 1 } }), heldClues: ["arkham"], doom: 12 }, content, leo);
     expect(s.doom).toBe(11);
     expect(s.assetDiscard).toContain(muscle);
     expect(who(s, leo)).toMatchObject({ defeated: "devoured", clues: 0, possessions: [], conditions: [], improvements: {}, tickets: [] });

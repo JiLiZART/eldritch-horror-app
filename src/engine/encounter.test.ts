@@ -146,7 +146,7 @@ describe("two tests decide the fight", () => {
   });
   it("rerolls a Will die for a clue and logs it", () => {
     const { before } = vs(0, 1);
-    const waiting = fight(patch(before, leo, { clues: 1 }), content, before.monsters.find((m) => m.id === byakhee)!);
+    const waiting = fight({ ...patch(before, leo, { clues: 1 }), heldClues: ["arkham"] }, content, before.monsters.find((m) => m.id === byakhee)!);
     const rerolled = rerollDie(waiting, set, 0);
     expect(who(rerolled, leo).clues).toBe(0);
     expect(rerolled.phase.name === "encounter" ? rerolled.phase.log.at(-1) : "").toMatch(/Leo Anderson rerolls die 1: /);

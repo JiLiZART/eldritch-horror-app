@@ -98,10 +98,11 @@ export function replaceInvestigator(state: GameState, content: Content, fallen: 
   const { encounters, ...rest } = state.decks;
   const decks: GameState["decks"] = { ...Object.fromEntries(Object.entries(rest).map(([k, v]) => [k, [...v]])), encounters } as GameState["decks"];
   const cluePool = [...state.cluePool];
-  const entry = placeInvestigator(sheet, content.set.cards, decks, cluePool);
+  const heldClues = [...state.heldClues];
+  const entry = placeInvestigator(sheet, content.set.cards, decks, cluePool, heldClues);
   const at = state.investigators.indexOf(old);
   const investigators = [...state.investigators.slice(0, at), { ...old, replacedBy: newcomer }, entry, ...state.investigators.slice(at + 1)];
-  return note({ ...state, decks, cluePool, investigators }, `${sheet.name} takes ${investigatorName(content, fallen)}'s seat`);
+  return note({ ...state, decks, cluePool, heldClues, investigators }, `${sheet.name} takes ${investigatorName(content, fallen)}'s seat`);
 }
 
 /** Ends the Mythos phase: the fallen are replaced first while a sheet is unused, the lead may pass the token, then the next round's Action phase starts with the lead (manual p.3, p.4). */

@@ -59,7 +59,8 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
   };
 
   // 2. Investigators: starting space, full health and sanity, starting possessions.
-  const investigators = chosen.map((i) => placeInvestigator(i, set.cards, decks, cluePool));
+  const heldClues: string[] = [];
+  const investigators = chosen.map((i) => placeInvestigator(i, set.cards, decks, cluePool, heldClues));
 
   // 3. Ancient One: doom, omen, set-aside monsters; 4. monster cup.
   const eldritchOnOmen: GameState["eldritchOnOmen"] = [ancientOne.setup?.eldritchTokensOnOmen ?? 0, 0, 0, 0];
@@ -93,6 +94,7 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
     clues: [],
     cluePool,
     clueDiscard: [],
+    heldClues,
     monsters: [],
     monsterCup,
     setAsideMonsters,
@@ -114,8 +116,8 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
   return state;
 }
 
-/** Takes the printed starting cards out of their decks and starting clues out of the pool. */
-export function placeInvestigator(i: Investigator, cards: Card[], decks: GameState["decks"], cluePool: string[]): InvestigatorState {
+/** Takes the printed starting cards out of their decks and starting clues out of the pool into the held list. */
+export function placeInvestigator(i: Investigator, cards: Card[], decks: GameState["decks"], cluePool: string[], heldClues: string[]): InvestigatorState {
   const possessions: string[] = [];
   const conditions: string[] = [];
   const refs = [...(i.starting.assets ?? []), ...(i.starting.spells ?? []), ...(i.starting.uniqueAssets ?? []), ...(i.starting.conditions ?? [])];
@@ -130,7 +132,7 @@ export function placeInvestigator(i: Investigator, cards: Card[], decks: GameSta
     (card.deck === "condition" ? conditions : possessions).push(...deck.splice(at, 1));
   }
   const clues = i.starting.clues ?? 0;
-  cluePool.splice(0, clues);
+  heldClues.push(...cluePool.splice(0, clues));
   return { id: i.id, space: i.startingSpace, health: i.health, sanity: i.sanity, clues, possessions, conditions, tickets: [], improvements: {} };
 }
 

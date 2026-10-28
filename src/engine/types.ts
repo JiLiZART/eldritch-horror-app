@@ -155,6 +155,8 @@ export interface GameState {
   clues: string[];
   cluePool: string[];
   clueDiscard: string[];
+  /** Clue token ids held by investigators, out of the pool and off the board; spent ones go to the discard (manual p.4). */
+  heldClues: string[];
   monsters: MonsterOnBoard[];
   monsterCup: MonsterInstance[];
   setAsideMonsters: MonsterInstance[];
