@@ -248,7 +248,9 @@ describe("a monster is moved by card text", () => {
 
 describe("a monster is discarded by card text", () => {
   it("returns a non-epic monster to the cup", () => {
-    const s = discardMonster(withMonster(byakhee, "london"), content, byakhee);
+    const before = withMonster(byakhee, "london");
+    const s = discardMonster(before, content, byakhee);
+    expect(s.rolls).toBe(before.rolls + 1);
     expect(on(s, byakhee.id)).toEqual([]);
     expect(s.monsterCup).toContainEqual(byakhee);
     expect(log(s)).toMatch(/the Byakhee is discarded and returns to the cup/);

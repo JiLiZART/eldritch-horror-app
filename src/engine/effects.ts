@@ -1,6 +1,6 @@
 import { distance, neighbors } from "../content/board";
 import type { Deck, Skill } from "../content/types";
-import { defeat, fall, fight } from "./encounter";
+import { defeat, fall, fight, toCup } from "./encounter";
 import { OMEN_TRACK } from "./omen";
 import { reshuffle, rng } from "./rng";
 import type { Content } from "./setup";
@@ -163,9 +163,7 @@ export function moveMonsterToward(state: GameState, content: Content, monster: M
 export function discardMonster(state: GameState, content: Content, monster: MonsterInstance): GameState {
   const { token, label, epic } = monsterOn(state, content, monster);
   const left = { ...state, monsters: state.monsters.filter((m) => m !== token) };
-  return epic
-    ? note(left, `${label} is discarded and leaves the game`)
-    : note({ ...left, monsterCup: [...left.monsterCup, { id: token.id, instance: token.instance }] }, `${label} is discarded and returns to the cup`);
+  return epic ? note(left, `${label} is discarded and leaves the game`) : note(toCup(left, [token]), `${label} is discarded and returns to the cup`);
 }
 
 export type BoardToken = "rumor" | "eldritch";

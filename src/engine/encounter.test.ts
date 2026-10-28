@@ -112,6 +112,20 @@ describe("two tests decide the fight", () => {
     expect(onBoard(after, byakhee)).toHaveLength(0);
     expect(after.monsterCup.filter((m) => m.id === byakhee)).toHaveLength(before.monsterCup.filter((m) => m.id === byakhee).length + 1);
   });
+  it("shuffles a defeated monster into the cup", () => {
+    const { before, after } = vs(1, 2);
+    const token = before.monsters.find((m) => m.id === byakhee)!;
+    expect(after.monsterCup).toHaveLength(before.monsterCup.length + 1);
+    expect(after.monsterCup).toContainEqual({ id: token.id, instance: token.instance });
+    expect(after.rolls).toBe(before.rolls + 3);
+    const appended = [...before.monsterCup, { id: token.id, instance: token.instance }];
+    const differs = [1, 2, 3, 4, 5].some((seed) => {
+      const s = seedFor({ ...before, seed }, 1, 2);
+      const out = brawl(s, token).monsterCup;
+      return out.some((m, n) => m.id !== appended[n]!.id || m.instance !== appended[n]!.instance);
+    });
+    expect(differs).toBe(true);
+  });
   it("finishes a wounded monster", () => {
     const { after } = vs(1, 1, 1);
     expect(onBoard(after, byakhee)).toHaveLength(0);
@@ -176,8 +190,10 @@ describe("a monster ambushes the investigator", () => {
     expect(s.phase.name === "encounter" ? s.phase.log.join("\n") : "").toMatch(/Color Out of Space ambushes Leo Anderson/);
   });
   it("returns a surviving monster to the cup after the fight", () => {
-    let s = ambush(trap(seedFor(encounters(), 0, undefined)), content);
+    const start = ambush(trap(seedFor(encounters(), 0, undefined)), content);
+    let s = start;
     while (s.phase.name === "encounter" && s.phase.combat) s = continueFight(s, content);
+    expect(s.rolls).toBe(start.rolls + 1);
     expect(onBoard(s, color)).toHaveLength(0);
     expect(s.monsterCup.some((m) => m.id === color)).toBe(true);
     expect(s.phase.name === "encounter" ? s.phase.log.join("\n") : "").toMatch(/returns to the cup after the ambush/);

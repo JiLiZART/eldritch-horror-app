@@ -133,17 +133,24 @@ function settle(state: GameState, content: Content, monster: MonsterInstance): G
   const target = state.monsters.find((m) => m.id === monster.id && m.instance === monster.instance)!;
   const { name, epic, combat } = combatOf(state, content, target.id);
   if (combat.toughness !== undefined && target.health >= combat.toughness) {
-    return log({ ...state, monsters: state.monsters.filter((m) => m !== target), monsterCup: epic ? state.monsterCup : [...state.monsterCup, { id: target.id, instance: target.instance }] }, `the ${name} is defeated${epic ? "" : " and returns to the cup"}`);
+    const gone = { ...state, monsters: state.monsters.filter((m) => m !== target) };
+    return log(epic ? gone : toCup(gone, [target]), `the ${name} is defeated${epic ? "" : " and returns to the cup"}`);
   }
   const stays = log(state, `the ${name} stays with ${target.health} health lost${combat.toughness === undefined ? " (toughness printed as a formula: left to the players)" : ""}`);
   return target.ambush ? log(returnAmbushers(stays), `the ${name} returns to the cup after the ambush`) : stays;
+}
+
+/** Tokens go back into the cup, which is shuffled at once from the seed (EH_reference p.11). */
+export function toCup(state: GameState, tokens: MonsterInstance[]): GameState {
+  const { items: monsterCup, rolls } = reshuffle(state, [...state.monsterCup, ...tokens.map(({ id, instance }) => ({ id, instance }))]);
+  return { ...state, monsterCup, rolls };
 }
 
 /** Ambushing tokens were never spawned: back to the cup (manual p.3 "Ambush"). */
 export function returnAmbushers(state: GameState): GameState {
   const ambushers = state.monsters.filter((m) => m.ambush);
   if (ambushers.length === 0) return state;
-  return { ...state, monsters: state.monsters.filter((m) => !m.ambush), monsterCup: [...state.monsterCup, ...ambushers.map(({ id, instance }) => ({ id, instance }))] };
+  return toCup({ ...state, monsters: state.monsters.filter((m) => !m.ambush) }, ambushers);
 }
 
 const signed = (n: number) => (n > 0 ? ` +${n}` : n < 0 ? ` ${n}` : "");
