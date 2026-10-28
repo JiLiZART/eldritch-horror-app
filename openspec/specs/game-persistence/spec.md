@@ -6,7 +6,7 @@ Keep the game in progress across reloads and let the players take back the last 
 ## Requirements
 
 ### Requirement: The game in progress survives a reload
-After every accepted step the game SHALL be saved in the browser in its own slot, named after the Ancient One, the seed and the round, or by a name the players give the slot, which SHALL outlast later steps and reloads until they clear it; opening the table again SHALL resume the slot last played in the same state; another window of the same browser showing the same slot SHALL follow each accepted step as it is saved, without a reload; the Saved games list SHALL show the slots last played first, each with when it was last played; the players SHALL be able to switch to any other saved slot, start a new game in a new slot without losing the others, duplicate a slot into a new one holding the same state and undo history, and remove a slot or abandon the game in progress after confirming it in a second step that can be declined; an unreadable save, or one written by an older state shape, SHALL be set aside and the New game form shown with a note saying the saved game could not be resumed. **Deviation**: slots live in one browser; a save written before slots existed becomes the first slot.
+After every accepted step the game SHALL be saved in the browser in its own slot, named after the Ancient One, the seed and the round, or by a name the players give the slot, which SHALL outlast later steps and reloads until they clear it; opening the table again SHALL resume the slot last played in the same state; another window of the same browser showing the same slot SHALL follow each accepted step as it is saved, without a reload, and its Saved games list SHALL follow slots made, named, duplicated or removed elsewhere; the Saved games list SHALL show the slots last played first, each with when it was last played; the players SHALL be able to switch to any other saved slot, start a new game in a new slot without losing the others, duplicate a slot into a new one holding the same state and undo history, and remove a slot or abandon the game in progress after confirming it in a second step that can be declined; an unreadable save, or one written by an older state shape, SHALL be set aside and the New game form shown with a note saying the saved game could not be resumed. **Deviation**: slots live in one browser; a save written before slots existed becomes the first slot.
 
 #### Scenario: Resumed
 - **WHEN** Leo Anderson has rested in round 1 and the page is reloaded
@@ -47,6 +47,10 @@ After every accepted step the game SHALL be saved in the browser in its own slot
 #### Scenario: Duplicate a slot
 - **WHEN** the players duplicate the current slot in round 3 and rest in the copy
 - **THEN** the copy is in round 3 with the rest taken and the original is unchanged, both listed
+
+#### Scenario: A second window sees a new slot
+- **WHEN** a new game is started in one window
+- **THEN** the other window's Saved games list shows it within a moment, without a reload
 
 ### Requirement: The last step can be undone
 A control beside the board SHALL revert the game to the state before the last accepted step, repeatedly, back to the freshly set-up game, after which it SHALL be disabled; a refused step SHALL NOT be undone since nothing changed; the last ten prior states SHALL be saved with the game in its slot, so a resumed game can undo those steps and no more.
