@@ -81,9 +81,18 @@ function CameraRig({ board, target, reducedMotion }: { board: Board; target: [nu
     camera.updateProjectionMatrix();
   }, [camera, minZoom]);
   const goal = useMemo(() => (target ? new Vector3(target[0], target[1], 0) : undefined), [target]);
+  // One glide per new target; a drag ends it, so the player's panning holds afterwards (camera-release D1).
+  const gliding = useRef(false);
+  useEffect(() => {
+    gliding.current = goal !== undefined;
+  }, [goal]);
   useFrame((_, dt) => {
     const c = controls.current;
-    if (!c || !goal || c.target.distanceTo(goal) < 0.001) return;
+    if (!c || !goal || !gliding.current) return;
+    if (c.target.distanceTo(goal) < 0.001) {
+      gliding.current = false;
+      return;
+    }
     const step = reducedMotion ? 1 : Math.min(1, dt * 6);
     const delta = goal.clone().sub(c.target).multiplyScalar(step);
     c.target.add(delta);
@@ -94,6 +103,9 @@ function CameraRig({ board, target, reducedMotion }: { board: Board; target: [nu
     <MapControls
       ref={controls}
       makeDefault
+      onStart={() => {
+        gliding.current = false;
+      }}
       enableRotate={false}
       enableDamping={!reducedMotion}
       screenSpacePanning
