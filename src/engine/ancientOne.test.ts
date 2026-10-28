@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn } from "./actions";
-import { changeDoom, solveFinalMystery, solveMystery } from "./ancientOne";
+import { changeDoom, changeMysteryTokens, solveFinalMystery, solveMystery } from "./ancientOne";
 import { finishEncounter } from "./encounter";
 import { OMEN_TRACK } from "./omen";
 import { resolveMythos } from "./mythos";
@@ -84,5 +84,20 @@ describe("the investigators win", () => {
     expect(s.phase.name).toBe("encounter");
     const won = solveFinalMystery(s, content);
     expect(won.phase).toEqual({ name: "won", reason: expect.stringMatching(/3 mysteries and the final mystery/) });
+  });
+});
+
+describe("tokens are placed on the mystery by card text", () => {
+  it("starts at 0 and counts placements", () => {
+    expect(game().mysteryTokens).toBe(0);
+    const s = changeMysteryTokens(changeMysteryTokens(encounters(), 1), 1);
+    expect(s.mysteryTokens).toBe(2);
+    expect(log(s)).toMatch(/a token is placed on the mystery \(2\)/);
+  });
+  it("refuses to remove from an empty mystery", () => {
+    expect(() => changeMysteryTokens(encounters(), -1)).toThrow(/mystery holds no token/);
+  });
+  it("discards the tokens when the mystery is solved", () => {
+    expect(solveMystery(changeMysteryTokens(encounters(), 1), content).mysteryTokens).toBe(0);
   });
 });

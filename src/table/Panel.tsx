@@ -168,7 +168,7 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
         <dd className="cards">
           {mystery && <img src={`/${mystery.images.front}`} alt={mystery.name} />}
           {state.awakened && ancientOne?.images.back && <img src={`/${ancientOne.images.back}`} alt={`${ancientOne.name} awakened`} />}
-          {state.solvedMysteries.length} solved{state.finalMysterySolved && ", final mystery solved"}
+          {state.solvedMysteries.length} solved, {state.mysteryTokens} tokens{state.finalMysterySolved && ", final mystery solved"}
         </dd>
         <dt>Reserve</dt>
         <dd className="cards">

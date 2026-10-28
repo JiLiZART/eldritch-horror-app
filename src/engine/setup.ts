@@ -105,6 +105,7 @@ export function setupGame({ board, set }: Content, options: SetupOptions): GameS
     mythosDiscard: [],
     currentMystery,
     solvedMysteries: [],
+    mysteryTokens: 0,
     activeExpedition,
   };
   const content = { board, set };

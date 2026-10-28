@@ -182,6 +182,8 @@ export interface GameState {
   currentMystery: string;
   /** Solved mystery ids, newest first. */
   solvedMysteries: string[];
+  /** Tokens of any kind on the current mystery, discarded when it is solved (manual p.4). */
+  mysteryTokens: number;
   /** The final mystery on the sheet back, solvable once awakened. */
   finalMysterySolved?: true;
   /** Doom reached 0: the sheet back is in play (manual p.4). */

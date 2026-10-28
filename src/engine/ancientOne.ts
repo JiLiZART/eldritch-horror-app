@@ -33,7 +33,15 @@ export function solveMystery(state: GameState, content: Content): GameState {
   const [next, ...mystery] = state.decks.mystery;
   if (next === undefined) throw new Error("the mystery deck is empty");
   const name = sheet(content, state).mysteries.find((m) => m.id === state.currentMystery)?.name ?? state.currentMystery;
-  return checkWin(note({ ...state, solvedMysteries: [state.currentMystery, ...state.solvedMysteries], currentMystery: next, decks: { ...state.decks, mystery } }, `${name} is solved`));
+  return checkWin(note({ ...state, solvedMysteries: [state.currentMystery, ...state.solvedMysteries], currentMystery: next, mysteryTokens: 0, decks: { ...state.decks, mystery } }, `${name} is solved`));
+}
+
+/** Card text places a token on the current mystery or removes one; the kind is the players' reading (manual p.4). */
+export function changeMysteryTokens(state: GameState, delta: number): GameState {
+  textPhase(state);
+  const mysteryTokens = state.mysteryTokens + delta;
+  if (mysteryTokens < 0) throw new Error("the mystery holds no token");
+  return note({ ...state, mysteryTokens }, `a token is ${delta > 0 ? "placed on" : "removed from"} the mystery (${mysteryTokens})`);
 }
 
 /** The final mystery on the sheet back (manual p.4). */

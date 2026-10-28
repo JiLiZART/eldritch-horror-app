@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Board, Deck, GameSet, Skill } from "../content/types";
-import { changeDoom, solveFinalMystery, solveMystery } from "../engine/ancientOne";
+import { changeDoom, changeMysteryTokens, solveFinalMystery, solveMystery } from "../engine/ancientOne";
 import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spendClue } from "../engine/effects";
 import { OMEN_TRACK } from "../engine/omen";
 import { monsterKey } from "../engine/encounter";
@@ -247,6 +247,12 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
           </button>
           <button type="button" onClick={() => onAct((s) => solveMystery(s, content))}>
             Solve mystery
+          </button>
+          <button type="button" onClick={() => onAct((s) => changeMysteryTokens(s, 1))}>
+            Place token on mystery
+          </button>
+          <button type="button" onClick={() => onAct((s) => changeMysteryTokens(s, -1))}>
+            Remove token
           </button>
           {state.awakened && (
             <button type="button" onClick={() => onAct((s) => solveFinalMystery(s, content))}>
