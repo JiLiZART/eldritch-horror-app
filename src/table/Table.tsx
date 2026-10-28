@@ -35,7 +35,7 @@ export interface TableProps {
   /** The Ancient One's card faces beside the board: the sheet, the current mystery and the ongoing mythos cards (tableau D2). */
   tableau?: { sheet: CardFace; mystery?: CardFace; mythos: CardFace[]; tokens: number };
   /** The investigators' sheet faces in seat order, below the board, each with the cards held under it (held-cards D2). */
-  sheets?: { sheet: CardFace; held: CardFace[]; health: number; sanity: number; improvements: Partial<Record<Skill, 1 | 2>>; tickets: Ticket[]; encounter?: CardFace }[];
+  sheets?: { sheet: CardFace; held: CardFace[]; health: number; sanity: number; improvements: Partial<Record<Skill, 1 | 2>>; tickets: Ticket[]; encounter?: CardFace; defeated?: boolean }[];
   /** Changes each time the player asks for the whole table; the view glides out to it (fit-view D1). */
   fit?: number;
   /** The round, phase and active investigator, or the outcome, and the last journal line, shown in the table's corner (table-status-line D1, table-ticker D1). */
@@ -454,6 +454,8 @@ interface FaceProps {
   map: Texture;
   /** The back's texture when the card has one (card-flip D1). */
   backMap?: Texture;
+  /** Drawn darker: a defeated investigator's sheet and cards (sheet-defeated-dim D1). */
+  dim?: boolean;
   /** The name shown beside the card while the pointer rests on it (card-hover D2). */
   label: string;
   position: [number, number];
@@ -463,7 +465,7 @@ interface FaceProps {
 }
 
 /** One card face lying flat on the table. */
-function Face({ map, backMap, label, position, size, onFocus }: FaceProps) {
+function Face({ map, backMap, dim, label, position, size, onFocus }: FaceProps) {
   const [hovered, setHovered] = useState(false);
   const badge = useMemo(() => badgeEvents(setHovered), []);
   const at = useContext(FocusedAt);
@@ -485,7 +487,7 @@ function Face({ map, backMap, label, position, size, onFocus }: FaceProps) {
     <Billboard position={[...position, 0.06]}>
       <mesh onClick={click} onPointerOver={(e) => badge.over(e.pointerType)} onPointerOut={(e) => badge.out(e.pointerType)} onPointerDown={(e) => badge.down(e.pointerType)}>
         <planeGeometry args={size} />
-        <meshBasicMaterial map={shown} transparent alphaTest={0.5} />
+        <meshBasicMaterial map={shown} color={dim ? "#777777" : "#ffffff"} transparent alphaTest={0.5} />
       </mesh>
       {hovered && (
         <Html position={[0, size[1] / 2 + 0.05, 0]} center style={{ pointerEvents: "none" }}>
@@ -549,14 +551,14 @@ function Sheets({ board, sheets, onFocus }: { board: Board; sheets: NonNullable<
     <>
       {sheets.map((s, seat) => (
         <group key={`${s.sheet.image}#${seat}`}>
-          <Face map={textureOf.get(s.sheet.image)!} label={s.sheet.label} position={sheetPosition(board, seat)} size={SHEET} onFocus={onFocus} />
+          <Face map={textureOf.get(s.sheet.image)!} label={s.sheet.label} dim={s.defeated} position={sheetPosition(board, seat)} size={SHEET} onFocus={onFocus} />
           {token(seat, healthToken(s.health), 0.635, 0.575, STAMP)}
           {token(seat, sanityToken(s.sanity), 0.848, 0.575, STAMP)}
           {(Object.entries(s.improvements) as [Skill, 1 | 2][]).flatMap(([skill, level]) => Array.from({ length: level }, (_, n) => token(seat, skillToken(skill), SKILL_X[skill], 0.888, [0.3, 0.3], n * 0.1)))}
           {s.tickets.map((t, n) => token(seat, ticketToken(t), 0.93, 0.07 + n * 0.1, [0.26, (0.26 * 221) / 450], n * 0.001))}
           {s.encounter && <Face map={textureOf.get(s.encounter.image)!} label={s.encounter.label} position={encounterPosition(board, seat)} size={HELD} onFocus={onFocus} />}
           {s.held.map((card, i) => (
-            <Face key={`${card.image}#${i}`} map={textureOf.get(card.image)!} backMap={card.back ? textureOf.get(card.back) : undefined} label={card.label} position={heldPosition(board, seat, i)} size={HELD} onFocus={onFocus} />
+            <Face key={`${card.image}#${i}`} map={textureOf.get(card.image)!} backMap={card.back ? textureOf.get(card.back) : undefined} label={card.label} dim={s.defeated} position={heldPosition(board, seat, i)} size={HELD} onFocus={onFocus} />
           ))}
         </group>
       ))}

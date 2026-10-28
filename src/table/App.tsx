@@ -248,7 +248,7 @@ export function App() {
     .filter((i) => !i.removed)
     .map((i) => {
       const printed = set.investigators.find((x) => x.id === i.id);
-      return { sheet: printed && { image: printed.images.front, label: printed.name }, ...(activeId === i.id && encounterFace ? { encounter: encounterFace } : {}), held: [...i.possessions, ...i.conditions].map((id) => face(id)).filter(known), health: i.health, sanity: i.sanity, improvements: i.improvements, tickets: i.tickets };
+      return { sheet: printed && { image: printed.images.front, label: printed.name }, ...(activeId === i.id && encounterFace ? { encounter: encounterFace } : {}), held: [...i.possessions, ...i.conditions].map((id) => face(id)).filter(known), health: i.health, sanity: i.sanity, improvements: i.improvements, tickets: i.tickets, ...(i.defeated ? { defeated: true } : {}) };
     })
     .filter((s): s is NonNullable<TableProps["sheets"]>[number] => !!s.sheet);
   const mystery = ancientOne?.mysteries.find((m) => m.id === game.state?.currentMystery);
