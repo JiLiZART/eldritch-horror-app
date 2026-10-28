@@ -29,7 +29,7 @@ After every accepted step the game SHALL be saved in the browser in its own slot
 - **THEN** it is no longer listed and the Azathoth slot is untouched
 
 ### Requirement: The last step can be undone
-A control beside the board SHALL revert the game to the state before the last accepted step, repeatedly, back to the freshly set-up game, after which it SHALL be disabled; a refused step SHALL NOT be undone since nothing changed; the undo history SHALL be kept for the session only, so a resumed game starts with nothing to undo.
+A control beside the board SHALL revert the game to the state before the last accepted step, repeatedly, back to the freshly set-up game, after which it SHALL be disabled; a refused step SHALL NOT be undone since nothing changed; the last ten prior states SHALL be saved with the game in its slot, so a resumed game can undo those steps and no more.
 
 #### Scenario: Undone
 - **WHEN** Leo Anderson rests and Undo is chosen
@@ -43,9 +43,17 @@ A control beside the board SHALL revert the game to the state before the last ac
 - **WHEN** a refused Rest is followed by Undo
 - **THEN** the step before the refusal is undone
 
-#### Scenario: Session only
+#### Scenario: Undo survives a reload
 - **WHEN** the page is reloaded after two steps
-- **THEN** the game resumes and Undo is disabled
+- **THEN** the game resumes and Undo reverts those two steps, then is disabled
+
+#### Scenario: History is bounded
+- **WHEN** the page is reloaded after twelve steps
+- **THEN** Undo reverts ten steps, then is disabled
+
+#### Scenario: Session only
+- **WHEN** a game is loaded from a file
+- **THEN** it starts with nothing to undo, since the file holds one state
 
 ### Requirement: The game is saved to and loaded from a file
 While a game is in progress the players SHALL be able to save it as a file named after the seed and round; at any time they SHALL be able to load such a file, which replaces the game in progress with the file's state and starts with nothing to undo. An unreadable file, or one written by an older state shape, SHALL be refused with the same notes as the browser slot and leave the game as it was. **Deviation**: the file is plain JSON with no signature.
