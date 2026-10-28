@@ -65,7 +65,9 @@ export function tableauPosition(board: Board, row: number): [x: number, y: numbe
 
 /** An investigator sheet's face, `[width, height]`: landscape, 1600 by 1268 (investigator-sheets D1). */
 export const SHEET: [width: number, height: number] = [2.4, (2.4 * 1268) / 1600];
-const SHEET_GAP = 0.2;
+const HELD_WIDTH = 0.7;
+/** Room between sheets for the encounter card being resolved (encounter-card-on-table D2). */
+const SHEET_GAP = 0.15 + HELD_WIDTH + 0.15;
 
 /** The centre of sheet `index` in the row below the board, from its left edge, in seat order (investigator-sheets D1). */
 export function sheetPosition(board: Board, index: number): [x: number, y: number] {
@@ -74,7 +76,13 @@ export function sheetPosition(board: Board, index: number): [x: number, y: numbe
 }
 
 /** A held card's face, `[width, height]`: portrait, 478 by 745, three to a row under a sheet (held-cards D1). */
-export const HELD: [width: number, height: number] = [0.7, (0.7 * 745) / 478];
+export const HELD: [width: number, height: number] = [HELD_WIDTH, (HELD_WIDTH * 745) / 478];
+
+/** The centre of the encounter card being resolved: right of sheet `seat`, level with its middle (encounter-card-on-table D2). */
+export function encounterPosition(board: Board, seat: number): [x: number, y: number] {
+  const [sx, sy] = sheetPosition(board, seat);
+  return [sx + SHEET[0] / 2 + 0.15 + HELD_WIDTH / 2, sy];
+}
 const HELD_GAP = 0.15;
 const HELD_PER_ROW = 3;
 /** Felt around the outermost cards, so one at the edge can be centred when read (table-margin D1). */
@@ -92,7 +100,7 @@ export function heldPosition(board: Board, seat: number, index: number): [x: num
 export function tableExtent(board: Board, { tableau, sheets, heldRows }: { tableau: boolean; sheets: number; heldRows: number }): { minX: number; maxX: number; minY: number; maxY: number } {
   const [w, h] = boardSize(board);
   const tableauX = tableau ? tableauPosition(board, 0)[0] + TABLEAU_ROWS[0]![0] / 2 : w / 2;
-  const sheetsX = sheets > 0 ? sheetPosition(board, sheets - 1)[0] + SHEET[0] / 2 : w / 2;
+  const sheetsX = sheets > 0 ? encounterPosition(board, sheets - 1)[0] + HELD_WIDTH / 2 : w / 2;
   const minY = heldRows > 0 ? heldPosition(board, 0, (heldRows - 1) * HELD_PER_ROW)[1] - HELD[1] / 2 : sheets > 0 ? sheetPosition(board, 0)[1] - SHEET[1] / 2 : -h / 2;
   return { minX: -w / 2 - TABLE_MARGIN, maxX: Math.max(tableauX, sheetsX) + TABLE_MARGIN, minY: minY - TABLE_MARGIN, maxY: h / 2 + TABLE_MARGIN };
 }

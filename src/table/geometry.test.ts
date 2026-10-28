@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Board } from "../content/types";
-import { BOARD_WIDTH, HELD, SHEET, TABLE_MARGIN, TABLEAU_ROWS, boardSize, boardToWorld, doomPosition, heldPosition, omenPosition, reservePosition, sheetPosition, spreadOnCircle, tableExtent, tableauPosition } from "./geometry";
+import { BOARD_WIDTH, HELD, SHEET, TABLE_MARGIN, TABLEAU_ROWS, boardSize, boardToWorld, doomPosition, encounterPosition, heldPosition, omenPosition, reservePosition, sheetPosition, spreadOnCircle, tableExtent, tableauPosition } from "./geometry";
 
 const board = { source: { file: "x", width: 2000, height: 1000 }, texture: "t", spaces: [], paths: [], tracks: { doom: { from: { x: 0.1, y: 0.1 }, to: { x: 0.9, y: 0.1 }, spaces: 21 }, omen: { center: { x: 0.9, y: 0.3 }, radius: 0.05 }, reserve: { from: { x: 0.1, y: 0.9 }, to: { x: 0.4, y: 0.9 }, slots: 4, width: 0.05 }, }, } as Board;
 
@@ -96,7 +96,7 @@ describe("investigator sheets", () => {
     expect(two.minY).toBeCloseTo(sheetPosition(board, 0)[1] - SHEET[1] / 2 - TABLE_MARGIN);
     expect(two.maxX).toBe(tableExtent(board, { tableau: true, sheets: 0, heldRows: 0 }).maxX);
     const eight = tableExtent(board, { tableau: true, sheets: 8, heldRows: 0 });
-    expect(eight.maxX).toBeCloseTo(sheetPosition(board, 7)[0] + SHEET[0] / 2 + TABLE_MARGIN);
+    expect(eight.maxX).toBeCloseTo(encounterPosition(board, 7)[0] + HELD[0] / 2 + TABLE_MARGIN);
   });
 });
 
@@ -116,5 +116,15 @@ describe("held cards", () => {
   it("drops the extent below the deepest held row", () => {
     const two = tableExtent(board, { tableau: true, sheets: 1, heldRows: 2 });
     expect(two.minY).toBeCloseTo(heldPosition(board, 0, 3)[1] - HELD[1] / 2 - TABLE_MARGIN);
+  });
+});
+
+describe("encounter card beside the sheet", () => {
+  it("lies right of the sheet and left of the next one, at the sheet's middle", () => {
+    const [sx, sy] = sheetPosition(board, 0);
+    const [ex, ey] = encounterPosition(board, 0);
+    expect(ex - HELD[0] / 2).toBeGreaterThan(sx + SHEET[0] / 2);
+    expect(ex + HELD[0] / 2).toBeLessThan(sheetPosition(board, 1)[0] - SHEET[0] / 2);
+    expect(ey).toBe(sy);
   });
 });

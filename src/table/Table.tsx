@@ -7,7 +7,7 @@ import { activeGraph } from "../content/board";
 import type { Board, BoardLabels, Skill, Space } from "../content/types";
 import type { Ticket } from "../engine/types";
 import { BoardText } from "./BoardText";
-import { BOARD_WIDTH, HELD, SHEET, TABLEAU_ROWS, boardSize, boardToWorld, doomPosition, heldPosition, omenPosition, reservePosition, sheetPosition, spreadOnCircle, tableExtent, tableauPosition } from "./geometry";
+import { BOARD_WIDTH, HELD, SHEET, TABLEAU_ROWS, boardSize, boardToWorld, doomPosition, encounterPosition, heldPosition, omenPosition, reservePosition, sheetPosition, spreadOnCircle, tableExtent, tableauPosition } from "./geometry";
 import type { Piece, PieceKind } from "./pieces";
 import { PATH_COLORS } from "./sets";
 
@@ -29,7 +29,7 @@ export interface TableProps {
   /** The Ancient One's card faces beside the board: the sheet, the current mystery and the ongoing mythos cards (tableau D2). */
   tableau?: { sheet: CardFace; mystery?: CardFace; mythos: CardFace[]; tokens: number };
   /** The investigators' sheet faces in seat order, below the board, each with the cards held under it (held-cards D2). */
-  sheets?: { sheet: CardFace; held: CardFace[]; health: number; sanity: number; improvements: Partial<Record<Skill, 1 | 2>>; tickets: Ticket[] }[];
+  sheets?: { sheet: CardFace; held: CardFace[]; health: number; sanity: number; improvements: Partial<Record<Skill, 1 | 2>>; tickets: Ticket[]; encounter?: CardFace }[];
   /** Changes each time the player asks for the whole table; the view glides out to it (fit-view D1). */
   fit?: number;
   enabled: Set<string>;
@@ -400,7 +400,7 @@ function Sheets({ board, sheets, onFocus }: { board: Board; sheets: NonNullable<
   const sanityToken = (n: number) => `${TOKENS}/sanity/sanity-0${Math.min(9, Math.max(0, n))}.webp`;
   const skillToken = (skill: Skill) => `${TOKENS}/improvements/${skill}.webp`;
   const ticketToken = (ticket: Ticket) => `${TOKENS}/travel/${ticket}.webp`;
-  const images = [...new Set(sheets.flatMap((s) => [s.sheet.image, ...s.held.map((c) => c.image), healthToken(s.health), sanityToken(s.sanity), ...Object.keys(s.improvements).map((k) => skillToken(k as Skill)), ...s.tickets.map(ticketToken)]))];
+  const images = [...new Set(sheets.flatMap((s) => [s.sheet.image, ...s.held.map((c) => c.image), ...(s.encounter ? [s.encounter.image] : []), healthToken(s.health), sanityToken(s.sanity), ...Object.keys(s.improvements).map((k) => skillToken(k as Skill)), ...s.tickets.map(ticketToken)]))];
   const textures = useTexture(images.map((i) => `/${i}`), srgb);
   const textureOf = new Map(images.map((img, i) => [img, textures[i]!]));
   /** A token on the sheet at `(fx, fy)` of the sheet from its top-left, `size` wide and high, `lift` above the sheet (sheet-tokens D1, skill-and-ticket-tokens D1). */
@@ -424,6 +424,7 @@ function Sheets({ board, sheets, onFocus }: { board: Board; sheets: NonNullable<
           {token(seat, sanityToken(s.sanity), 0.848, 0.575, STAMP)}
           {(Object.entries(s.improvements) as [Skill, 1 | 2][]).flatMap(([skill, level]) => Array.from({ length: level }, (_, n) => token(seat, skillToken(skill), SKILL_X[skill], 0.888, [0.3, 0.3], n * 0.1)))}
           {s.tickets.map((t, n) => token(seat, ticketToken(t), 0.93, 0.07 + n * 0.1, [0.26, (0.26 * 221) / 450], n * 0.001))}
+          {s.encounter && <Face map={textureOf.get(s.encounter.image)!} label={s.encounter.label} position={encounterPosition(board, seat)} size={HELD} onFocus={onFocus} />}
           {s.held.map((card, i) => (
             <Face key={`${card.image}#${i}`} map={textureOf.get(card.image)!} label={card.label} position={heldPosition(board, seat, i)} size={HELD} onFocus={onFocus} />
           ))}

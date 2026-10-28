@@ -102,11 +102,19 @@ export function App() {
     return card && { image: card.images.front, label: value ? `${card.name} · ${t("status.value", { value: card.value ?? 0 })}` : card.name };
   };
   const known = (c: CardFace | undefined): c is CardFace => !!c;
+  /** The encounter card being resolved, as a face for the active investigator's sheet (encounter-card-on-table D1). */
+  const encounterFace = (() => {
+    if (phase?.name !== "encounter" || !phase.card) return undefined;
+    const drawn = phase.card;
+    const cards = drawn.deck === "research" ? ancientOne?.research : drawn.deck === "special" ? ancientOne?.special : set.encounterDecks.find((d) => d.id === drawn.deck)?.cards;
+    const card = cards?.find((c) => c.id === drawn.id);
+    return card && { image: card.images.front, label: card.name };
+  })();
   const sheets = game.state?.investigators
     .filter((i) => !i.removed)
     .map((i) => {
       const printed = set.investigators.find((x) => x.id === i.id);
-      return { sheet: printed && { image: printed.images.front, label: printed.name }, held: [...i.possessions, ...i.conditions].map((id) => face(id)).filter(known), health: i.health, sanity: i.sanity, improvements: i.improvements, tickets: i.tickets };
+      return { sheet: printed && { image: printed.images.front, label: printed.name }, ...(activeId === i.id && encounterFace ? { encounter: encounterFace } : {}), held: [...i.possessions, ...i.conditions].map((id) => face(id)).filter(known), health: i.health, sanity: i.sanity, improvements: i.improvements, tickets: i.tickets };
     })
     .filter((s): s is NonNullable<TableProps["sheets"]>[number] => !!s.sheet);
   const mystery = ancientOne?.mysteries.find((m) => m.id === game.state?.currentMystery);
