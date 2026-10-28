@@ -365,7 +365,7 @@ During a game each improved skill SHALL carry an improvement token on that skill
 - **THEN** a train token and a ship token lie in the top-right corner of his sheet
 
 ### Requirement: The view can be fitted to the table again
-A Fit table control beside the board SHALL glide the view back to the whole table at the zoom-out limit, in the panel's language; it SHALL be reachable by keyboard; reduced motion makes the move instant.
+A Fit table control beside the board, and a double-click on empty table, SHALL glide the view back to the whole table at the zoom-out limit, in the panel's language; it SHALL be reachable by keyboard; reduced motion makes the move instant.
 
 #### Scenario: Fit after reading a card
 - **WHEN** the player has zoomed onto a card and chooses Fit table
@@ -374,6 +374,10 @@ A Fit table control beside the board SHALL glide the view back to the whole tabl
 #### Scenario: In Russian
 - **WHEN** the panel language is Russian
 - **THEN** the control is labelled in Russian
+
+#### Scenario: Double-click fits
+- **WHEN** the player has zoomed in and double-clicks on empty table
+- **THEN** the view glides out until the whole table is in view, with the selection unchanged
 
 ### Requirement: Mystery tokens lie on the mystery card
 During a game the tokens placed on the current mystery SHALL lie as mystery tokens on the mystery card in the tableau, one per token counted in the state, updating with every change; a solved mystery's tokens leave with the card.
