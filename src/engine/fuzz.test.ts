@@ -235,17 +235,21 @@ describe("random play keeps the engine's invariants", () => {
         let roll = random() * total;
         const chosen = (options.find(([w]) => (roll -= w) < 0) ?? options.at(-1))![1];
         const label = chosen.toString().replace(/\s+/g, " ").slice(0, 90);
+        const where = `seed ${seed}, round ${s.round}, ${s.phase.name} step ${step} [${label}]`;
+        const before = JSON.stringify(s);
         let next: GameState;
         try {
           next = chosen(s);
         } catch (e) {
           if (e instanceof Error && e.constructor === Error) {
             refusals++;
+            expect(JSON.stringify(s), `${where}: input state untouched by a refusal`).toBe(before);
             continue;
           }
-          throw new Error(`seed ${seed}, round ${s.round}, ${s.phase.name} step ${step} [${label}]: ${String(e)}`);
+          throw new Error(`${where}: ${String(e)}`);
         }
-        check(next, ref, `seed ${seed}, round ${s.round}, ${s.phase.name} step ${step} [${label}]`, s);
+        check(next, ref, where, s);
+        expect(JSON.stringify(s), `${where}: input state untouched`).toBe(before);
         s = next;
       }
       expect(refusals).toBeGreaterThan(0);
