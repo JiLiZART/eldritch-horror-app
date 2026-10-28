@@ -60,7 +60,7 @@ Every active space SHALL be marked at its coordinates on the texture and every a
 - **THEN** it uses the train colour from the legend shown on screen
 
 ### Requirement: Sets can be toggled
-The player SHALL be able to enable or disable each set that adds spaces (Mountains of Madness, Under the Pyramids, The Dreamlands). Disabling a set SHALL hide its spaces and every path touching them.
+The player SHALL be able to enable or disable each set that adds spaces (Mountains of Madness, Under the Pyramids, The Dreamlands). Disabling a set SHALL hide its spaces and every path touching them. While any set beyond the core is toggled on, the panel SHALL say in one line, in its language, that those spaces are a preview and the game plays on the core set.
 
 #### Scenario: Dreamlands off
 - **WHEN** The Dreamlands is disabled
@@ -69,6 +69,10 @@ The player SHALL be able to enable or disable each set that adds spaces (Mountai
 #### Scenario: Core cannot be disabled
 - **WHEN** the set controls are shown
 - **THEN** the core set is always on and cannot be switched off
+
+#### Scenario: The preview note
+- **WHEN** Under the Pyramids is toggled on
+- **THEN** a line under the Sets controls says its spaces are a preview and the game plays on the core set; with every expansion off the line is absent
 
 ### Requirement: A space can be selected
 Clicking a marker, or a piece standing on a space, SHALL select that space and show its id, English and Russian names, kind, region, set, its neighbours with the path type to each, and the pieces standing on it. The space list SHALL offer a text filter that narrows it to the spaces whose name in the chosen language contains the typed text, case-insensitively; an empty filter shows all. Clicking empty table SHALL clear the selection, and so SHALL pressing Escape while the table or the panel has keyboard focus; Escape during route picking SHALL cancel the route instead, as the Cancel control does; Escape while a card is brought up to read SHALL put it down, fitting the view to the whole table, before it clears anything. When the active investigator changes in the Action or Encounter phase, their space SHALL become the selected space, so the camera follows the turn; a route being picked SHALL NOT be disturbed. The camera SHALL glide to a newly selected space once and then leave the view to the player, so dragging the table afterwards is not undone; a drag during the glide SHALL end it.
