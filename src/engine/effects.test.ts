@@ -158,6 +158,13 @@ describe("cards are gained and discarded", () => {
     const cursed = gainCard(encounters(), content, lily, "condition", "Cursed");
     expect(() => gainCard(cursed, content, lily, "condition", "Cursed")).toThrow(/already has Cursed/);
   });
+  it("rebuilds an empty artifact deck from its discard", () => {
+    const before = encounters();
+    const relic = before.decks.artifact[0]!;
+    const s = gainCard({ ...before, decks: { ...before.decks, artifact: [] }, artifactDiscard: [relic] }, content, leo, "artifact");
+    expect(who(s, leo).possessions).toContain(relic);
+    expect(s.artifactDiscard).toEqual([]);
+  });
   it("refuses an empty deck or an absent name", () => {
     expect(() => gainCard({ ...encounters(), decks: { ...encounters().decks, artifact: [] } }, content, leo, "artifact")).toThrow(/artifact deck is empty/);
     expect(() => gainCard(encounters(), content, leo, "condition", "Nope")).toThrow(/no Nope in the condition deck/);

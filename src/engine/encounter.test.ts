@@ -170,6 +170,39 @@ describe("one encounter of the investigator's choice", () => {
     const next = drawEncounter({ ...s, gates: [...s.gates, "buenos-aires"] }, content, "other-world");
     expect(next.phase).toMatchObject({ card: { deck: "other-world" } });
   });
+  it("rebuilds an empty deck from its discard before drawing", () => {
+    const s = encounters();
+    const cards = s.decks.encounters.america!.slice(0, 3);
+    const empty: GameState = { ...s, decks: { ...s.decks, encounters: { ...s.decks.encounters, america: [] } }, encounterDiscards: { america: cards } };
+    const next = drawEncounter(empty, content, "america");
+    expect(cards).toContain((next.phase as { card: { id: string } }).card.id);
+    expect(next.decks.encounters.america).toHaveLength(2);
+    expect(next.encounterDiscards.america).toEqual([]);
+  });
+  it("rebuilds the deck at once when the last card is drawn", () => {
+    const s = encounters();
+    const [last, ...rest] = s.decks.encounters.america!;
+    const thin: GameState = { ...s, decks: { ...s.decks, encounters: { ...s.decks.encounters, america: [last!] } }, encounterDiscards: { america: rest.slice(0, 2) } };
+    const next = drawEncounter(thin, content, "america");
+    expect((next.phase as { card: { id: string } }).card.id).toBe(last);
+    expect(next.decks.encounters.america).toHaveLength(2);
+    expect(next.encounterDiscards.america).toEqual([]);
+  });
+  it("refuses a deck whose discard is empty too", () => {
+    const s = encounters();
+    const empty: GameState = { ...s, decks: { ...s.decks, encounters: { ...s.decks.encounters, america: [] } } };
+    expect(() => drawEncounter(empty, content, "america")).toThrow(/america deck and its discard are empty/);
+  });
+  it("lands the expedition token on the rebuilt deck's top card", () => {
+    const s = { ...encounters(), activeExpedition: "buenos-aires" };
+    const [last, ...rest] = s.decks.encounters.expedition!;
+    const thin: GameState = { ...s, decks: { ...s.decks, encounters: { ...s.decks.encounters, expedition: [last!] } }, encounterDiscards: { expedition: rest } };
+    const next = finishEncounter(drawEncounter(thin, content, "expedition"), content);
+    expect(next.decks.encounters.expedition).toHaveLength(rest.length);
+    expect(next.encounterDiscards.expedition).toEqual([last]);
+    const top = set.encounterDecks.find((d) => d.id === "expedition")!.cards.find((c) => c.id === next.decks.encounters.expedition![0])!;
+    expect(board.spaces.find((sp) => sp.id === next.activeExpedition)!.name.en).toBe(top.name.replace(/ - \d+$/, ""));
+  });
   it("refuses a second draw", () => {
     const s = drawEncounter(encounters(), content, "america");
     expect(() => drawEncounter(s, content, "general")).toThrow(/one encounter/);

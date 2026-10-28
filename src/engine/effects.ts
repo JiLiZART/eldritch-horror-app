@@ -70,9 +70,18 @@ export function closeGate(state: GameState, content: Content, id: string): GameS
   return note({ ...replace(state, me), gates: state.gates.filter((s) => s !== me.space), gateDiscard: [me.space, ...state.gateDiscard] }, `${name(content, id)} closes the gate on ${spaceName(content, me.space)}`);
 }
 
+/** An empty asset or artifact deck takes its shuffled discard at once (manual p.4). */
+function replenish(state: GameState, deck: Deck): GameState {
+  const pile = deck === "asset" ? "assetDiscard" : deck === "artifact" ? "artifactDiscard" : undefined;
+  if (pile === undefined || state.decks[deck].length > 0 || state[pile].length === 0) return state;
+  const { items, rolls } = reshuffle(state, state[pile]);
+  return { ...state, rolls, decks: { ...state.decks, [deck]: items }, [pile]: [] };
+}
+
 /** By name when given; else the top card, or the bottom of a double-sided deck (manual p.4). Spells and conditions are never duplicated. */
-export function gainCard(state: GameState, content: Content, id: string, deck: Deck, cardName?: string): GameState {
-  const me = subject(state, id);
+export function gainCard(start: GameState, content: Content, id: string, deck: Deck, cardName?: string): GameState {
+  const me = subject(start, id);
+  const state = replenish(start, deck);
   const cards = state.decks[deck];
   const title = (cardId: string) => content.set.cards.find((c) => c.id === cardId)?.name;
   const at = cardName === undefined ? (DOUBLE_SIDED.includes(deck) ? cards.length - 1 : 0) : cards.findIndex((c) => title(c) === cardName);

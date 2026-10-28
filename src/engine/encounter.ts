@@ -149,7 +149,21 @@ function allowed(state: GameState, { board }: Content, space: string, deck: stri
   return `no encounter deck ${deck}`;
 }
 
-/** Draws the top card of an allowed deck once the space holds no monster (manual p.3). */
+const cardsOf = (state: GameState, deck: string) => (deck === "research" ? state.decks.research : state.decks.encounters[deck]!);
+const withCards = (state: GameState, deck: string, cards: string[]): GameState => ({
+  ...state,
+  decks: deck === "research" ? { ...state.decks, research: cards } : { ...state.decks, encounters: { ...state.decks.encounters, [deck]: cards } },
+});
+
+/** An empty deck takes its shuffled discard at once (manual p.4); the mythos deck never does. */
+function replenish(state: GameState, deck: string): GameState {
+  const discard = state.encounterDiscards[deck] ?? [];
+  if (cardsOf(state, deck).length > 0 || discard.length === 0) return state;
+  const { items, rolls } = reshuffle(state, discard);
+  return { ...withCards(state, deck, items), rolls, encounterDiscards: { ...state.encounterDiscards, [deck]: [] } };
+}
+
+/** Draws the top card of an allowed deck once the space holds no monster (manual p.3), rebuilding the deck when it runs out. */
 export function drawEncounter(state: GameState, content: Content, deck: string): GameState {
   const phase = encounterPhase(state);
   const me = active(state);
@@ -158,10 +172,11 @@ export function drawEncounter(state: GameState, content: Content, deck: string):
   if (phase.card) throw new Error("an investigator resolves one encounter");
   const refusal = allowed(state, content, me.space, deck);
   if (refusal) throw new Error(refusal);
-  const [card, ...rest] = deck === "research" ? state.decks.research : state.decks.encounters[deck]!;
-  if (card === undefined) throw new Error(`the ${deck} deck is empty`);
-  const decks = deck === "research" ? { ...state.decks, research: rest } : { ...state.decks, encounters: { ...state.decks.encounters, [deck]: rest } };
-  return log({ ...state, decks, phase: { ...phase, card: { deck, id: card } } }, `draws from the ${deck} deck: the card text is left to the players`);
+  const full = replenish(state, deck);
+  const [card, ...rest] = cardsOf(full, deck);
+  if (card === undefined) throw new Error(`the ${deck} deck and its discard are empty`);
+  const drawn = replenish(withCards(full, deck, rest), deck);
+  return log({ ...drawn, phase: { ...phase, card: { deck, id: card } } }, `draws from the ${deck} deck: the card text is left to the players`);
 }
 
 /** Discards the drawn card and passes to the next seat once every monster on the space was fought; after the last the Mythos phase draws its card. */
