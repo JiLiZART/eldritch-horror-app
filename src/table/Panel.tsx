@@ -6,7 +6,7 @@ import type { GameState, JournalEntry } from "../engine/types";
 import { Glossary } from "./Glossary";
 import { useSpaceName, useT } from "./lang";
 import type { Piece, Translate } from "./pieces";
-import { BOARD_SETS, PATH_COLORS } from "./sets";
+import { BOARD_SETS, PATH_COLORS, pathTypes } from "./sets";
 
 interface PanelProps {
   board: Board;
@@ -74,9 +74,9 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
       </fieldset>
       <fieldset>
         <legend>{t("panel.paths")}</legend>
-        {Object.entries(PATH_COLORS).map(([type, color]) => (
+        {pathTypes(shownBoard.paths).map((type) => (
           <span key={type} className="swatch">
-            <i style={{ background: color }} /> {t(`path.${type}`)}
+            <i style={{ background: PATH_COLORS[type] }} /> {t(`path.${type}`)}
           </span>
         ))}
       </fieldset>
