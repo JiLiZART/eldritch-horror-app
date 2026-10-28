@@ -6,7 +6,7 @@ Show the board data on an interactive table so the graph can be inspected by eye
 ## Requirements
 
 ### Requirement: The board is shown on a table
-When the app opens, the board texture SHALL be visible on a flat table seen from above, keeping the source aspect ratio, and the player SHALL be able to pan and zoom the view without rotating it under the table. The view SHALL stay within the table, which is the board alone without a game and the board with the tableau beside it during one, so zooming out fully shows the whole table and panning stops at its edges.
+When the app opens, the board texture SHALL be visible on a flat table seen from above, keeping the source aspect ratio, and the player SHALL be able to pan and zoom the view without rotating it under the table. The view SHALL stay within the table, which is the board alone without a game and the board with the tableau beside it during one, so zooming out fully shows the whole table and panning stops at its edges; the table SHALL carry a small margin around its contents, so a card at its edge can be centred when brought up to read.
 
 #### Scenario: First open
 - **WHEN** the app loads
@@ -23,6 +23,10 @@ When the app opens, the board texture SHALL be visible on a flat table seen from
 #### Scenario: Panning stops at the edge
 - **WHEN** the player drags the table far past its edge
 - **THEN** the view stops with the table's edge at the edge of the view
+
+#### Scenario: Edge card centred
+- **WHEN** the player brings up the first held card under the leftmost sheet
+- **THEN** the card sits clear of the view's edges, with table margin around it
 
 ### Requirement: Spaces and paths are drawn from the board data
 Every active space SHALL be marked at its coordinates on the texture and every active path SHALL be drawn between its two spaces, coloured by type (train, ship, uncharted, local), matching `inspired/All_boards.jpg` and the `board-graph` capability.
