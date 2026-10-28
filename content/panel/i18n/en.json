@@ -257,5 +257,8 @@
   "panel.filterSpaces": "Filter spaces",
   "game.rename": "Name",
   "game.hidePanel": "Hide panel",
-  "game.showPanel": "Show panel"
+  "game.showPanel": "Show panel",
+  "track.doom": "Doom {doom}",
+  "track.omen": "Omen: {omen}, {count} eldritch",
+  "track.eldritch": "Eldritch token on the {omen} omen space"
 }

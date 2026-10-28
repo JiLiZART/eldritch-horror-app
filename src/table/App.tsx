@@ -2,6 +2,7 @@ import { use, useEffect, useMemo, useRef, useState } from "react";
 import { activeGraph } from "../content/board";
 import { content } from "../content/client";
 import { travel } from "../engine/actions";
+import { OMEN_TRACK } from "../engine/omen";
 import { setupGame } from "../engine/setup";
 import type { Lang } from "../content/types";
 import type { GameState, SetupOptions } from "../engine/types";
@@ -216,7 +217,7 @@ export function App() {
         </button>
       )}
       <main className="table">
-        <Table board={board} labels={labels} strings={strings[lang]} pieces={pieces} tracks={game.state && { doom: game.state.doom, omen: game.state.omen, eldritch: [...game.state.eldritchOnOmen], reserve: game.state.reserve.map((id) => face(id, true)).filter(known) }} tableau={tableau} sheets={sheets} fit={fit} focus={cardFocus} enabled={enabled} selected={selectedSpace?.id} route={route} onSelect={select} reducedMotion={reducedMotion} />
+        <Table board={board} labels={labels} strings={strings[lang]} pieces={pieces} tracks={game.state && { doom: game.state.doom, omen: game.state.omen, eldritch: [...game.state.eldritchOnOmen], reserve: game.state.reserve.map((id) => face(id, true)).filter(known), labels: { doom: t("track.doom", { doom: game.state.doom }), omen: t("track.omen", { omen: t(`omen.${OMEN_TRACK[game.state.omen]}`), count: game.state.eldritchOnOmen[game.state.omen] ?? 0 }), eldritch: OMEN_TRACK.map((c) => t("track.eldritch", { omen: t(`omen.${c}`) })) } }} tableau={tableau} sheets={sheets} fit={fit} focus={cardFocus} enabled={enabled} selected={selectedSpace?.id} route={route} onSelect={select} reducedMotion={reducedMotion} />
       </main>
       {!panelHidden && <Panel board={board} set={set} lang={lang} onLang={chooseLang} state={game.state} pieces={pieces} spaces={spaces} enabled={enabled} onToggle={toggle} selected={selectedSpace} onSelect={select} onHidePanel={() => showPanel(false)} onFocusCard={focusCard}>
         <NewGame

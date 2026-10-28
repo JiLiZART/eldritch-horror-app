@@ -25,7 +25,7 @@ export interface TableProps {
   /** Pieces grouped by space id; empty when no game is in progress. */
   pieces: Map<string, Piece[]>;
   /** The doom value, the omen index and the eldritch tokens per omen space; undefined without a game (track-tokens D3). */
-  tracks?: { doom: number; omen: number; eldritch: number[]; reserve: CardFace[] };
+  tracks?: { doom: number; omen: number; eldritch: number[]; reserve: CardFace[]; labels: { doom: string; omen: string; eldritch: string[] } };
   /** The Ancient One's card faces beside the board: the sheet, the current mystery and the ongoing mythos cards (tableau D2). */
   tableau?: { sheet: CardFace; mystery?: CardFace; mythos: CardFace[]; tokens: number };
   /** The investigators' sheet faces in seat order, below the board, each with the cards held under it (held-cards D2). */
@@ -319,23 +319,33 @@ const TOKENS = "cards/eh01/tokens";
 /** The doom and omen tokens on their printed tracks, with the eldritch tokens fanned beside their omen space (design D3). */
 function Tracks({ board, tracks }: { board: Board; tracks: NonNullable<TableProps["tracks"]> }) {
   const [doom, omen, eldritch] = useTexture([`/${TOKENS}/doom-token.webp`, `/${TOKENS}/omen-token.webp`, `/${TOKENS}/eldritch-token.webp`], srgb);
-  const token = (map: Texture, [x, y]: [number, number], size: number, key: string, z = 0.06) => (
-    <Billboard key={key} position={[x, y, z]}>
-      <mesh>
+  return (
+    <>
+      <TrackToken map={doom!} position={doomPosition(board, tracks.doom)} size={0.3} label={tracks.labels.doom} />
+      <TrackToken map={omen!} position={omenPosition(board, tracks.omen)} size={0.3} z={0.07} label={tracks.labels.omen} />
+      {tracks.eldritch.flatMap((count, i) => {
+        const [x, y] = omenPosition(board, i);
+        return spreadOnCircle(count, 0.14).map(([dx, dy], k) => <TrackToken key={`eldritch-${i}-${k}`} map={eldritch!} position={[x + dx, y + dy]} size={0.16} z={0.08 + k * 0.001} label={tracks.labels.eldritch[i] ?? ""} />);
+      })}
+    </>
+  );
+}
+
+/** A token on a printed track, naming itself while the pointer rests on it (track-hover D2). */
+function TrackToken({ map, position: [x, y], size, z = 0.06, label }: { map: Texture; position: [number, number]; size: number; z?: number; label: string }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <Billboard position={[x, y, z]}>
+      <mesh onPointerOver={() => setHovered(true)} onPointerOut={() => setHovered(false)}>
         <planeGeometry args={[size, size]} />
         <meshBasicMaterial map={map} transparent alphaTest={0.5} />
       </mesh>
+      {hovered && (
+        <Html position={[0, size / 2 + 0.05, 0]} center style={{ pointerEvents: "none" }}>
+          <span className="piece-label">{label}</span>
+        </Html>
+      )}
     </Billboard>
-  );
-  return (
-    <>
-      {token(doom!, doomPosition(board, tracks.doom), 0.3, "doom")}
-      {token(omen!, omenPosition(board, tracks.omen), 0.3, "omen", 0.07)}
-      {tracks.eldritch.flatMap((count, i) => {
-        const [x, y] = omenPosition(board, i);
-        return spreadOnCircle(count, 0.14).map(([dx, dy], k) => token(eldritch!, [x + dx, y + dy], 0.16, `eldritch-${i}-${k}`, 0.08 + k * 0.001));
-      })}
-    </>
   );
 }
 

@@ -257,5 +257,8 @@
   "panel.filterSpaces": "Поиск локации",
   "game.rename": "Название",
   "game.hidePanel": "Скрыть панель",
-  "game.showPanel": "Показать панель"
+  "game.showPanel": "Показать панель",
+  "track.doom": "Рок {doom}",
+  "track.omen": "Знамение: {omen}, Древних: {count}",
+  "track.eldritch": "Жетон Древних на {omen} знамении"
 }
