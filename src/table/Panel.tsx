@@ -2,10 +2,10 @@ import { useState, type ReactNode } from "react";
 import { neighbors } from "../content/board";
 import type { Board, GameSet, Lang, Space } from "../content/types";
 import { OMEN_TRACK } from "../engine/omen";
-import type { GameState } from "../engine/types";
+import type { GameState, JournalEntry } from "../engine/types";
 import { Glossary } from "./Glossary";
 import { useSpaceName, useT } from "./lang";
-import type { Piece } from "./pieces";
+import type { Piece, Translate } from "./pieces";
 import { BOARD_SETS, PATH_COLORS } from "./sets";
 
 interface PanelProps {
@@ -132,11 +132,16 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
   );
 }
 
+/** A journal entry as the Journal and the table's corner phrase it: phase word, investigator, text (table-ticker D1). */
+export function journalLine(entry: JournalEntry, set: GameSet, t: Translate): string {
+  const name = (id: string) => set.investigators.find((i) => i.id === id)?.name ?? id;
+  const text = entry.text.startsWith("component:") ? t("journal.component", { name: set.cards.find((c) => c.id === entry.text.slice(10))?.name ?? name(entry.text.slice(10)) }) : entry.text;
+  return `${t(`journal.${entry.phase}`)}${entry.who ? `, ${name(entry.who)}` : ""}: ${text}`;
+}
+
 /** The game's record beside the board (design D4): folded, grouped by round, oldest first. */
 function Journal({ set, state }: { set: GameSet; state: GameState }) {
   const t = useT();
-  const name = (id: string) => set.investigators.find((i) => i.id === id)?.name ?? id;
-  const text = (line: string) => (line.startsWith("component:") ? t("journal.component", { name: set.cards.find((c) => c.id === line.slice(10))?.name ?? name(line.slice(10)) }) : line);
   const rounds = [...new Set(state.journal.map((e) => e.round))];
   return (
     <details className="journal">
@@ -148,10 +153,7 @@ function Journal({ set, state }: { set: GameSet; state: GameState }) {
             {state.journal
               .filter((e) => e.round === round)
               .map((e, n) => (
-                <li key={n}>
-                  {t(`journal.${e.phase}`)}
-                  {e.who && `, ${name(e.who)}`}: {text(e.text)}
-                </li>
+                <li key={n}>{journalLine(e, set, t)}</li>
               ))}
           </ol>
         </section>

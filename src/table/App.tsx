@@ -10,7 +10,7 @@ import type { GameState, SetupOptions } from "../engine/types";
 import { Encounter } from "./Encounter";
 import { Mythos } from "./Mythos";
 import { NewGame } from "./NewGame";
-import { type FocusCard, Panel } from "./Panel";
+import { type FocusCard, journalLine, Panel } from "./Panel";
 import { LangProvider, translate, useT } from "./lang";
 import { piecesOnSpace } from "./pieces";
 import { fileName, gameKey, loadGame, loadSlots, newSlotId, parseGame, removeGame, renameGame, saveGame, slotName } from "./saved";
@@ -137,11 +137,16 @@ export function App() {
   const t = useMemo(() => (key: string, vars?: Record<string, string | number>) => translate(panel[lang], key, vars), [panel, lang]);
   const activeId = phase?.name === "action" || phase?.name === "encounter" ? phase.active : undefined;
   /** The table's corner line: round, phase and whose turn, or the outcome (table-status-line D1). */
+  const lastEntry = game.state?.journal.at(-1);
   const status = !game.state || !phase
     ? undefined
-    : phase.name === "won" || phase.name === "lost"
-      ? t(phase.name === "won" ? "app.win" : "app.lose")
-      : [t("panel.round", { round: game.state.round }), t(`journal.${phase.name}`), activeId && set.investigators.find((i) => i.id === activeId)?.name].filter(Boolean).join(" · ");
+    : {
+        line:
+          phase.name === "won" || phase.name === "lost"
+            ? t(phase.name === "won" ? "app.win" : "app.lose")
+            : [t("panel.round", { round: game.state.round }), t(`journal.${phase.name}`), activeId && set.investigators.find((i) => i.id === activeId)?.name].filter(Boolean).join(" · "),
+        ...(lastEntry ? { last: journalLine(lastEntry, set, t) } : {}),
+      };
   const picking = route !== undefined;
   useEffect(() => {
     if (!activeId || picking) return;
