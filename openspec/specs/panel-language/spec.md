@@ -6,7 +6,7 @@ Show the panel's own words, the game form, the three phase panels and their cont
 ## Requirements
 
 ### Requirement: The game and phase controls follow the chosen language
-When the board language is Russian, the New game form, the Action, Encounter and Mythos panels, the Acquire Assets form, the dice, the Trade form, the Game section, the panel's section headings, the five card-text groups with their shell, and the Status table SHALL show their labels, headings and notes in Russian, using the glossary's Russian names for rules terms; in English they SHALL read as today. Card names, investigator names, space names and the engine's log lines stay as the content and the engine give them.
+When the board language is Russian, the New game form, the Action, Encounter and Mythos panels, the Acquire Assets form, the dice, the Trade form, the Game section, the panel's section headings, the five card-text groups with their shell, the Status table, and the piece labels (on hover and in the selected space's piece list) SHALL show their labels, headings and notes in Russian, using the glossary's Russian names for rules terms; in English they SHALL read as today. Card names, investigator names, space names and the engine's log lines stay as the content and the engine give them.
 
 #### Scenario: Russian turn panel
 - **WHEN** the board language is Russian and Leo Anderson's Action turn begins
@@ -23,6 +23,10 @@ When the board language is Russian, the New game form, the Action, Encounter and
 #### Scenario: Russian status
 - **WHEN** the board language is Russian during a game
 - **THEN** the status reads Безысходность, Знамение, Памятка, Тайна, Резерв and the investigator table's headers in Russian
+
+#### Scenario: Piece labels in Russian
+- **WHEN** the board language is Russian and the pointer rests on a gate token, then on a monster that has lost 1 health
+- **THEN** the labels read the glossary's Russian word for a gate, and the monster's name with the health lost in Russian
 
 ### Requirement: Both languages hold the same strings
 The two string files SHALL hold the same keys, and every key the panel asks for SHALL exist in both; a missing key SHALL fail the content validation and the tests rather than show at the table.
