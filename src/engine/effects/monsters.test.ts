@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { fight } from "../encounter";
-import { discardMonster, moveMonster, moveMonsterToward } from "../effects";
-import { content, leo, patch, encounters, log, byakhee, cthulhu, withMonster, on } from "./fixture";
+import { discardMonster, monsterSteps, moveMonster, moveMonsterToward } from "../effects";
+import { content, leo, lily, patch, encounters, log, byakhee, cthulhu, withMonster, on } from "./fixture";
 
 describe("a monster is moved by card text", () => {
   it("moves to a named space", () => {
@@ -13,6 +13,13 @@ describe("a monster is moved by card text", () => {
     const s = moveMonsterToward(patch(withMonster(byakhee, "arkham"), leo, { space: "london" }), content, byakhee);
     expect(on(s, byakhee.id)).toEqual(["london"]);
     expect(log(s)).toMatch(/the Byakhee moves to London/);
+  });
+  it("asks the players to choose among tied steps and takes their pick", () => {
+    const tied = patch(patch(withMonster(byakhee, "istanbul"), leo, { space: "london" }), lily, { space: "london" });
+    expect(monsterSteps(tied, content, byakhee)).toEqual(["rome", "space-14"]);
+    expect(() => moveMonsterToward(tied, content, byakhee)).toThrow(/choose the Byakhee's step: Rome, Space 14/);
+    expect(() => moveMonsterToward(tied, content, byakhee, "arkham")).toThrow(/choose the Byakhee's step/);
+    expect(on(moveMonsterToward(tied, content, byakhee, "space-14"), byakhee.id)).toEqual(["space-14"]);
   });
   it("stays when already with an investigator", () => {
     const before = patch(withMonster(byakhee, "london"), leo, { space: "london" });

@@ -15,14 +15,24 @@ export function moveMonster(state: GameState, content: Content, monster: Monster
 }
 
 
-/** 1 space along a shortest route to the nearest standing investigator (EH_reference p.2). Deviation: ties by seat order and board order, not the active investigator's choice. */
-export function moveMonsterToward(state: GameState, content: Content, monster: MonsterInstance): GameState {
-  const { token, label } = monsterOn(state, content, monster);
+/** The neighbours one path closer to any nearest standing investigator, in board order; empty when the monster already shares a space with one (monster-nearest-choice D1). */
+export function monsterSteps(state: GameState, content: Content, monster: MonsterInstance): string[] {
+  const { token } = monsterOn(state, content, monster);
   const standing = state.investigators.filter((i) => !i.defeated);
-  const nearest = standing.reduce((best, i) => (distance(content.board, token.space, i.space) < distance(content.board, token.space, best.space) ? i : best));
-  const far = distance(content.board, token.space, nearest.space);
-  if (far === 0) return note(state, `${label} is already with ${name(content, nearest.id)}`);
-  const step = neighbors(content.board, token.space).find((n) => distance(content.board, n, nearest.space) === far - 1)!;
+  const far = Math.min(...standing.map((i) => distance(content.board, token.space, i.space)));
+  if (far === 0 || !Number.isFinite(far)) return [];
+  const nearest = standing.filter((i) => distance(content.board, token.space, i.space) === far);
+  return neighbors(content.board, token.space).filter((n) => nearest.some((i) => distance(content.board, n, i.space) === far - 1));
+}
+
+/** 1 space along a shortest route to the nearest standing investigator; among tied steps the players choose, as the active investigator does at the table (EH_reference p.2; monster-nearest-choice D2). */
+export function moveMonsterToward(state: GameState, content: Content, monster: MonsterInstance, chosen?: string): GameState {
+  const { token, label } = monsterOn(state, content, monster);
+  const together = state.investigators.find((i) => !i.defeated && i.space === token.space);
+  if (together) return note(state, `${label} is already with ${name(content, together.id)}`);
+  const steps = monsterSteps(state, content, monster);
+  const step = steps.length === 1 ? steps[0]! : chosen && steps.includes(chosen) ? chosen : undefined;
+  if (step === undefined) throw new Error(`choose ${label}'s step: ${steps.map((s) => spaceName(content, s)).join(", ")}`);
   return moveMonster(state, content, monster, step);
 }
 

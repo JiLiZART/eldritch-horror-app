@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Board, GameSet } from "../../content/types";
-import { discardMonster, moveMonster, moveMonsterToward } from "../../engine/effects";
+import { discardMonster, monsterSteps, moveMonster, moveMonsterToward } from "../../engine/effects";
 import { monsterKey } from "../../engine/encounter";
 import type { GameState, InvestigatorState } from "../../engine/types";
 import { useSpaceName, useT } from "../lang";
@@ -25,6 +25,9 @@ export function MonstersEffects({ board, set, state, space, onAct }: Props) {
   const t = useT();
   const spaceName = useSpaceName();
   const chosen = state.monsters.find((m) => monsterKey(m) === monster) ?? state.monsters[0];
+  /** The players' pick among tied steps toward the nearest investigator (monster-nearest-choice D3). */
+  const [step, setStep] = useState("");
+  const steps = chosen ? monsterSteps(state, content, chosen) : [];
   return (
     <>
       {!chosen && <p>{t("effects.noMonster")}</p>}
@@ -43,7 +46,17 @@ export function MonstersEffects({ board, set, state, space, onAct }: Props) {
           <button type="button" onClick={() => onAct((s) => moveMonster(s, content, chosen, space))}>
             {t("effects.moveToSpace", { space: spaceName(board, space) })}
           </button>
-          <button type="button" onClick={() => onAct((s) => moveMonsterToward(s, content, chosen))}>
+          {steps.length > 1 && (
+            <select value={step} onChange={(e) => setStep(e.target.value)}>
+              <option value="">{t("effects.choose")}</option>
+              {steps.map((id) => (
+                <option key={id} value={id}>
+                  {spaceName(board, id)}
+                </option>
+              ))}
+            </select>
+          )}{" "}
+          <button type="button" onClick={() => onAct((s) => moveMonsterToward(s, content, chosen, step || undefined))}>
             {t("effects.towardNearest")}
           </button>
           <button type="button" onClick={() => onAct((s) => discardMonster(s, content, chosen))}>
