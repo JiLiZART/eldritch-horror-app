@@ -136,7 +136,7 @@ During the Encounter phase and after the mythos card is resolved the players SHA
 - **THEN** its back is shown in place of the face
 
 ### Requirement: An investigator is moved by card text
-In the Encounter and Mythos phases a standing investigator SHALL be moved to any space the players name, without spending a ticket or an action; an unknown space SHALL be refused naming it. A move to a random space SHALL take the space printed on the top clue token of the pool, that token going to the clue discard, the discard being shuffled into an empty pool first; with no clue token anywhere the move SHALL be refused saying the lead investigator chooses the space instead. A move to the nearest space of a kind, or to the nearest space holding a gate or a clue, SHALL take the matching space at the smallest number of paths from the investigator, their own space counting first when it matches; with no matching space the move SHALL be refused naming what was sought. Among several nearest spaces the players SHALL choose which, as the active investigator does at the table; a choice that is not one of the nearest SHALL be refused naming the nearest spaces; with one nearest space no choice is asked.
+In the Encounter and Mythos phases a standing investigator SHALL be moved to any space the players name, without spending a ticket or an action; an unknown space SHALL be refused naming it. A move to a random space SHALL take the space printed on the top clue token of the pool, that token going to the clue discard, the discard being shuffled into an empty pool first; with no clue token anywhere the lead investigator SHALL choose the space: the move takes the space the players name and, given none, SHALL be refused saying the lead investigator chooses. A move to the nearest space of a kind, or to the nearest space holding a gate or a clue, SHALL take the matching space at the smallest number of paths from the investigator, their own space counting first when it matches; with no matching space the move SHALL be refused naming what was sought. Among several nearest spaces the players SHALL choose which, as the active investigator does at the table; a choice that is not one of the nearest SHALL be refused naming the nearest spaces; with one nearest space no choice is asked.
 
 #### Scenario: Moved
 - **WHEN** Leo Anderson on Buenos Aires is moved to Arkham by card text
@@ -173,6 +173,10 @@ In the Encounter and Mythos phases a standing investigator SHALL be moved to any
 #### Scenario: A tie among nearest spaces
 - **WHEN** Leo Anderson is moved to the nearest city from a space with two cities equally near
 - **THEN** the move waits for the players to name one of the two, takes the named city, and refuses any other space naming both nearest cities
+
+#### Scenario: The lead chooses when no clue token is left
+- **WHEN** the clue pool and the clue discard are empty and Leo Anderson is moved to a random space with Tokyo named
+- **THEN** he moves to Tokyo; without a named space the move is refused saying the lead investigator chooses
 
 ### Requirement: A monster is moved by card text
 In the Encounter and Mythos phases a monster on the board SHALL be moved to any space the players name, or 1 space toward the nearest standing investigator along a shortest route; a monster already on a space with a standing investigator SHALL stay where it is. A monster not on the board or an unknown space SHALL be refused naming it. The log SHALL say where the monster moves. When several investigators are equally near, or several neighbouring spaces each start a shortest route, the players SHALL choose the step among those spaces, as the active investigator does at the table; a step that is not on a shortest route to a nearest investigator SHALL be refused naming the spaces that are; with one such space no choice is asked. **Deviation**: moving an epic monster is the players' call.
