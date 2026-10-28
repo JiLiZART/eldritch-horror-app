@@ -167,7 +167,16 @@ export function App() {
         line:
           phase.name === "won" || phase.name === "lost"
             ? t(phase.name === "won" ? "app.win" : "app.lose")
-            : [t("panel.round", { round: game.state.round }), t(`journal.${phase.name}`), activeId && set.investigators.find((i) => i.id === activeId)?.name].filter(Boolean).join(" · "),
+            : [
+                t("panel.round", { round: game.state.round }),
+                t(`journal.${phase.name}`),
+                activeId && set.investigators.find((i) => i.id === activeId)?.name,
+                // Doom and the omen for a far screen (table-status-tracks D1).
+                t("track.doom", { doom: game.state.doom }),
+                t("track.omen", { omen: t(`omen.${OMEN_TRACK[game.state.omen]}`), count: game.state.eldritchOnOmen[game.state.omen] ?? 0 }),
+              ]
+                .filter(Boolean)
+                .join(" · "),
         ...(lastEntry ? { last: journalLine(lastEntry, set, t) } : {}),
         ...(openRoll ? { dice: t("table.roll", { name: set.investigators.find((i) => i.id === openRoll.investigator)?.name ?? openRoll.investigator, dice: openRoll.dice.map((d) => (d >= 5 ? `[${d}]` : `${d}`)).join(" ") }) } : {}),
       };
