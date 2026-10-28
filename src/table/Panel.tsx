@@ -142,18 +142,22 @@ export function journalLine(entry: JournalEntry, set: GameSet, t: Translate): st
 /** The game's record beside the board (design D4): folded, grouped by round, oldest first. */
 function Journal({ set, state }: { set: GameSet; state: GameState }) {
   const t = useT();
-  const rounds = [...new Set(state.journal.map((e) => e.round))];
+  /** Text narrowing the lines across every round (journal-filter D1). */
+  const [filter, setFilter] = useState("");
+  const lines = state.journal.map((e) => ({ round: e.round, text: journalLine(e, set, t) })).filter((l) => l.text.toLocaleLowerCase().includes(filter.toLocaleLowerCase()));
+  const rounds = [...new Set(lines.map((l) => l.round))];
   return (
     <details className="journal">
       <summary>{t("panel.journal", { count: state.journal.length })}</summary>
+      <input type="search" aria-label={t("panel.filterJournal")} placeholder={t("panel.filterJournal")} value={filter} onChange={(e) => setFilter(e.target.value)} />
       {rounds.map((round) => (
         <section key={round}>
           <h3>{t("panel.round", { round })}</h3>
           <ol>
-            {state.journal
-              .filter((e) => e.round === round)
-              .map((e, n) => (
-                <li key={n}>{journalLine(e, set, t)}</li>
+            {lines
+              .filter((l) => l.round === round)
+              .map((l, n) => (
+                <li key={n}>{l.text}</li>
               ))}
           </ol>
         </section>
