@@ -24,7 +24,8 @@ interface PanelProps {
   children?: ReactNode;
 }
 
-const SET_NAMES: Record<string, string> = { eh01: "Core", ...Object.fromEntries(BOARD_SETS.map((s) => [s.id, s.name])) };
+/** Board set names beyond the core set, as the content names them; the core set's name is a panel string (deck-names-language D1). */
+const SET_NAMES: Record<string, string> = Object.fromEntries(BOARD_SETS.map((s) => [s.id, s.name]));
 
 export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled, onToggle, selected, onSelect, children }: PanelProps) {
   const t = useT();
@@ -47,7 +48,7 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
       <fieldset>
         <legend>{t("panel.sets")}</legend>
         <label>
-          <input type="checkbox" checked disabled /> Core
+          <input type="checkbox" checked disabled /> {t("set.eh01")}
         </label>
         {BOARD_SETS.map((s) => (
           <label key={s.id}>
@@ -78,7 +79,7 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
             <dt>{t("space.region")}</dt>
             <dd>{selected.region ?? t("space.none")}</dd>
             <dt>{t("space.set")}</dt>
-            <dd>{SET_NAMES[selected.set]}</dd>
+            <dd>{selected.set === "eh01" ? t("set.eh01") : SET_NAMES[selected.set]}</dd>
             <dt>{t("space.pieces")}</dt>
             <dd>{pieces.get(selected.id)?.map((p) => p.label).join(", ") ?? t("space.none")}</dd>
             <dt>{t("space.neighbours")}</dt>
@@ -153,7 +154,7 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
   const cardName = (id: string) => set.cards.find((c) => c.id === id)?.name ?? id;
   const spaceName = (id: string) => board.spaces.find((s) => s.id === id)?.name.en ?? id;
   const { encounters, ...decks } = state.decks;
-  const sizes = Object.entries({ ...decks, ...encounters, "monster cup": state.monsterCup, "set aside": state.setAsideMonsters, "gate stack": state.gateStack, "clue pool": state.cluePool });
+  const sizes = Object.entries({ ...decks, ...encounters, monsterCup: state.monsterCup, setAside: state.setAsideMonsters, gateStack: state.gateStack, cluePool: state.cluePool });
   const ongoing = state.ongoingMythos.map((id) => set.mythos.find((m) => m.id === id)).filter((m) => m !== undefined);
   return (
     <section className="status">
@@ -198,7 +199,7 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
           ))}
         </dd>
         <dt>{t("status.decks")}</dt>
-        <dd>{sizes.map(([name, cards]) => `${name} ${cards.length}`).join(", ")}</dd>
+        <dd>{sizes.map(([name, cards]) => `${t(`deck.${name}`)} ${cards.length}`).join(", ")}</dd>
       </dl>
       <table>
         <thead>

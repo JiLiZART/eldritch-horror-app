@@ -229,5 +229,21 @@
   "journal.action": "Action",
   "journal.encounter": "Encounter",
   "journal.mythos": "Mythos",
-  "journal.component": "component action: {name}"
+  "journal.component": "component action: {name}",
+  "deck.unique-asset": "unique asset",
+  "deck.mythos": "mythos",
+  "deck.mystery": "mystery",
+  "deck.research": "research",
+  "deck.special": "special",
+  "deck.america": "america",
+  "deck.europe": "europe",
+  "deck.asia": "asia",
+  "deck.general": "general",
+  "deck.other-world": "other world",
+  "deck.expedition": "expedition",
+  "deck.monsterCup": "monster cup",
+  "deck.setAside": "set aside",
+  "deck.gateStack": "gate stack",
+  "deck.cluePool": "clue pool",
+  "set.eh01": "Core"
 }
