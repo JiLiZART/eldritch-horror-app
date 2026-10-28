@@ -11,6 +11,8 @@ export interface Piece {
   label: string;
   /** A pawn laid on its side: the investigator is delayed or defeated (manual p.4). */
   lying?: true;
+  /** A monster's health lost, marked with a health token on it (manual p.3; monster-damage D1). */
+  damage?: number;
 }
 
 const byId = <T extends { id: string }>(list: T[], id: string): T => {
@@ -34,7 +36,7 @@ export function piecesOnSpace(state: GameState | undefined, set: GameSet): Map<s
   }
   for (const m of state.monsters) {
     const monster = byId(set.monsters, m.id);
-    add(m.space, { kind: "monster", id: `${m.id}#${m.instance}`, image: monster.images.front, label: m.health > 0 ? `${monster.name} (${m.health} health lost)` : monster.name });
+    add(m.space, { kind: "monster", id: `${m.id}#${m.instance}`, image: monster.images.front, label: m.health > 0 ? `${monster.name} (${m.health} health lost)` : monster.name, ...(m.health > 0 ? { damage: m.health } : {}) });
   }
   for (const i of state.investigators) {
     if (i.defeated === "devoured" || i.removed) continue;

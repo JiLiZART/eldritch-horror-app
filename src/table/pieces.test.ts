@@ -35,6 +35,13 @@ describe("piecesOnSpace", () => {
     expect(ofKind("clue")[0]?.image).toBe("cards/eh01/tokens/clues/clues-back.webp");
     expect(pieces.get(state.activeExpedition)?.some((p) => p.kind === "expedition" && p.image === "cards/eh01/tokens/active-expedition-token.webp")).toBe(true);
   });
+  it("marks a wounded monster's health lost and leaves an unhurt one unmarked", () => {
+    const [m] = state.monsters;
+    const wounded = piecesOnSpace({ ...state, monsters: [{ ...m!, health: 2 }] }, set);
+    const [piece] = [...wounded.values()].flat().filter((p) => p.kind === "monster");
+    expect(piece?.damage).toBe(2);
+    expect(ofKind("monster")[0]?.damage).toBeUndefined();
+  });
   it("names monsters and investigators after their content entries", () => {
     const [m] = state.monsters;
     const monster = set.monsters.find((x) => x.id === m!.id)!;

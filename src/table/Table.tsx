@@ -203,7 +203,8 @@ const SIZE: Record<PieceKind, [width: number, height: number]> = {
 };
 
 function Pieces({ pieces, at }: { pieces: Map<string, Piece[]>; at: Map<string, [number, number]> }) {
-  const images = useMemo(() => [...new Set([...pieces.values()].flat().map((p) => p.image))], [pieces]);
+  const damageToken = (n: number) => `${TOKENS}/health/health-0${Math.min(9, n)}.webp`;
+  const images = useMemo(() => [...new Set([...pieces.values()].flat().flatMap((p) => (p.damage ? [p.image, damageToken(p.damage)] : [p.image])))], [pieces]);
   const textures = useTexture(images.map((i) => `/${i}`), srgb);
   const textureOf = new Map(images.map((img, i) => [img, textures[i]]));
   /** The piece under the pointer, whose label floats beside it (piece-hover D1). */
@@ -226,6 +227,12 @@ function Pieces({ pieces, at }: { pieces: Map<string, Piece[]>; at: Map<string, 
                 <planeGeometry args={[w, h]} />
                 <meshBasicMaterial map={textureOf.get(p.image)} transparent alphaTest={0.5} />
               </mesh>
+              {p.damage && (
+                <mesh position={[0.08, -0.08, 0.002]}>
+                  <planeGeometry args={[0.14, (0.14 * 386) / 365]} />
+                  <meshBasicMaterial map={textureOf.get(damageToken(p.damage))} transparent alphaTest={0.5} />
+                </mesh>
+              )}
               {hovered === p.id && (
                 <Html position={[0, half + 0.05, 0]} center style={{ pointerEvents: "none" }}>
                   <span className="piece-label">{p.label}</span>
