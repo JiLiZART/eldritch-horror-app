@@ -86,6 +86,22 @@ function check(s: GameState, ref: ReturnType<typeof reference>, where: string, p
   expect(s.round, `${where}: round`).toBe(prev.phase.name === "mythos" && s.phase.name === "action" ? prev.round + 1 : prev.round);
   if (prev.phase.name === "mythos" && s.phase.name === "action") expect(s.usedComponents, `${where}: used components at the round start`).toEqual([]);
   for (const i of s.investigators) if (i.replacedBy) expect(seated(i.replacedBy), `${where}: replacement ${i.replacedBy}`).toBeDefined();
+  // Each investigator's own numbers stay within the rules (manual p.3–4; fuzz-bounds D1).
+  const spaces = new Set(board.spaces.map((x) => x.id));
+  for (const i of s.investigators) {
+    const printed = set.investigators.find((x) => x.id === i.id)!;
+    expect(i.health, `${where}: ${i.id} health`).toBeGreaterThanOrEqual(0);
+    expect(i.health, `${where}: ${i.id} health`).toBeLessThanOrEqual(printed.health);
+    expect(i.sanity, `${where}: ${i.id} sanity`).toBeGreaterThanOrEqual(0);
+    expect(i.sanity, `${where}: ${i.id} sanity`).toBeLessThanOrEqual(printed.sanity);
+    expect(i.clues, `${where}: ${i.id} clues`).toBeGreaterThanOrEqual(0);
+    expect(i.tickets.length, `${where}: ${i.id} tickets`).toBeLessThanOrEqual(2);
+    for (const [skill, level] of Object.entries(i.improvements)) expect([1, 2], `${where}: ${i.id} ${skill} improvement`).toContain(level);
+    expect(spaces.has(i.space), `${where}: ${i.id} on ${i.space}`).toBe(true);
+    if (i.defeated === "health") expect(i.health, `${where}: ${i.id} defeated by health`).toBe(0);
+    if (i.defeated === "sanity") expect(i.sanity, `${where}: ${i.id} defeated by sanity`).toBe(0);
+  }
+  for (const m of s.monsters) expect(spaces.has(m.space), `${where}: monster ${m.id} on ${m.space}`).toBe(true);
 }
 
 /** Candidate steps for the state, each closing over random picks. */
