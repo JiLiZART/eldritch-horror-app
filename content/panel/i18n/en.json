@@ -216,5 +216,14 @@
   "piece.lead": "Lead investigator",
   "piece.monsterHurt": "{name} ({count} health lost)",
   "piece.delayed": "{name} (delayed)",
-  "piece.defeated": "{name} (defeated)"
+  "piece.defeated": "{name} (defeated)",
+  "space.id": "Id",
+  "space.name": "Name",
+  "space.kind": "Kind",
+  "space.region": "Region",
+  "space.set": "Set",
+  "space.pieces": "Pieces",
+  "space.neighbours": "Neighbours",
+  "space.none": "none",
+  "space.pick": "Click a marker or pick a space below."
 }

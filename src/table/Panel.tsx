@@ -67,21 +67,21 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
         <h2>{t("panel.selectedSpace")}</h2>
         {selected ? (
           <dl>
-            <dt>Id</dt>
+            <dt>{t("space.id")}</dt>
             <dd>{selected.id}</dd>
-            <dt>Name</dt>
+            <dt>{t("space.name")}</dt>
             <dd>
               {selected.name.en} / {selected.name.ru}
             </dd>
-            <dt>Kind</dt>
+            <dt>{t("space.kind")}</dt>
             <dd>{selected.kind}</dd>
-            <dt>Region</dt>
-            <dd>{selected.region ?? "none"}</dd>
-            <dt>Set</dt>
+            <dt>{t("space.region")}</dt>
+            <dd>{selected.region ?? t("space.none")}</dd>
+            <dt>{t("space.set")}</dt>
             <dd>{SET_NAMES[selected.set]}</dd>
-            <dt>Pieces</dt>
-            <dd>{pieces.get(selected.id)?.map((p) => p.label).join(", ") ?? "none"}</dd>
-            <dt>Neighbours</dt>
+            <dt>{t("space.pieces")}</dt>
+            <dd>{pieces.get(selected.id)?.map((p) => p.label).join(", ") ?? t("space.none")}</dd>
+            <dt>{t("space.neighbours")}</dt>
             <dd>
               <ul>
                 {neighbors(board, selected.id).map((n) => (
@@ -96,7 +96,7 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
             </dd>
           </dl>
         ) : (
-          <p>Click a marker or pick a space below.</p>
+          <p>{t("space.pick")}</p>
         )}
       </section>
       <section>

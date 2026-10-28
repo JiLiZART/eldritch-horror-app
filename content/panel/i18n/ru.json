@@ -216,5 +216,14 @@
   "piece.lead": "Ведущий сыщик",
   "piece.monsterHurt": "{name} (потеряно {count} здоровья)",
   "piece.delayed": "{name} (задержан)",
-  "piece.defeated": "{name} (побеждён)"
+  "piece.defeated": "{name} (побеждён)",
+  "space.id": "Id",
+  "space.name": "Название",
+  "space.kind": "Тип",
+  "space.region": "Регион",
+  "space.set": "Набор",
+  "space.pieces": "Фишки",
+  "space.neighbours": "Соседи",
+  "space.none": "нет",
+  "space.pick": "Нажмите на маркер или выберите локацию ниже."
 }
