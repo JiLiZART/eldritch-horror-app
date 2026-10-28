@@ -9,6 +9,7 @@ import type { Ticket } from "../engine/types";
 import { BoardText } from "./BoardText";
 import { BOARD_WIDTH, HELD, SHEET, TABLEAU_ROWS, boardSize, boardToWorld, doomPosition, encounterPosition, heldPosition, omenPosition, reservePosition, sheetPosition, spreadOnCircle, tableExtent, tableauPosition } from "./geometry";
 import type { Piece, PieceKind } from "./pieces";
+import { badgeEvents } from "./badge";
 import { PATH_COLORS } from "./sets";
 
 /** A card face on the table: its image under public/ and the name its hover badge shows (card-hover D1). */
@@ -281,6 +282,8 @@ function Pieces({ pieces, at, onSelect }: { pieces: Map<string, Piece[]>; at: Ma
   const textureOf = new Map(images.map((img, i) => [img, textures[i]]));
   /** The piece under the pointer, whose label floats beside it (piece-hover D1). */
   const [hovered, setHovered] = useState<string>();
+  /** The badge rule for the piece under the pointer; `true` is set by the piece's own handler (touch-badges D1). */
+  const badge = useMemo(() => badgeEvents((shown) => !shown && setHovered(undefined)), []);
   return (
     <>
       {[...pieces].flatMap(([space, list]) => {
@@ -305,8 +308,15 @@ function Pieces({ pieces, at, onSelect }: { pieces: Map<string, Piece[]>; at: Ma
               {/* A lying pawn turns a quarter turn in the billboard's plane, so the standee rests sideways on the board (design D2). */}
               <mesh
                 rotation={[0, 0, p.lying ? Math.PI / 2 : 0]}
-                onPointerOver={() => setHovered(p.id)}
-                onPointerOut={() => setHovered((h) => (h === p.id ? undefined : h))}
+                onPointerOver={(e) => {
+                  setHovered(p.id);
+                  badge.over(e.pointerType);
+                }}
+                onPointerOut={(e) => badge.out(e.pointerType)}
+                onPointerDown={(e) => {
+                  if (e.pointerType === "touch") setHovered(p.id);
+                  badge.down(e.pointerType);
+                }}
                 // A still click selects the space the piece stands on; a drag that started here only pans (piece-click-selects D1).
                 onClick={(e) => {
                   e.stopPropagation();
@@ -359,9 +369,10 @@ function Tracks({ board, tracks }: { board: Board; tracks: NonNullable<TableProp
 /** A token on a printed track, naming itself while the pointer rests on it (track-hover D2). */
 function TrackToken({ map, position: [x, y], size, z = 0.06, label }: { map: Texture; position: [number, number]; size: number; z?: number; label: string }) {
   const [hovered, setHovered] = useState(false);
+  const badge = useMemo(() => badgeEvents(setHovered), []);
   return (
     <Billboard position={[x, y, z]}>
-      <mesh onPointerOver={() => setHovered(true)} onPointerOut={() => setHovered(false)}>
+      <mesh onPointerOver={(e) => badge.over(e.pointerType)} onPointerOut={(e) => badge.out(e.pointerType)} onPointerDown={(e) => badge.down(e.pointerType)}>
         <planeGeometry args={[size, size]} />
         <meshBasicMaterial map={map} transparent alphaTest={0.5} />
       </mesh>
@@ -403,6 +414,7 @@ interface FaceProps {
 /** One card face lying flat on the table. */
 function Face({ map, label, position, size, onFocus }: FaceProps) {
   const [hovered, setHovered] = useState(false);
+  const badge = useMemo(() => badgeEvents(setHovered), []);
   const click = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
     // A drag that starts on the card ends with a click event too; only a still pointer brings the card up.
@@ -410,7 +422,7 @@ function Face({ map, label, position, size, onFocus }: FaceProps) {
   };
   return (
     <Billboard position={[...position, 0.06]}>
-      <mesh onClick={click} onPointerOver={() => setHovered(true)} onPointerOut={() => setHovered(false)}>
+      <mesh onClick={click} onPointerOver={(e) => badge.over(e.pointerType)} onPointerOut={(e) => badge.out(e.pointerType)} onPointerDown={(e) => badge.down(e.pointerType)}>
         <planeGeometry args={size} />
         <meshBasicMaterial map={map} transparent alphaTest={0.5} />
       </mesh>
