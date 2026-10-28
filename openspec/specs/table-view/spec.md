@@ -258,7 +258,7 @@ The Ancient One sheet SHALL lie faceup to the right of the board, flipped to its
 - **THEN** that card lies first in the tableau's mythos row until the phase ends, and leaves the row unless it stays in play as an ongoing card
 
 ### Requirement: A card face can be brought up to read
-Clicking a card face on the table (a reserve card, the Ancient One sheet, the mystery card or an ongoing mythos card) SHALL glide the view to that card and zoom until the card fills most of the view's height, within the zoom limits; the selection SHALL NOT change. The panel's card thumbnails (the mystery, the ongoing mythos cards, the reserve) and each investigator's Show sheet control SHALL bring the same card up on the table, reachable by keyboard, with the thumbnails as buttons; so SHALL each possession and condition named in the Status table, bringing up that held card under the investigator's sheet; and so SHALL the Encounter panel's card thumbnail, bringing up the encounter card beside the sheet, and the Mythos panel's, bringing up the drawn mythos card in the tableau; in the Acquire Assets form each reserve card's name SHALL bring that card up as well. The player's own panning and zooming afterwards SHALL hold as usual.
+Clicking a card face on the table (a reserve card, the Ancient One sheet, the mystery card or an ongoing mythos card) SHALL glide the view to that card and zoom until the card fills most of the view's height, within the zoom limits; the selection SHALL NOT change. The panel's card thumbnails (the mystery, the ongoing mythos cards, the reserve) and each investigator's Show sheet control SHALL bring the same card up on the table, reachable by keyboard, with the thumbnails as buttons; so SHALL each possession and condition named in the Status table, bringing up that held card under the investigator's sheet; and so SHALL the Encounter panel's card thumbnail, bringing up the encounter card beside the sheet, and the Mythos panel's, bringing up the drawn mythos card in the tableau; in the Acquire Assets form each reserve card's name SHALL bring that card up as well, and in the Trade form each possession's name SHALL bring up that held card under its holder's sheet. The player's own panning and zooming afterwards SHALL hold as usual.
 
 #### Scenario: Read the mystery
 - **WHEN** the player clicks the mystery card beside the board
@@ -287,6 +287,10 @@ Clicking a card face on the table (a reserve card, the Ancient One sheet, the my
 #### Scenario: A reserve card from the Acquire Assets form
 - **WHEN** Leo Anderson is acquiring assets and the player activates the first reserve card's name in the form
 - **THEN** the view glides and zooms onto that card in the reserve
+
+#### Scenario: A possession from the Trade form
+- **WHEN** Leo Anderson is trading with Lily Chen and the player activates "Hired Muscle" in his offer
+- **THEN** the view glides and zooms onto that card under his sheet
 
 ### Requirement: The investigator sheets lie below the board
 During a game each investigator's sheet SHALL lie faceup in a row below the board, in seat order from the board's left edge, one per investigator in the game including a replaced or defeated one until they are removed; the table SHALL extend to hold the row, and clicking a sheet SHALL bring it up to read like any card face. While an investigator resolves an encounter card, that card SHALL lie to the right of their sheet until the encounter is finished.
