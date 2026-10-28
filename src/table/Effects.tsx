@@ -1,11 +1,12 @@
 import { useState } from "react";
 import type { Board, Deck, GameSet, Skill } from "../content/types";
 import { changeDoom, changeMysteryTokens, solveFinalMystery, solveMystery } from "../engine/ancientOne";
-import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spendClue } from "../engine/effects";
+import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spendClue } from "../engine/effects";
 import { OMEN_TRACK } from "../engine/omen";
 import { monsterKey } from "../engine/encounter";
 import { spaceName } from "../engine/spawn";
 import type { GameState } from "../engine/types";
+import type { NearestTarget } from "../engine/effects";
 import type { Act } from "./Turn";
 
 interface EffectsProps {
@@ -30,6 +31,7 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
   const [monster, setMonster] = useState("");
   const [skill, setSkill] = useState<Skill>("lore");
   const [omenSlot, setOmenSlot] = useState(0);
+  const [target, setTarget] = useState<NearestTarget>("city");
   const content = { board, set };
   const me = state.investigators.find((i) => i.id === id) ?? state.investigators[0]!;
   const name = (x: string) => set.investigators.find((i) => i.id === x)?.name ?? x;
@@ -97,6 +99,19 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
           </button>
           <button type="button" onClick={() => onAct((s) => moveInvestigatorRandomly(s, content, me.id))}>
             Move to a random space
+          </button>{" "}
+          <label>
+            Nearest{" "}
+            <select value={target} onChange={(e) => setTarget(e.target.value as NearestTarget)}>
+              {(["city", "wilderness", "sea", "gate", "clue"] as const).map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
+          </label>{" "}
+          <button type="button" onClick={() => onAct((s) => moveInvestigatorToNearest(s, content, me.id, target))}>
+            Move to nearest
           </button>
         </p>
         <p>

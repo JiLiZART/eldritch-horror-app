@@ -1,4 +1,4 @@
-import { distance } from "../content/board";
+import { nearest } from "../content/board";
 import type { MonsterCombat } from "../content/types";
 import { awakenAt0 } from "./ancientOne";
 import { keepLog } from "./journal";
@@ -228,7 +228,7 @@ export function defeat(state: GameState, content: Content, investigator: string,
   const me = state.investigators.find((i) => i.id === investigator);
   if (!me) throw new Error(`no investigator ${investigator}`);
   const cities = content.board.spaces.filter((sp) => sp.kind === "city").map((sp) => sp.id);
-  const space = cities.reduce((best, id) => (distance(content.board, me.space, id) < distance(content.board, me.space, best) ? id : best));
+  const space = nearest(content.board, me.space, cities)!;
   const { items: condition, rolls } = reshuffle(state, [...state.decks.condition, ...me.conditions]);
   const fallen: InvestigatorState = { ...me, defeated: cause, space, conditions: [], improvements: {} };
   return fall({ ...state, rolls, decks: { ...state.decks, condition } }, content, fallen, `${investigatorName(content, investigator)} is defeated and lies on ${spaceName(content, space)}`);

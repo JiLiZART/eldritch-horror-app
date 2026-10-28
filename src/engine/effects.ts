@@ -1,5 +1,5 @@
-import { distance, neighbors } from "../content/board";
-import type { Deck, Skill } from "../content/types";
+import { distance, nearest, neighbors } from "../content/board";
+import type { Deck, Skill, SpaceKind } from "../content/types";
 import { defeat, fall, fight, toCup } from "./encounter";
 import { OMEN_TRACK } from "./omen";
 import { reshuffle, rng } from "./rng";
@@ -40,6 +40,20 @@ export function moveInvestigator(state: GameState, content: Content, id: string,
   if (isDetained(me)) throw new Error("a Detained investigator cannot move");
   if (!content.board.spaces.some((s) => s.id === space)) throw new Error(`no space ${space} on the board`);
   return note(replace(state, { ...me, space }), `${name(content, id)} moves to ${spaceName(content, space)}`);
+}
+
+export type NearestTarget = SpaceKind | "gate" | "clue";
+
+/** "Move to the nearest X" (EH_reference p.2): the fewest paths, the own space first when it matches. Deviation: ties go to board order. */
+export function moveInvestigatorToNearest(state: GameState, content: Content, id: string, target: NearestTarget): GameState {
+  const me = subject(state, id);
+  const ids = content.board.spaces.map((s) => s.id);
+  const candidates = target === "gate" ? ids.filter((s) => state.gates.includes(s)) : target === "clue" ? ids.filter((s) => state.clues.includes(s)) : content.board.spaces.filter((s) => s.kind === target).map((s) => s.id);
+  const what = target === "gate" || target === "clue" ? `space with a ${target}` : `${target} space`;
+  const space = nearest(content.board, me.space, candidates);
+  if (space === undefined) throw new Error(`no ${what} exists`);
+  if (space === me.space) return note(state, `${name(content, id)} is already on the nearest ${target === "gate" || target === "clue" ? what : target}`);
+  return moveInvestigator(state, content, id, space);
 }
 
 /** Lays the token on its side (manual p.4 "Delayed"). Deviation: text that ends the delay early is left to the players. */

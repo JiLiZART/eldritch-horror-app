@@ -24,6 +24,11 @@ export function distance(board: Board, from: string, to: string): number {
   return Infinity;
 }
 
+/** The candidate at the smallest distance from `from`, the first on a tie; `from` itself when it is a candidate (EH_reference p.2). */
+export function nearest(board: Board, from: string, candidates: string[]): string | undefined {
+  return candidates.reduce<string | undefined>((best, id) => (best === undefined || distance(board, from, id) < distance(board, from, best) ? id : best), undefined);
+}
+
 /** Spaces of the enabled sets and the paths whose both ends are among them. */
 export function activeGraph(board: Board, enabled: Set<string>): Pick<Board, "spaces" | "paths"> {
   const spaces = board.spaces.filter((s) => enabled.has(s.set));

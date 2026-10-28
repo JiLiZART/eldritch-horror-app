@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { endTurn } from "./actions";
-import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spendClue } from "./effects";
+import { ambush, changeEldritchOnOmen, changeHealth, changeSanity, closeGate, delay, devour, discardCard, discardImprovement, discardMonster, gainCard, gainClue, improveSkill, moveInvestigator, moveMonster, moveInvestigatorRandomly, moveInvestigatorToNearest, moveMonsterToward, placeToken, removeToken, spawnClueByText, spawnGateByText, spawnMonsterByText, spawnMonsterRandomly, spendClue } from "./effects";
 import { finishEncounter } from "./encounter";
 import { resolveMythos } from "./mythos";
 import { setupGame } from "./setup";
@@ -120,6 +120,24 @@ describe("spent clues join the clue discard", () => {
     const s = devour(before, content, leo);
     expect(s.clueDiscard).toHaveLength(before.clueDiscard.length + who(before, leo).clues);
     expect(s.heldClues).toHaveLength(before.heldClues.length - who(before, leo).clues);
+  });
+});
+
+describe("an investigator is moved to the nearest space", () => {
+  it("moves to the nearest city", () => {
+    const s = moveInvestigatorToNearest(patch(encounters(), leo, { space: "space-2" }), content, leo, "city");
+    expect(who(s, leo).space).toBe("san-francisco");
+    expect(log(s)).toMatch(/Leo Anderson moves to San Francisco/);
+  });
+  it("stays when already on a matching space", () => {
+    const s = moveInvestigatorToNearest(encounters(), content, leo, "city");
+    expect(who(s, leo).space).toBe("buenos-aires");
+    expect(log(s)).toMatch(/Leo Anderson is already on the nearest city/);
+  });
+  it("finds the nearest gate and refuses with nothing matching", () => {
+    const s = moveInvestigatorToNearest({ ...encounters(), gates: ["london"] }, content, leo, "gate");
+    expect(who(s, leo).space).toBe("london");
+    expect(() => moveInvestigatorToNearest({ ...encounters(), clues: [] }, content, leo, "clue")).toThrow(/no space with a clue exists/);
   });
 });
 
