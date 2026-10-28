@@ -44,6 +44,8 @@ export interface TableProps {
   /** Spaces of the travel route being picked, highlighted in order. */
   route?: string[];
   onSelect: (id: string | undefined) => void;
+  /** A double-click on empty table asks for the whole table (double-click-fit D1). */
+  onFit: () => void;
   reducedMotion: boolean;
 }
 
@@ -55,6 +57,8 @@ const srgb = (t: Texture | Texture[]) => {
 };
 
 export function Table(props: TableProps) {
+  /** Set by a click that hit nothing, read by the double-click that follows it (double-click-fit D1). */
+  const missed = useRef(false);
   return (
     <>
       {props.status && (
@@ -64,7 +68,23 @@ export function Table(props: TableProps) {
           {props.status.dice && <small>{props.status.dice}</small>}
         </div>
       )}
-      <Canvas flat orthographic camera={{ position: [0, 0, 50], up: [0, 0, 1], near: 0.1, far: 100 }} onPointerMissed={() => props.onSelect(undefined)}>
+      <Canvas
+        flat
+        orthographic
+        camera={{ position: [0, 0, 50], up: [0, 0, 1], near: 0.1, far: 100 }}
+        onPointerMissed={() => {
+          missed.current = true;
+          props.onSelect(undefined);
+        }}
+        onDoubleClick={() => {
+          if (missed.current) props.onFit();
+          missed.current = false;
+        }}
+        onClick={() => {
+          // A click that hit a piece or a card never set the flag; clear a stale one from an earlier miss.
+          setTimeout(() => (missed.current = false), 400);
+        }}
+      >
       <color attach="background" args={["#1a1612"]} />
       <Suspense fallback={null}>
         <Scene {...props} />
