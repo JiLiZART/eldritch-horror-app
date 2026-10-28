@@ -194,6 +194,14 @@ function Status({ board, set, state, onSelect, onFocusCard }: { board: Board; se
   const { encounters, ...decks } = state.decks;
   const sizes = Object.entries({ ...decks, ...encounters, monsterCup: state.monsterCup, setAside: state.setAsideMonsters, gateStack: state.gateStack, cluePool: state.cluePool });
   const ongoing = state.ongoingMythos.map((id) => set.mythos.find((m) => m.id === id)).filter((m) => m !== undefined);
+  /** The cup's and the set-aside monsters' kinds with their counts (cup-contents D1). */
+  const kinds = (tokens: { id: string }[]) =>
+    [...new Set(tokens.map((m) => m.id))]
+      .map((id) => ({ name: set.monsters.find((m) => m.id === id)?.name ?? id, count: tokens.filter((m) => m.id === id).length }))
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((k) => t("effects.kindCount", { name: k.name, count: k.count }))
+      .join(", ");
+  const piles: [string, string][] = ([["monsterCup", state.monsterCup], ["setAside", state.setAsideMonsters]] as [string, { id: string }[]][]).filter(([, tokens]) => tokens.length > 0).map(([name, tokens]) => [name, kinds(tokens)]);
   /** The card discards with their names, for abilities that search a discard (discard-piles D1). */
   const discards: [string, string[]][] = (
     [
@@ -255,6 +263,19 @@ function Status({ board, set, state, onSelect, onFocusCard }: { board: Board; se
         <dt>{t("status.decks")}</dt>
         <dd>{sizes.map(([name, cards]) => `${t(`deck.${name}`)} ${cards.length}`).join(", ")}</dd>
       </dl>
+      {piles.length > 0 && (
+        <details>
+          <summary>{t("status.cup")}</summary>
+          <dl>
+            {piles.map(([name, text]) => (
+              <div key={name}>
+                <dt>{t(`deck.${name}`)}</dt>
+                <dd>{text}</dd>
+              </div>
+            ))}
+          </dl>
+        </details>
+      )}
       {discards.length > 0 && (
         <details>
           <summary>{t("status.discards")}</summary>

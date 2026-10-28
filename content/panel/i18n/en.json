@@ -274,5 +274,6 @@
   "game.redo": "Redo",
   "game.backup": "Save backup",
   "game.restore": "Load backup",
-  "game.restored": "{added} saved games added, {skipped} set aside"
+  "game.restored": "{added} saved games added, {skipped} set aside",
+  "status.cup": "Monster cup"
 }

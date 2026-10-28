@@ -274,5 +274,6 @@
   "game.redo": "Вернуть",
   "game.backup": "Сохранить резервную копию",
   "game.restore": "Загрузить резервную копию",
-  "game.restored": "Добавлено игр: {added}, отложено: {skipped}"
+  "game.restored": "Добавлено игр: {added}, отложено: {skipped}",
+  "status.cup": "Пул монстров"
 }
