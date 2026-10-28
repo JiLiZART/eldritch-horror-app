@@ -261,5 +261,7 @@
   "track.doom": "Рок {doom}",
   "track.omen": "Знамение: {omen}, Древних: {count}",
   "track.eldritch": "Жетон Древних на {omen} знамении",
-  "panel.resize": "Ширина панели"
+  "panel.resize": "Ширина панели",
+  "game.confirm": "Подтвердить",
+  "game.cancel": "Отмена"
 }

@@ -261,5 +261,7 @@
   "track.doom": "Doom {doom}",
   "track.omen": "Omen: {omen}, {count} eldritch",
   "track.eldritch": "Eldritch token on the {omen} omen space",
-  "panel.resize": "Resize panel"
+  "panel.resize": "Resize panel",
+  "game.confirm": "Confirm",
+  "game.cancel": "Cancel"
 }

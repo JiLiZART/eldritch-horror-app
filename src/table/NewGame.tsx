@@ -34,6 +34,30 @@ const DIFFICULTIES: Difficulty[] = ["normal", "easy", "hard"];
 /** Setup choices; checkbox check order is seat order. Inputs outlive a running game so abandoning offers them again. */
 export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUndo, onFit, onSave, onLoad, onNew, slots, current, onSwitch, onRemove, onRename }: NewGameProps) {
   const [ancientOne, setAncientOne] = useState(set.ancientOnes[0]?.id ?? "");
+  /** A removal or abandonment waiting for its second click (remove-confirm D1). */
+  const [pending, setPending] = useState<{ kind: "abandon" } | { kind: "remove"; id: string }>();
+  /** The pressed button becomes Confirm and Cancel until one is chosen. */
+  const guarded = (label: string, action: { kind: "abandon" } | { kind: "remove"; id: string }, run: () => void) =>
+    pending && JSON.stringify(pending) === JSON.stringify(action) ? (
+      <>
+        <button
+          type="button"
+          onClick={() => {
+            setPending(undefined);
+            run();
+          }}
+        >
+          {t("game.confirm")}
+        </button>{" "}
+        <button type="button" onClick={() => setPending(undefined)}>
+          {t("game.cancel")}
+        </button>
+      </>
+    ) : (
+      <button type="button" onClick={() => setPending(action)}>
+        {label}
+      </button>
+    );
   const [seats, setSeats] = useState<string[]>([]);
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 1e9));
@@ -46,9 +70,7 @@ export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUn
       <h2>{t("game.title")}</h2>
       {running ? (
         <p>
-          <button type="button" onClick={onAbandon}>
-            {t("game.abandon")}
-          </button>{" "}
+          {guarded(t("game.abandon"), { kind: "abandon" }, onAbandon)}{" "}
           <button type="button" disabled={!canUndo} onClick={onUndo}>
             {t("game.undo")}
           </button>{" "}
@@ -126,9 +148,7 @@ export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUn
                 <button type="button" disabled={s.id === current} onClick={() => onSwitch(s.id)}>
                   {t("game.switch")}
                 </button>{" "}
-                <button type="button" onClick={() => onRemove(s.id)}>
-                  {t("game.remove")}
-                </button>
+                {guarded(t("game.remove"), { kind: "remove", id: s.id }, () => onRemove(s.id))}
               </li>
             ))}
           </ul>
