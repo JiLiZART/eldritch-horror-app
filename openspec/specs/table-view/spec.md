@@ -254,7 +254,7 @@ The Ancient One sheet SHALL lie faceup to the right of the board, flipped to its
 - **THEN** that card lies first in the tableau's mythos row until the phase ends, and leaves the row unless it stays in play as an ongoing card
 
 ### Requirement: A card face can be brought up to read
-Clicking a card face on the table (a reserve card, the Ancient One sheet, the mystery card or an ongoing mythos card) SHALL glide the view to that card and zoom until the card fills most of the view's height, within the zoom limits; the selection SHALL NOT change. The player's own panning and zooming afterwards SHALL hold as usual.
+Clicking a card face on the table (a reserve card, the Ancient One sheet, the mystery card or an ongoing mythos card) SHALL glide the view to that card and zoom until the card fills most of the view's height, within the zoom limits; the selection SHALL NOT change. The panel's card thumbnails (the mystery, the ongoing mythos cards, the reserve) and each investigator's Show sheet control SHALL bring the same card up on the table, reachable by keyboard, with the thumbnails as buttons. The player's own panning and zooming afterwards SHALL hold as usual.
 
 #### Scenario: Read the mystery
 - **WHEN** the player clicks the mystery card beside the board
@@ -263,6 +263,10 @@ Clicking a card face on the table (a reserve card, the Ancient One sheet, the my
 #### Scenario: Reduced motion
 - **WHEN** reduced motion is on and the player clicks a reserve card
 - **THEN** the view is on the card at once without animation
+
+#### Scenario: From the panel
+- **WHEN** the player activates the first reserve card's thumbnail in the Status section with the keyboard
+- **THEN** the view glides and zooms onto that card on the table
 
 ### Requirement: The investigator sheets lie below the board
 During a game each investigator's sheet SHALL lie faceup in a row below the board, in seat order from the board's left edge, one per investigator in the game including a replaced or defeated one until they are removed; the table SHALL extend to hold the row, and clicking a sheet SHALL bring it up to read like any card face. While an investigator resolves an encounter card, that card SHALL lie to the right of their sheet until the encounter is finished.
