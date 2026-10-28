@@ -91,6 +91,12 @@ export function App() {
         {game.state?.phase.name === "action" && <Turn board={board} set={set} state={game.state} phase={game.state.phase} error={game.error} route={route} onAct={act} onRoute={setRoute} />}
         {game.state?.phase.name === "encounter" && <Encounter board={board} set={set} state={game.state} phase={game.state.phase} error={game.error} onAct={act} />}
         {game.state?.phase.name === "mythos" && <Mythos board={board} set={set} state={game.state} phase={game.state.phase} error={game.error} onAct={act} />}
+        {game.state?.phase.name === "won" && (
+          <section className="turn">
+            <h2>The investigators win</h2>
+            <p>{game.state.phase.reason}</p>
+          </section>
+        )}
         {game.state?.phase.name === "lost" && (
           <section className="turn">
             <h2>The investigators lose</h2>

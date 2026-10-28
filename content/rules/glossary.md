@@ -275,7 +275,7 @@ When doom reaches 0 the sheet flips, Awakens effects resolve, the back replaces 
 Source: manual_eng.pdf p.4; EH_reference.pdf p.3
 
 ### Mystery / Тайна
-Card of the chosen Ancient One placed near the sheet; the active mystery collects tokens; solving 3 wins the game. After awakening the final mystery must be solved as well. The app draws the mystery but its enters-play effect is read from the card image and applied by the players (deviation: card text is not modelled).
+Card of the chosen Ancient One placed near the sheet; the active mystery collects tokens; solving 3 wins the game. After awakening the final mystery must be solved as well. The app draws the mystery and solves it when the players apply the card text; the enters-play effect and the tokens on the card are read from the image and handled by the players (deviation: card text is not modelled).
 Source: manual_eng.pdf p.3, p.4, p.9; EH_reference.pdf p.12
 
 ### Mythos card / Карта Мифа

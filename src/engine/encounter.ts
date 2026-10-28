@@ -1,5 +1,6 @@
 import { distance } from "../content/board";
 import type { MonsterCombat } from "../content/types";
+import { awakenAt0 } from "./ancientOne";
 import { drawMythos } from "./mythos";
 import type { Content } from "./setup";
 import { reshuffle } from "./rng";
@@ -166,7 +167,7 @@ export function defeat(state: GameState, content: Content, investigator: string,
   const space = cities.reduce((best, id) => (distance(content.board, me.space, id) < distance(content.board, me.space, best) ? id : best));
   const { items: condition, rolls } = reshuffle(state, [...state.decks.condition, ...me.conditions]);
   const fallen = { ...me, defeated: cause, space, conditions: [] };
-  let s = note(replaceInvestigator({ ...state, doom: state.doom - 1, rolls, decks: { ...state.decks, condition } }, fallen), `${investigatorName(content, investigator)} is defeated and lies on ${spaceName(content, space)}`);
+  let s = awakenAt0(note(replaceInvestigator({ ...state, doom: state.doom - 1, rolls, decks: { ...state.decks, condition } }, fallen), `${investigatorName(content, investigator)} is defeated and lies on ${spaceName(content, space)}`), content);
   if (s.leadInvestigator === investigator) s = { ...s, leadInvestigator: nextStanding(s, investigator) ?? investigator };
   if (!s.investigators.some((i) => !i.defeated)) return { ...s, phase: { name: "lost", reason: `every investigator is defeated (doom ${s.doom})` } };
   // shortcut: defeat is only reached from combat today; a defeat in the Action phase would leave the active seat on a fallen investigator, upgrade when encounter text is applied by hand.

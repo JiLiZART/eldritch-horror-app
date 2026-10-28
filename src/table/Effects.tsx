@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Board, Deck, GameSet } from "../content/types";
+import { changeDoom, solveFinalMystery, solveMystery } from "../engine/ancientOne";
 import { changeHealth, changeSanity, closeGate, delay, discardCard, discardMonster, gainCard, gainClue, moveInvestigator, moveMonster, moveMonsterToward, spendClue } from "../engine/effects";
 import { monsterKey } from "../engine/encounter";
 import { spaceName } from "../engine/spawn";
@@ -91,6 +92,22 @@ export function Effects({ board, set, state, who, onAct }: EffectsProps) {
         <button type="button" onClick={() => onAct((s) => moveInvestigator(s, content, me.id, space))}>
           Move
         </button>
+      </p>
+      <p>
+        <button type="button" onClick={() => onAct((s) => changeDoom(s, content, -1))}>
+          Advance doom
+        </button>
+        <button type="button" onClick={() => onAct((s) => changeDoom(s, content, 1))}>
+          Retreat doom
+        </button>
+        <button type="button" onClick={() => onAct((s) => solveMystery(s, content))}>
+          Solve mystery
+        </button>
+        {state.awakened && (
+          <button type="button" onClick={() => onAct((s) => solveFinalMystery(s, content))}>
+            Solve final mystery
+          </button>
+        )}
       </p>
       {chosen && (
         <p>

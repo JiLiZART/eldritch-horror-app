@@ -120,12 +120,14 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
   const ongoing = state.ongoingMythos.map((id) => set.mythos.find((m) => m.id === id)).filter((m) => m !== undefined);
   return (
     <section className="status">
-      <h2>{ancientOne?.name ?? state.ancientOne}</h2>
+      <h2>
+        {ancientOne?.name ?? state.ancientOne}
+        {state.awakened && " (awakened)"}
+      </h2>
       <dl>
         <dt>Doom</dt>
         <dd>
           {state.doom}
-          {state.doom <= 0 && " (the Ancient One awakens; awakening is not modelled)"}
         </dd>
         <dt>Omen</dt>
         <dd>
@@ -136,7 +138,11 @@ function Status({ board, set, state }: { board: Board; set: GameSet; state: Game
           gates {state.referenceCard.gates}, clues {state.referenceCard.clues}, surge {state.referenceCard.surge}
         </dd>
         <dt>Mystery</dt>
-        <dd className="cards">{mystery && <img src={`/${mystery.images.front}`} alt={mystery.name} />}</dd>
+        <dd className="cards">
+          {mystery && <img src={`/${mystery.images.front}`} alt={mystery.name} />}
+          {state.awakened && ancientOne?.images.back && <img src={`/${ancientOne.images.back}`} alt={`${ancientOne.name} awakened`} />}
+          {state.solvedMysteries.length} solved{state.finalMysterySolved && ", final mystery solved"}
+        </dd>
         <dt>Reserve</dt>
         <dd className="cards">
           {state.reserve.map((id) => {

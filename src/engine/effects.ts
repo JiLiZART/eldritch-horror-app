@@ -3,18 +3,12 @@ import type { Deck } from "../content/types";
 import { defeat } from "./encounter";
 import { reshuffle } from "./rng";
 import type { Content } from "./setup";
-import { note, spaceName } from "./spawn";
+import { note, spaceName, textPhase } from "./spawn";
 import type { GameState, InvestigatorState, MonsterInstance, MonsterOnBoard } from "./types";
 
 /** Card text applied by the players (manual_eng.pdf p.3–4): health, sanity, clues, gates and cards. The text itself stays with the players. */
 
 const DOUBLE_SIDED: Deck[] = ["spell", "condition", "unique-asset"];
-
-/** Card text is applied in the Encounter phase or the resolved Mythos phase. */
-function textPhase(state: GameState): void {
-  if (state.phase.name !== "encounter" && state.phase.name !== "mythos") throw new Error("card text is applied in the Encounter and Mythos phases");
-  if (state.phase.name === "mythos" && !state.phase.log) throw new Error("the mythos card is resolved first");
-}
 
 /** The investigator an effect may touch: standing. */
 function subject(state: GameState, id: string): InvestigatorState {

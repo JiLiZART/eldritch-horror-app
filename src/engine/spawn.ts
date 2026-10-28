@@ -1,3 +1,4 @@
+import { awakenAt0 } from "./ancientOne";
 import type { Random } from "./rng";
 import { shuffle } from "./rng";
 import type { Content } from "./setup";
@@ -11,6 +12,12 @@ export function note(state: GameState, line: string): GameState {
   return phase.name === "mythos" || phase.name === "encounter" ? { ...state, phase: { ...phase, log: [...(phase.log ?? []), line] } } : state;
 }
 
+/** Card text is applied in the Encounter phase or the resolved Mythos phase. */
+export function textPhase(state: GameState): void {
+  if (state.phase.name !== "encounter" && state.phase.name !== "mythos") throw new Error("card text is applied in the Encounter and Mythos phases");
+  if (state.phase.name === "mythos" && !state.phase.log) throw new Error("the mythos card is resolved first");
+}
+
 export const spaceName = ({ board }: Content, id: string) => board.spaces.find((s) => s.id === id)?.name.en ?? id;
 
 /** Opens the top gate of the stack with 1 monster; reshuffles the discard first, advances doom instead when no token is left. */
@@ -21,7 +28,7 @@ export function spawnGate(state: GameState, content: Content, random: Random): G
     gateDiscard = [];
   }
   const [space, ...rest] = gateStack;
-  if (space === undefined) return note({ ...state, doom: state.doom - 1 }, `no gate token is left: doom advances to ${state.doom - 1}`);
+  if (space === undefined) return awakenAt0(note({ ...state, doom: state.doom - 1 }, `no gate token is left: doom advances to ${state.doom - 1}`), content);
   const opened = note({ ...state, gates: [...state.gates, space], gateStack: rest, gateDiscard }, `a gate opens on ${spaceName(content, space)}`);
   return spawnMonster(opened, content, space);
 }

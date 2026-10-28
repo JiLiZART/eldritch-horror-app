@@ -79,8 +79,13 @@ export interface LostPhase {
   reason: string;
 }
 
+export interface WonPhase {
+  name: "won";
+  reason: string;
+}
+
 /** The phase in progress. */
-export type Phase = ActionPhase | EncounterPhase | MythosPhase | LostPhase;
+export type Phase = ActionPhase | EncounterPhase | MythosPhase | LostPhase | WonPhase;
 
 /** Printed on the reference card for the investigator count. */
 export interface ReferenceCard {
@@ -138,6 +143,12 @@ export interface GameState {
   ongoingMythos: string[];
   mythosDiscard: string[];
   currentMystery: string;
+  /** Solved mystery ids, newest first. */
+  solvedMysteries: string[];
+  /** The final mystery on the sheet back, solvable once awakened. */
+  finalMysterySolved?: true;
+  /** Doom reached 0: the sheet back is in play (manual p.4). */
+  awakened?: true;
   /** Space id of the active expedition token. */
   activeExpedition: string;
 }
