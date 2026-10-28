@@ -253,5 +253,6 @@
   "gate.green": "зелёные врата",
   "gate.blue": "синие врата",
   "gate.red": "красные врата",
-  "piece.investigatorHint": "здоровье {health}, рассудок {sanity}, улики {clues}"
+  "piece.investigatorHint": "здоровье {health}, рассудок {sanity}, улики {clues}",
+  "panel.filterSpaces": "Поиск локации"
 }

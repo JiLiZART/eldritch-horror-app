@@ -30,6 +30,9 @@ const SET_NAMES: Record<string, string> = Object.fromEntries(BOARD_SETS.map((s) 
 export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled, onToggle, selected, onSelect, children }: PanelProps) {
   const t = useT();
   const spaceName = useSpaceName();
+  /** Text narrowing the space list by name in the chosen language (space-filter D1). */
+  const [filter, setFilter] = useState("");
+  const shown = spaces.filter((s) => spaceName(board, s.id).toLocaleLowerCase().includes(filter.toLocaleLowerCase()));
   const pathType = (a: string, b: string) => board.paths.find((p) => (p.from === a && p.to === b) || (p.from === b && p.to === a))?.type;
   return (
     <aside className="panel">
@@ -103,8 +106,9 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
       </section>
       <section>
         <h2>{t("panel.spaces")}</h2>
+        <input type="search" aria-label={t("panel.filterSpaces")} placeholder={t("panel.filterSpaces")} value={filter} onChange={(e) => setFilter(e.target.value)} />
         <ul className="spaces">
-          {spaces.map((s) => (
+          {shown.map((s) => (
             <li key={s.id}>
               <button type="button" aria-pressed={s.id === selected?.id} onClick={() => onSelect(s.id)}>
                 {spaceName(board, s.id)}
