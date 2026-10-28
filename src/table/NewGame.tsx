@@ -10,12 +10,16 @@ interface NewGameProps {
   onAbandon: () => void;
   canUndo: boolean;
   onUndo: () => void;
+  /** Downloads the game in progress as a file (design D2). */
+  onSave: () => void;
+  /** Loads a saved game's text, replacing the game in progress (design D3). */
+  onLoad: (text: string) => void;
 }
 
 const DIFFICULTIES: Difficulty[] = ["normal", "easy", "hard"];
 
 /** Setup choices; checkbox check order is seat order. Inputs outlive a running game so abandoning offers them again. */
-export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUndo }: NewGameProps) {
+export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUndo, onSave, onLoad }: NewGameProps) {
   const [ancientOne, setAncientOne] = useState(set.ancientOnes[0]?.id ?? "");
   const [seats, setSeats] = useState<string[]>([]);
   const [difficulty, setDifficulty] = useState<Difficulty>("normal");
@@ -32,7 +36,13 @@ export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUn
           </button>{" "}
           <button type="button" disabled={!canUndo} onClick={onUndo}>
             Undo
-          </button>
+          </button>{" "}
+          <button type="button" onClick={onSave}>
+            Save to file
+          </button>{" "}
+          <label>
+            Load from file <input type="file" accept=".json,application/json" onChange={(e) => void e.target.files?.[0]?.text().then(onLoad)} />
+          </label>
         </p>
       ) : (
         <form
@@ -72,6 +82,9 @@ export function NewGame({ set, running, error, onStart, onAbandon, canUndo, onUn
             Seed <input type="number" value={seed} onChange={(e) => setSeed(Number(e.target.value))} />
           </label>
           <p>
+            <label>
+              Load from file <input type="file" accept=".json,application/json" onChange={(e) => void e.target.files?.[0]?.text().then(onLoad)} />
+            </label>
             <button type="submit">Start</button>
           </p>
           <p aria-live="assertive" className="error">

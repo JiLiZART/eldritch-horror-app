@@ -10,7 +10,7 @@ import { Mythos } from "./Mythos";
 import { NewGame } from "./NewGame";
 import { Panel } from "./Panel";
 import { piecesOnSpace } from "./pieces";
-import { clearGame, loadGame, saveGame } from "./saved";
+import { clearGame, fileName, loadGame, parseGame, saveGame } from "./saved";
 import { Table } from "./Table";
 import { type Act, Turn } from "./Turn";
 import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
@@ -108,6 +108,20 @@ export function App() {
           onAbandon={() => {
             setGame({});
             setHistory([]);
+          }}
+          onSave={() => {
+            const url = URL.createObjectURL(new Blob([JSON.stringify(game.state)], { type: "application/json" }));
+            const a = Object.assign(document.createElement("a"), { href: url, download: fileName(game.state!) });
+            a.click();
+            URL.revokeObjectURL(url);
+          }}
+          onLoad={(text) => {
+            const { state, note } = parseGame(text);
+            if (state) {
+              setGame({ state });
+              setHistory([]);
+              setRoute(undefined);
+            } else setGame({ ...game, error: note });
           }}
           canUndo={history.length > 0}
           onUndo={() => {

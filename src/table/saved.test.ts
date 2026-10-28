@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { loadSet } from "../content/load";
 import type { Board } from "../content/types";
 import { setupGame } from "../engine/setup";
-import { clearGame, loadGame, saveGame, type Slot } from "./saved";
+import { clearGame, fileName, loadGame, parseGame, saveGame, type Slot } from "./saved";
 
 const root = join(import.meta.dirname, "../..");
 const board: Board = JSON.parse(readFileSync(join(root, "content/board/board.json"), "utf8"));
@@ -43,5 +43,17 @@ describe("the game in progress survives a reload", () => {
     saveGame(storage, game());
     clearGame(storage);
     expect(storage.items.size).toBe(0);
+  });
+});
+
+describe("the game is saved to and loaded from a file", () => {
+  it("parses a saved state and names the file after the seed and round", () => {
+    expect(parseGame(JSON.stringify(game()))).toEqual({ state: game() });
+    expect(fileName({ ...game(), round: 3 })).toBe("eldritch-horror-3-round-3.json");
+  });
+  it("refuses garbage, an older shape and nothing", () => {
+    expect(parseGame("{not json")).toEqual({ note: "the saved game could not be read" });
+    expect(parseGame(JSON.stringify({ ...game(), version: 1 }))).toEqual({ note: "the saved game was written by an older version and was set aside" });
+    expect(parseGame("")).toEqual({ note: "the saved game could not be read" });
   });
 });
