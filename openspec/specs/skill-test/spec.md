@@ -6,7 +6,7 @@ Roll a skill test the way the rulebook says, so that Acquire Assets today and en
 ## Requirements
 
 ### Requirement: A test rolls dice for a skill
-A test SHALL roll dice equal to the investigator's printed skill value plus the test modifier, at least 1 die. Each die showing 5 or 6 SHALL count as a success; the number of successes SHALL be the test result, and the test passes when the result is at least 1. The dice rolled SHALL be visible to the players. Dice SHALL be drawn from the game seed, so the same game replays the same rolls. **Deviation**: skill bonuses printed on possessions, improvement tokens, rerolls and spent clues are not applied; the players apply them by hand.
+A test SHALL roll dice equal to the investigator's printed skill value plus the test modifier, at least 1 die. Each die showing 5 or 6 SHALL count as a success; the number of successes SHALL be the test result, and the test passes when the result is at least 1. The dice rolled SHALL be visible to the players. Dice SHALL be drawn from the game seed, so the same game replays the same rolls. **Deviation**: skill bonuses printed on possessions and improvement tokens are not applied; the players apply them by hand.
 
 #### Scenario: Plain test
 - **WHEN** Charlie Kane, Influence 4, tests Influence with modifier 0
