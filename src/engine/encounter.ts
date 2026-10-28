@@ -118,13 +118,14 @@ export function continueFight(state: GameState, content: Content): GameState {
   if (waiting.step === "will") {
     const lost = Math.max(0, combat.will!.horror - successes);
     s = log(s, `Will test${signed(combat.will!.modifier)}: dice ${dice.join(" ")}, ${plural} against horror ${combat.will!.horror}: loses ${lost} sanity`);
-    s = replaceInvestigator(s, { ...me, sanity: me.sanity - lost });
+    // A loss past zero leaves zero (manual p.4; combat-health-floor D1).
+    s = replaceInvestigator(s, { ...me, sanity: Math.max(0, me.sanity - lost) });
     if (me.sanity - lost <= 0) return defeat(log(s, "the combat ends"), content, me.id, "sanity");
     return proceed(s, content, target, "will");
   }
   const lost = Math.max(0, combat.strength!.damage - successes);
   s = log(s, `Strength test${signed(combat.strength!.modifier)}: dice ${dice.join(" ")}, ${plural} against damage ${combat.strength!.damage}: loses ${lost} health, the ${name} loses ${successes} health`);
-  s = replaceInvestigator({ ...s, monsters: s.monsters.map((m) => (m === target ? { ...m, health: m.health + successes } : m)) }, { ...me, health: me.health - lost });
+  s = replaceInvestigator({ ...s, monsters: s.monsters.map((m) => (m === target ? { ...m, health: m.health + successes } : m)) }, { ...me, health: Math.max(0, me.health - lost) });
   s = settle(s, content, target);
   return me.health - lost <= 0 ? defeat(s, content, me.id, "health") : s;
 }

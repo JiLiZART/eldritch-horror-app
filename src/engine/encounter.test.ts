@@ -106,6 +106,13 @@ describe("two tests decide the fight", () => {
     expect(who(after, leo).health).toBe(who(before, leo).health - 1);
     expect(onBoard(after, byakhee)).toMatchObject([{ health: 1 }]);
   });
+  it("floors a loss past zero at zero and defeats by that side", () => {
+    const start = seedFor(place(encounters(), byakhee, "buenos-aires", 0), 1, 0);
+    const weak = { ...start, investigators: start.investigators.map((i) => (i.id === leo ? { ...i, health: 1 } : i)) };
+    const after = brawl(weak, { id: byakhee, instance: weak.monsters.find((m) => m.id === byakhee)!.instance });
+    expect(who(after, leo).health).toBe(0);
+    expect(who(after, leo).defeated).toBe("health");
+  });
   it("defeats the monster at its toughness and returns it to the cup", () => {
     const { before, after } = vs(1, 2);
     expect(who(after, leo)).toMatchObject({ sanity: who(before, leo).sanity, health: who(before, leo).health });
