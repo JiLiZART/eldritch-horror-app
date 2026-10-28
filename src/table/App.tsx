@@ -114,7 +114,11 @@ export function App() {
     ancientOne && {
       sheet: { image: game.state.awakened && ancientOne.images.back ? ancientOne.images.back : ancientOne.images.front, label: ancientOne.name },
       mystery: mystery && { image: mystery.images.front, label: mystery.name },
-      mythos: game.state.ongoingMythos.map((id) => set.mythos.find((m) => m.id === id)).filter((m) => m !== undefined).map((m) => ({ image: m.images.front, label: m.name })),
+      // The card drawn this round lies first while the Mythos phase lasts (mythos-card-on-table D1).
+      mythos: (phase?.name === "mythos" ? [phase.card, ...game.state.ongoingMythos.filter((id) => id !== phase.card)] : game.state.ongoingMythos)
+        .map((id) => set.mythos.find((m) => m.id === id))
+        .filter((m) => m !== undefined)
+        .map((m) => ({ image: m.images.front, label: m.name })),
       tokens: game.state.mysteryTokens,
     };
   const selectedSpace = spaces.find((s) => s.id === selected);
