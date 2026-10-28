@@ -53,8 +53,18 @@ pawn lies on its side on the board. The journal beside the board keeps every
 phase log and action by round, and the Rules glossary (English and Russian,
 with sources) sits below it.
 
+**The table itself.** Beside the board lie the Ancient One sheet (its back
+once awakened), the current mystery with the tokens it has collected and the
+ongoing mythos cards; below the board lie the investigators' sheets in seat
+order, each with its held cards under it and numbered health and sanity
+tokens, improvement tokens and tickets on it. A wounded monster carries a
+health token. Pointing at a piece shows its name; clicking any card brings it
+up to read, and Fit table takes the view back to the whole table. The wheel
+zooms under the pointer, dragging pans, and the view stays within the table.
+
 **Keeping the game.** Every accepted step is saved in the browser and resumes
-on reload; Undo takes back the last step this session; Save to file and Load
+on reload; Undo takes back the last steps, ten of them even across a reload;
+Save to file and Load
 from file move a game between browsers as plain JSON. A save from an older
 state shape is set aside with a note rather than resumed.
 
@@ -84,8 +94,8 @@ Derived from the specs under `openspec/specs/`:
 - `game-persistence`, `game-journal`, `table-view`, `board-language`,
   `panel-language`, `board-graph`, `content-schema`, `icon-set`,
   `rules-glossary`: the saved game, undo and files, the journal, the table
-  and its pieces, the board and panel in two languages, the board data, the
-  content on disk and the glossary.
+  with its pieces, tableau, sheets and tokens, the board and panel in two
+  languages, the board data, the content on disk and the glossary.
 
 ## What stays with the players
 
