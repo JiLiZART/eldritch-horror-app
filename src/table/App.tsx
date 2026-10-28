@@ -156,6 +156,8 @@ export function App() {
   // The camera follows the turn (follow-active D1): keyed on the active investigator, not their space, and never mid-route.
   const phase = game.state?.phase;
   const t = useMemo(() => (key: string, vars?: Record<string, string | number>) => translate(panel[lang], key, vars), [panel, lang]);
+  /** A saved-game note is a key and translates; an engine refusal is a sentence and falls through (save-notes-language D1). */
+  const error = game.error && t(game.error);
   const activeId = phase?.name === "action" || phase?.name === "encounter" ? phase.active : undefined;
   /** The table's corner line: round, phase and whose turn, or the outcome (table-status-line D1). */
   const lastEntry = game.state?.journal.at(-1);
@@ -349,7 +351,7 @@ export function App() {
         <NewGame
           set={set}
           running={game.state !== undefined}
-          error={game.state ? undefined : game.error}
+          error={game.state ? undefined : error}
           onStart={start}
           onAbandon={() => {
             if (slot) setSlots(removeGame(localStorage, slot));
@@ -397,9 +399,9 @@ export function App() {
           canRedo={redo.length > 0}
           onRedo={redoStep}
         />
-        {game.state?.phase.name === "action" && <Turn board={playBoard} set={set} state={game.state} phase={game.state.phase} error={game.error} route={route} onAct={act} onRoute={setRoute} onFocusCard={focusCard} />}
-        {game.state?.phase.name === "encounter" && <Encounter board={playBoard} set={set} state={game.state} phase={game.state.phase} error={game.error} onAct={act} onFocusCard={focusCard} />}
-        {game.state?.phase.name === "mythos" && <Mythos board={playBoard} set={set} state={game.state} phase={game.state.phase} error={game.error} onAct={act} onFocusCard={focusCard} />}
+        {game.state?.phase.name === "action" && <Turn board={playBoard} set={set} state={game.state} phase={game.state.phase} error={error} route={route} onAct={act} onRoute={setRoute} onFocusCard={focusCard} />}
+        {game.state?.phase.name === "encounter" && <Encounter board={playBoard} set={set} state={game.state} phase={game.state.phase} error={error} onAct={act} onFocusCard={focusCard} />}
+        {game.state?.phase.name === "mythos" && <Mythos board={playBoard} set={set} state={game.state} phase={game.state.phase} error={error} onAct={act} onFocusCard={focusCard} />}
         {game.state?.phase.name === "won" && (
           <section className="turn">
             <Heading k="app.win" />

@@ -291,5 +291,8 @@
   "region.europe": "Европа",
   "region.asia": "Азия",
   "panel.filterGlossary": "Поиск по глоссарию",
-  "glossary.unofficial": "(неофициально)"
+  "glossary.unofficial": "(неофициально)",
+  "save.unreadable": "Сохранение не удалось прочитать.",
+  "save.older": "Сохранение сделано старой версией и отложено.",
+  "save.notBackup": "Файл не является резервной копией."
 }

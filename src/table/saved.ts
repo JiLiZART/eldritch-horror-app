@@ -35,10 +35,10 @@ export function parseGame(text: string): { state?: GameState; note?: string } {
   try {
     parsed = JSON.parse(text);
   } catch {
-    return { note: "the saved game could not be read" };
+    return { note: "save.unreadable" };
   }
-  if (parsed === null || typeof parsed !== "object" || !("phase" in parsed)) return { note: "the saved game could not be read" };
-  if ((parsed as { version?: number }).version !== STATE_VERSION) return { note: "the saved game was written by an older version and was set aside" };
+  if (parsed === null || typeof parsed !== "object" || !("phase" in parsed)) return { note: "save.unreadable" };
+  if ((parsed as { version?: number }).version !== STATE_VERSION) return { note: "save.older" };
   return { state: parsed as GameState };
 }
 
@@ -146,10 +146,10 @@ export function importAll(storage: Slot, text: string): { added: number; skipped
   try {
     parsed = JSON.parse(text);
   } catch {
-    throw new Error("the file is not a backup");
+    throw new Error("save.notBackup");
   }
   const backup = parsed as { backup?: number; slots?: unknown[] };
-  if (!backup || backup.backup !== 1 || !Array.isArray(backup.slots)) throw new Error("the file is not a backup");
+  if (!backup || backup.backup !== 1 || !Array.isArray(backup.slots)) throw new Error("save.notBackup");
   let added = 0;
   let skipped = 0;
   for (const entry of backup.slots as { name?: string; title?: string; savedAt?: number; state?: unknown; history?: unknown }[]) {

@@ -291,5 +291,8 @@
   "region.europe": "Europe",
   "region.asia": "Asia",
   "panel.filterGlossary": "Filter the glossary",
-  "glossary.unofficial": "(unofficial)"
+  "glossary.unofficial": "(unofficial)",
+  "save.unreadable": "The saved game could not be read.",
+  "save.older": "The saved game was written by an older version and was set aside.",
+  "save.notBackup": "The file is not a backup."
 }

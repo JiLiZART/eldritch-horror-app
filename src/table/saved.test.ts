@@ -49,11 +49,11 @@ describe("the game in progress survives a reload", () => {
   it("sets aside garbage, a save without a phase and an older shape with a note", () => {
     const storage = fake();
     storage.setItem("eldritch-horror.game.x", "{not json");
-    expect(loadGame(storage, "x")).toEqual({ note: "the saved game could not be read" });
+    expect(loadGame(storage, "x")).toEqual({ note: "save.unreadable" });
     storage.setItem("eldritch-horror.game.x", JSON.stringify({ seed: 3 }));
-    expect(loadGame(storage, "x")).toEqual({ note: "the saved game could not be read" });
+    expect(loadGame(storage, "x")).toEqual({ note: "save.unreadable" });
     storage.setItem("eldritch-horror.game.x", JSON.stringify({ ...game(), version: 1 }));
-    expect(loadGame(storage, "x")).toEqual({ note: "the saved game was written by an older version and was set aside" });
+    expect(loadGame(storage, "x")).toEqual({ note: "save.older" });
     expect(loadGame(storage, "nope")).toEqual({});
   });
 });
@@ -76,7 +76,7 @@ describe("every slot can be backed up and restored", () => {
   });
   it("refuses a file that is not a backup and skips a state of an older shape", () => {
     const storage = fake();
-    expect(() => importAll(storage, "{\"nope\":1}")).toThrow(/not a backup/);
+    expect(() => importAll(storage, "{\"nope\":1}")).toThrow("save.notBackup");
     const text = JSON.stringify({ backup: 1, slots: [{ name: "old", savedAt: 1, state: { ...game(), version: 1 }, history: [] }] });
     expect(importAll(storage, text)).toEqual({ added: 0, skipped: 1 });
   });
@@ -144,8 +144,8 @@ describe("the game is saved to and loaded from a file", () => {
     expect(fileName(game(), "   ")).toBe("eldritch-horror-3-round-1.json");
   });
   it("refuses garbage, an older shape and nothing", () => {
-    expect(parseGame("{not json")).toEqual({ note: "the saved game could not be read" });
-    expect(parseGame(JSON.stringify({ ...game(), version: 1 }))).toEqual({ note: "the saved game was written by an older version and was set aside" });
-    expect(parseGame("")).toEqual({ note: "the saved game could not be read" });
+    expect(parseGame("{not json")).toEqual({ note: "save.unreadable" });
+    expect(parseGame(JSON.stringify({ ...game(), version: 1 }))).toEqual({ note: "save.older" });
+    expect(parseGame("")).toEqual({ note: "save.unreadable" });
   });
 });
