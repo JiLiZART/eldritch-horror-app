@@ -74,7 +74,7 @@ After the card resolves, the lead investigator MAY give the lead token to any ot
 - **THEN** Leo Anderson is still the lead and active
 
 ### Requirement: The Mythos phase is shown beside the board
-During the Mythos phase the players SHALL see the drawn card image, a button to resolve it, the resolution log, the pass-lead choice and the next-round button; at all times the mythos deck size, the ongoing cards and doom reaching 0 SHALL be visible. **Deviation**: at doom 0 the panel says the Ancient One's awakening is not modelled.
+During the Mythos phase the players SHALL see the drawn card image, a button to resolve it, the resolution log, the pass-lead choice and the next-round button; at all times the mythos deck size and the ongoing cards SHALL be visible.
 
 #### Scenario: Card shown
 - **WHEN** the Mythos phase begins
