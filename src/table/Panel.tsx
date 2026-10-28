@@ -3,6 +3,7 @@ import { neighbors } from "../content/board";
 import type { Board, GameSet, Lang, Space } from "../content/types";
 import { OMEN_TRACK } from "../engine/omen";
 import type { GameState } from "../engine/types";
+import { Glossary } from "./Glossary";
 import type { Piece } from "./pieces";
 import { BOARD_SETS, PATH_COLORS } from "./sets";
 
@@ -32,6 +33,7 @@ export function Panel({ board, set, state, lang, onLang, pieces, spaces, enabled
       {children}
       {state && <Status board={board} set={set} state={state} />}
       {state && <Journal set={set} state={state} />}
+      <Glossary />
       <fieldset>
         <legend>Board language</legend>
         {(["en", "ru"] as const).map((l) => (
